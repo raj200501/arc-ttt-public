@@ -1,0 +1,35 @@
+{
+  "task": "7b5033c1",
+  "ttt_augmentations": 16,
+  "alpha": 32,
+  "results": {
+    "16": {
+      "seconds": 630.0,
+      "peak_gb": 12.78,
+      "candidates": [
+        2
+      ]
+    },
+    "64": {
+      "seconds": 484.8,
+      "peak_gb": 10.88,
+      "candidates": [
+        2
+      ]
+    },
+    "128": {
+      "seconds": 577.2,
+      "peak_gb": 12.23,
+      "candidates": [
+        2
+      ]
+    },
+    "256": {
+      "seconds": 585.0,
+      "peak_gb": 12.69,
+      "candidates": [
+        2
+      ]
+    }
+  }
+}

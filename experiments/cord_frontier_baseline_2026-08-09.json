@@ -1,0 +1,142 @@
+{
+  "spec": "ENTERPRISE_EVAL_SPEC.md minimal smoke \u2014 frontier k-shot baseline arm",
+  "date": "2026-08-09",
+  "dataset": "naver-clova-ix/cord-v2 (CC BY 4.0), text-only post-OCR; demo/cord_validation.jsonl",
+  "model": "claude-fable-5 (frontier LLM, k-shot in-context, no adaptation)",
+  "protocol": "Identical split to cord_smoke pair (seed 0 shuffle, k=10 demos, eval_n=20) exported via scripts/export_cord_prompts.py; demos presented as in-context worked examples; predictions produced by the frontier model with no tools beyond reading the prompt file; scored with arcttt.text_ttt.score_text_output (same scorer as all CORD arms). Run via Claude agent harness, temperature/decoding = provider defaults, single sample per receipt.",
+  "arm": "frontier-kshot",
+  "k": 10,
+  "eval_n": 20,
+  "seed": 0,
+  "exact_match": 15,
+  "valid_json": 20,
+  "scored": 20,
+  "mean_micro_f1": 0.9703,
+  "comparison": {
+    "adapted_qwen0.5b_same_split": 0.7882,
+    "kshot_qwen0.5b_same_split": 0.6611,
+    "source": "cord_smoke_2026-08-08.json / cord_smoke_baseline_2026-08-08.json"
+  },
+  "results": [
+    {
+      "index": 0,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 1,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 2,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 3,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 4,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 5,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.9474
+    },
+    {
+      "index": 6,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 7,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 8,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 9,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 10,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 11,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 12,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 13,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 14,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 15,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 16,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.6364
+    },
+    {
+      "index": 17,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.9333
+    },
+    {
+      "index": 18,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.9474
+    },
+    {
+      "index": 19,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.9412
+    }
+  ]
+}

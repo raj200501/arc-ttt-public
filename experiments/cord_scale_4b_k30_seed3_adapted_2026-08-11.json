@@ -1,0 +1,8 @@
+{
+  "rung": "4b",
+  "arm": "adapted",
+  "k": 30,
+  "seed": 3,
+  "error": "oom",
+  "note": "arm OOMed at frozen config; no number imputed"
+}

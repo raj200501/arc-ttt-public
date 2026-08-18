@@ -1,0 +1,16 @@
+{
+  "run": "kaggle_v7_submission_scored",
+  "submission_row": 55363020,
+  "kernel": "rajskashikar/arc-ttt-v1",
+  "kernel_version": 7,
+  "submitted_utc": "2026-08-09T00:12:54Z",
+  "scored_by_utc": "2026-08-09T20:22:00Z",
+  "public_score": 0.0,
+  "context": {
+    "real_predictions": 40,
+    "tasks_total": 240,
+    "known_run_defects": "98/167 attempted tasks lost to _gather_cache ValueError (transformers>=5 cache API), 52 level-0 OOMs — coverage was 40/240, not solver-limited on the remaining 73"
+  },
+  "finding": "0/40 real predictions correct on the hidden semi-private set. No format or pipeline error is indicated (v6's hardware bug class was fixed; file passed validation and scored). The 0.00 is consistent with low coverage times low per-task hit rate on ARC-AGI-2 hidden tasks; not evidence of a new pipeline bug.",
+  "action": "No resubmit of the identical file. v8 (150 real predictions, cache fix live, 4-frame search) is the next slot's candidate per the staged decision rule."
+}

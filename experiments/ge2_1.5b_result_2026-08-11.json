@@ -1,0 +1,26 @@
+{
+  "result": "G-E2 FAILS at the 1.5B rung — Addendum A is now fully decided: ALL THREE RUNGS FAIL",
+  "date_utc": "2026-08-14T15:35Z",
+  "spec": "ENTERPRISE_EVAL_SPEC.md Addendum A (frozen 2026-08-08), gate = mean paired delta at k=10 over seeds {1,2,3} >= +5 F1",
+  "kernel": "rajskashikar/arc-ttt-cord-scale-15b-cpu v3 (Kaggle CPU, fp32), COMPLETE; arms accumulated across three resumed sessions via dataset seeding",
+  "gate_k10": {
+    "deltas_micro_f1": [0.0112, -0.1975, -0.1596],
+    "mean_delta": -0.1153,
+    "threshold": 0.05,
+    "g_e2_pass": false,
+    "ci95_receipt_level": [-0.2, -0.0306],
+    "sign_test": "16 wins / 22 losses / 22 ties, p = 0.42",
+    "read": "The worst failure of the three rungs: -11.5 F1. The receipt-level CI excludes zero on the negative side, but the sign test does not corroborate (many ties; p=0.42), so by this project's own two-statistics rule the claim stays 'failure to demonstrate benefit, with a reliably negative mean driven partly by loss magnitude' - not 'demonstrated harm'."
+  },
+  "addendum_a_closure": {
+    "all_rungs": {
+      "0.5B (CPU/fp32)": "-7.3 F1, fail",
+      "1.5B (CPU/fp32)": "-11.5 F1, fail",
+      "4B (T4/bf16)": "-4.5 F1, fail"
+    },
+    "the_device_clean_scale_comparison": "0.5B and 1.5B share device and dtype (CPU/fp32), so this pair carries NO device confound. Scaling 3x made the paired delta WORSE (-7.3 -> -11.5). The scale hypothesis is dead on a clean comparison, not just on the confounded 4B one.",
+    "spec_note": "Addendum A called a 1.5B pass 'the strongest commercial outcome'. It is instead the largest failure.",
+    "overall": "The preregistered question is answered at every scale it named: one epoch of per-request LoRA adaptation has not been shown to beat k-shot prompting on CORD at 0.5B, 1.5B or 4B, and every point estimate is negative.",
+    "what_remains": "Only Addendum B (novel-schema gate) can now rescue the quality thesis - it tests the one regime Addendum A never touched. Relaunch on T4/bf16 at the 2026-08-15T00:00Z quota refresh."
+  }
+}

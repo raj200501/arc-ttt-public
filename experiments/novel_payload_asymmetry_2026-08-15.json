@@ -1,0 +1,18 @@
+{
+  "artifact": "prompt payload asymmetry, novel-schema corpus (Addendum B tenants, seeds 1-3)",
+  "date_utc": "2026-08-15",
+  "method": "exact character counts over the seeded generator's own documents (180 eval docs, 90 train examples); reproducible by anyone from novel_schema.py at the same seeds; no model dependency",
+  "mean_document_chars": 208.0,
+  "mean_example_chars": 394.9,
+  "per_request_prompt_chars": {
+    "adapted_endpoint (document only)": 208.0,
+    "kshot_k10 (document + 10 examples)": 4157.4,
+    "kshot_k30 (document + 30 examples)": 12056.0
+  },
+  "payload_ratio": {
+    "k10_vs_adapted": 19.98,
+    "k30_vs_adapted": 57.95
+  },
+  "honest_framing_REQUIRED": "Cost statement only. Its ONLY legitimate use is beside the same corpus's quality numbers with their gate status. On this corpus the k=10 quality comparison is a comparability point (not the gate); the k=30 gate is pending. Quote accordingly.",
+  "units_caveat": "Characters, not tokens; chars chosen for model-free verifiability."
+}

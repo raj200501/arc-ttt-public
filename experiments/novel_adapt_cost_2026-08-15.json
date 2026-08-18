@@ -1,0 +1,27 @@
+{
+  "artifact": "measured per-tenant adaptation cost, novel-schema corpus (k=10, T4/bf16)",
+  "date_utc": "2026-08-15",
+  "per_tenant_adapt_seconds": [
+    {
+      "tenant_seed": 1,
+      "adapt_seconds": 58.2,
+      "device": "cuda",
+      "dtype": null
+    },
+    {
+      "tenant_seed": 2,
+      "adapt_seconds": 58.2,
+      "device": "cuda",
+      "dtype": null
+    },
+    {
+      "tenant_seed": 3,
+      "adapt_seconds": 58.0,
+      "device": "cuda",
+      "dtype": null
+    }
+  ],
+  "mean_adapt_seconds": 58.1,
+  "read": "Wall-clock LoRA training per tenant at k=10 on a single T4, from the arms that produced the +45 F1 comparability result - the 'minutes, one GPU' claim measured on the same runs that measured quality.",
+  "framing": "Cost numbers travel only with their quality numbers and gate status, as always."
+}

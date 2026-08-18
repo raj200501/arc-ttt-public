@@ -1,0 +1,30 @@
+{
+  "result": "G-E2 FAILS at the 0.5B rung",
+  "date_utc": "2026-08-12T02:10Z",
+  "spec": "ENTERPRISE_EVAL_SPEC.md Addendum A (frozen 2026-08-08), gate = mean paired delta at k=10 over seeds {1,2,3} >= +5 F1",
+  "kernel": "rajskashikar/arc-ttt-cord-scale-cpu (gate-only v5, Kaggle CPU), COMPLETE",
+  "gate_k10": {
+    "deltas_micro_f1": [-0.0117, -0.155, -0.0514],
+    "mean_delta": -0.0727,
+    "threshold": 0.05,
+    "g_e2_pass": false,
+    "ci95_receipt_level": [-0.1659, 0.0205],
+    "sign_test": "27 wins / 32 losses / 1 tie, p = 0.60",
+    "read": "Negative at the decision point (-7.3 F1) but not significant on a win-count basis. Failure to demonstrate benefit, not demonstrated harm — same reading as 4B."
+  },
+  "how_the_environment_conflict_was_resolved": {
+    "problem": "The gate-only run produced kernel-env arms for k10 seeds 1-adapted, 1-kshot and 2-adapted, whose filenames collided with the earlier LOCAL-env arms already in experiments/. Keeping the local files would have left the 0.5B gate permanently mixed-environment and wasted the run; overwriting them would have destroyed real measurements.",
+    "resolution": "Neither. The three local-env artifacts were MOVED to experiments/superseded_localenv/ and the kernel-env versions installed under the canonical names. Nothing was deleted and all six gating arms are now kernel-produced, so the pair-level homogeneity rule is satisfied without discarding data.",
+    "glob_safety": "cord_scale_summary.py and cord_paired_power.py both use a NON-recursive glob, so the preserved copies in the subdirectory cannot re-enter either computation and produce a duplicate-key collision.",
+    "superseded_values_for_the_record": {
+      "k10_seed1_adapted": "local 0.5491 -> kernel 0.5452",
+      "k10_seed1_kshot": "local 0.5804 -> kernel 0.5569",
+      "k10_seed2_adapted": "local 0.5151 -> kernel 0.4956"
+    }
+  },
+  "combined_picture": {
+    "statement": "Two rungs have now completed the preregistered gate and BOTH fail: 0.5B at -7.3 F1 and 4B at -4.5 F1. This is no longer a single negative that scale might explain away — the lever that was preregistered to rescue the 0.5B result was tested and did not.",
+    "remaining": "1.5B (arc-ttt-cord-scale-15b-cpu, RUNNING) is the only rung outstanding. Addendum A calls a 1.5B pass the strongest commercial outcome; on the evidence so far it would also be the surprising one.",
+    "honesty_note": "Neither failure is statistically significant on its own (p=0.60 at 0.5B, p=0.10 at 4B) and the gate is underpowered at both. The correct summary is that adaptation has not been shown to help at the decision point at either scale, not that it has been shown to hurt."
+  }
+}

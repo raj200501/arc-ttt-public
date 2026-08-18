@@ -1,0 +1,20 @@
+{
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "device": "cuda",
+  "model_load_seconds": 1.2,
+  "config": {
+    "augmentations": 4,
+    "samples_per_augmentation": 1,
+    "lora_rank": 16,
+    "epochs": 1
+  },
+  "tasks": {
+    "20270e3b": 58.6,
+    "28a6681f": 61.6,
+    "e8686506": 110.9
+  },
+  "solved": 0,
+  "scored": 4,
+  "mean_task_seconds": 77.0,
+  "projection_240_tasks_hours": 5.14
+}

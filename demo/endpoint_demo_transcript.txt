@@ -1,0 +1,220 @@
+==============================================================================
+ arc-ttt adaptation endpoint — live demo
+ task: receipt OCR text in  →  structured JSON out (CORD-v2, CC BY 4.0)
+==============================================================================
+[serve] loading Qwen/Qwen2.5-0.5B-Instruct on cpu ...
+[serve] model loaded in 85.4s
+[serve] listening on 127.0.0.1:8341 | model Qwen/Qwen2.5-0.5B-Instruct
+[serve] "GET /health HTTP/1.1" 200 -
+
+[1] GET http://127.0.0.1:8341/health
+    -> {"status": "ok", "model": "Qwen/Qwen2.5-0.5B-Instruct", "requests_served": 0}
+
+[2] Data: 100 real receipts on disk. Deterministic split (seed 0):
+    5 receipts + their labelled JSON = the customer's examples
+    2 receipts held out = the questions we grade the model on
+
+==============================================================================
+ STEP A — BEFORE ADAPTATION
+  POST /adapt with adapt:false — the model sees the 5 examples in its
+  prompt but its weights are untouched. This is standard few-shot prompting.
+==============================================================================
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+[serve] "POST /adapt HTTP/1.1" 200 -
+
+   endpoint round-trip 78.2s (no weight update: 1.0s)
+
+   held-out receipt #1 — raw OCR text sent to the endpoint:
+      | 1
+      | MINERAL 600 ML
+      | 7,727
+      | 1
+      | BULGOGI RICE R
+      | 33,636
+      | Subtotal 41,364
+      | Tax 4,136
+      | Total 45,500
+      | CASH 50,000
+      | Cash CHANGE -4,500
+   model answered in 47.7s (before) — 11/11 gold fields correct, field F1 0.67
+      MODEL OUTPUT                          | GOLD (human-labelled)
+      ------------------------------------- | -------------------------------------
+      {                                     | {
+       "menu": [                            |  "menu": [
+        {                                   |   {
+         "cnt": "1",                        |    "cnt": "1",
+         "nm": "MINERAL 600 ML",            |    "nm": "MINERAL 600 ML",
+         "price": "7,727"                   |    "price": "7,727"
+        },                                  |   },
+        {                                   |   {
+         "cnt": "1",                        |    "cnt": "1",
+         "nm": "Bulgogi Rice R",            |    "nm": "BULGOGI RICE R",
+         "price": "33,636"                  |    "price": "33,636"
+        },                                  |   }
+        {                                   |  ],
+         "cnt": "1",                        |  "sub_total": {
+         "nm": "Sub Total",                 |   "subtotal_price": "41,364",
+         "price": "41,364"                  |   "tax_price": "4,136"
+        },                                  |  },
+        {                                   |  "total": {
+         "cnt": "1",                        |   "cashprice": "50,000",
+         "nm": "Tax",                       |   "changeprice": "-4,500",
+         "price": "4,136"                   |   "total_price": "45,500"
+        },                                  |  }
+        {                                   | }
+         "cnt": "1",                        | 
+         "nm": "Total",                     | 
+         "price": "45,500"                  | 
+        }                                   | 
+       ],                                   | 
+       "sub_total": {                       | 
+        "subtotal_price": "41,364",         | 
+        "tax_price": "4,136",               | 
+        "total_price": "45,500"             | 
+       },                                   | 
+       "total": {                           | 
+        "cashprice": "50,000",              | 
+        "changeprice": "-4,500",            | 
+        "menuqty_cnt": "1",                 | 
+        "total_price": "45,500"             | 
+       }                                    | 
+      }                                     | 
+
+   held-out receipt #2 — raw OCR text sent to the endpoint:
+      | Kopi Susu Kolonel
+      | 1
+      | 23.000
+      | Total 23.000
+      | Tunai 50.000
+      | Kembali 27.000
+   model answered in 29.5s (before) — 5/6 gold fields correct, field F1 0.40
+      MODEL OUTPUT                          | GOLD (human-labelled)
+      ------------------------------------- | -------------------------------------
+      {                                     | {
+       "menu": [                            |  "menu": {
+        {                                   |   "cnt": "1",
+         "cnt": "1",                        |   "nm": "Kopi Susu Kolonel",
+         "nm": "Kopi Susu Kolonel",         |   "price": "23.000"
+         "price": "23.000"                  |  },
+        },                                  |  "total": {
+        {                                   |   "cashprice": "50.000",
+         "cnt": "1",                        |   "changeprice": "27.000",
+         "nm": "Total",                     |   "total_price": "23.000"
+         "price": "23.000"                  |  }
+        },                                  | }
+        {                                   | 
+         "cnt": "1",                        | 
+         "nm": "Tunai",                     | 
+         "price": "50.000"                  | 
+        },                                  | 
+        {                                   | 
+         "cnt": "1",                        | 
+         "nm": "Kembali",                   | 
+         "price": "27.000"                  | 
+        }                                   | 
+       ],                                   | 
+       "sub_total": {                       | 
+        "subtotal_price": "23.000",         | 
+        "tax_price": "0",                   | 
+        "total_price": "23.000"             | 
+       },                                   | 
+       "total": {                           | 
+        "cashprice": "0",                   | 
+        "changeprice": "27.000",            | 
+        "menuqty_cnt": "1",                 | 
+        "total_price": "23.000"             | 
+       }                                    | 
+      }                                     | 
+
+==============================================================================
+ STEP B — ADAPT + RE-ASK
+  POST /adapt with adapt:true — same 5 examples, but now the endpoint
+  trains a LoRA adapter on them (test-time training) before answering
+  the same 2 held-out receipts with the adapted weights.
+==============================================================================
+[serve] "POST /adapt HTTP/1.1" 200 -
+
+   endpoint round-trip 189.3s (weight update on 5 examples: 157.8s)
+
+   held-out receipt #1 — raw OCR text sent to the endpoint:
+      | 1
+      | MINERAL 600 ML
+      | 7,727
+      | 1
+      | BULGOGI RICE R
+      | 33,636
+      | Subtotal 41,364
+      | Tax 4,136
+      | Total 45,500
+      | CASH 50,000
+      | Cash CHANGE -4,500
+   model answered in 17.0s (after) — 8/11 gold fields correct, field F1 0.80
+      MODEL OUTPUT                          | GOLD (human-labelled)
+      ------------------------------------- | -------------------------------------
+      {                                     | {
+       "menu": {                            |  "menu": [
+        "cnt": "1",                         |   {
+        "nm": "MINERAL 600 ML",             |    "cnt": "1",
+        "price": "7,727"                    |    "nm": "MINERAL 600 ML",
+       },                                   |    "price": "7,727"
+       "sub_total": {                       |   },
+        "subtotal_price": "41,364",         |   {
+        "tax_price": "4,136"                |    "cnt": "1",
+       },                                   |    "nm": "BULGOGI RICE R",
+       "total": {                           |    "price": "33,636"
+        "cashprice": "50,000",              |   }
+        "changeprice": "-4,500",            |  ],
+        "menuqty_cnt": "1",                 |  "sub_total": {
+        "total_price": "45,500"             |   "subtotal_price": "41,364",
+       }                                    |   "tax_price": "4,136"
+      }                                     |  },
+                                            |  "total": {
+                                            |   "cashprice": "50,000",
+                                            |   "changeprice": "-4,500",
+                                            |   "total_price": "45,500"
+                                            |  }
+                                            | }
+
+   held-out receipt #2 — raw OCR text sent to the endpoint:
+      | Kopi Susu Kolonel
+      | 1
+      | 23.000
+      | Total 23.000
+      | Tunai 50.000
+      | Kembali 27.000
+   model answered in 14.4s (after) — 2/6 gold fields correct, field F1 0.31
+      MODEL OUTPUT                          | GOLD (human-labelled)
+      ------------------------------------- | -------------------------------------
+      {                                     | {
+       "menu": {                            |  "menu": {
+        "cnt": "Kopi Susu Kolonel",         |   "cnt": "1",
+        "price": "23.000"                   |   "nm": "Kopi Susu Kolonel",
+       },                                   |   "price": "23.000"
+       "sub_total": {                       |  },
+        "subtotal_price": "23.000",         |  "total": {
+        "tax_price": "50.000"               |   "cashprice": "50.000",
+       },                                   |   "changeprice": "27.000",
+       "total": {                           |   "total_price": "23.000"
+        "kembaliprice": "27.000",           |  }
+        "menuqty_cnt": "1",                 | }
+        "total_price": "23.000"             | 
+       }                                    | 
+      }                                     | 
+
+==============================================================================
+ SCOREBOARD — same receipts, same prompt; only the weights changed
+==============================================================================
+   receipt        fields correct   field F1      fields correct   field F1
+                          BEFORE                          AFTER
+   held-out #1            11/11       0.67                8/11       0.80
+   held-out #2              5/6       0.40                 2/6       0.31
+   mean                                0.53                           0.55
+
+   adaptation cost: 157.8s on CPU, 5 examples, one LoRA adapter
+   total demo wall time: 377.5s (single CPU, 0.5B-parameter open model)
+
+   n=2 receipts is a live demo, not an eval. The measured result on
+   this dataset (k=10, 20 held-out receipts, same config) is in
+   experiments/cord_smoke_2026-08-08.json: field F1 0.661 → 0.788.
+==============================================================================
+[demo] endpoint stopped.

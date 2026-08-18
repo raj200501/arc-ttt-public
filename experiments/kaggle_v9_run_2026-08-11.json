@@ -1,0 +1,39 @@
+{
+  "run": "kaggle_v9_interactive",
+  "kernel": "rajskashikar/arc-ttt-v1",
+  "kernel_version": 9,
+  "date_utc": "2026-08-11",
+  "wall_minutes": 520,
+  "hypothesis": "DFS recall bound was binding: t4_champ_diag_2026-08-08.json shows 4 of 9 scored tests where lp_true > lp_top (true solution outscores the returned top candidate under teacher forcing) yet the truth is absent from the candidate set - a search-recall failure, not a ranking failure. v8 pruned on TOTAL completion NLL at -ln(0.1) = 2.30 nats; the recall-miss truths total 2.5-3.8 nats, i.e. outside the bound.",
+  "change_from_v8": {
+    "dfs_probability_cutoff": "0.1 -> 0.02 (total-NLL bound 2.30 -> 3.91 nats)",
+    "dfs_max_candidates": "32 -> 64",
+    "everything_else": "v8 verbatim (4 search frames / 8 rescore frames, rank 256 rslora, 60 s DFS budget, OOM ladder, pacing guards, machine_shape=NvidiaTeslaT4)"
+  },
+  "results": {
+    "tasks_total": 240,
+    "entries_total": 259,
+    "real_predictions": 150,
+    "tasks_with_real_attempt": 137,
+    "real_entries_with_two_distinct_attempts": 82,
+    "oom_level_0": 49,
+    "oom_level_1": 10,
+    "oom_level_2": 3,
+    "new_failure_classes": "none; no cache-API errors, no unpack errors, both workers bf16=True on Tesla T4"
+  },
+  "gate": {
+    "rule": "submit iff run completed AND real predictions >= 100 AND no new dominant failure signature",
+    "evaluation": "completed=yes, 150>=100=yes, new_dominant_failure=no",
+    "action": "SUBMITTED kernel version 9 at 2026-08-11T15:17:05Z, submission row 55436183"
+  },
+  "caveats": [
+    "Coverage is IDENTICAL to v8 (150 real predictions, 137 tasks) - expected: the DFS bound governs which candidates are found per attempted task, not how many tasks get attempted. Coverage is set by the time/OOM pacing, which was unchanged.",
+    "Wall time 520 min vs v8's 522 min. Because the DFS also carries a 60 s per-predict time budget, a wider bound does not necessarily cost more wall-clock; it reallocates the same budget across a broader, shallower frontier. This is a confound: a null result cannot distinguish 'bound was not binding' from 'wider bound explored more but ran out of time budget'. If v9 scores flat, the next lever should separate these (raise dfs_time_budget_seconds at the widened bound, or measure candidate-set size directly in an offline probe) before abandoning the recall hypothesis.",
+    "No offline candidate-recall instrumentation ran inside the kernel, so the causal chain (wider bound -> more candidates -> more hits) is inferred from the score, not measured per task."
+  ],
+  "preregistered_read": {
+    "if_score_rises_well_above_1.67": "recall class converted; push the bound further and add time budget",
+    "if_score_flat_or_lower": "the bound was not the binding constraint at this time budget; next lever is TTT sharpening (epochs 1 -> 2) or DFS time budget, NOT further bound widening",
+    "sept_1_bar": "~10% needs ~24/240 tasks; at v8's ~2.7% per-attempt this is a ~4x hit-rate program"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "run": "cord_scale_4b_cpu_attempt_1",
+  "spec": "ENTERPRISE_EVAL_SPEC.md Addendum A scaled run — 4B rung, k=10 gating arms",
+  "date_utc": "2026-08-11",
+  "kernel": "rajskashikar/arc-ttt-cord-scale-4b-cpu",
+  "kernel_version": 1,
+  "device": "cpu",
+  "dtype": "float32",
+  "outcome": "OOM — process SIGKILLed (\"Killed\") during the TTT backward",
+  "evidence": "kernel log: 398 weight shards materialized ('Loading weights: 91% ... layers.32.self_attn.o_proj.weight'), then 'use_cache=True is incompatible with gradient checkpointing. Setting use_cache=False.', then 'Killed'. No arm artifact was written for the 4B rung.",
+  "why_attempted": "kaggle quota showed 28.81h of the 30.00h weekly GPU allowance consumed (refresh 2026-08-15), and the six k=10 arms that decide G-E2 need ~3-4h of T4. Kaggle CPU draws no GPU quota, so it was the only free path to the 4B adaptation number before Saturday.",
+  "risk_was_preregistered": "yes — the entry docstring recorded 'Qwen3-4B in float32 is ~16 GB of weights against a ~30 GB session ... this may still OOM. If it does, that is a reportable result, not a silent hole.' before the run.",
+  "arms_completed": 0,
+  "next_action": "kernel version 2 pushed with bfloat16 weights (~8 GB instead of ~16 GB), gradient checkpointing already unconditional. If bf16 also OOMs, the CPU path is closed and the 4B number waits for the 2026-08-15 GPU refresh (run kaggle/cord-scale-gate/, six arms, ~3-4h) or Lightning promotional credits (~4.5 T4-hours, Raj's call).",
+  "dtype_caveat_if_bf16_succeeds": "0.5B and 1.5B rungs run fp32 on CPU; a bf16 4B rung means the CROSS-RUNG scale comparison carries a dtype confound and must never be quoted without it. The G-E2 gate itself stays clean because it is evaluated per rung on paired arms that share a dtype.",
+  "claim_impact": "None. No adaptation delta at 4B exists. The product wedge's quality evidence remains the 0.5B net-neutral result (cord_variance_summary_2026-08-08.json) until a 4B pair lands."
+}

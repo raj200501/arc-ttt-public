@@ -1,0 +1,22 @@
+{
+  "run": "kaggle_v9_submission_scored",
+  "submission_row": 55436183,
+  "kernel_version": 9,
+  "submitted_utc": "2026-08-11T15:17:05Z",
+  "scored_by_utc": "2026-08-12T18:14:00Z",
+  "public_score": 1.67,
+  "prior_score_v8": 1.67,
+  "delta": 0.0,
+  "intervention": "DFS recall bound widened 0.1 -> 0.02 (total-NLL 2.30 -> 3.91 nats) and dfs_max_candidates 32 -> 64; everything else v8 verbatim; 150 real predictions in both.",
+  "finding": "EXACTLY FLAT. Widening the recall bound by 1.6 nats and doubling the candidate cap changed the public score not at all (1.67 -> 1.67). Because v8 and v9 are otherwise byte-identical in configuration and both submitted 150 real predictions, this is a clean single-variable test and the null is informative rather than merely disappointing.",
+  "preregistered_read_applied": {
+    "branch_taken": "FLAT",
+    "rule_as_written": "recall class converts -> hit rate >> 2.7%; FLAT -> the bound was not binding and the next lever is the DFS TIME budget via the staged kaggle/v10/, NOT more bound widening",
+    "conclusion": "The recall bound was NOT the binding constraint. The search was not failing to admit correct candidates for want of probability mass, so giving it more mass and more candidate slots bought nothing. Widening it further is now explicitly ruled out by the preregistration - the next lever is the DFS TIME budget (v10: 60 -> 90 s/task), which is staged in kaggle/v10/.",
+    "what_would_have_falsified_this": "Any movement in either direction. A rise would have converted the recall class; a fall would have indicated the wider bound was admitting distractors and costing precision. Neither happened."
+  },
+  "caveat_on_resolution": "The public leaderboard quantizes at roughly 1/240 = 0.42 points, so 'flat' means the change moved fewer than about one hidden task in either direction. It does not exclude a sub-task-scale effect; it does exclude an effect large enough to matter against the ~10% Sept-1 bar.",
+  "kill_trigger_status": "ARC continues (nonzero, unchanged). The Sept 1 bar of ~10% still requires roughly a 4x hit-rate improvement and is untouched by this result.",
+  "quota_note": "v10 cannot be pushed before the 2026-08-15 GPU refresh: quota is 33.29h used against a 30h allowance, currently OVERRUN. The lever is identified but not yet purchasable.",
+  "submission_slot": "The 08-11 slot was spent by v9. No submission was made on the 08-12 slot: v10 is the only candidate and it is quota-blocked, and the non-negotiable forbids spending a slot on a file that cannot be produced."
+}

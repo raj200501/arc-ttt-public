@@ -1,0 +1,260 @@
+### 0
+gopizu: 8288.79
+vatoke: 2026-05-12
+nugige: 2024-10-17
+safidi: JFF-4178
+nonove: 2023-05-26
+subose: Nane Zavo
+dobomu: 6753.81
+kirozu: 5686.49
+rumefu: SQT-3046
+tomelu: Seku Lifi
+fuzaka: 1554.04
+depolo: 2026-03-27
+### 1
+subose: Gonu Kisi
+fuzaka: SQQ-3873
+vatoke: EGU-3611
+rumefu: YSX-5492
+dobomu: ELG-2480
+kirozu: 6315.17
+nonove: NCE-8526
+gopizu: 4598.14
+safidi: UTP-7273
+nugige: 2021-03-05
+tomelu: Kufi Somi
+depolo: 2021-01-13
+### 2
+fuzaka: 2019-02-17
+tomelu: Basu Neka
+dobomu: 2020-04-05
+rumefu: GFC-8665
+vatoke: 3130.72
+depolo: 2020-08-15
+gopizu: 727.69
+safidi: CLU-1633
+subose: Poli Vani
+nonove: LMY-4464
+kirozu: 3406.79
+nugige: 2021-04-03
+### 3
+tomelu: Sono Pufi
+kirozu: 9573.33
+nugige: 2024-05-20
+gopizu: 2394.58
+depolo: 2022-01-04
+vatoke: 2023-11-27
+dobomu: 9326.16
+rumefu: HLW-8637
+nonove: 2020-05-17
+safidi: QXF-2479
+subose: Beva Tege
+fuzaka: 2024-09-06
+### 4
+nugige: 2020-02-10
+safidi: YEP-3991
+dobomu: 7255.19
+subose: Fitu Fupe
+kirozu: 2912.55
+rumefu: MPD-9699
+gopizu: 2322.96
+depolo: 2024-01-01
+nonove: SZP-3887
+fuzaka: 2024-08-15
+vatoke: 2025-02-17
+tomelu: Vege Nopa
+### 5
+depolo: 2022-04-26
+rumefu: CUK-1893
+nonove: PNL-8938
+gopizu: 6554.93
+dobomu: 7953.67
+subose: Vite Dila
+vatoke: EPA-6413
+tomelu: Linu Bume
+safidi: EPF-5152
+fuzaka: 5618.25
+nugige: 2023-05-08
+kirozu: 4454.87
+### 6
+nonove: 2023-02-05
+fuzaka: 2026-09-02
+nugige: 2021-02-15
+kirozu: 4247.88
+rumefu: HNM-8607
+vatoke: KYF-5374
+safidi: LSH-5529
+depolo: 2025-09-10
+tomelu: Nore Mubu
+gopizu: 8399.35
+subose: Bine Radu
+dobomu: 5979.43
+### 7
+subose: Kaka Mozi
+depolo: 2020-10-03
+vatoke: 2024-12-18
+nugige: 2026-02-13
+dobomu: 3289.51
+safidi: FGS-6347
+gopizu: 2217.31
+rumefu: TCG-6629
+fuzaka: 7310.63
+nonove: 3109.75
+tomelu: Zagi Lodo
+kirozu: 1470.06
+### 8
+tomelu: Dati Vufi
+safidi: ULU-8805
+dobomu: 7281.97
+kirozu: 2646.85
+rumefu: JZY-1054
+depolo: 2022-03-12
+vatoke: YQS-3916
+subose: Goso Zile
+nugige: 2021-03-23
+fuzaka: 1227.33
+nonove: 2020-03-04
+gopizu: 2515.45
+### 9
+subose: Nipe Pelo
+kirozu: 1049.27
+vatoke: 2024-09-08
+nugige: 2023-10-11
+tomelu: Sebo Bada
+nonove: HAS-2030
+gopizu: 719.80
+depolo: 2023-08-07
+dobomu: 2021-06-23
+rumefu: QWJ-5616
+fuzaka: 2023-01-26
+safidi: PSW-1948
+### 10
+nonove: 2024-12-13
+nugige: 2026-09-04
+tomelu: Gida Logi
+gopizu: 550.91
+vatoke: CJA-8772
+depolo: 2019-04-16
+fuzaka: DAN-2873
+subose: Mude Mepe
+kirozu: 8054.87
+safidi: CES-7450
+dobomu: 9626.54
+rumefu: MHJ-7144
+### 11
+nonove: 2026-09-07
+vatoke: 9098.06
+safidi: TTW-1670
+kirozu: 3870.45
+dobomu: 2026-03-18
+gopizu: 1070.48
+depolo: 2019-04-04
+rumefu: GCB-1631
+subose: Zize Pema
+tomelu: Peke Moso
+nugige: 2026-08-12
+fuzaka: 2023-01-15
+### 12
+kirozu: 9374.24
+nonove: NLN-9132
+depolo: 2020-05-01
+safidi: LQR-5057
+gopizu: 6439.88
+fuzaka: 8197.21
+dobomu: 4821.01
+tomelu: Pipa Seki
+subose: Fope Deko
+nugige: 2023-12-22
+vatoke: 2025-01-07
+rumefu: NFT-3488
+### 13
+nugige: 2019-11-10
+dobomu: 2020-05-04
+tomelu: Vesa Tezo
+fuzaka: 2020-11-03
+nonove: 6367.61
+subose: Lani Meta
+gopizu: 1151.29
+vatoke: 4492.69
+depolo: 2020-04-20
+kirozu: 6042.06
+rumefu: UNE-5502
+safidi: KFH-2488
+### 14
+tomelu: Mubu Daru
+fuzaka: FNY-2305
+dobomu: XEV-5344
+depolo: 2024-12-20
+nonove: 1662.72
+safidi: MXR-2069
+kirozu: 3900.69
+subose: Kina Zado
+gopizu: 8629.11
+rumefu: RUY-5021
+nugige: 2022-09-19
+vatoke: 157.80
+### 15
+kirozu: 905.59
+depolo: 2020-09-02
+tomelu: Selu Baki
+nugige: 2023-10-16
+dobomu: 2020-07-05
+fuzaka: WUL-6598
+safidi: UTR-9330
+gopizu: 5782.71
+rumefu: SKN-7918
+nonove: CHV-2450
+subose: Zita Vofu
+vatoke: RFA-4076
+### 16
+nugige: 2025-06-14
+gopizu: 5766.40
+nonove: 2024-09-25
+kirozu: 353.99
+rumefu: JMA-2927
+subose: Nofu Mubo
+vatoke: 6832.29
+depolo: 2025-06-19
+dobomu: 2023-11-13
+safidi: SLT-9751
+tomelu: Zaka Fupu
+fuzaka: 4507.71
+### 17
+gopizu: 8568.82
+nonove: 3936.86
+nugige: 2025-12-11
+dobomu: 379.32
+rumefu: AFR-9384
+vatoke: 2020-05-11
+kirozu: 4540.15
+tomelu: Pane Fezu
+fuzaka: XXP-4472
+subose: Gage Boge
+safidi: EGZ-3160
+depolo: 2023-12-02
+### 18
+safidi: ALM-9501
+gopizu: 7780.68
+vatoke: 2764.62
+kirozu: 6405.79
+tomelu: Nuta Nugu
+rumefu: TPQ-9525
+depolo: 2026-09-10
+nugige: 2019-07-20
+dobomu: 2022-01-11
+subose: Kumi Taro
+fuzaka: 2022-10-26
+nonove: UWE-3846
+### 19
+nugige: 2020-07-17
+fuzaka: 2023-10-13
+subose: Zigo Bopa
+gopizu: 2121.75
+kirozu: 4668.65
+rumefu: QKE-8074
+nonove: 2021-08-20
+dobomu: 2022-09-02
+vatoke: 4949.95
+safidi: HNM-6327
+tomelu: Tugo Depo
+depolo: 2021-08-05

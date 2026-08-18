@@ -1,0 +1,49 @@
+{
+  "model": "sorokin/qwen3_4b_grids15_sft139",
+  "tasks": {
+    "e8686506": {
+      "seconds": 71.7,
+      "solved": 0,
+      "scored": 1
+    },
+    "20270e3b": {
+      "seconds": 141.0,
+      "solved": 0,
+      "scored": 2
+    },
+    "28a6681f": {
+      "seconds": 133.7,
+      "solved": 0,
+      "scored": 1
+    },
+    "7b5033c1": {
+      "seconds": 129.5,
+      "solved": 0,
+      "scored": 1
+    },
+    "dbff022c": {
+      "seconds": 137.3,
+      "solved": 0,
+      "scored": 1
+    },
+    "faa9f03d": {
+      "seconds": 282.3,
+      "solved": 0,
+      "scored": 1
+    },
+    "78332cb0": {
+      "seconds": 223.7,
+      "solved": 0,
+      "scored": 2
+    },
+    "3dc255db": {
+      "seconds": 189.7,
+      "solved": 0,
+      "scored": 1
+    }
+  },
+  "solved": 0,
+  "scored": 10,
+  "accuracy": 0.0,
+  "config": "v2 raw format, 4 dihedral augs, 1 sample, r=16"
+}

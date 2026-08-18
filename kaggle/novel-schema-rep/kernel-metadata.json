@@ -1,0 +1,15 @@
+{
+  "id": "rajskashikar/arc-ttt-novel-schema-rep",
+  "title": "arc-ttt novel schema rep",
+  "code_file": "bundled_pipeline.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "competition_sources": [],
+  "model_sources": [],
+  "dataset_sources": ["rajskashikar/cord-validation"],
+  "kernel_sources": []
+}

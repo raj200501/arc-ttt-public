@@ -1,0 +1,219 @@
+{
+  "spec": "ENTERPRISE_EVAL_SPEC.md minimal smoke \u2014 variance mini-curve",
+  "date": "2026-08-08",
+  "dataset": "naver-clova-ix/cord-v2 (CC BY 4.0), text-only post-OCR; demo/cord_validation.jsonl (100 receipts)",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "config": {
+    "rank": 16,
+    "alpha": 32,
+    "epochs_adapted": 1,
+    "eval_n": 20,
+    "max_new_tokens": 512,
+    "max_seq": {
+      "k5_k10": 4096,
+      "k30": 8192
+    },
+    "device": "cpu (new runs); original smoke pair device not recorded in its artifact"
+  },
+  "pairs": [
+    {
+      "k": 10,
+      "seed": 0,
+      "label": "original smoke pair",
+      "adapted": {
+        "artifact": "cord_smoke_2026-08-08.json",
+        "mean_micro_f1": 0.7882,
+        "exact_match": 1,
+        "scored": 20,
+        "invalid_json": 0,
+        "no_completion": 0,
+        "adapt_seconds": 271.0,
+        "seed": 0,
+        "k": 10,
+        "arm": "adapted"
+      },
+      "kshot": {
+        "artifact": "cord_smoke_baseline_2026-08-08.json",
+        "mean_micro_f1": 0.6611,
+        "exact_match": 0,
+        "scored": 20,
+        "invalid_json": 1,
+        "no_completion": 0,
+        "adapt_seconds": 0.2,
+        "seed": 0,
+        "k": 10,
+        "arm": "kshot-no-ttt"
+      },
+      "delta_micro_f1": 0.1271
+    },
+    {
+      "k": 10,
+      "seed": 2,
+      "label": "new",
+      "adapted": {
+        "artifact": "cord_k10_seed2_adapted_2026-08-08.json",
+        "mean_micro_f1": 0.5406,
+        "exact_match": 1,
+        "scored": 20,
+        "invalid_json": 0,
+        "no_completion": 0,
+        "adapt_seconds": 496.2,
+        "seed": 2,
+        "k": 10,
+        "arm": "adapted"
+      },
+      "kshot": {
+        "artifact": "cord_k10_seed2_kshot_2026-08-08.json",
+        "mean_micro_f1": 0.5925,
+        "exact_match": 0,
+        "scored": 20,
+        "invalid_json": 1,
+        "no_completion": 0,
+        "adapt_seconds": 0.4,
+        "seed": 2,
+        "k": 10,
+        "arm": "kshot-no-ttt"
+      },
+      "delta_micro_f1": -0.0519
+    },
+    {
+      "k": 10,
+      "seed": 3,
+      "label": "new",
+      "adapted": {
+        "artifact": "cord_k10_seed3_adapted_2026-08-08.json",
+        "mean_micro_f1": 0.4788,
+        "exact_match": 0,
+        "scored": 20,
+        "invalid_json": 1,
+        "no_completion": 0,
+        "adapt_seconds": 404.1,
+        "seed": 3,
+        "k": 10,
+        "arm": "adapted"
+      },
+      "kshot": {
+        "artifact": "cord_k10_seed3_kshot_2026-08-08.json",
+        "mean_micro_f1": 0.5434,
+        "exact_match": 0,
+        "scored": 20,
+        "invalid_json": 0,
+        "no_completion": 0,
+        "adapt_seconds": 0.2,
+        "seed": 3,
+        "k": 10,
+        "arm": "kshot-no-ttt"
+      },
+      "delta_micro_f1": -0.0646
+    },
+    {
+      "k": 5,
+      "seed": 1,
+      "label": "new",
+      "adapted": {
+        "artifact": "cord_k5_seed1_adapted_2026-08-08.json",
+        "mean_micro_f1": 0.5341,
+        "exact_match": 0,
+        "scored": 20,
+        "invalid_json": 0,
+        "no_completion": 0,
+        "adapt_seconds": 77.9,
+        "seed": 1,
+        "k": 5,
+        "arm": "adapted"
+      },
+      "kshot": {
+        "artifact": "cord_k5_seed1_kshot_2026-08-08.json",
+        "mean_micro_f1": 0.5951,
+        "exact_match": 0,
+        "scored": 20,
+        "invalid_json": 0,
+        "no_completion": 0,
+        "adapt_seconds": 0.1,
+        "seed": 1,
+        "k": 5,
+        "arm": "kshot-no-ttt"
+      },
+      "delta_micro_f1": -0.061
+    },
+    {
+      "k": 30,
+      "seed": 1,
+      "label": "new",
+      "adapted": null,
+      "kshot": null,
+      "delta_micro_f1": null,
+      "status": "incomplete: adapted, kshot arm(s) missing"
+    }
+  ],
+  "delta_stats": {
+    "k10_across_seeds": {
+      "n": 3,
+      "mean": 0.0035,
+      "min": -0.0646,
+      "max": 0.1271
+    },
+    "all_pairs": {
+      "n": 4,
+      "mean": -0.0126,
+      "min": -0.0646,
+      "max": 0.1271
+    }
+  },
+  "run_wall_seconds": [
+    {
+      "k": 10,
+      "seed": 2,
+      "arm": "kshot",
+      "rc": 0,
+      "wall_seconds": 982
+    },
+    {
+      "k": 10,
+      "seed": 2,
+      "arm": "adapted",
+      "rc": 0,
+      "wall_seconds": 854
+    },
+    {
+      "k": 10,
+      "seed": 3,
+      "arm": "kshot",
+      "rc": 0,
+      "wall_seconds": 585
+    },
+    {
+      "k": 10,
+      "seed": 3,
+      "arm": "adapted",
+      "rc": 0,
+      "wall_seconds": 782
+    },
+    {
+      "k": 5,
+      "seed": 1,
+      "arm": "kshot",
+      "rc": 0,
+      "wall_seconds": 353
+    },
+    {
+      "k": 5,
+      "seed": 1,
+      "arm": "adapted",
+      "rc": 0,
+      "wall_seconds": 361
+    }
+  ],
+  "failures": [],
+  "skipped_arms": [],
+  "caveats": [
+    "n=1 schema (CORD receipts only); nothing here claims transfer beyond this schema.",
+    "The original smoke pair is seed 0 (per its artifacts), not seed 1 as some notes state; new seeds are 2,3 (k=10) and 1 (k=5, k=30).",
+    "Each seed reshuffles the 100-receipt pool, so demonstration AND eval sets differ across seeds; deltas are paired within a seed (same 20 eval receipts per arm) but F1 levels are not comparable across seeds.",
+    "eval_n=20 per arm from a 100-receipt validation slice, not the CORD test set; this is dev-side evidence per spec section 3.1, not the preregistered test shot.",
+    "k=30 arms required max_seq=8192 (k-shot prompts are 5.4-6.6k tokens; the smoke script default 4096 would produce zero completions). All other config identical to the smoke pair.",
+    "New runs are CPU (float32); adapt_seconds values are not comparable to any GPU-timed runs and carry no cost-curve weight.",
+    "Sampling is greedy top-1 via predictor samples=1, matching the smoke pair; no vote/rescore layer was active in either the original or these runs.",
+    "Deltas computed only from artifacts on disk; any arm listed under skipped_arms/failures has no number and none is imputed."
+  ]
+}

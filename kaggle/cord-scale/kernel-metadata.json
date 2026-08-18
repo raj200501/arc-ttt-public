@@ -1,0 +1,17 @@
+{
+  "id": "rajskashikar/arc-ttt-cord-scale",
+  "title": "arc-ttt cord scale",
+  "code_file": "bundled_pipeline.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "competition_sources": [],
+  "model_sources": [],
+  "dataset_sources": [
+    "rajskashikar/cord-validation"
+  ],
+  "kernel_sources": [],
+  "machine_shape": "NvidiaTeslaT4"
+}

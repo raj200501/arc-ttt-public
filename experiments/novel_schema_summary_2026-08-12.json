@@ -1,0 +1,69 @@
+{
+  "spec": "ENTERPRISE_EVAL_SPEC.md Addendum B (frozen 2026-08-12T19:40Z)",
+  "date": "2026-08-12",
+  "VERDICT": "GO",
+  "verdict_detail": "Gate PASSES at k=30: mean +0.4648 >= +0.05, CI excludes zero, sign test agrees (156W/0L, p=0.0). Claimable per Addendum B B.6, always next to the CORD negative.",
+  "gate_k30": {
+    "k": 30,
+    "role": "DECISION",
+    "pairs_complete": 3,
+    "missing_seeds": [],
+    "errored_seeds": [],
+    "heterogeneous_pairs_refused": [],
+    "validity_trips": [],
+    "seed_deltas": [
+      0.3604,
+      0.4901,
+      0.5438
+    ],
+    "mean_delta": 0.4648,
+    "receipt_level": {
+      "n": 158,
+      "mean": 0.4612,
+      "ci95": [
+        0.4284,
+        0.494
+      ],
+      "excludes_zero": true,
+      "sign_test": {
+        "wins": 156,
+        "losses": 0,
+        "ties": 2,
+        "p_value": 0.0
+      },
+      "mde_80pct": 0.0464
+    }
+  },
+  "comparability_k10": {
+    "k": 10,
+    "role": "comparability-only",
+    "pairs_complete": 3,
+    "missing_seeds": [],
+    "errored_seeds": [],
+    "heterogeneous_pairs_refused": [],
+    "validity_trips": [],
+    "seed_deltas": [
+      0.398,
+      0.4688,
+      0.4833
+    ],
+    "mean_delta": 0.45,
+    "receipt_level": {
+      "n": 180,
+      "mean": 0.45,
+      "ci95": [
+        0.4194,
+        0.4806
+      ],
+      "excludes_zero": true,
+      "sign_test": {
+        "wins": 171,
+        "losses": 0,
+        "ties": 9,
+        "p_value": 0.0
+      },
+      "mde_80pct": 0.0434
+    }
+  },
+  "k10_promotion_bar": "Preregistered: a k=10 positive with a k=30 non-pass is a FAIL and may not be quoted as the result."
+}

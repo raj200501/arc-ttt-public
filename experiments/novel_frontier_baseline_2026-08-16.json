@@ -1,0 +1,413 @@
+{
+  "artifact": "frontier k-shot baseline, novel-schema corpus (context arm, NOT a gate arm)",
+  "date": "2026-08-16",
+  "spec_relation": "Same corpus construction as Addendum B gate arms (make_task(seed, n_train=k, n_test=60)); scored on the first 20 eval docs per tenant (indices 0-19), which are construction-identical to the kernel arms' docs at those indices. Bounded subset \u2014 labeled as such, never pooled with the 60-doc arms.",
+  "model": "claude-fable-5 (frontier LLM, k-shot in-context, no adaptation)",
+  "protocol": "Prompts exported by scripts/export_novel_prompts.py with gold split to a file the predictor never read. Run via Claude agent harness: the model inferred each tenant's schema mapping from the 10 in-context demos and authored every prediction; a parsing script reformatted input documents for reading only. Single sample per receipt. Scored with arcttt.text_ttt.score_text_output (same scorer as all arms).",
+  "k": 10,
+  "per_tenant": [
+    {
+      "seed": 1,
+      "n": 20,
+      "mean_micro_f1": 1.0,
+      "exact_match": 20,
+      "valid_json": 20,
+      "results": [
+        {
+          "index": 0,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 1,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 2,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 3,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 4,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 5,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 6,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 7,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 8,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 9,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 10,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 11,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 12,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 13,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 14,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 15,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 16,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 17,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 18,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 19,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "n": 20,
+      "mean_micro_f1": 1.0,
+      "exact_match": 20,
+      "valid_json": 20,
+      "results": [
+        {
+          "index": 0,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 1,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 2,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 3,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 4,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 5,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 6,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 7,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 8,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 9,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 10,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 11,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 12,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 13,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 14,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 15,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 16,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 17,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 18,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 19,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "n": 20,
+      "mean_micro_f1": 1.0,
+      "exact_match": 20,
+      "valid_json": 20,
+      "results": [
+        {
+          "index": 0,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 1,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 2,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 3,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 4,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 5,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 6,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 7,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 8,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 9,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 10,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 11,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 12,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 13,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 14,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 15,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 16,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 17,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 18,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        },
+        {
+          "index": 19,
+          "valid_json": true,
+          "exact_match": true,
+          "micro_f1": 1.0
+        }
+      ]
+    }
+  ],
+  "pooled_mean_micro_f1": 1.0,
+  "pooled_n": 60,
+  "honest_framing_REQUIRED": "Context arm for the 'why not a frontier API' question \u2014 NOT part of any preregistered gate, and states nothing about the gate delta. The corpus is verbatim-extraction by design (novelty of schema, not difficulty of reasoning, is the manipulated variable), so a frontier model is expected to do well; the product claim next to this number is cost and data-exposure (payload asymmetry artifacts), never frontier quality parity on customers' real documents, which this corpus cannot speak to.",
+  "comparison_same_corpus": {
+    "qwen0.5b_kshot_k10_per_seed": {
+      "1": 0.5708,
+      "2": 0.4854,
+      "3": 0.5021
+    },
+    "qwen0.5b_adapted_k10_per_seed": {
+      "1": 0.9688,
+      "2": 0.9542,
+      "3": 0.9854
+    },
+    "source": "novel_schema_0.5b_k10_seed{1,2,3}_{arm}_2026-08-12.json (full 60-doc arms; this arm is a 20-doc subset)"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "run": "kaggle-v7 postmortem",
+  "date": "2026-08-08",
+  "source_log": "kaggle_v7_interactive_run.log",
+  "attempted_tasks": {
+    "w0": 80,
+    "w1": 87,
+    "total": 167,
+    "note": "from 'deadline margin reached at task N' lines (exact); progress lines print every 5"
+  },
+  "real_predictions": 40,
+  "failure_counts": {
+    "value_error_tasks": 98,
+    "oom_level_0": 52,
+    "oom_level_1": 19,
+    "oom_level_2": 1
+  },
+  "unique_valueerror_tasks": 98,
+  "root_cause": "_gather_cache iterated the KV cache generically; on the Kaggle image's transformers (>=5, no to_legacy_cache) iteration yields raw 4-D tensors and 'key, value' unpacking iterates the batch dim -> ValueError: too many values to unpack. Every task whose lockstep search reached a compaction gather died.",
+  "fix": "decode.py: explicit API probes (_cache_layers/_rebuild_like) over .layers / .key_cache / legacy tuples; never iterates the cache object. Regression-tested against a layered-only fake that reproduces the failure (tests/test_decode.py).",
+  "not_reproducible_locally": "local transformers 4.57.6 retains to_legacy_cache and pair iteration"
+}

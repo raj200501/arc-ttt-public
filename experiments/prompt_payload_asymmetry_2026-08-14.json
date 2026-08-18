@@ -1,0 +1,18 @@
+{
+  "artifact": "prompt payload asymmetry, CORD-v2 validation (100 receipts)",
+  "date_utc": "2026-08-14",
+  "method": "exact character counts over the project's own prompt rendering (text_task.from_cord_gt rule); no model, no sampling \u2014 reproducible from the public dataset by anyone",
+  "mean_document_chars": 124.1,
+  "mean_example_chars": 388.5,
+  "per_request_prompt_chars": {
+    "adapted_endpoint (document only)": 124.1,
+    "kshot_k10 (document + 10 examples)": 4009.1,
+    "kshot_k30 (document + 30 examples)": 11779.1
+  },
+  "payload_ratio": {
+    "k10_vs_adapted": 32.3,
+    "k30_vs_adapted": 94.9
+  },
+  "honest_framing_REQUIRED": "This is a COST statement, not a quality statement. It says what adaptation saves per request IF quality holds \u2014 and quality is exactly what the gates test. Until a gate passes, the only claimable sentence is: 'the k-shot baseline pays this payload ratio on every request; adaptation pays it once.' Never quote this ratio without the gate status next to it.",
+  "units_caveat": "Characters, not tokens \u2014 token ratios vary by tokenizer but track document length closely at this scale. Chars chosen so the number is verifiable without any model dependency."
+}

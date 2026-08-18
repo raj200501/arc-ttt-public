@@ -1,0 +1,68 @@
+{
+  "config": "t4-champ-dfs config, decoder fixed (ef6a387), greedy off",
+  "tasks": {
+    "e8686506": {
+      "seconds": 156.7,
+      "solved": 1,
+      "scored": 1,
+      "candidates": [
+        2
+      ]
+    },
+    "20270e3b": {
+      "seconds": 199.3,
+      "solved": 0,
+      "scored": 2,
+      "candidates": [
+        2,
+        1
+      ]
+    },
+    "28a6681f": {
+      "seconds": 149.0,
+      "solved": 0,
+      "scored": 1,
+      "candidates": [
+        0
+      ]
+    },
+    "7b5033c1": {
+      "seconds": 115.7,
+      "solved": 0,
+      "scored": 1,
+      "candidates": [
+        1
+      ]
+    },
+    "dbff022c": {
+      "seconds": 167.7,
+      "solved": 0,
+      "scored": 1,
+      "candidates": [
+        0
+      ]
+    },
+    "faa9f03d": {
+      "error": "oom"
+    },
+    "78332cb0": {
+      "seconds": 278.7,
+      "solved": 0,
+      "scored": 2,
+      "candidates": [
+        1,
+        1
+      ]
+    },
+    "3dc255db": {
+      "seconds": 364.9,
+      "solved": 0,
+      "scored": 1,
+      "candidates": [
+        2
+      ]
+    }
+  },
+  "solved": 1,
+  "scored": 9
+}

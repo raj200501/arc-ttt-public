@@ -1,0 +1,16 @@
+{
+  "run": "kaggle_v10_submission_scored",
+  "submission_row": 55525902,
+  "kernel_version": 10,
+  "public_score": 1.67,
+  "prior_scores": {"v8": 1.67, "v9": 1.67},
+  "scored_by_utc": "2026-08-15T21:36Z",
+  "intervention": "DFS time budget 60 -> 90 s/task; all else v9 verbatim; 149 real predictions (v9: 150)",
+  "preregistered_read_applied": {
+    "branch_taken": "FLAT",
+    "rule_as_written": "a rise means the search was time-bound; a second flat means neither probability mass (v9) nor time (v10) was binding - the bottleneck is candidate QUALITY and further budget levers are ruled out",
+    "conclusion": "Two clean single-variable nulls in a row. The DFS search, given 63% more probability mass and 50% more time, returns the same ~4/240. The truth is usually not in the candidate set at any affordable budget - candidate GENERATION quality (augmentation strategy, adapter rank/training, candidate ordering) is the binding constraint. That is a multi-week solver program, not a lever."
+  },
+  "strategic_consequence": "With the Sept-1 ~10% bar requiring ~4x hit rate and budget levers exhausted, leaderboard climbing is formally deprioritized: ARC's role in the company story is the harness, the incident discipline, the paper track (Nov 8), and the honest 'proving ground' framing - consistent with public rank ~983, which the materials never contradicted. GPU quota stays allocated to the enterprise gates.",
+  "telemetry_check": "v10 telemetry showed the widened budget engaged (150 deadline-stops of 372 frames searched), so the null is informative: time was genuinely offered and did not convert."
+}

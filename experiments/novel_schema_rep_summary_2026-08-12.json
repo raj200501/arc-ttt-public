@@ -1,0 +1,153 @@
+{
+  "spec": "ENTERPRISE_EVAL_SPEC.md B.8 (frozen 2026-08-15T21:25Z)",
+  "ROLE": "EXPLORATORY REPLICATION of the k=10 comparability point. NOT the gate. May never be quoted as the gate.",
+  "tenants": [
+    {
+      "tenant_seed": 1,
+      "n": 60,
+      "adapted_f1": 0.9688,
+      "kshot_f1": 0.5708,
+      "delta": 0.3979,
+      "sign_test": {
+        "wins": 55,
+        "losses": 0,
+        "ties": 5,
+        "p_value": 0.0
+      }
+    },
+    {
+      "tenant_seed": 2,
+      "n": 60,
+      "adapted_f1": 0.9542,
+      "kshot_f1": 0.4854,
+      "delta": 0.4688,
+      "sign_test": {
+        "wins": 57,
+        "losses": 0,
+        "ties": 3,
+        "p_value": 0.0
+      }
+    },
+    {
+      "tenant_seed": 3,
+      "n": 60,
+      "adapted_f1": 0.9854,
+      "kshot_f1": 0.5021,
+      "delta": 0.4833,
+      "sign_test": {
+        "wins": 59,
+        "losses": 0,
+        "ties": 1,
+        "p_value": 0.0
+      }
+    },
+    {
+      "tenant_seed": 4,
+      "n": 60,
+      "adapted_f1": 0.9667,
+      "kshot_f1": 0.4708,
+      "delta": 0.4958,
+      "sign_test": {
+        "wins": 59,
+        "losses": 1,
+        "ties": 0,
+        "p_value": 0.0
+      }
+    },
+    {
+      "tenant_seed": 5,
+      "n": 60,
+      "adapted_f1": 0.9792,
+      "kshot_f1": 0.625,
+      "delta": 0.3542,
+      "sign_test": {
+        "wins": 58,
+        "losses": 0,
+        "ties": 2,
+        "p_value": 0.0
+      }
+    },
+    {
+      "tenant_seed": 6,
+      "n": 60,
+      "adapted_f1": 0.9604,
+      "kshot_f1": 0.6208,
+      "delta": 0.3396,
+      "sign_test": {
+        "wins": 53,
+        "losses": 0,
+        "ties": 7,
+        "p_value": 0.0
+      }
+    },
+    {
+      "tenant_seed": 7,
+      "n": 60,
+      "adapted_f1": 0.9938,
+      "kshot_f1": 0.6208,
+      "delta": 0.3729,
+      "sign_test": {
+        "wins": 58,
+        "losses": 0,
+        "ties": 2,
+        "p_value": 0.0
+      }
+    },
+    {
+      "tenant_seed": 8,
+      "n": 60,
+      "adapted_f1": 0.9604,
+      "kshot_f1": 0.5833,
+      "delta": 0.3771,
+      "sign_test": {
+        "wins": 58,
+        "losses": 0,
+        "ties": 2,
+        "p_value": 0.0
+      }
+    },
+    {
+      "tenant_seed": 9,
+      "n": 60,
+      "adapted_f1": 0.9854,
+      "kshot_f1": 0.5729,
+      "delta": 0.4125,
+      "sign_test": {
+        "wins": 56,
+        "losses": 0,
+        "ties": 4,
+        "p_value": 0.0
+      }
+    },
+    {
+      "tenant_seed": 10,
+      "n": 60,
+      "adapted_f1": 0.9688,
+      "kshot_f1": 0.5167,
+      "delta": 0.4521,
+      "sign_test": {
+        "wins": 56,
+        "losses": 0,
+        "ties": 4,
+        "p_value": 0.0
+      }
+    }
+  ],
+  "tenants_negative": [],
+  "refused_heterogeneous": [],
+  "pooled": {
+    "n": 600,
+    "n_tenants": 10,
+    "mean": 0.4154,
+    "ci95": [
+      0.3982,
+      0.4326
+    ],
+    "sign_test": {
+      "wins": 569,
+      "losses": 1,
+      "ties": 30,
+      "p_value": 0.0
+    }
+  }
+}

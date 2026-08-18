@@ -1,0 +1,15 @@
+{
+  "run": "kaggle_v8_submission_scored",
+  "submission_row": 55392326,
+  "kernel": "rajskashikar/arc-ttt-v1",
+  "kernel_version": 8,
+  "submitted_utc": "2026-08-10T00:17:56Z",
+  "scored_by_utc": "2026-08-10T16:57:00Z",
+  "public_score": 1.67,
+  "context": {
+    "real_predictions": 150,
+    "tasks_with_real_attempt": 137,
+    "tasks_total": 240
+  },
+  "finding": "FIRST NONZERO leaderboard score. 1.67 public on ARC-AGI-2 hidden semi-private set ~= 4/240 tasks. Per-attempt hit rate ~2.7% (4/150), consistent with v7's 0/40 (expected ~1 at this rate; observed 0). Validates end-to-end pipeline (submission format, T4 pin, cache fix) AND establishes the honest capability floor: solver quality, not coverage, is now the binding constraint (coverage 150/240; even 240/240 at this hit rate projects ~2.7%)."
+}

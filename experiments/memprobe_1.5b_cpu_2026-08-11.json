@@ -1,0 +1,23 @@
+{
+  "probe": "cord 1.5b fp32 CPU fit",
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "rung": "1.5b",
+  "k": 10,
+  "date_utc": "2026-08-11",
+  "question": "does a 1.5B fp32 LoRA backward at 4096 tokens survive a Kaggle CPU session, or does it SIGKILL like the 4B fp32 attempt",
+  "device": "cpu",
+  "dtype": "float32",
+  "peak_rss_gb_after_load": 9.55,
+  "status": "complete",
+  "peak_rss_gb": 20.33,
+  "elapsed_minutes": 36.2,
+  "adapt_seconds": 1529.4,
+  "peak_rss_gb_after_backward": 20.33,
+  "predict_seconds": 625.3,
+  "got_completion": true,
+  "peak_rss_gb_after_predict": 20.33,
+  "projected_adapted_arm_minutes": 233.9,
+  "projected_kshot_arm_minutes": 208.4,
+  "projected_six_arm_hours": 22.1,
+  "sessions_needed_at_11h_budget": 3
+}

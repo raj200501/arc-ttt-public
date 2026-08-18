@@ -1,0 +1,476 @@
+{
+  "spec": "ENTERPRISE_EVAL_SPEC.md Addendum A \u2014 G-E2 decision record",
+  "date": "2026-08-11",
+  "gate": "mean paired delta at k=10 over seeds [1, 2, 3] >= +0.05 micro-F1",
+  "pairs": [
+    {
+      "rung": "0.5b",
+      "k": 5,
+      "seed": 1,
+      "adapted": {
+        "artifact": "cord_scale_0.5b_k5_seed1_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.5469,
+        "invalid_json": 0,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_0.5b_k5_seed1_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.621,
+        "invalid_json": 0,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": -0.0741
+    },
+    {
+      "rung": "0.5b",
+      "k": 5,
+      "seed": 2,
+      "adapted": {
+        "artifact": "cord_scale_0.5b_k5_seed2_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.6192,
+        "invalid_json": 1,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_0.5b_k5_seed2_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.6206,
+        "invalid_json": 0,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": -0.0014
+    },
+    {
+      "rung": "0.5b",
+      "k": 5,
+      "seed": 3,
+      "adapted": {
+        "artifact": "cord_scale_0.5b_k5_seed3_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.5712,
+        "invalid_json": 1,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_0.5b_k5_seed3_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.4624,
+        "invalid_json": 0,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": 0.1088
+    },
+    {
+      "rung": "0.5b",
+      "k": 10,
+      "seed": 1,
+      "adapted": {
+        "artifact": "cord_scale_0.5b_k10_seed1_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.5452,
+        "invalid_json": 3,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_0.5b_k10_seed1_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.5569,
+        "invalid_json": 2,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": -0.0117
+    },
+    {
+      "rung": "0.5b",
+      "k": 10,
+      "seed": 2,
+      "adapted": {
+        "artifact": "cord_scale_0.5b_k10_seed2_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.4956,
+        "invalid_json": 1,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_0.5b_k10_seed2_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.6506,
+        "invalid_json": 0,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": -0.155
+    },
+    {
+      "rung": "0.5b",
+      "k": 10,
+      "seed": 3,
+      "adapted": {
+        "artifact": "cord_scale_0.5b_k10_seed3_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.5126,
+        "invalid_json": 2,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_0.5b_k10_seed3_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.564,
+        "invalid_json": 0,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": -0.0514
+    },
+    {
+      "rung": "1.5b",
+      "k": 10,
+      "seed": 1,
+      "adapted": {
+        "artifact": "cord_scale_1.5b_k10_seed1_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.7355,
+        "invalid_json": 1,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_1.5b_k10_seed1_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.7243,
+        "invalid_json": 0,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": 0.0112
+    },
+    {
+      "rung": "1.5b",
+      "k": 10,
+      "seed": 2,
+      "adapted": {
+        "artifact": "cord_scale_1.5b_k10_seed2_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.4963,
+        "invalid_json": 5,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_1.5b_k10_seed2_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.6938,
+        "invalid_json": 1,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": -0.1975
+    },
+    {
+      "rung": "1.5b",
+      "k": 10,
+      "seed": 3,
+      "adapted": {
+        "artifact": "cord_scale_1.5b_k10_seed3_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.5785,
+        "invalid_json": 3,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_1.5b_k10_seed3_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.7381,
+        "invalid_json": 0,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": -0.1596
+    },
+    {
+      "rung": "4b",
+      "k": 5,
+      "seed": 1,
+      "adapted": {
+        "artifact": "cord_scale_4b_k5_seed1_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.8257,
+        "invalid_json": 0,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_4b_k5_seed1_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.7328,
+        "invalid_json": 0,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": 0.0929
+    },
+    {
+      "rung": "4b",
+      "k": 5,
+      "seed": 2,
+      "adapted": {
+        "artifact": "cord_scale_4b_k5_seed2_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.821,
+        "invalid_json": 0,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_4b_k5_seed2_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.6664,
+        "invalid_json": 2,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": 0.1546
+    },
+    {
+      "rung": "4b",
+      "k": 5,
+      "seed": 3,
+      "adapted": {
+        "artifact": "cord_scale_4b_k5_seed3_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.7457,
+        "invalid_json": 0,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_4b_k5_seed3_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.7865,
+        "invalid_json": 0,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": -0.0408
+    },
+    {
+      "rung": "4b",
+      "k": 10,
+      "seed": 1,
+      "adapted": {
+        "artifact": "cord_scale_4b_k10_seed1_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.7383,
+        "invalid_json": 1,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_4b_k10_seed1_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.7057,
+        "invalid_json": 2,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": 0.0326
+    },
+    {
+      "rung": "4b",
+      "k": 10,
+      "seed": 2,
+      "adapted": {
+        "artifact": "cord_scale_4b_k10_seed2_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.6402,
+        "invalid_json": 1,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_4b_k10_seed2_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.7249,
+        "invalid_json": 1,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": -0.0847
+    },
+    {
+      "rung": "4b",
+      "k": 10,
+      "seed": 3,
+      "adapted": {
+        "artifact": "cord_scale_4b_k10_seed3_adapted_2026-08-11.json",
+        "mean_micro_f1": 0.6637,
+        "invalid_json": 1,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "kshot": {
+        "artifact": "cord_scale_4b_k10_seed3_kshot_2026-08-11.json",
+        "mean_micro_f1": 0.7453,
+        "invalid_json": 1,
+        "scored": 20,
+        "env": "kernel"
+      },
+      "env": "kernel",
+      "delta_micro_f1": -0.0816
+    }
+  ],
+  "incomplete": [
+    {
+      "rung": "0.5b",
+      "k": 30,
+      "seed": 1,
+      "status": "incomplete",
+      "adapted": null,
+      "kshot": null
+    },
+    {
+      "rung": "0.5b",
+      "k": 30,
+      "seed": 2,
+      "status": "incomplete",
+      "adapted": null,
+      "kshot": null
+    },
+    {
+      "rung": "0.5b",
+      "k": 30,
+      "seed": 3,
+      "status": "incomplete",
+      "adapted": null,
+      "kshot": null
+    },
+    {
+      "rung": "1.5b",
+      "k": 5,
+      "seed": 1,
+      "status": "incomplete",
+      "adapted": null,
+      "kshot": null
+    },
+    {
+      "rung": "1.5b",
+      "k": 5,
+      "seed": 2,
+      "status": "incomplete",
+      "adapted": null,
+      "kshot": null
+    },
+    {
+      "rung": "1.5b",
+      "k": 5,
+      "seed": 3,
+      "status": "incomplete",
+      "adapted": null,
+      "kshot": null
+    },
+    {
+      "rung": "1.5b",
+      "k": 30,
+      "seed": 1,
+      "status": "incomplete",
+      "adapted": null,
+      "kshot": null
+    },
+    {
+      "rung": "1.5b",
+      "k": 30,
+      "seed": 2,
+      "status": "incomplete",
+      "adapted": null,
+      "kshot": null
+    },
+    {
+      "rung": "1.5b",
+      "k": 30,
+      "seed": 3,
+      "status": "incomplete",
+      "adapted": null,
+      "kshot": null
+    },
+    {
+      "rung": "4b",
+      "k": 30,
+      "seed": 1,
+      "status": "incomplete",
+      "adapted": {
+        "artifact": "cord_scale_4b_k30_seed1_adapted_2026-08-11.json",
+        "error": "oom",
+        "env": "local"
+      },
+      "kshot": {
+        "artifact": "cord_scale_4b_k30_seed1_kshot_2026-08-11.json",
+        "error": "oom",
+        "env": "local"
+      }
+    },
+    {
+      "rung": "4b",
+      "k": 30,
+      "seed": 2,
+      "status": "incomplete",
+      "adapted": {
+        "artifact": "cord_scale_4b_k30_seed2_adapted_2026-08-11.json",
+        "error": "oom",
+        "env": "local"
+      },
+      "kshot": {
+        "artifact": "cord_scale_4b_k30_seed2_kshot_2026-08-11.json",
+        "error": "oom",
+        "env": "local"
+      }
+    },
+    {
+      "rung": "4b",
+      "k": 30,
+      "seed": 3,
+      "status": "incomplete",
+      "adapted": {
+        "artifact": "cord_scale_4b_k30_seed3_adapted_2026-08-11.json",
+        "error": "oom",
+        "env": "local"
+      },
+      "kshot": {
+        "artifact": "cord_scale_4b_k30_seed3_kshot_2026-08-11.json",
+        "error": "oom",
+        "env": "local"
+      }
+    }
+  ],
+  "non_arm_files": [
+    "cord_scale_4b_cpu_oom_2026-08-11.json"
+  ],
+  "decisions": {
+    "0.5b": {
+      "k10_deltas": [
+        -0.0117,
+        -0.155,
+        -0.0514
+      ],
+      "k10_mean_delta": -0.0727,
+      "g_e2_pass": false
+    },
+    "1.5b": {
+      "k10_deltas": [
+        0.0112,
+        -0.1975,
+        -0.1596
+      ],
+      "k10_mean_delta": -0.1153,
+      "g_e2_pass": false
+    },
+    "4b": {
+      "k10_deltas": [
+        0.0326,
+        -0.0847,
+        -0.0816
+      ],
+      "k10_mean_delta": -0.0446,
+      "g_e2_pass": false
+    }
+  }
+}

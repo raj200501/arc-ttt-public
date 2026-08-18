@@ -1,0 +1,16 @@
+{
+  "incident": "novel-schema kernel v1 OOM-killed on Kaggle CPU during the first k=30 adaptation",
+  "date_utc": "2026-08-14T06:55Z",
+  "kernel": "rajskashikar/arc-ttt-novel-schema v1, status ERROR",
+  "symptom": "log shows model loaded, gradient-checkpointing notice, then 'Killed' at t=159s; no traceback, no artifact written",
+  "root_cause": "Linux OOM-killer, not a code error. LOO training at k=30 packs the other 29 examples as context, giving ~7.5k-token sequences; at fp32 the lm-head logits tensor is seq_len x 152k vocab x 4B ~= 4.6 GB, and log-softmax plus backward multiply that transient by ~3x - past the CPU session's RAM ceiling alongside model and activations. k=10 arms (~2.5k tokens) fit, which is why every CORD CPU gate arm succeeded and this failed on the FIRST k=30 arm.",
+  "retroactive_explanation": "The same arithmetic explains the 4B CPU replication producing zero arms in a full session: 4B fp32 weights alone (~16 GB) exceed the same ceiling. Its log ends identically - load, first adaptation, silence.",
+  "fix": "Same kernel, T4/bf16: 0.5B weights ~1 GB, k=30 logits ~2.3 GB in bf16 - comfortable in 16 GB VRAM. The entry already selects cuda/bf16 when available; the only change is enable_gpu in kernel metadata. Corpus, protocol, seeds, decode, scorer and pairing unchanged; every pair remains internally homogeneous (all arms cuda/bf16).",
+  "spec_action": "Dated execution revision appended to Addendum B B.7 - execution environment is not part of the frozen science, and the revision is recorded rather than silent.",
+  "constraint": "GPU quota refreshes 2026-08-15T00:00Z; the fixed kernel is pushed AFTER the refresh, alongside v10. No GPU work before it.",
+  "schedule_impact": "Verdict slips ~17h to the refresh, then arms run in minutes rather than hours on T4 - net likely FASTER than the CPU path would have been. Estimated verdict: Aug 15, morning UTC.",
+  "t4_fit_check": {
+    "estimate": "0.5B bf16: 1.0 GB weights + 3 x 2.5 GB logits transient + 1.5 GB slack ~= 10 GB peak vs 16 GB T4",
+    "validation": "the same estimator gives ~17 GB for 4B at k=30/8192 on T4 - which is the OOM actually observed on the 4B GPU rung - so the model is calibrated against a known failure, not just hopeful"
+  }
+}

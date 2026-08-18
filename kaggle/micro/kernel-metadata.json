@@ -1,0 +1,19 @@
+{
+  "id": "rajskashikar/arc-ttt-micro-train",
+  "title": "arc-ttt micro train",
+  "code_file": "bundled_pipeline.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": false,
+  "competition_sources": [
+    "arc-prize-2026-arc-agi-2"
+  ],
+  "model_sources": [
+    "qwen-lm/qwen2.5/Transformers/0.5b-instruct/1"
+  ],
+  "dataset_sources": [],
+  "kernel_sources": [],
+  "machine_shape": "NvidiaTeslaT4"
+}

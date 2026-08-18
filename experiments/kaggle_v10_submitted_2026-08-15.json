@@ -1,0 +1,12 @@
+{
+  "run": "kaggle_v10_submitted",
+  "submission_row": 55525902,
+  "kernel": "rajskashikar/arc-ttt-v1",
+  "kernel_version": 10,
+  "submitted_utc": "2026-08-15T10:50:29Z",
+  "change_from_v9": "DFS time budget 60 -> 90 s/task; everything else v9 verbatim",
+  "coverage": {"tasks_total": 240, "real_predictions": 149},
+  "run_telemetry": {"frames_searched": 372, "stop_reasons": {"exhausted": 222, "deadline": 150}, "candidates_found_total": 581, "wall_minutes": 526},
+  "preregistered_read": "TIME-budget lever after v9's FLAT null on the recall bound. If v10 rises: the search was time-bound and the next lever is throughput/batching. If FLAT again: neither probability mass nor time was binding at this coverage - the bottleneck is candidate QUALITY (augmentation/rank/ordering), and further budget levers are ruled out.",
+  "submission_note": "First CLI attempt (file upload) returned 400 AFTER the server created row 55525902; the retry reported '0 submissions remaining today', confirming the row is ours and the slot is spent. Single submission, no double-spend."
+}

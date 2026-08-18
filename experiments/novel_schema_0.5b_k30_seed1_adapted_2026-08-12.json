@@ -1,0 +1,393 @@
+{
+  "spec": "ENTERPRISE_EVAL_SPEC.md Addendum B (frozen 2026-08-12T19:40Z)",
+  "dataset": "synthetic novel-schema tenants (novel_schema.py), no external data",
+  "tenant": "gobozi",
+  "schema": "tenant gobozi\n  gopizu -> muvepu.gavepu (amount)\n  rumefu -> lokura.tanaku (code)\n  depolo -> muvepu.tidosu (date)\n  tomelu -> lokura.muzane (name)\n  kirozu -> muvepu.tumuze (amount)\n  safidi -> lokura.vokamu (code)\n  nugige -> muvepu.mapevo (date)\n  subose -> lokura.ralaba (name)",
+  "rung": "0.5b",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "arm": "adapted",
+  "k": 30,
+  "eval_n": 60,
+  "resumed": true,
+  "seed": 1,
+  "gate_role": "DECISION",
+  "validity": "ok",
+  "decode": "vote/rescore ON: 1 greedy + 4 sampled (T=0.7), canonical-JSON pooling, count+likelihood top-1",
+  "config": {
+    "rank": 16,
+    "alpha": 32,
+    "epochs": 1,
+    "max_new_tokens": 512,
+    "max_seq": 8192
+  },
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "adapt_seconds": 9651.4,
+  "exact_match": 51,
+  "scored": 60,
+  "invalid_json": 0,
+  "no_completion": 0,
+  "mean_micro_f1": 0.9812,
+  "results": [
+    {
+      "index": 0,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 1,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 2,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 3,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 4,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 5,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 6,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 7,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 8,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 9,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 10,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875
+    },
+    {
+      "index": 11,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 12,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875
+    },
+    {
+      "index": 13,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 14,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 15,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 16,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 17,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 18,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 19,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 20,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 21,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 22,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 23,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875
+    },
+    {
+      "index": 24,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875
+    },
+    {
+      "index": 25,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 26,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 27,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 28,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 29,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 30,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 31,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 32,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 33,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 34,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 35,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 36,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875
+    },
+    {
+      "index": 37,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875
+    },
+    {
+      "index": 38,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 39,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 40,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 41,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 42,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 43,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 44,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 45,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 46,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 47,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 48,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 49,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 50,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 51,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875
+    },
+    {
+      "index": 52,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 53,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 54,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875
+    },
+    {
+      "index": 55,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 56,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875
+    },
+    {
+      "index": 57,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 58,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    },
+    {
+      "index": 59,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0
+    }
+  ]
+}

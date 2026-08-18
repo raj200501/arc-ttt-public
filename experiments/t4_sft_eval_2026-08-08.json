@@ -1,0 +1,102 @@
+{
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "sft": {
+    "examples_built": 860,
+    "steps": 860,
+    "skipped": 0,
+    "loss_first": 0.5404655933380127,
+    "loss_last": 0.1485566347837448,
+    "seconds": 552.6,
+    "lora": {
+      "r": 32,
+      "alpha": 64,
+      "lr": 0.0001
+    },
+    "augmentations": 2,
+    "task_limit": 400
+  },
+  "eval": {
+    "tasks": {
+      "e8686506": {
+        "seconds": 94.6,
+        "solved": 0,
+        "scored": 1
+      },
+      "20270e3b": {
+        "seconds": 145.9,
+        "solved": 0,
+        "scored": 2
+      },
+      "28a6681f": {
+        "seconds": 39.3,
+        "solved": 0,
+        "scored": 1
+      },
+      "7b5033c1": {
+        "seconds": 120.2,
+        "solved": 0,
+        "scored": 1
+      },
+      "dbff022c": {
+        "seconds": 109.4,
+        "solved": 0,
+        "scored": 1
+      },
+      "faa9f03d": {
+        "seconds": 77.2,
+        "solved": 0,
+        "scored": 1
+      },
+      "78332cb0": {
+        "seconds": 66.8,
+        "solved": 0,
+        "scored": 2
+      },
+      "3dc255db": {
+        "seconds": 62.4,
+        "solved": 0,
+        "scored": 1
+      },
+      "136b0064": {
+        "seconds": 126.3,
+        "solved": 0,
+        "scored": 1
+      },
+      "eee78d87": {
+        "seconds": 129.2,
+        "solved": 0,
+        "scored": 1
+      },
+      "f931b4a8": {
+        "seconds": 52.0,
+        "solved": 0,
+        "scored": 2
+      },
+      "97d7923e": {
+        "seconds": 98.2,
+        "solved": 0,
+        "scored": 1
+      },
+      "b0039139": {
+        "seconds": 139.7,
+        "solved": 0,
+        "scored": 2
+      },
+      "dd6b8c4b": {
+        "seconds": 92.6,
+        "solved": 0,
+        "scored": 2
+      },
+      "d35bdbdc": {
+        "seconds": 110.2,
+        "solved": 0,
+        "scored": 3
+      }
+    },
+    "solved": 0,
+    "scored": 22,
+    "accuracy": 0.0,
+    "seconds": 1464.1,
+    "note": "15 smallest public eval tasks; TTT pipeline at smoke config"
+  }
+}

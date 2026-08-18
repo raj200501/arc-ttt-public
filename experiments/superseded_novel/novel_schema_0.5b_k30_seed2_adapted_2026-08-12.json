@@ -1,0 +1,9 @@
+{
+  "rung": "0.5b",
+  "arm": "adapted",
+  "k": 30,
+  "seed": 2,
+  "device": "cuda",
+  "error": "oom",
+  "note": "arm OOMed at frozen config; no number imputed"
+}
