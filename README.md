@@ -7,7 +7,7 @@ approach — plus cost-vs-accuracy TTT curves on enterprise-shaped tail tasks.
 **Status (2026-08-17): the preregistered k=30 adaptation gate decided GO —
 mean +46.5 micro-F1 over 30-shot prompting across three novel-schema
 seeds (+36.0 / +49.0 / +54.4 vs a +5 bar frozen 2026-08-12 before any
-data; receipt-level sign test 156W/0L, p=0.0; CI excludes zero;
+data; receipt-level sign test 156W/0L (p < 1e-15); CI excludes zero;
 `experiments/novel_schema_summary_2026-08-12.json`).** Stated per the
 spec's claim rule, always beside the CORD negative: on CORD receipts —
 a domain the base model already knows — the same adaptation recipe
