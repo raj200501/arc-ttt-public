@@ -38,6 +38,24 @@ probabilities of 85–97% (lp −0.16..−0.03) to true solutions under our
 serialization; current iteration targets candidate recall (search) and TTT
 sharpening. No claims beyond the artifacts in `experiments/`.
 
+## Verify the headline in 60 seconds
+
+Don't trust our summary — recompute it. Zero dependencies:
+
+```
+python3 scripts/verify_verdict.py
+```
+
+It rebuilds every statistic of the k=30 gate from the raw per-receipt
+records (per-arm means, paired deltas, sign test, receipt-level and
+cluster-level CIs, validity windows, attrition) and cross-checks the
+published summary, exiting nonzero on any mismatch. To re-run the
+underlying experiment itself, any free Kaggle account suffices — the
+kernel entries under `kaggle/` are the exact runners that produced the
+artifacts. If you find any claim in this README not backed by its cited
+artifact, open an issue; we publish our corrections (spec B.9) with the
+same prominence as our results.
+
 ## What's in the harness
 
 - **Clean-room reproduction** of the NVARC 2025 winning recipe from its
