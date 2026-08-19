@@ -1129,3 +1129,19 @@ kshot-with-prompt (F.1 Read 1 bar: +5), −4.1 vs adapted-with-prompt
 PRIMARY-VERIFIED — all 60 stored predictions re-scored against
 regenerated gold match recorded scores. F.1 binds when seeds 2 and 3
 land.
+
+### D.7 VERDICT: FAIL (decided 2026-08-19 06:33Z, all three seeds banked)
+
+Read 1 (retention): seed-mean −98.4 F1 vs the −5.0 bar — FAIL.
+Read 2 (unified claim): seed-mean −51.9 F1, 0W/155L — FAIL.
+D.5 comparability: adapter contribution over no-adapter is +0.0 — in
+document-only serving, the demo-trained adapter does nothing.
+Per D.3, stated verbatim in every material that carried the payload
+economics: "document-only quality does not survive; the serving-cost
+claim applies only with demos included, whose payload advantage is
+smaller and is republished accordingly." Mechanism: D.6 (prose
+collapse; adapters trained with demonstration context encode the
+schema as context-conditioned behavior). The corrective, preregistered
+before this verdict (Addendum F, doc-only-TRAINED adapters), has its
+first seed banked at 0.9407 with 60/60 valid JSON (F.3 interim,
+PRIMARY-VERIFIED); F's verdict binds on seeds 2 and 3.

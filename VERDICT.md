@@ -18,8 +18,8 @@ issue.
 | Frontier context (comparability, self-run) | frontier k-shot 1.00; adapted 0.5B 0.954–0.985 (k=10 arms) | `experiments/novel_frontier_baseline_2026-08-16.json` | artifact |
 | Payload asymmetry (document-only endpoint, this corpus) | 20.0x–58.0x | `experiments/novel_payload_asymmetry_2026-08-15.json` | artifact |
 | Document-only serving, demo-trained adapter (Addendum D, partial) | seeds 2,3: both 0.0000, 0/60 valid JSON (prose collapse; mechanism reproduced — spec D.6; seed-2 fresh-adapter run rules out checkpoint staleness) | `experiments/novel_schema_d_0.5b_k30_seed{2,3}_doconly_2026-08-18.json` | artifacts |
-| Document-only, no adapter (D.5 comparability) | seeds 1,2: 0.0000, 0/60 valid JSON | `experiments/novel_schema_d_0.5b_k30_seed{1,2}_doczero_2026-08-18.json` | artifacts |
-| Addendum D verdict | PENDING (seed 1 doconly in flight; bars frozen in D.2) | — | spec |
+| Document-only, no adapter (D.5 comparability) | seeds 1,2: 0.0000, 0/60 valid JSON (dz-s3 in flight) | `experiments/novel_schema_d_0.5b_k30_seed{1,2}_doczero_2026-08-18.json` | artifacts |
+| **Addendum D verdict** | **FAIL, both reads** (retention −98.4 vs −5 bar; unified −51.9, 0W/155L; all seeds 0.0000; adapter contribution +0.0 over no-adapter) — published per the pre-written D.3 branch; corrective is Addendum F | `experiments/novel_schema_d_*` + spec D.7 | `read_addendum_d.py` |
 | Doc-only-TRAINED adapters (Addendum F) | seed-1 interim: 0.9407, 60/60 valid, +32.0 vs prompted baseline, adapt 271s; PRIMARY-VERIFIED; verdict binds on 3 seeds (bars frozen pre-run, OTS) | `experiments/novel_schema_f_0.5b_k30_seed1_docadapted_2026-08-19.json` | `verify_from_primary.py` |
 | Diverse-geometry gate (Addendum E) | PENDING (6 seeds, bars frozen E.2) | — | spec + OTS |
 | ARC Prize track | 1.67 public ×3 (v8/v9/v10); climb formally deprioritized | `experiments/kaggle_v{8,9,10}_scored_*.json` | artifacts |
