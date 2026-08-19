@@ -1,0 +1,83 @@
+{
+ "artifact": "E-r2 tokenizer seed screen (length-only, outcome-blind; spec E-r2)",
+ "geometry": "diverse-compact",
+ "k": 30,
+ "eval_n": 60,
+ "tokenizer": "Qwen/Qwen2.5-0.5B-Instruct (chat template)",
+ "screen_bound": 7900,
+ "sequence_budget": 8192,
+ "seeds": [
+  {
+   "seed": 201,
+   "tenant": "femogo",
+   "max_loo_train_tokens": 8536,
+   "decode_prompt_tokens_min": 8693,
+   "decode_prompt_tokens_max": 8707,
+   "eligible": false
+  },
+  {
+   "seed": 202,
+   "tenant": "redeno",
+   "max_loo_train_tokens": 8438,
+   "decode_prompt_tokens_min": 8593,
+   "decode_prompt_tokens_max": 8609,
+   "eligible": false
+  },
+  {
+   "seed": 203,
+   "tenant": "deguda",
+   "max_loo_train_tokens": 6495,
+   "decode_prompt_tokens_min": 6619,
+   "decode_prompt_tokens_max": 6635,
+   "eligible": true
+  },
+  {
+   "seed": 204,
+   "tenant": "nigono",
+   "max_loo_train_tokens": 7000,
+   "decode_prompt_tokens_min": 7136,
+   "decode_prompt_tokens_max": 7152,
+   "eligible": true
+  },
+  {
+   "seed": 205,
+   "tenant": "medemi",
+   "max_loo_train_tokens": 8819,
+   "decode_prompt_tokens_min": 8986,
+   "decode_prompt_tokens_max": 9003,
+   "eligible": false
+  },
+  {
+   "seed": 206,
+   "tenant": "fefine",
+   "max_loo_train_tokens": 6745,
+   "decode_prompt_tokens_min": 6873,
+   "decode_prompt_tokens_max": 6886,
+   "eligible": true
+  },
+  {
+   "seed": 207,
+   "tenant": "romide",
+   "max_loo_train_tokens": 6524,
+   "decode_prompt_tokens_min": 6645,
+   "decode_prompt_tokens_max": 6657,
+   "eligible": true
+  },
+  {
+   "seed": 208,
+   "tenant": "mobofu",
+   "max_loo_train_tokens": 6869,
+   "decode_prompt_tokens_min": 6993,
+   "decode_prompt_tokens_max": 7006,
+   "eligible": true
+  },
+  {
+   "seed": 209,
+   "tenant": "podiga",
+   "max_loo_train_tokens": 7285,
+   "decode_prompt_tokens_min": 7428,
+   "decode_prompt_tokens_max": 7447,
+   "eligible": true
+  }
+ ]
+}

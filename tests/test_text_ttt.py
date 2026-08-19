@@ -259,7 +259,6 @@ def test_score_text_output_metrics_and_invalid_json() -> None:
 # -- tiny-model end-to-end ---------------------------------------------------
 
 pytest.importorskip("transformers")
-pytest.importorskip("peft")
 
 import torch  # noqa: E402
 from tokenizers import Tokenizer, models, pre_tokenizers  # noqa: E402
@@ -428,12 +427,14 @@ def test_predict_text_voted_selects_majority_completion() -> None:
     from arcttt.text_ttt import predict_text_voted
 
     class FakePredictor:
-        def predict_text(self, task: object, index: int, samples: int) -> list[str]:
+        def predict_text(self, task: object, index: int, samples: int,
+                         include_demos: bool = True) -> list[str]:
             assert samples == 5
             return ['{"a": 1}', '{"a":1}', '{"a": 2}']
 
         def log_probabilities_text(
-            self, task: object, index: int, outputs: list[str]
+            self, task: object, index: int, outputs: list[str],
+            include_demos: bool = True,
         ) -> list[float]:
             # the odd one out is the model's single favorite; the pool wins
             return [-2.0 if "1" in text else -0.01 for text in outputs]

@@ -41,6 +41,7 @@ def main() -> int:
         return 2
 
     r1, r2, comp = [], [], []
+    r1_deltas_all = []
     r2_deltas_all = []
     for s in SEEDS:
         d = scores(EXP / f"novel_schema_d_0.5b_k30_seed{s}_doconly_{D_DATE}.json")
@@ -52,6 +53,7 @@ def main() -> int:
         m2 = sum(d[i] - k[i] for i in i2) / len(i2)
         r1.append(m1)
         r2.append(m2)
+        r1_deltas_all += [d[i] - a[i] for i in i1]
         r2_deltas_all += [d[i] - k[i] for i in i2]
         line = (f"seed {s}: doconly {sum(d.values())/len(d):.4f}  "
                 f"retention {m1*100:+.1f} (n={len(i1)})  "
@@ -73,12 +75,21 @@ def main() -> int:
     lo2 = mean2 - 1.96 * sd2 / math.sqrt(n)
     wins = sum(x > 1e-12 for x in r2_deltas_all)
     losses = sum(x < -1e-12 for x in r2_deltas_all)
+    ties = n - wins - losses
 
-    read1 = "PASS" if m_r1 >= -0.05 else "FAIL"
+    # Read 1 sign test (frozen D.2: seed-mean bar WITH the sign test not
+    # contradicting) — pooled retention deltas
+    n1 = len(r1_deltas_all)
+    wins1 = sum(x > 1e-12 for x in r1_deltas_all)
+    losses1 = sum(x < -1e-12 for x in r1_deltas_all)
+    ties1 = n1 - wins1 - losses1
+
+    read1 = "PASS" if (m_r1 >= -0.05 and wins1 >= losses1) else "FAIL"
     read2 = "PASS" if (m_r2 >= 0.05 and lo2 > 0 and wins > losses) else "FAIL"
-    print(f"\nRead 1 (retention, bar >= -5.0): seed-mean {m_r1*100:+.2f} F1 -> {read1}")
+    print(f"\nRead 1 (retention, bar >= -5.0): seed-mean {m_r1*100:+.2f} F1, "
+          f"sign {wins1}W/{losses1}L/{ties1}T -> {read1}")
     print(f"Read 2 (unified claim, bar >= +5.0): seed-mean {m_r2*100:+.2f} F1, "
-          f"receipt CI low {lo2*100:+.1f}, sign {wins}W/{losses}L -> {read2}")
+          f"receipt CI low {lo2*100:+.1f}, sign {wins}W/{losses}L/{ties}T -> {read2}")
     if comp:
         print(f"D.5 comparability (non-gating): adapter contribution "
               f"seed-mean {sum(comp)/len(comp)*100:+.1f} F1 over doczero")

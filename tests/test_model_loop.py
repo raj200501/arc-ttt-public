@@ -6,7 +6,6 @@ import pytest
 import torch
 
 pytest.importorskip("transformers")
-pytest.importorskip("peft")
 
 from tokenizers import Tokenizer, models, pre_tokenizers  # noqa: E402
 from transformers import PreTrainedTokenizerFast, Qwen2Config, Qwen2ForCausalLM  # noqa: E402

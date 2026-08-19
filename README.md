@@ -13,8 +13,8 @@ spec's claim rule, always beside the CORD negative: on CORD receipts —
 a domain the base model already knows — the same adaptation recipe
 FAILED its preregistered gates at all three scales tested (Addendum A:
 −7.3 / −11.5 / −4.5 F1). Adaptation buys novelty, not general quality,
-and we publish our negatives. Replication: 10/10 fresh tenants at k=10,
-+41.5 pooled (569W/1L; cuda/bf16 per B.8). The k=30 gate pairs ran
+and we publish our negatives. Replication: 7 fresh tenants at k=10, pooled with
+the 3 gate tenants: +41.5 pooled, 569W/1L (cuda/bf16 per B.8). The k=30 gate pairs ran
 CPU/fp32 on free Kaggle kernels; artifacts carry full receipt trails,
 including `resumed` stamps from the checkpoint/resume system that
 survived repeated infrastructure kill-strikes during the gate.
@@ -29,7 +29,7 @@ coverage). The road there is documented failure by failure: v6 scored
 incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
-binding constraint, and that is the current work. 83 offline tests
+binding constraint, and that is the current work. 128 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -112,7 +112,7 @@ same prominence as our results.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 83 offline tests (tiny in-test models; no downloads).
+- `tests/` — 128 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured
@@ -120,8 +120,6 @@ same prominence as our results.
 - `scripts/` — dataset fetch and eval helper scripts.
 - `paper/` — ARC paper-track outline (reproduction + ablations + costs).
 - `docs/research/` — competition mechanics and recipe notes (web-verified).
-- `docs/strategy/` — decision documents behind this bet.
-  **Remove via fresh-history export before making the repo public.**
 
 ## License
 

@@ -47,6 +47,6 @@ fi
 echo "== re-pushing ${KERNEL}"
 (cd "${ROOT}/kaggle" && kaggle kernels push -p "novel-schema-${SUFFIX}") || {
   echo "push failed (slot cap?) — delete+repush:";
-  yes | kaggle kernels delete "${KERNEL}";
+  kaggle kernels delete "${KERNEL}" <<< "y";
   (cd "${ROOT}/kaggle" && kaggle kernels push -p "novel-schema-${SUFFIX}"); }
 echo "== resumed ${KERNEL}"
