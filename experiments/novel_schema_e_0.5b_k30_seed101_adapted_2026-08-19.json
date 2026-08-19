@@ -1,0 +1,273 @@
+{
+  "spec": "ENTERPRISE_EVAL_SPEC.md Addendum B (frozen 2026-08-12T19:40Z)",
+  "dataset": "synthetic novel-schema tenants (novel_schema.py), no external data",
+  "tenant": "pikiti",
+  "schema": "tenant pikiti\n  limosa -> bozesi.pilafi (amount)\n  ginepu -> tepage.zunubi (name)\n  kebaso -> bozesi.mapiga (name)\n  difine -> safidi.nagisi (date)\n  mabupi -> bozesi.nedeki (code)\n  sevetu -> bozesi.vuvove (name)\n  tozasu -> safidi.dabulu (amount)\n  ketusa -> pugenu.sunenu (amount)\n  fidemi -> pugenu.birebo (date)\n  divali -> tepage.tobogu (amount)\n  mogodo -> tepage.susisi (amount)\n  doniga -> pugenu.nigome (name)",
+  "rung": "0.5b",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "arm": "adapted",
+  "k": 30,
+  "eval_n": 60,
+  "resumed": false,
+  "seed": 101,
+  "gate_role": "DECISION",
+  "validity": "ok",
+  "decode": "vote/rescore ON: 1 greedy + 4 sampled (T=0.7), canonical-JSON pooling, count+likelihood top-1",
+  "config": {
+    "rank": 16,
+    "alpha": 32,
+    "epochs": 1,
+    "max_new_tokens": 512,
+    "max_seq": 8192
+  },
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "adapt_seconds": 1.0,
+  "exact_match": 0,
+  "scored": 0,
+  "invalid_json": 0,
+  "no_completion": 60,
+  "mean_micro_f1": 0.0,
+  "results": [
+    {
+      "index": 0,
+      "error": "no completion"
+    },
+    {
+      "index": 1,
+      "error": "no completion"
+    },
+    {
+      "index": 2,
+      "error": "no completion"
+    },
+    {
+      "index": 3,
+      "error": "no completion"
+    },
+    {
+      "index": 4,
+      "error": "no completion"
+    },
+    {
+      "index": 5,
+      "error": "no completion"
+    },
+    {
+      "index": 6,
+      "error": "no completion"
+    },
+    {
+      "index": 7,
+      "error": "no completion"
+    },
+    {
+      "index": 8,
+      "error": "no completion"
+    },
+    {
+      "index": 9,
+      "error": "no completion"
+    },
+    {
+      "index": 10,
+      "error": "no completion"
+    },
+    {
+      "index": 11,
+      "error": "no completion"
+    },
+    {
+      "index": 12,
+      "error": "no completion"
+    },
+    {
+      "index": 13,
+      "error": "no completion"
+    },
+    {
+      "index": 14,
+      "error": "no completion"
+    },
+    {
+      "index": 15,
+      "error": "no completion"
+    },
+    {
+      "index": 16,
+      "error": "no completion"
+    },
+    {
+      "index": 17,
+      "error": "no completion"
+    },
+    {
+      "index": 18,
+      "error": "no completion"
+    },
+    {
+      "index": 19,
+      "error": "no completion"
+    },
+    {
+      "index": 20,
+      "error": "no completion"
+    },
+    {
+      "index": 21,
+      "error": "no completion"
+    },
+    {
+      "index": 22,
+      "error": "no completion"
+    },
+    {
+      "index": 23,
+      "error": "no completion"
+    },
+    {
+      "index": 24,
+      "error": "no completion"
+    },
+    {
+      "index": 25,
+      "error": "no completion"
+    },
+    {
+      "index": 26,
+      "error": "no completion"
+    },
+    {
+      "index": 27,
+      "error": "no completion"
+    },
+    {
+      "index": 28,
+      "error": "no completion"
+    },
+    {
+      "index": 29,
+      "error": "no completion"
+    },
+    {
+      "index": 30,
+      "error": "no completion"
+    },
+    {
+      "index": 31,
+      "error": "no completion"
+    },
+    {
+      "index": 32,
+      "error": "no completion"
+    },
+    {
+      "index": 33,
+      "error": "no completion"
+    },
+    {
+      "index": 34,
+      "error": "no completion"
+    },
+    {
+      "index": 35,
+      "error": "no completion"
+    },
+    {
+      "index": 36,
+      "error": "no completion"
+    },
+    {
+      "index": 37,
+      "error": "no completion"
+    },
+    {
+      "index": 38,
+      "error": "no completion"
+    },
+    {
+      "index": 39,
+      "error": "no completion"
+    },
+    {
+      "index": 40,
+      "error": "no completion"
+    },
+    {
+      "index": 41,
+      "error": "no completion"
+    },
+    {
+      "index": 42,
+      "error": "no completion"
+    },
+    {
+      "index": 43,
+      "error": "no completion"
+    },
+    {
+      "index": 44,
+      "error": "no completion"
+    },
+    {
+      "index": 45,
+      "error": "no completion"
+    },
+    {
+      "index": 46,
+      "error": "no completion"
+    },
+    {
+      "index": 47,
+      "error": "no completion"
+    },
+    {
+      "index": 48,
+      "error": "no completion"
+    },
+    {
+      "index": 49,
+      "error": "no completion"
+    },
+    {
+      "index": 50,
+      "error": "no completion"
+    },
+    {
+      "index": 51,
+      "error": "no completion"
+    },
+    {
+      "index": 52,
+      "error": "no completion"
+    },
+    {
+      "index": 53,
+      "error": "no completion"
+    },
+    {
+      "index": 54,
+      "error": "no completion"
+    },
+    {
+      "index": 55,
+      "error": "no completion"
+    },
+    {
+      "index": 56,
+      "error": "no completion"
+    },
+    {
+      "index": 57,
+      "error": "no completion"
+    },
+    {
+      "index": 58,
+      "error": "no completion"
+    },
+    {
+      "index": 59,
+      "error": "no completion"
+    }
+  ]
+}

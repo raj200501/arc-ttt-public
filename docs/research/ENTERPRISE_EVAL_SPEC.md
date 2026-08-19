@@ -1174,3 +1174,22 @@ regime: ~272s per tenant (~40x cheaper than LOO-context training).
 The B.9.1 caveat is hereby retired per D.3/F.1: the quality claim and
 the 20-58x payload economics hold in ONE measured configuration, with
 raw predictions published and independently re-scorable.
+
+### E.4 UNINFORMATIVE + Amendment E-r1 (frozen 2026-08-19T06:45Z, before any E-r1 run)
+
+Seed-101 adapted arm: 60/60 "no completion", adapt_seconds=1.0 — every
+LOO training sequence AND every decode prompt exceeded the frozen
+8192-token budget. The E.1 diverse ranges (fields up to 12, distractors
+up to 7) are structurally unmeasurable at k=30 under B's frozen
+max_sequence_tokens for large-geometry draws. Per the B.6 uninformative
+branch: reported as such (the artifact stays banked as the record; it
+is not evidence either way), and the corpus is re-scoped BEFORE any
+further diverse data:
+
+**E-r1:** geometry "diverse-compact" — groups 2-3, fields 6-9,
+distractors 3-5 (still shape-varying per tenant, unlike fixed mode);
+seeds {201..206} (fresh range; the 101-106 series is retired to avoid
+mixing protocols); every other value unchanged from E.1/E.2 including
+the +5 bar, both-statistics rule, and primary-evidence storage. The
+in-flight 101/102-series kernels are cancelled — their data would be
+unpoolable under the amendment.
