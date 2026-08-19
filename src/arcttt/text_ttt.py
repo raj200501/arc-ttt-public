@@ -35,23 +35,52 @@ from arcttt.text_task import TextTask, TextTaskFormatError
 # -- corpus construction -----------------------------------------------------
 
 
-def text_task_to_messages(task: TextTask, test_index: int = 0) -> tuple[ChatTurn, ...]:
+def text_task_to_messages(
+    task: TextTask, test_index: int = 0, include_demos: bool = True
+) -> tuple[ChatTurn, ...]:
     """Serialize demonstrations plus one test input as chat turns.
 
     The model is expected to complete the final assistant turn with the
     output text (for CORD: the canonical ``gt_parse`` JSON).
+    ``include_demos=False`` is the document-only serving configuration
+    (Addendum D): the prompt carries ONLY the test document; any task
+    knowledge must live in the adapter weights.
     """
 
     if not 0 <= test_index < len(task.test):
         raise TextTaskFormatError(f"{task.task_id}: test index {test_index} out of range")
     turns: list[ChatTurn] = []
+    if include_demos:
+        for pair in task.train:
+            if pair.output_text is None:
+                raise TextTaskFormatError(f"{task.task_id}: train pair missing output")
+            turns.append(ChatTurn("user", pair.input_text))
+            turns.append(ChatTurn("assistant", pair.output_text))
+    turns.append(ChatTurn("user", task.test[test_index].input_text))
+    return tuple(turns)
+
+
+def text_docmode_training_examples(
+    task: TextTask,
+) -> tuple[tuple[ChatTurn, ...], ...]:
+    """Document-only training sequences (Addendum F).
+
+    One example per train pair: (user: document) -> (assistant: target
+    JSON), with NO leave-one-out context. Trains the adapter on exactly
+    the serving configuration the payload economics describe — the
+    corrective to the D.6 finding that LOO-context adapters produce
+    prose, not JSON, on bare documents.
+    """
+
+    examples = []
     for pair in task.train:
         if pair.output_text is None:
             raise TextTaskFormatError(f"{task.task_id}: train pair missing output")
-        turns.append(ChatTurn("user", pair.input_text))
-        turns.append(ChatTurn("assistant", pair.output_text))
-    turns.append(ChatTurn("user", task.test[test_index].input_text))
-    return tuple(turns)
+        examples.append((
+            ChatTurn("user", pair.input_text),
+            ChatTurn("assistant", pair.output_text),
+        ))
+    return tuple(examples)
 
 
 def text_ttt_training_examples(
@@ -129,24 +158,28 @@ class TextPredictor(CausalLMPredictor):
             examples.extend(text_ttt_training_examples(task, seed))
         self.adapt_on_examples(examples)
 
-    def predict_text(self, task: TextTask, test_index: int, samples: int) -> list[str]:
+    def predict_text(
+        self, task: TextTask, test_index: int, samples: int,
+        include_demos: bool = True,
+    ) -> list[str]:
         """Raw completion texts (greedy first, then samples); empty ones dropped.
 
         Parsing/validation is the scorer's job (``score_text_output``), so the
         voting layer can still count near-miss candidates by canonical form.
         """
 
-        prompt = self._prompt_ids(text_task_to_messages(task, test_index))
+        prompt = self._prompt_ids(text_task_to_messages(task, test_index, include_demos))
         if prompt is None:
             return []
         return [text.strip() for text in self._sample_texts(prompt, samples) if text.strip()]
 
     def log_probabilities_text(
-        self, task: TextTask, test_index: int, outputs: Sequence[str]
+        self, task: TextTask, test_index: int, outputs: Sequence[str],
+        include_demos: bool = True,
     ) -> list[float]:
         """Mean supervised-token log-probability per candidate output text."""
 
-        base = text_task_to_messages(task, test_index)
+        base = text_task_to_messages(task, test_index, include_demos)
         return self.score_turn_sequences(
             [base + (ChatTurn("assistant", output),) for output in outputs]
         )
@@ -229,7 +262,8 @@ def select_text_attempts(
 
 
 def predict_text_voted(
-    predictor: TextPredictor, task: TextTask, test_index: int, samples: int = 5
+    predictor: TextPredictor, task: TextTask, test_index: int, samples: int = 5,
+    include_demos: bool = True,
 ) -> str | None:
     """The Addendum-A decode: greedy + sampled pool -> vote/rescore -> top-1.
 
@@ -239,7 +273,7 @@ def predict_text_voted(
     (``log_probabilities_text``), computed once per distinct text.
     """
 
-    texts = predictor.predict_text(task, test_index, samples)
+    texts = predictor.predict_text(task, test_index, samples, include_demos)
     if not texts:
         return None
     distinct = list(dict.fromkeys(texts))  # lp once per distinct text
@@ -248,7 +282,7 @@ def predict_text_voted(
     # tokens on a 151k vocab, which OOM-kills CPU containers. Chunking is
     # math-identical (per-sequence mean supervised-token lp).
     lps = [
-        predictor.log_probabilities_text(task, test_index, [text])[0]
+        predictor.log_probabilities_text(task, test_index, [text], include_demos)[0]
         for text in distinct
     ]
     lp_by_text = dict(zip(distinct, lps))

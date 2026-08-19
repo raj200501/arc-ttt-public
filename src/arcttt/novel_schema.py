@@ -145,8 +145,18 @@ def make_schema(
     n_fields: int = 8,
     n_groups: int = 2,
     n_distractors: int = 4,
+    geometry: str = "fixed",
 ) -> NovelSchema:
     """Build one tenant schema with nesting and distractors.
+
+    ``geometry="fixed"`` (default) keeps the historical deterministic
+    shape — every tenant has the same group/kind layout, differing only
+    in vocabulary. This is the geometry the Addendum B gate ran on and
+    it MUST stay byte-identical for artifact reproducibility.
+    ``geometry="diverse"`` (Addendum E) derives the shape itself from
+    the seed: group count, field count, per-field value kinds and group
+    assignments all vary per tenant, answering the B.9.5 limitation
+    that fixed-mode tenants are vocabulary re-rolls of one shape.
 
     Fields are distributed across ``n_groups`` invented top-level objects
     so the target is nested rather than flat — flat key-value extraction is
@@ -154,19 +164,46 @@ def make_schema(
     schema in mind.
     """
 
+    rng = random.Random(seed)
+    if geometry == "diverse":
+        # Shape drawn from the seed BEFORE the vocabulary pool so fixed
+        # mode's pool consumption (and thus its schemas) is untouched.
+        n_groups = rng.randint(2, 4)
+        n_fields = rng.randint(max(6, n_groups), 12)
+        n_distractors = rng.randint(3, 7)
+    elif geometry == "diverse-compact":
+        # E-r1: shape-varying but bounded so k=30 LOO sequences fit the
+        # frozen 8192-token budget (E.4 made "diverse" unmeasurable at
+        # its largest draws).
+        n_groups = rng.randint(2, 3)
+        n_fields = rng.randint(max(6, n_groups), 9)
+        n_distractors = rng.randint(3, 5)
+    elif geometry != "fixed":
+        raise ValueError(f"unknown geometry: {geometry!r}")
     if n_fields < n_groups:
         raise ValueError("n_fields must be at least n_groups")
-    rng = random.Random(seed)
     # One pool, so a label can never coincide with a key or a distractor.
     pool = _unique_pseudowords(rng, n_fields * 2 + n_groups + n_distractors + 1)
     tenant_id = pool.pop()
     group_names = [pool.pop() for _ in range(n_groups)]
+    if geometry in ("diverse", "diverse-compact"):
+        # every group non-empty, remainder assigned at random
+        assignment = list(range(n_groups)) + [
+            rng.randrange(n_groups) for _ in range(n_fields - n_groups)
+        ]
+        rng.shuffle(assignment)
+        kinds = [rng.choice(("amount", "code", "date", "name"))
+                 for _ in range(n_fields)]
     fields: list[FieldSpec] = []
     for index in range(n_fields):
         doc_label = pool.pop()
         json_key = pool.pop()  # deliberately unrelated to doc_label
-        group = group_names[index % n_groups]
-        kind = ("amount", "code", "date", "name")[index % 4]
+        if geometry in ("diverse", "diverse-compact"):
+            group = group_names[assignment[index]]
+            kind = kinds[index]
+        else:
+            group = group_names[index % n_groups]
+            kind = ("amount", "code", "date", "name")[index % 4]
         fields.append(
             FieldSpec(
                 doc_label=doc_label,
@@ -225,6 +262,8 @@ def make_task(
     n_groups: int = 2,
     n_distractors: int = 4,
     task_id: str | None = None,
+
+    geometry: str = "fixed",
 ):
     """A ``TextTask`` over one invented tenant schema.
 
@@ -236,7 +275,8 @@ def make_task(
     from arcttt.text_task import TextPair, TextTask
 
     schema = make_schema(
-        seed, n_fields=n_fields, n_groups=n_groups, n_distractors=n_distractors
+        seed, n_fields=n_fields, n_groups=n_groups,
+        n_distractors=n_distractors, geometry=geometry
     )
     total = n_train + n_test
     # Offset record seeds by the schema seed so two tenants never share
