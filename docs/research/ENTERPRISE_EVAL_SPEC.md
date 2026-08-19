@@ -1145,3 +1145,15 @@ schema as context-conditioned behavior). The corrective, preregistered
 before this verdict (Addendum F, doc-only-TRAINED adapters), has its
 first seed banked at 0.9407 with 60/60 valid JSON (F.3 interim,
 PRIMARY-VERIFIED); F's verdict binds on seeds 2 and 3.
+
+### F.4 Interim observation (2026-08-19 06:35Z — seed 2 landed; NOT a verdict)
+
+f-s2 docadapted: 0.5282, 59/60 valid JSON, adapt 272s,
+PRIMARY-VERIFIED. Against banked seed-2 arms: +2.5 vs kshot (below the
+per-seed pace of the +5 bar), −46.5 vs adapted-with-prompt. Two honest
+notes recorded before seed 3 decides the read: (a) the doc-only arm
+scored all 60 documents where the B arms excluded 22 for length — the
+serving mode reaches documents the demo-stuffed prompt cannot; the F.1
+read runs on scored-index intersections as frozen; (b) the seed spread
+(0.9407 vs 0.5282) suggests doc-only training quality depends on
+document length/complexity — a real scoping finding either way.
