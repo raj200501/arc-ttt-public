@@ -16,6 +16,7 @@ issue.
 | CORD negative (the scoping result) | FAILED gates at all three scales: −7.3 / −11.5 / −4.5 F1 | `experiments/ge2_*_result_2026-08-11.json` | artifacts |
 | k=10 replication | 10/10 tenants, +41.5 pooled, 569W/1L | `experiments/novel_schema_summary` k=10 section + per-arm files | artifacts |
 | Frontier context (comparability, self-run) | frontier k-shot 1.00; adapted 0.5B 0.954–0.985 (k=10 arms) | `experiments/novel_frontier_baseline_2026-08-16.json` | artifact |
+| Cheap-API-tier context (comparability, self-run) | gemini-3.5-flash-lite k-shot 1.00 (60/60 exact, same protocol) — this corpus is saturated by every API tier; quality differentiation requires real-workload documents | `experiments/novel_cheaptier_baseline_2026-08-19.json` | artifact (raw predictions stored) |
 | Payload asymmetry (document-only endpoint, this corpus) | 20.0x–58.0x | `experiments/novel_payload_asymmetry_2026-08-15.json` | artifact |
 | Document-only serving, demo-trained adapter (Addendum D, partial) | seeds 2,3: both 0.0000, 0/60 valid JSON (prose collapse; mechanism reproduced — spec D.6; seed-2 fresh-adapter run rules out checkpoint staleness) | `experiments/novel_schema_d_0.5b_k30_seed{2,3}_doconly_2026-08-18.json` | artifacts |
 | Document-only, no adapter (D.5 comparability) | seeds 1,2: 0.0000, 0/60 valid JSON (dz-s3 in flight) | `experiments/novel_schema_d_0.5b_k30_seed{1,2}_doczero_2026-08-18.json` | artifacts |
