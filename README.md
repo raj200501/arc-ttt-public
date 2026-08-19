@@ -40,6 +40,18 @@ sharpening. No claims beyond the artifacts in `experiments/`.
 
 ## Verify the headline in 60 seconds
 
+**Preregistration you can check without trusting us:** the eval spec's
+SHA-256 is anchored to the Bitcoin blockchain via OpenTimestamps —
+proofs committed beside byte-exact snapshots of the revisions they
+stamp (`docs/research/snapshots_ENTERPRISE_EVAL_SPEC_*.md` +
+matching `.ots`). Verify with
+`ots verify docs/research/ENTERPRISE_EVAL_SPEC.md.2026-08-19T0119Z.ots -f docs/research/snapshots_ENTERPRISE_EVAL_SPEC_2026-08-19T0119Z.md`
+(attestations complete once the Bitcoin confirmation lands). The
+Addendum D and E/F freezes therefore have independently checkable
+ordering: bars first, data second.
+
+## Run the verification
+
 Don't trust our summary — recompute it. Zero dependencies:
 
 ```
@@ -108,6 +120,8 @@ same prominence as our results.
 - `scripts/` — dataset fetch and eval helper scripts.
 - `paper/` — ARC paper-track outline (reproduction + ablations + costs).
 - `docs/research/` — competition mechanics and recipe notes (web-verified).
+- `docs/strategy/` — decision documents behind this bet.
+  **Remove via fresh-history export before making the repo public.**
 
 ## License
 
