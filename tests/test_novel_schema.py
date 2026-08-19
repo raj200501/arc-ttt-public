@@ -134,6 +134,7 @@ def test_canonical_json_matches_the_projects_definition_without_importing_it() -
     canonicalization changes there, this fails and forces the update here.
     """
 
+    import ast
     from pathlib import Path
 
     from arcttt.novel_schema import _json_canonical
@@ -144,7 +145,20 @@ def test_canonical_json_matches_the_projects_definition_without_importing_it() -
     expected_call = (
         'json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)'
     )
-    assert expected_call in source, "text_ttt.json_canonical changed — update novel_schema"
+    # Scope the check to json_canonical's OWN body: a whole-file substring
+    # match would keep passing if the function changed while the identical
+    # call string survived elsewhere in the module.
+    tree = ast.parse(source)
+    fn = next(
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.FunctionDef) and node.name == "json_canonical"
+    )
+    fn_source = ast.get_source_segment(source, fn)
+    assert fn_source is not None
+    assert expected_call in fn_source, (
+        "text_ttt.json_canonical changed — update novel_schema"
+    )
 
     # and the local one really behaves that way (key order, spacing, unicode)
     assert _json_canonical({"b": 1, "a": {"d": "x", "c": "é"}}) == '{"a":{"c":"é","d":"x"},"b":1}'

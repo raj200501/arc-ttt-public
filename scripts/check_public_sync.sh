@@ -4,7 +4,7 @@
 # found the public tree shipping a stale src/arcttt/novel_schema.py —
 # which made verify_from_primary.py (the email's second command) crash
 # with TypeError for anyone who ran it. Incremental public commits must
-# never drift from the source tree on the paths investors execute.
+# never drift from the source tree on the paths a cold reader executes.
 set -euo pipefail
 
 SRC="$(cd "$(dirname "$0")/.." && pwd)"

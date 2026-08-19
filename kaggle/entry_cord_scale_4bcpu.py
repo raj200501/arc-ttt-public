@@ -243,6 +243,7 @@ def run_rung(rung: str, rows: list, deadline: float, device: "_torch.device") ->
                     "max_seq": config.max_sequence_tokens,
                 },
                 "device": str(device),
+                "dtype": str(dtype),
                 "adapt_seconds": round(adapt_seconds, 1),
                 "exact_match": exact,
                 "scored": scored,
@@ -275,6 +276,7 @@ def run_rung(rung: str, rows: list, deadline: float, device: "_torch.device") ->
                     "k": k,
                     "seed": seed,
                     "device": str(device),  # provenance stays uniform across outcomes
+                    "dtype": str(dtype),
                     "error": "oom",
                     "note": "arm OOMed at frozen config; no number imputed",
                 },

@@ -1,8 +1,8 @@
-"""Kaggle kernel entry: Addendum B novel-schema gate, 0.5B CPU.
+"""Kaggle kernel entry: Addendum C scale-rung gate, 1.5B GPU (fp16).
 
-The one experiment that can still rescue the quality thesis, run exactly as
-frozen in ENTERPRISE_EVAL_SPEC.md Addendum B (2026-08-12T19:40Z, before any
-record existed):
+The Addendum C scale rung (frozen 2026-08-17T20:35Z), run with all protocol
+values inherited from ENTERPRISE_EVAL_SPEC.md Addendum B (frozen
+2026-08-12T19:40Z) per C.2:
 
 - Corpus: synthetic novel-schema tenants (novel_schema.make_task) — the ONLY
   variable changed from Addendum A. Model, LoRA config, 1 epoch, decode,
@@ -48,6 +48,7 @@ import torch as _torch
 from arcttt.model import TTTConfig
 from arcttt.novel_schema import make_task
 from arcttt.text_ttt import TextPredictor, predict_text_voted, score_text_output
+from arcttt.lora import inject_lora, remove_lora
 
 RUNG = "1.5b"
 MODEL_ID = "Qwen/Qwen2.5-1.5B-Instruct"
@@ -270,7 +271,7 @@ def main() -> None:
                 with _torch.no_grad():
                     for n, p in lora_state.items():
                         p.copy_(saved[n].to(p.device, p.dtype))
-                model.train()  # parity with post-adapt state
+                model.eval()  # parity with post-adapt state (adapt_on_examples ends in eval())
                 adapt_seconds = _json.loads(open(f"{ckpt_stem}_meta.json").read())["adapt_seconds"]
                 resumed_adapter = True
                 print(f"resumed adapter: {adapter_path}", flush=True)
@@ -279,10 +280,12 @@ def main() -> None:
                 predictor.adapt_text(task, shuffle_seeds=(seed,))
                 adapt_seconds = _time.monotonic() - adapt_started
                 if arm == "adapted":
+                    _adapter_tmp = f"{adapter_path}.tmp"
                     _torch.save(
                         {n: p.detach().cpu() for n, p in model.named_parameters() if "lora_" in n},
-                        adapter_path,
+                        _adapter_tmp,
                     )
+                    _os.replace(_adapter_tmp, adapter_path)
                     _write_atomic(f"{ckpt_stem}_meta.json", {"adapt_seconds": adapt_seconds})
 
             results = []
@@ -363,7 +366,7 @@ def main() -> None:
                 elif mean_f1 > CEILING:
                     validity = "ceiling"
             report = {
-                "spec": "ENTERPRISE_EVAL_SPEC.md Addendum B (frozen 2026-08-12T19:40Z)",
+                "spec": "ENTERPRISE_EVAL_SPEC.md Addendum C (frozen 2026-08-17T20:35Z); protocol values per Addendum B (frozen 2026-08-12T19:40Z)",
                 "dataset": "synthetic novel-schema tenants (novel_schema.py), no external data",
                 "tenant": schema.tenant_id,
                 "schema": schema.describe(),  # artifact-only; never in any prompt

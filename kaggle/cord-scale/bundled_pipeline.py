@@ -38,7 +38,7 @@ def to_grid(rows: object) -> Grid:
         elif len(row) != width:
             raise TaskFormatError("grid rows must share one width")
         for cell in row:
-            if not isinstance(cell, int) or not 0 <= cell < COLORS:
+            if isinstance(cell, bool) or not isinstance(cell, int) or not 0 <= cell < COLORS:
                 raise TaskFormatError("grid cells must be ints in [0, 10)")
         out.append(tuple(row))
     if len(out) > MAX_SIDE or (width or 0) > MAX_SIDE:
@@ -374,7 +374,6 @@ submitted, so selection returns an ordered list.
 
 
 
-import math
 from collections import Counter
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
@@ -430,16 +429,20 @@ def rescore_candidates(
 
 
 def select_attempts(candidates: Iterable[Candidate], attempts: int = 2) -> tuple[Grid, ...]:
-    """Rank by (found_count + normalized probability score), descending.
+    """Rank lexicographically by (found_count, mean log-probability), descending.
 
-    The combined score follows the paper's shape: occurrence count plus the
-    geometric-mean probability term. exp(mean log p) lies in (0, 1], so it
-    breaks ties between equal counts without ever outweighing one extra find.
+    Order-equivalent to the paper's additive shape (count + exp(mean log p))
+    under exact arithmetic — exp is monotonic and bounded by 1, so the count
+    strictly dominates and the probability term only breaks ties among equal
+    counts — but the tuple key avoids float64 absorption: exp(mean log p)
+    underflows (or is absorbed by the integer count) for very negative mean
+    log-probabilities, which would make genuinely different candidates
+    compare exactly equal.
     """
 
     ranked = sorted(
         candidates,
-        key=lambda c: c.found_count + math.exp(c.mean_log_probability),
+        key=lambda c: (c.found_count, c.mean_log_probability),
         reverse=True,
     )
     return tuple(candidate.grid for candidate in ranked[:attempts])
@@ -522,6 +525,8 @@ def inject_lora(
     Returns the paths that were wrapped. All non-LoRA parameters are frozen.
     """
 
+    if any(isinstance(m, LoRALinear) for m in model.modules()):
+        raise RuntimeError("model already has LoRA injected; call remove_lora first")
     for parameter in model.parameters():
         parameter.requires_grad_(False)
     wrapped = []
@@ -540,7 +545,12 @@ def remove_lora(model: nn.Module) -> None:
 
     for path, module in list(_named_linears_including_lora(model)):
         if isinstance(module, LoRALinear):
-            _set_submodule(model, path, module.base)
+            # Unwrap to the innermost base so even an (illegally) stacked
+            # adapter is fully removed, honoring this function's contract.
+            base = module.base
+            while isinstance(base, LoRALinear):
+                base = base.base
+            _set_submodule(model, path, base)
 
 
 def _named_linears_including_lora(
@@ -625,10 +635,22 @@ def build_grid_vocab(tokenizer: Any) -> GridVocab:
         digit_ids.append(ids[0])
 
     newline_ids = set()
-    for candidate in ("\n", "Ċ"):
-        ids = safe_encode(candidate)
-        if len(ids) == 1:
-            newline_ids.add(ids[0])
+    ids = safe_encode("\n")
+    if len(ids) == 1:
+        newline_ids.add(ids[0])
+    # "Ċ" is the GPT2-style byte-level token NAME for "\n", not text —
+    # it must be looked up with convert_tokens_to_ids, never encode().
+    try:
+        candidate = tokenizer.convert_tokens_to_ids("Ċ")
+    except Exception:
+        candidate = None
+    if (
+        isinstance(candidate, int)
+        and candidate >= 0
+        and candidate != getattr(tokenizer, "unk_token_id", None)
+        and tokenizer.decode([candidate]) == "\n"
+    ):
+        newline_ids.add(candidate)
     if not newline_ids:
         raise TaskFormatError("no single-token newline found for grid decoding")
 
@@ -652,10 +674,13 @@ def build_grid_vocab(tokenizer: Any) -> GridVocab:
 def _cache_layers(cache: Any) -> list[tuple[torch.Tensor, torch.Tensor]]:
     """Per-layer (key, value) tensors of a KV cache, across transformers APIs.
 
-    Never iterates the cache object itself: on transformers >= 5 generic
-    iteration yields raw tensors, and unpacking a 4-D tensor "iterates" its
-    batch dimension — the v7 kernel lost 98 tasks to exactly that
-    (``ValueError: too many values to unpack``). Explicit attribute probes
+    Never iterates the cache object itself: what ``__iter__`` yields varies
+    by build — the Kaggle image's transformers (a 5.x build) yielded raw 4-D
+    tensors whose 2-way unpacking "iterates" the batch dimension, and current
+    5.x (e.g. 5.15.0) yields (keys, values, sliding_window) 3-tuples — and
+    either way ``key, value`` unpacking raises ``ValueError: too many values
+    to unpack``; the v7 kernel lost 98 tasks to exactly that.
+    Explicit attribute probes
     cover the layered API (>= 4.54, including 5.x), the key_cache/value_cache
     lists (4.36-4.53), and the legacy tuple-of-pairs format.
     """
@@ -686,7 +711,12 @@ def _crop_cache(cache: Any, length: int) -> Any:
     """Truncate a KV cache to ``length`` positions, whatever its concrete type."""
 
     if hasattr(cache, "crop"):
-        cache.crop(length)
+        excess = cache.get_seq_length() - length
+        if excess > 0:
+            # negative = remove that many tokens (non-deprecated on 4.x and
+            # 5.x; a positive "absolute target" is legacy and flips meaning
+            # to tokens_to_remove once transformers drops the legacy branch).
+            cache.crop(-excess)
         return cache
     return _rebuild_like(
         cache,
@@ -713,7 +743,8 @@ def constrained_dfs(
     would alias each other and corrupt sibling branches. The invariant is
     that when a frame (tokens, pending expansions) is on top of the stack,
     the cache holds exactly prompt + tokens. Bounded by ``max_candidates``
-    and, if given, a wall-clock ``deadline``.
+    and, if given, a ``deadline`` on the monotonic clock
+    (``time.monotonic()``).
     """
 
     device = model.device
@@ -722,7 +753,14 @@ def constrained_dfs(
     stop = set(vocab.stop_ids)
 
     with torch.no_grad():
-        primed = model(input_ids=prompt_ids.to(device), use_cache=True, return_dict=True)
+        # logits_to_keep=1: only the last position's logits are ever read,
+        # and full-prompt full-vocab logits are the dominant prime tensor.
+        primed = model(
+            input_ids=prompt_ids.to(device),
+            use_cache=True,
+            return_dict=True,
+            logits_to_keep=1,
+        )
     cache = primed.past_key_values
     prompt_length = prompt_ids.shape[1]
 
@@ -746,7 +784,7 @@ def constrained_dfs(
         ([], expansions_under_cutoff(primed.logits[:, -1].float(), 0.0))
     ]
     while stack and len(completed) < max_candidates:
-        if deadline is not None and time.time() > deadline:
+        if deadline is not None and time.monotonic() > deadline:
             break
         tokens, expansions = stack[-1]
         if not expansions:
@@ -791,6 +829,13 @@ class _FrameSearch:
     slots: list[int]  # physical cache column of each token on the current path
     completed: list[tuple[Grid, float]]
     done: bool = False
+    # Why this frame stopped: "exhausted" (whole tree under the NLL bound was
+    # searched), "candidate_cap" (hit max_candidates), or "deadline" (ran out
+    # of wall-clock). This is the ONLY signal that separates a bound-limited
+    # search from a time-limited one, and it decides whether the next lever is
+    # a wider bound or a bigger time budget. Observation only - setting it
+    # never changes what the search does.
+    stop_reason: str = "exhausted"
 
 
 def _expansions_under_cutoff(
@@ -836,8 +881,13 @@ def constrained_dfs_multi(
     max_new_tokens: int = 992,
     max_candidates: int = 64,
     deadline: float | None = None,
+    stats_out: list[tuple[str, int]] | None = None,
 ) -> list[list[tuple[Grid, float]]]:
     """Run ``constrained_dfs`` for several prompts in lockstep batched forwards.
+
+    If ``stats_out`` is given, one ``(stop_reason, candidates_found)`` pair per
+    frame is appended: why each frame's search ended and how much it found.
+    Pure observation - it cannot change the search.
 
     Returns one (grid, score) list per prompt, each equal to what the
     single-frame search returns. Every step is ONE batched forward over the
@@ -874,12 +924,19 @@ def constrained_dfs_multi(
         batch[row, : prompt_lengths[row]] = ids[0].cpu()
         live[row, : prompt_lengths[row]] = True
     live = live.to(device)
+    # Only one position per row is ever read from the prime logits; keeping
+    # every position would materialize [rows, width, vocab] (tens of GiB at
+    # the 8-frame / 8192-token operating point). logits_to_keep with a 1-D
+    # index tensor keeps just the needed positions (transformers >= 4.49).
+    keep = sorted({length - 1 for length in prompt_lengths})
+    keep_pos = {position: index for index, position in enumerate(keep)}
     with torch.no_grad():
         primed = model(
             input_ids=batch.to(device),
             attention_mask=live.long(),
             use_cache=True,
             return_dict=True,
+            logits_to_keep=torch.tensor(keep, device=device),
         )
     cache = primed.past_key_values
     physical_length = width
@@ -887,7 +944,11 @@ def constrained_dfs_multi(
     states = []
     for row, length in enumerate(prompt_lengths):
         root = _expansions_under_cutoff(
-            primed.logits[row, length - 1].float(), 0.0, allowed, allowed_tensor, max_score
+            primed.logits[row, keep_pos[length - 1]].float(),
+            0.0,
+            allowed,
+            allowed_tensor,
+            max_score,
         )
         states.append(
             _FrameSearch(prompt_length=length, stack=[([], root)], slots=[], completed=[])
@@ -898,9 +959,13 @@ def constrained_dfs_multi(
 
         while True:
             if not state.stack or len(state.completed) >= max_candidates:
+                state.stop_reason = (
+                    "candidate_cap" if len(state.completed) >= max_candidates else "exhausted"
+                )
                 state.done = True
                 return None
-            if deadline is not None and time.time() > deadline:
+            if deadline is not None and time.monotonic() > deadline:
+                state.stop_reason = "deadline"
                 state.done = True
                 return None
             tokens, expansions = state.stack[-1]
@@ -987,6 +1052,8 @@ def constrained_dfs_multi(
     for state in states:
         state.completed.sort(key=lambda pair: pair[1])
         results.append(state.completed[:max_candidates])
+        if stats_out is not None:
+            stats_out.append((state.stop_reason, len(state.completed)))
     return results
 
 
@@ -1058,7 +1125,7 @@ class TTTConfig:
     raw_qwen_format: bool = False  # champion-style <|im_start|> framing, no system turn
     gradient_checkpointing: bool = False
     use_dfs: bool = False  # constrained DFS decoding instead of sampled generation
-    dfs_probability_cutoff: float = 0.2  # keep completions with per-step prob >= this
+    dfs_probability_cutoff: float = 0.2  # keep completions whose TOTAL probability exceeds this (DFS prunes at cumulative NLL -ln(cutoff))
     dfs_max_candidates: int = 32
     shuffle_examples: bool = False  # permute demonstration order per augmentation
     ttt_batch_size: int = 1  # examples per optimizer step (padded batch)
@@ -1066,6 +1133,15 @@ class TTTConfig:
     dfs_include_greedy: bool = True  # always add the greedy completion; the
     # cumulative-NLL cutoff can exclude even the argmax path, and greedy
     # guarantees one candidate per augmentation frame for the voting pool.
+    chunked_loss_tokens: int = 0  # 0 = HF labels-path loss (legacy, exact).
+    # N > 0 = compute the SAME shifted fp32 cross-entropy in N-token slices
+    # of the sequence with a two-phase backward, so the seq x vocab logits
+    # tensor never materializes whole. Mathematically identical (the loss is
+    # per-token additive; mean = sum / count either way); exists because a
+    # 7.5k-token training sequence's full logits over a 152k vocab OOM a T4
+    # (observed: Addendum B k=30 adapted arms, 2026-08-15). Guarded by
+    # tests/test_chunked_loss.py, which pins loss AND gradients against the
+    # labels path.
 
 
 def turns_to_raw_qwen(turns: Sequence[ChatTurn], add_generation_prompt: bool) -> str:
@@ -1086,6 +1162,28 @@ def turns_to_chat(turns: Sequence[ChatTurn]) -> list[dict[str, str]]:
 class CausalLMPredictor:
     """LoRA-per-task TTT over a HuggingFace causal LM. Device-agnostic."""
 
+    # Search telemetry, CLASS-level on purpose: the kernel builds a fresh
+    # predictor per task (and per OOM-ladder level), so instance counters
+    # would reset ~240 times and measure nothing. These accumulate across the
+    # whole worker process and are dumped once at the end of the run.
+    dfs_stop_reasons: dict[str, int] = {}
+    dfs_candidates_found: int = 0
+    dfs_frames_searched: int = 0
+
+    @classmethod
+    def dfs_telemetry(cls) -> dict[str, Any]:
+        """Snapshot of why searches stopped and how much they found."""
+
+        frames = cls.dfs_frames_searched
+        return {
+            "frames_searched": frames,
+            "stop_reasons": dict(cls.dfs_stop_reasons),
+            "candidates_found_total": cls.dfs_candidates_found,
+            "candidates_per_frame_mean": (
+                round(cls.dfs_candidates_found / frames, 2) if frames else 0.0
+            ),
+        }
+
     def __init__(
         self,
         model: Any,
@@ -1099,6 +1197,15 @@ class CausalLMPredictor:
         self.device = device
         self.model: Any = model
         self._grid_vocab: Any = None
+
+    def _pad_id(self) -> int:
+        """Padding token id with None-based fallback (a legitimate pad id of 0
+        must NOT fall through to eos — truthiness would drop it)."""
+
+        pad = self.tokenizer.pad_token_id
+        if pad is None:
+            pad = self.tokenizer.eos_token_id
+        return 0 if pad is None else int(pad)
 
     # -- adaptation ---------------------------------------------------------
 
@@ -1137,56 +1244,185 @@ class CausalLMPredictor:
                 self.model.enable_input_require_grads()
             self.model.gradient_checkpointing_enable()
         self.model.train()
-        optimizer = torch.optim.AdamW(
-            lora_parameters(self.model), lr=self.config.learning_rate
-        )
-        encoded = [
-            batch
-            for turns in examples
-            if (batch := self._encode(turns, supervise_final=True)) is not None
-        ]
-        batch_size = max(1, self.config.ttt_batch_size)
-        if batch_size > 1:
-            # Sort by length so padded batches stay dense (batch_size 1 keeps
-            # the original example order and exact legacy behavior).
-            encoded.sort(key=lambda pair: pair[0].shape[1])
-        pad_id = self.tokenizer.pad_token_id or self.tokenizer.eos_token_id or 0
-        for _ in range(self.config.epochs):
-            for start in range(0, len(encoded), batch_size):
-                chunk = encoded[start : start + batch_size]
-                if len(chunk) == 1:
-                    input_ids, labels = chunk[0]
-                    attention_mask = torch.ones_like(input_ids)
-                else:
-                    width = max(ids.shape[1] for ids, _ in chunk)
-                    input_ids = torch.full(
-                        (len(chunk), width), pad_id, dtype=torch.long
-                    )
-                    labels = torch.full((len(chunk), width), -100, dtype=torch.long)
-                    attention_mask = torch.zeros(
-                        (len(chunk), width), dtype=torch.long
-                    )
-                    for row, (ids, label_row) in enumerate(chunk):
-                        length = ids.shape[1]
-                        input_ids[row, :length] = ids[0].cpu()
-                        labels[row, :length] = label_row[0].cpu()
-                        attention_mask[row, :length] = 1
-                    input_ids = input_ids.to(self.device)
-                    labels = labels.to(self.device)
-                    attention_mask = attention_mask.to(self.device)
-                optimizer.zero_grad()
-                loss = self.model(
-                    input_ids=input_ids,
-                    attention_mask=attention_mask,
-                    labels=labels,
-                ).loss
-                loss.backward()
-                optimizer.step()
-        if self.config.gradient_checkpointing and hasattr(
-            self.model, "gradient_checkpointing_disable"
-        ):
-            self.model.gradient_checkpointing_disable()  # cached generation next
-        self.model.eval()
+        # v8 forensics closed the case on HF's gradient_checkpointing_enable
+        # in this image: flags read True everywhere, yet ~430 MB/layer of
+        # activations stay resident (11.3 GB at 5.4k tokens) - a no-op at
+        # layer level. When the chunked path (and therefore long-sequence
+        # training) is in play, checkpoint each decoder layer OURSELVES with
+        # torch.utils.checkpoint, preserving HF's forward orchestration.
+        # Wrappers are restored in the finally below so eval and generation
+        # see the original forwards.
+        wrapped_layers: list[tuple[object, object]] = []
+        if self.config.chunked_loss_tokens > 0 and self.config.gradient_checkpointing:
+            layers = getattr(getattr(self.model, "model", None), "layers", None)
+            if layers is not None:
+                from torch.utils.checkpoint import checkpoint as _torch_checkpoint
+
+                def _wrap(fwd):
+                    def wrapped(*args, **kwargs):
+                        return _torch_checkpoint(
+                            fwd, *args, use_reentrant=False, **kwargs
+                        )
+
+                    return wrapped
+
+                for layer in layers:
+                    wrapped_layers.append((layer, layer.forward))
+                    layer.forward = _wrap(layer.forward)
+                print(
+                    f"manually checkpointed {len(wrapped_layers)} decoder layers",
+                    flush=True,
+                )
+        try:
+            optimizer = torch.optim.AdamW(
+                lora_parameters(self.model), lr=self.config.learning_rate
+            )
+            encoded = [
+                batch
+                for turns in examples
+                if (batch := self._encode(turns, supervise_final=True)) is not None
+            ]
+            dropped = len(examples) - len(encoded)
+            if dropped:
+                print(
+                    f"adapt_on_examples: dropped {dropped}/{len(examples)} examples over "
+                    f"max_sequence_tokens={self.config.max_sequence_tokens}",
+                    flush=True,
+                )
+            if not encoded:
+                print(
+                    "adapt_on_examples: ALL examples dropped — zero optimizer steps, "
+                    "adapter is a no-op (predictions = base model)",
+                    flush=True,
+                )
+            batch_size = max(1, self.config.ttt_batch_size)
+            if batch_size > 1:
+                # Sort by length so padded batches stay dense (batch_size 1 keeps
+                # the original example order and exact legacy behavior).
+                encoded.sort(key=lambda pair: pair[0].shape[1])
+            pad_id = self._pad_id()
+            for _ in range(self.config.epochs):
+                for start in range(0, len(encoded), batch_size):
+                    chunk = encoded[start : start + batch_size]
+                    if len(chunk) == 1:
+                        input_ids, labels = chunk[0]
+                        attention_mask = torch.ones_like(input_ids)
+                    else:
+                        width = max(ids.shape[1] for ids, _ in chunk)
+                        input_ids = torch.full(
+                            (len(chunk), width), pad_id, dtype=torch.long
+                        )
+                        labels = torch.full((len(chunk), width), -100, dtype=torch.long)
+                        attention_mask = torch.zeros(
+                            (len(chunk), width), dtype=torch.long
+                        )
+                        for row, (ids, label_row) in enumerate(chunk):
+                            length = ids.shape[1]
+                            input_ids[row, :length] = ids[0].cpu()
+                            labels[row, :length] = label_row[0].cpu()
+                            attention_mask[row, :length] = 1
+                        input_ids = input_ids.to(self.device)
+                        labels = labels.to(self.device)
+                        attention_mask = attention_mask.to(self.device)
+                    optimizer.zero_grad()
+                    if self.config.chunked_loss_tokens > 0:
+                        self._chunked_loss_backward(input_ids, attention_mask, labels)
+                    else:
+                        loss = self.model(
+                            input_ids=input_ids,
+                            attention_mask=attention_mask,
+                            labels=labels,
+                        ).loss
+                        loss.backward()
+                    optimizer.step()
+        finally:
+            for layer, original_forward in wrapped_layers:
+                layer.forward = original_forward
+            if self.config.gradient_checkpointing and hasattr(
+                self.model, "gradient_checkpointing_disable"
+            ):
+                self.model.gradient_checkpointing_disable()  # cached generation next
+            self.model.eval()
+
+    def _chunked_loss_backward(
+        self,
+        input_ids: torch.Tensor,
+        attention_mask: torch.Tensor,
+        labels: torch.Tensor,
+    ) -> None:
+        """The HF causal-LM loss and its gradients, without whole-seq logits.
+
+        Reproduces exactly what ``forward(labels=...)`` computes - shift by
+        one, cross-entropy in fp32, mean over non-ignored tokens - but applies
+        the lm_head to ``chunked_loss_tokens``-sized slices of the hidden
+        states, backpropagating each slice's SUM loss scaled by the global
+        token count. Per-token CE is additive, so slice sums divided by the
+        one global count equal the whole-sequence mean, and the accumulated
+        gradients are equal too (autograd sums across backward calls).
+
+        Two-phase backward: slices push gradients into a detached copy of the
+        hidden states (freeing each slice's logits before the next), then one
+        trunk backward carries the accumulated hidden-state gradient through
+        the LoRA parameters. The lm_head is frozen under LoRA, so skipping
+        its weight gradient changes nothing.
+        """
+
+        trunk = getattr(self.model, "model", None)
+        lm_head = getattr(self.model, "lm_head", None)
+        if trunk is None or lm_head is None:  # architecture without the split
+            loss = self.model(
+                input_ids=input_ids, attention_mask=attention_mask, labels=labels
+            ).loss
+            loss.backward()
+            return
+        # gradient_checkpointing_enable() is called on the wrapper; whether
+        # the flag reaches the trunk that we call DIRECTLY is version-
+        # dependent (11 GB of held activations at 5.4k tokens says it did
+        # not, 2026-08-15). Assert-and-repair, loudly, once.
+        if not getattr(self, "_ckpt_reported", False):
+            self._ckpt_reported = True
+            engaged = bool(getattr(trunk, "gradient_checkpointing", False))
+            print(f"trunk gradient_checkpointing={engaged}", flush=True)
+            if self.config.gradient_checkpointing and not engaged:
+                trunk.gradient_checkpointing = True
+                print("trunk gradient_checkpointing FORCED on", flush=True)
+        # torch-level activation offload: the scoring image's transformers
+        # ignores BOTH its own gradient_checkpointing_enable and a per-layer
+        # torch.utils.checkpoint monkeypatch (verified: saved-activation
+        # bytes match the no-checkpoint profile exactly, while the identical
+        # mechanisms verifiably work in transformers 5.15 locally). save_on_cpu
+        # is beneath the framework - every tensor autograd saves for backward
+        # lives in host RAM instead of GPU memory, whatever HF does or does
+        # not do. Gradient-identical (pinned in the local probe); costs one
+        # PCIe round-trip per training example, noise next to generation.
+        if input_ids.is_cuda:
+            with torch.autograd.graph.save_on_cpu(pin_memory=True):
+                hidden = trunk(
+                    input_ids=input_ids, attention_mask=attention_mask
+                ).last_hidden_state
+        else:
+            hidden = trunk(
+                input_ids=input_ids, attention_mask=attention_mask
+            ).last_hidden_state
+        detached = hidden.detach().requires_grad_(True)
+        shifted_labels = labels[:, 1:]
+        total = int((shifted_labels != -100).sum().item())
+        if total == 0:
+            return
+        width = hidden.shape[1]
+        step = self.config.chunked_loss_tokens
+        for start in range(0, width - 1, step):
+            end = min(width - 1, start + step)
+            logits = lm_head(detached[:, start:end])
+            slice_loss = torch.nn.functional.cross_entropy(
+                logits.float().reshape(-1, logits.shape[-1]),
+                shifted_labels[:, start:end].reshape(-1),
+                ignore_index=-100,
+                reduction="sum",
+            )
+            (slice_loss / total).backward()
+        assert detached.grad is not None
+        hidden.backward(detached.grad)
 
     # -- inference ----------------------------------------------------------
 
@@ -1218,8 +1454,7 @@ class CausalLMPredictor:
                     max_new_tokens=self.config.max_new_tokens,
                     do_sample=sample > 0,
                     temperature=self.config.temperature,
-                    pad_token_id=self.tokenizer.pad_token_id
-                    or self.tokenizer.eos_token_id,
+                    pad_token_id=self._pad_id(),
                 )
                 texts.append(
                     self.tokenizer.decode(
@@ -1244,7 +1479,7 @@ class CausalLMPredictor:
             max_score=-math.log(self.config.dfs_probability_cutoff),
             max_new_tokens=self.config.max_new_tokens,
             max_candidates=self.config.dfs_max_candidates,
-            deadline=time.time() + budget if budget is not None else None,
+            deadline=time.monotonic() + budget if budget is not None else None,
         )
         seen: set[Grid] = set()
         ordered: list[Grid] = []
@@ -1260,8 +1495,7 @@ class CausalLMPredictor:
                     attention_mask=attention_mask,
                     max_new_tokens=self.config.max_new_tokens,
                     do_sample=False,
-                    pad_token_id=self.tokenizer.pad_token_id
-                    or self.tokenizer.eos_token_id,
+                    pad_token_id=self._pad_id(),
                 )
             text = self.tokenizer.decode(
                 generated[0][prompt.shape[1] :], skip_special_tokens=True
@@ -1301,6 +1535,7 @@ class CausalLMPredictor:
         if self._grid_vocab is None:
             self._grid_vocab = build_grid_vocab(self.tokenizer)
         budget = self.config.dfs_time_budget_seconds
+        frame_stats: list[tuple[str, int]] = []
         results = constrained_dfs_multi(
             self.model,
             [prompt for _, prompt in live],
@@ -1309,8 +1544,19 @@ class CausalLMPredictor:
             max_score=-math.log(self.config.dfs_probability_cutoff),
             max_new_tokens=self.config.max_new_tokens,
             max_candidates=self.config.dfs_max_candidates,
-            deadline=time.time() + budget if budget is not None else None,
+            deadline=time.monotonic() + budget if budget is not None else None,
+            stats_out=frame_stats,
         )
+        # Running tally of WHY searches stop, across the whole run. A run
+        # dominated by "deadline" is time-limited (buy search time); one
+        # dominated by "exhausted" is bound-limited (widen the NLL bound);
+        # "candidate_cap" means raise max_candidates. Without this the only
+        # signal is the next day's leaderboard score - one bit per day.
+        cls = type(self)  # class-level tally: `self.x += 1` would shadow it
+        for reason, found in frame_stats:
+            cls.dfs_stop_reasons[reason] = cls.dfs_stop_reasons.get(reason, 0) + 1
+            cls.dfs_candidates_found += found
+            cls.dfs_frames_searched += 1
         greedy: list[Grid | None] = [None] * len(live)
         if self.config.dfs_include_greedy:
             greedy = self._greedy_grids([prompt for _, prompt in live])
@@ -1329,7 +1575,7 @@ class CausalLMPredictor:
     def _greedy_grids(self, prompts: Sequence[torch.Tensor]) -> list[Grid | None]:
         """Greedy completion per prompt via one left-padded batch generate."""
 
-        pad_id = self.tokenizer.pad_token_id or self.tokenizer.eos_token_id or 0
+        pad_id = self._pad_id()
         width = max(prompt.shape[1] for prompt in prompts)
         ids = torch.full((len(prompts), width), pad_id, dtype=torch.long)
         mask = torch.zeros((len(prompts), width), dtype=torch.long)
@@ -1365,8 +1611,12 @@ class CausalLMPredictor:
         """Score heterogeneous (task, test_index, output) pairs, chunked.
 
         One padded batch forward per chunk instead of one call per
-        augmentation frame; chunking bounds activation memory (the cut
-        16-token vocabulary keeps the logits tensor negligible)."""
+        augmentation frame; chunk_rows bounds activation memory — each chunk
+        still materializes FULL-vocab logits ([chunk_rows, width, ~152k]
+        float32, the dominant tensor; see the 152k-vocab OOM note at the top
+        of this file), so keep chunk_rows small. The 16-token grid vocabulary
+        only constrains DFS search in decode.py; it never shrinks scoring
+        logits."""
 
         encoded: list[tuple[torch.Tensor, torch.Tensor] | None] = []
         for task, test_index, output in pairs:
@@ -1376,7 +1626,7 @@ class CausalLMPredictor:
             encoded.append(self._encode(turns, supervise_final=True))
         scores = [float("-inf")] * len(pairs)
         live = [(i, e) for i, e in enumerate(encoded) if e is not None]
-        pad_id = self.tokenizer.pad_token_id or self.tokenizer.eos_token_id or 0
+        pad_id = self._pad_id()
         for start in range(0, len(live), chunk_rows):
             chunk = live[start : start + chunk_rows]
             width = max(e[0].shape[1] for _, e in chunk)
@@ -1435,7 +1685,7 @@ class CausalLMPredictor:
         scores = [float("-inf")] * len(sequences)
         if not live:
             return scores
-        pad_id = self.tokenizer.pad_token_id or self.tokenizer.eos_token_id or 0
+        pad_id = self._pad_id()
         width = max(e[0].shape[1] for _, e in live)
         ids = torch.full((len(live), width), pad_id, dtype=torch.long)
         labels = torch.full((len(live), width), -100, dtype=torch.long)
@@ -1570,7 +1820,9 @@ def solve_task(task: Task, predictor: Predictor, config: SolveConfig) -> list[li
         predictions: list[tuple[Augmentation, Grid]] = []
         frame_predictor = getattr(predictor, "predict_frames", None)
         if callable(frame_predictor):
-            # One lockstep-batched pass over all augmentation frames.
+            # Hand all augmentation frames to the predictor at once; with DFS
+            # decoding this runs as one lockstep-batched pass, otherwise it
+            # falls back to per-frame predict().
             transformed_tasks = [
                 augmentation.apply_task(task) for augmentation in config.augmentations
             ]
@@ -1591,6 +1843,13 @@ def solve_task(task: Task, predictor: Predictor, config: SolveConfig) -> list[li
         if not counts:
             per_test.append([])
             continue
+
+        # Shared guard for all three scorer branches: the fast paths divide
+        # by len(rescore_augmentations) and would otherwise raise an
+        # uninformative ZeroDivisionError (the fallback branch raises this
+        # same ValueError via rescore_candidates).
+        if not config.rescore_augmentations:
+            raise ValueError("rescoring needs at least one augmentation")
 
         pair_scorer = getattr(predictor, "log_probabilities_pairs", None)
         batch_scorer = getattr(predictor, "log_probabilities", None)
@@ -1936,23 +2195,52 @@ import torch
 # -- corpus construction -----------------------------------------------------
 
 
-def text_task_to_messages(task: TextTask, test_index: int = 0) -> tuple[ChatTurn, ...]:
+def text_task_to_messages(
+    task: TextTask, test_index: int = 0, include_demos: bool = True
+) -> tuple[ChatTurn, ...]:
     """Serialize demonstrations plus one test input as chat turns.
 
     The model is expected to complete the final assistant turn with the
     output text (for CORD: the canonical ``gt_parse`` JSON).
+    ``include_demos=False`` is the document-only serving configuration
+    (Addendum D): the prompt carries ONLY the test document; any task
+    knowledge must live in the adapter weights.
     """
 
     if not 0 <= test_index < len(task.test):
         raise TextTaskFormatError(f"{task.task_id}: test index {test_index} out of range")
     turns: list[ChatTurn] = []
+    if include_demos:
+        for pair in task.train:
+            if pair.output_text is None:
+                raise TextTaskFormatError(f"{task.task_id}: train pair missing output")
+            turns.append(ChatTurn("user", pair.input_text))
+            turns.append(ChatTurn("assistant", pair.output_text))
+    turns.append(ChatTurn("user", task.test[test_index].input_text))
+    return tuple(turns)
+
+
+def text_docmode_training_examples(
+    task: TextTask,
+) -> tuple[tuple[ChatTurn, ...], ...]:
+    """Document-only training sequences (Addendum F).
+
+    One example per train pair: (user: document) -> (assistant: target
+    JSON), with NO leave-one-out context. Trains the adapter on exactly
+    the serving configuration the payload economics describe — the
+    corrective to the D.6 finding that LOO-context adapters produce
+    prose, not JSON, on bare documents.
+    """
+
+    examples = []
     for pair in task.train:
         if pair.output_text is None:
             raise TextTaskFormatError(f"{task.task_id}: train pair missing output")
-        turns.append(ChatTurn("user", pair.input_text))
-        turns.append(ChatTurn("assistant", pair.output_text))
-    turns.append(ChatTurn("user", task.test[test_index].input_text))
-    return tuple(turns)
+        examples.append((
+            ChatTurn("user", pair.input_text),
+            ChatTurn("assistant", pair.output_text),
+        ))
+    return tuple(examples)
 
 
 def text_ttt_training_examples(
@@ -2030,24 +2318,28 @@ class TextPredictor(CausalLMPredictor):
             examples.extend(text_ttt_training_examples(task, seed))
         self.adapt_on_examples(examples)
 
-    def predict_text(self, task: TextTask, test_index: int, samples: int) -> list[str]:
+    def predict_text(
+        self, task: TextTask, test_index: int, samples: int,
+        include_demos: bool = True,
+    ) -> list[str]:
         """Raw completion texts (greedy first, then samples); empty ones dropped.
 
         Parsing/validation is the scorer's job (``score_text_output``), so the
         voting layer can still count near-miss candidates by canonical form.
         """
 
-        prompt = self._prompt_ids(text_task_to_messages(task, test_index))
+        prompt = self._prompt_ids(text_task_to_messages(task, test_index, include_demos))
         if prompt is None:
             return []
         return [text.strip() for text in self._sample_texts(prompt, samples) if text.strip()]
 
     def log_probabilities_text(
-        self, task: TextTask, test_index: int, outputs: Sequence[str]
+        self, task: TextTask, test_index: int, outputs: Sequence[str],
+        include_demos: bool = True,
     ) -> list[float]:
         """Mean supervised-token log-probability per candidate output text."""
 
-        base = text_task_to_messages(task, test_index)
+        base = text_task_to_messages(task, test_index, include_demos)
         return self.score_turn_sequences(
             [base + (ChatTurn("assistant", output),) for output in outputs]
         )
@@ -2130,7 +2422,8 @@ def select_text_attempts(
 
 
 def predict_text_voted(
-    predictor: TextPredictor, task: TextTask, test_index: int, samples: int = 5
+    predictor: TextPredictor, task: TextTask, test_index: int, samples: int = 5,
+    include_demos: bool = True,
 ) -> str | None:
     """The Addendum-A decode: greedy + sampled pool -> vote/rescore -> top-1.
 
@@ -2140,7 +2433,7 @@ def predict_text_voted(
     (``log_probabilities_text``), computed once per distinct text.
     """
 
-    texts = predictor.predict_text(task, test_index, samples)
+    texts = predictor.predict_text(task, test_index, samples, include_demos)
     if not texts:
         return None
     distinct = list(dict.fromkeys(texts))  # lp once per distinct text
@@ -2149,7 +2442,7 @@ def predict_text_voted(
     # tokens on a 151k vocab, which OOM-kills CPU containers. Chunking is
     # math-identical (per-sequence mean supervised-token lp).
     lps = [
-        predictor.log_probabilities_text(task, test_index, [text])[0]
+        predictor.log_probabilities_text(task, test_index, [text], include_demos)[0]
         for text in distinct
     ]
     lp_by_text = dict(zip(distinct, lps))
@@ -2313,6 +2606,7 @@ RUNGS = {
 }
 EVAL_N = 20
 POOL_SAMPLES = 5  # 1 greedy + 4 sampled (T=0.7, model config default)
+_ARM_IDENTITY = {"rung", "k", "seed", "arm"}
 DATE = "2026-08-11"
 WALL_BUDGET_SECONDS = 11.0 * 3600
 MARGIN_SECONDS = 25 * 60  # stop starting arms this close to the deadline
@@ -2340,23 +2634,56 @@ def _write_atomic(path: str, payload: dict) -> None:
 
 
 def _seed_resume_artifacts() -> int:
-    """Copy previously landed arm artifacts from attached inputs into cwd.
+    """Copy previously landed KERNEL arm artifacts from attached inputs to cwd.
 
-    A fresh kernel version starts with a clean /kaggle/working; attaching the
-    dataset that carries already-landed cord_scale_*.json files lets
-    skip-if-exists resume across pushes, not just within one session.
+    A fresh kernel version starts with a clean /kaggle/working; attaching a
+    prior run's output lets skip-if-exists resume across pushes, not just
+    within one session.
+
+    Only kernel-produced artifacts may seed a kernel run. An artifact records
+    a "device" field iff this entry wrote it, so its absence marks a
+    locally-produced arm. Seeding one of those makes the kernel skip that arm
+    and leaves its pair split across two environments — which is exactly the
+    contamination cord_scale_summary.py refuses to score. Seeding it here
+    would turn a hard refusal into a silently missing number, so the filter
+    belongs at the source. (Cost of getting this wrong, observed 08-11: the
+    0.5b k=10 gate went undecidable on seed 2.)
     """
 
     import shutil
 
-    seeded = 0
+    seeded = skipped_local = 0
     for path in _glob.glob("/kaggle/input/**/cord_scale_*.json", recursive=True):
         name = _os.path.basename(path)
         if name.startswith("cord_scale_summary"):
             continue
-        if not _os.path.exists(name):
-            shutil.copy(path, name)
-            seeded += 1
+        if _os.path.exists(name):
+            continue
+        try:
+            record = _json.loads(open(path).read())
+        except Exception:
+            continue
+        if not _ARM_IDENTITY.issubset(record):
+            # Not an arm at all: hand-written incident records (the 4B CPU OOM
+            # postmortem) sit in the same directory and match the same glob,
+            # and one of them carries a "device" field. Identity keys, not
+            # provenance keys, decide what is an arm - same rule as
+            # scripts/cord_scale_summary.py.
+            skipped_local += 1
+            print(f"not seeding (not an arm record): {name}", flush=True)
+            continue
+        if "device" not in record or "error" in record:
+            # No device tag -> produced locally. Error record -> the arm never
+            # produced a number, so seeding it would retire the arm forever
+            # instead of retrying it under a changed config (e.g. the 4B
+            # fp32 -> bf16 switch). Both re-run here.
+            skipped_local += 1
+            print(f"not seeding (will re-run here): {name}", flush=True)
+            continue
+        shutil.copy(path, name)
+        seeded += 1
+    if skipped_local:
+        print(f"{skipped_local} local-env artifacts ignored for environment homogeneity", flush=True)
     return seeded
 
 
@@ -2460,6 +2787,7 @@ def run_rung(rung: str, rows: list, deadline: float, device: "_torch.device") ->
                     "max_seq": config.max_sequence_tokens,
                 },
                 "device": str(device),
+                "dtype": str(dtype),
                 "adapt_seconds": round(adapt_seconds, 1),
                 "exact_match": exact,
                 "scored": scored,
@@ -2491,6 +2819,7 @@ def run_rung(rung: str, rows: list, deadline: float, device: "_torch.device") ->
                     "arm": arm,
                     "k": k,
                     "seed": seed,
+                    "device": str(device),  # provenance stays uniform across outcomes
                     "error": "oom",
                     "note": "arm OOMed at frozen config; no number imputed",
                 },

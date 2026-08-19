@@ -74,6 +74,8 @@ def inject_lora(
     Returns the paths that were wrapped. All non-LoRA parameters are frozen.
     """
 
+    if any(isinstance(m, LoRALinear) for m in model.modules()):
+        raise RuntimeError("model already has LoRA injected; call remove_lora first")
     for parameter in model.parameters():
         parameter.requires_grad_(False)
     wrapped = []
@@ -92,7 +94,12 @@ def remove_lora(model: nn.Module) -> None:
 
     for path, module in list(_named_linears_including_lora(model)):
         if isinstance(module, LoRALinear):
-            _set_submodule(model, path, module.base)
+            # Unwrap to the innermost base so even an (illegally) stacked
+            # adapter is fully removed, honoring this function's contract.
+            base = module.base
+            while isinstance(base, LoRALinear):
+                base = base.base
+            _set_submodule(model, path, base)
 
 
 def _named_linears_including_lora(

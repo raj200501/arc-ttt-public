@@ -38,7 +38,7 @@ def to_grid(rows: object) -> Grid:
         elif len(row) != width:
             raise TaskFormatError("grid rows must share one width")
         for cell in row:
-            if not isinstance(cell, int) or not 0 <= cell < COLORS:
+            if isinstance(cell, bool) or not isinstance(cell, int) or not 0 <= cell < COLORS:
                 raise TaskFormatError("grid cells must be ints in [0, 10)")
         out.append(tuple(row))
     if len(out) > MAX_SIDE or (width or 0) > MAX_SIDE:
@@ -374,7 +374,6 @@ submitted, so selection returns an ordered list.
 
 
 
-import math
 from collections import Counter
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
@@ -430,16 +429,20 @@ def rescore_candidates(
 
 
 def select_attempts(candidates: Iterable[Candidate], attempts: int = 2) -> tuple[Grid, ...]:
-    """Rank by (found_count + normalized probability score), descending.
+    """Rank lexicographically by (found_count, mean log-probability), descending.
 
-    The combined score follows the paper's shape: occurrence count plus the
-    geometric-mean probability term. exp(mean log p) lies in (0, 1], so it
-    breaks ties between equal counts without ever outweighing one extra find.
+    Order-equivalent to the paper's additive shape (count + exp(mean log p))
+    under exact arithmetic — exp is monotonic and bounded by 1, so the count
+    strictly dominates and the probability term only breaks ties among equal
+    counts — but the tuple key avoids float64 absorption: exp(mean log p)
+    underflows (or is absorbed by the integer count) for very negative mean
+    log-probabilities, which would make genuinely different candidates
+    compare exactly equal.
     """
 
     ranked = sorted(
         candidates,
-        key=lambda c: c.found_count + math.exp(c.mean_log_probability),
+        key=lambda c: (c.found_count, c.mean_log_probability),
         reverse=True,
     )
     return tuple(candidate.grid for candidate in ranked[:attempts])
@@ -522,6 +525,8 @@ def inject_lora(
     Returns the paths that were wrapped. All non-LoRA parameters are frozen.
     """
 
+    if any(isinstance(m, LoRALinear) for m in model.modules()):
+        raise RuntimeError("model already has LoRA injected; call remove_lora first")
     for parameter in model.parameters():
         parameter.requires_grad_(False)
     wrapped = []
@@ -540,7 +545,12 @@ def remove_lora(model: nn.Module) -> None:
 
     for path, module in list(_named_linears_including_lora(model)):
         if isinstance(module, LoRALinear):
-            _set_submodule(model, path, module.base)
+            # Unwrap to the innermost base so even an (illegally) stacked
+            # adapter is fully removed, honoring this function's contract.
+            base = module.base
+            while isinstance(base, LoRALinear):
+                base = base.base
+            _set_submodule(model, path, base)
 
 
 def _named_linears_including_lora(
@@ -625,10 +635,22 @@ def build_grid_vocab(tokenizer: Any) -> GridVocab:
         digit_ids.append(ids[0])
 
     newline_ids = set()
-    for candidate in ("\n", "Ċ"):
-        ids = safe_encode(candidate)
-        if len(ids) == 1:
-            newline_ids.add(ids[0])
+    ids = safe_encode("\n")
+    if len(ids) == 1:
+        newline_ids.add(ids[0])
+    # "Ċ" is the GPT2-style byte-level token NAME for "\n", not text —
+    # it must be looked up with convert_tokens_to_ids, never encode().
+    try:
+        candidate = tokenizer.convert_tokens_to_ids("Ċ")
+    except Exception:
+        candidate = None
+    if (
+        isinstance(candidate, int)
+        and candidate >= 0
+        and candidate != getattr(tokenizer, "unk_token_id", None)
+        and tokenizer.decode([candidate]) == "\n"
+    ):
+        newline_ids.add(candidate)
     if not newline_ids:
         raise TaskFormatError("no single-token newline found for grid decoding")
 
@@ -652,10 +674,13 @@ def build_grid_vocab(tokenizer: Any) -> GridVocab:
 def _cache_layers(cache: Any) -> list[tuple[torch.Tensor, torch.Tensor]]:
     """Per-layer (key, value) tensors of a KV cache, across transformers APIs.
 
-    Never iterates the cache object itself: on transformers >= 5 generic
-    iteration yields raw tensors, and unpacking a 4-D tensor "iterates" its
-    batch dimension — the v7 kernel lost 98 tasks to exactly that
-    (``ValueError: too many values to unpack``). Explicit attribute probes
+    Never iterates the cache object itself: what ``__iter__`` yields varies
+    by build — the Kaggle image's transformers (a 5.x build) yielded raw 4-D
+    tensors whose 2-way unpacking "iterates" the batch dimension, and current
+    5.x (e.g. 5.15.0) yields (keys, values, sliding_window) 3-tuples — and
+    either way ``key, value`` unpacking raises ``ValueError: too many values
+    to unpack``; the v7 kernel lost 98 tasks to exactly that.
+    Explicit attribute probes
     cover the layered API (>= 4.54, including 5.x), the key_cache/value_cache
     lists (4.36-4.53), and the legacy tuple-of-pairs format.
     """
@@ -686,7 +711,12 @@ def _crop_cache(cache: Any, length: int) -> Any:
     """Truncate a KV cache to ``length`` positions, whatever its concrete type."""
 
     if hasattr(cache, "crop"):
-        cache.crop(length)
+        excess = cache.get_seq_length() - length
+        if excess > 0:
+            # negative = remove that many tokens (non-deprecated on 4.x and
+            # 5.x; a positive "absolute target" is legacy and flips meaning
+            # to tokens_to_remove once transformers drops the legacy branch).
+            cache.crop(-excess)
         return cache
     return _rebuild_like(
         cache,
@@ -713,7 +743,8 @@ def constrained_dfs(
     would alias each other and corrupt sibling branches. The invariant is
     that when a frame (tokens, pending expansions) is on top of the stack,
     the cache holds exactly prompt + tokens. Bounded by ``max_candidates``
-    and, if given, a wall-clock ``deadline``.
+    and, if given, a ``deadline`` on the monotonic clock
+    (``time.monotonic()``).
     """
 
     device = model.device
@@ -722,7 +753,14 @@ def constrained_dfs(
     stop = set(vocab.stop_ids)
 
     with torch.no_grad():
-        primed = model(input_ids=prompt_ids.to(device), use_cache=True, return_dict=True)
+        # logits_to_keep=1: only the last position's logits are ever read,
+        # and full-prompt full-vocab logits are the dominant prime tensor.
+        primed = model(
+            input_ids=prompt_ids.to(device),
+            use_cache=True,
+            return_dict=True,
+            logits_to_keep=1,
+        )
     cache = primed.past_key_values
     prompt_length = prompt_ids.shape[1]
 
@@ -746,7 +784,7 @@ def constrained_dfs(
         ([], expansions_under_cutoff(primed.logits[:, -1].float(), 0.0))
     ]
     while stack and len(completed) < max_candidates:
-        if deadline is not None and time.time() > deadline:
+        if deadline is not None and time.monotonic() > deadline:
             break
         tokens, expansions = stack[-1]
         if not expansions:
@@ -886,12 +924,19 @@ def constrained_dfs_multi(
         batch[row, : prompt_lengths[row]] = ids[0].cpu()
         live[row, : prompt_lengths[row]] = True
     live = live.to(device)
+    # Only one position per row is ever read from the prime logits; keeping
+    # every position would materialize [rows, width, vocab] (tens of GiB at
+    # the 8-frame / 8192-token operating point). logits_to_keep with a 1-D
+    # index tensor keeps just the needed positions (transformers >= 4.49).
+    keep = sorted({length - 1 for length in prompt_lengths})
+    keep_pos = {position: index for index, position in enumerate(keep)}
     with torch.no_grad():
         primed = model(
             input_ids=batch.to(device),
             attention_mask=live.long(),
             use_cache=True,
             return_dict=True,
+            logits_to_keep=torch.tensor(keep, device=device),
         )
     cache = primed.past_key_values
     physical_length = width
@@ -899,7 +944,11 @@ def constrained_dfs_multi(
     states = []
     for row, length in enumerate(prompt_lengths):
         root = _expansions_under_cutoff(
-            primed.logits[row, length - 1].float(), 0.0, allowed, allowed_tensor, max_score
+            primed.logits[row, keep_pos[length - 1]].float(),
+            0.0,
+            allowed,
+            allowed_tensor,
+            max_score,
         )
         states.append(
             _FrameSearch(prompt_length=length, stack=[([], root)], slots=[], completed=[])
@@ -915,7 +964,7 @@ def constrained_dfs_multi(
                 )
                 state.done = True
                 return None
-            if deadline is not None and time.time() > deadline:
+            if deadline is not None and time.monotonic() > deadline:
                 state.stop_reason = "deadline"
                 state.done = True
                 return None
@@ -1076,7 +1125,7 @@ class TTTConfig:
     raw_qwen_format: bool = False  # champion-style <|im_start|> framing, no system turn
     gradient_checkpointing: bool = False
     use_dfs: bool = False  # constrained DFS decoding instead of sampled generation
-    dfs_probability_cutoff: float = 0.2  # keep completions with per-step prob >= this
+    dfs_probability_cutoff: float = 0.2  # keep completions whose TOTAL probability exceeds this (DFS prunes at cumulative NLL -ln(cutoff))
     dfs_max_candidates: int = 32
     shuffle_examples: bool = False  # permute demonstration order per augmentation
     ttt_batch_size: int = 1  # examples per optimizer step (padded batch)
@@ -1149,6 +1198,15 @@ class CausalLMPredictor:
         self.model: Any = model
         self._grid_vocab: Any = None
 
+    def _pad_id(self) -> int:
+        """Padding token id with None-based fallback (a legitimate pad id of 0
+        must NOT fall through to eos — truthiness would drop it)."""
+
+        pad = self.tokenizer.pad_token_id
+        if pad is None:
+            pad = self.tokenizer.eos_token_id
+        return 0 if pad is None else int(pad)
+
     # -- adaptation ---------------------------------------------------------
 
     def adapt(self, task: Task, augmentations: Sequence[Augmentation]) -> None:
@@ -1215,61 +1273,76 @@ class CausalLMPredictor:
                     f"manually checkpointed {len(wrapped_layers)} decoder layers",
                     flush=True,
                 )
-        optimizer = torch.optim.AdamW(
-            lora_parameters(self.model), lr=self.config.learning_rate
-        )
-        encoded = [
-            batch
-            for turns in examples
-            if (batch := self._encode(turns, supervise_final=True)) is not None
-        ]
-        batch_size = max(1, self.config.ttt_batch_size)
-        if batch_size > 1:
-            # Sort by length so padded batches stay dense (batch_size 1 keeps
-            # the original example order and exact legacy behavior).
-            encoded.sort(key=lambda pair: pair[0].shape[1])
-        pad_id = self.tokenizer.pad_token_id or self.tokenizer.eos_token_id or 0
-        for _ in range(self.config.epochs):
-            for start in range(0, len(encoded), batch_size):
-                chunk = encoded[start : start + batch_size]
-                if len(chunk) == 1:
-                    input_ids, labels = chunk[0]
-                    attention_mask = torch.ones_like(input_ids)
-                else:
-                    width = max(ids.shape[1] for ids, _ in chunk)
-                    input_ids = torch.full(
-                        (len(chunk), width), pad_id, dtype=torch.long
-                    )
-                    labels = torch.full((len(chunk), width), -100, dtype=torch.long)
-                    attention_mask = torch.zeros(
-                        (len(chunk), width), dtype=torch.long
-                    )
-                    for row, (ids, label_row) in enumerate(chunk):
-                        length = ids.shape[1]
-                        input_ids[row, :length] = ids[0].cpu()
-                        labels[row, :length] = label_row[0].cpu()
-                        attention_mask[row, :length] = 1
-                    input_ids = input_ids.to(self.device)
-                    labels = labels.to(self.device)
-                    attention_mask = attention_mask.to(self.device)
-                optimizer.zero_grad()
-                if self.config.chunked_loss_tokens > 0:
-                    self._chunked_loss_backward(input_ids, attention_mask, labels)
-                else:
-                    loss = self.model(
-                        input_ids=input_ids,
-                        attention_mask=attention_mask,
-                        labels=labels,
-                    ).loss
-                    loss.backward()
-                optimizer.step()
-        for layer, original_forward in wrapped_layers:
-            layer.forward = original_forward
-        if self.config.gradient_checkpointing and hasattr(
-            self.model, "gradient_checkpointing_disable"
-        ):
-            self.model.gradient_checkpointing_disable()  # cached generation next
-        self.model.eval()
+        try:
+            optimizer = torch.optim.AdamW(
+                lora_parameters(self.model), lr=self.config.learning_rate
+            )
+            encoded = [
+                batch
+                for turns in examples
+                if (batch := self._encode(turns, supervise_final=True)) is not None
+            ]
+            dropped = len(examples) - len(encoded)
+            if dropped:
+                print(
+                    f"adapt_on_examples: dropped {dropped}/{len(examples)} examples over "
+                    f"max_sequence_tokens={self.config.max_sequence_tokens}",
+                    flush=True,
+                )
+            if not encoded:
+                print(
+                    "adapt_on_examples: ALL examples dropped — zero optimizer steps, "
+                    "adapter is a no-op (predictions = base model)",
+                    flush=True,
+                )
+            batch_size = max(1, self.config.ttt_batch_size)
+            if batch_size > 1:
+                # Sort by length so padded batches stay dense (batch_size 1 keeps
+                # the original example order and exact legacy behavior).
+                encoded.sort(key=lambda pair: pair[0].shape[1])
+            pad_id = self._pad_id()
+            for _ in range(self.config.epochs):
+                for start in range(0, len(encoded), batch_size):
+                    chunk = encoded[start : start + batch_size]
+                    if len(chunk) == 1:
+                        input_ids, labels = chunk[0]
+                        attention_mask = torch.ones_like(input_ids)
+                    else:
+                        width = max(ids.shape[1] for ids, _ in chunk)
+                        input_ids = torch.full(
+                            (len(chunk), width), pad_id, dtype=torch.long
+                        )
+                        labels = torch.full((len(chunk), width), -100, dtype=torch.long)
+                        attention_mask = torch.zeros(
+                            (len(chunk), width), dtype=torch.long
+                        )
+                        for row, (ids, label_row) in enumerate(chunk):
+                            length = ids.shape[1]
+                            input_ids[row, :length] = ids[0].cpu()
+                            labels[row, :length] = label_row[0].cpu()
+                            attention_mask[row, :length] = 1
+                        input_ids = input_ids.to(self.device)
+                        labels = labels.to(self.device)
+                        attention_mask = attention_mask.to(self.device)
+                    optimizer.zero_grad()
+                    if self.config.chunked_loss_tokens > 0:
+                        self._chunked_loss_backward(input_ids, attention_mask, labels)
+                    else:
+                        loss = self.model(
+                            input_ids=input_ids,
+                            attention_mask=attention_mask,
+                            labels=labels,
+                        ).loss
+                        loss.backward()
+                    optimizer.step()
+        finally:
+            for layer, original_forward in wrapped_layers:
+                layer.forward = original_forward
+            if self.config.gradient_checkpointing and hasattr(
+                self.model, "gradient_checkpointing_disable"
+            ):
+                self.model.gradient_checkpointing_disable()  # cached generation next
+            self.model.eval()
 
     def _chunked_loss_backward(
         self,
@@ -1381,8 +1454,7 @@ class CausalLMPredictor:
                     max_new_tokens=self.config.max_new_tokens,
                     do_sample=sample > 0,
                     temperature=self.config.temperature,
-                    pad_token_id=self.tokenizer.pad_token_id
-                    or self.tokenizer.eos_token_id,
+                    pad_token_id=self._pad_id(),
                 )
                 texts.append(
                     self.tokenizer.decode(
@@ -1407,7 +1479,7 @@ class CausalLMPredictor:
             max_score=-math.log(self.config.dfs_probability_cutoff),
             max_new_tokens=self.config.max_new_tokens,
             max_candidates=self.config.dfs_max_candidates,
-            deadline=time.time() + budget if budget is not None else None,
+            deadline=time.monotonic() + budget if budget is not None else None,
         )
         seen: set[Grid] = set()
         ordered: list[Grid] = []
@@ -1423,8 +1495,7 @@ class CausalLMPredictor:
                     attention_mask=attention_mask,
                     max_new_tokens=self.config.max_new_tokens,
                     do_sample=False,
-                    pad_token_id=self.tokenizer.pad_token_id
-                    or self.tokenizer.eos_token_id,
+                    pad_token_id=self._pad_id(),
                 )
             text = self.tokenizer.decode(
                 generated[0][prompt.shape[1] :], skip_special_tokens=True
@@ -1473,7 +1544,7 @@ class CausalLMPredictor:
             max_score=-math.log(self.config.dfs_probability_cutoff),
             max_new_tokens=self.config.max_new_tokens,
             max_candidates=self.config.dfs_max_candidates,
-            deadline=time.time() + budget if budget is not None else None,
+            deadline=time.monotonic() + budget if budget is not None else None,
             stats_out=frame_stats,
         )
         # Running tally of WHY searches stop, across the whole run. A run
@@ -1504,7 +1575,7 @@ class CausalLMPredictor:
     def _greedy_grids(self, prompts: Sequence[torch.Tensor]) -> list[Grid | None]:
         """Greedy completion per prompt via one left-padded batch generate."""
 
-        pad_id = self.tokenizer.pad_token_id or self.tokenizer.eos_token_id or 0
+        pad_id = self._pad_id()
         width = max(prompt.shape[1] for prompt in prompts)
         ids = torch.full((len(prompts), width), pad_id, dtype=torch.long)
         mask = torch.zeros((len(prompts), width), dtype=torch.long)
@@ -1540,8 +1611,12 @@ class CausalLMPredictor:
         """Score heterogeneous (task, test_index, output) pairs, chunked.
 
         One padded batch forward per chunk instead of one call per
-        augmentation frame; chunking bounds activation memory (the cut
-        16-token vocabulary keeps the logits tensor negligible)."""
+        augmentation frame; chunk_rows bounds activation memory — each chunk
+        still materializes FULL-vocab logits ([chunk_rows, width, ~152k]
+        float32, the dominant tensor; see the 152k-vocab OOM note at the top
+        of this file), so keep chunk_rows small. The 16-token grid vocabulary
+        only constrains DFS search in decode.py; it never shrinks scoring
+        logits."""
 
         encoded: list[tuple[torch.Tensor, torch.Tensor] | None] = []
         for task, test_index, output in pairs:
@@ -1551,7 +1626,7 @@ class CausalLMPredictor:
             encoded.append(self._encode(turns, supervise_final=True))
         scores = [float("-inf")] * len(pairs)
         live = [(i, e) for i, e in enumerate(encoded) if e is not None]
-        pad_id = self.tokenizer.pad_token_id or self.tokenizer.eos_token_id or 0
+        pad_id = self._pad_id()
         for start in range(0, len(live), chunk_rows):
             chunk = live[start : start + chunk_rows]
             width = max(e[0].shape[1] for _, e in chunk)
@@ -1610,7 +1685,7 @@ class CausalLMPredictor:
         scores = [float("-inf")] * len(sequences)
         if not live:
             return scores
-        pad_id = self.tokenizer.pad_token_id or self.tokenizer.eos_token_id or 0
+        pad_id = self._pad_id()
         width = max(e[0].shape[1] for _, e in live)
         ids = torch.full((len(live), width), pad_id, dtype=torch.long)
         labels = torch.full((len(live), width), -100, dtype=torch.long)
@@ -1745,7 +1820,9 @@ def solve_task(task: Task, predictor: Predictor, config: SolveConfig) -> list[li
         predictions: list[tuple[Augmentation, Grid]] = []
         frame_predictor = getattr(predictor, "predict_frames", None)
         if callable(frame_predictor):
-            # One lockstep-batched pass over all augmentation frames.
+            # Hand all augmentation frames to the predictor at once; with DFS
+            # decoding this runs as one lockstep-batched pass, otherwise it
+            # falls back to per-frame predict().
             transformed_tasks = [
                 augmentation.apply_task(task) for augmentation in config.augmentations
             ]
@@ -1766,6 +1843,13 @@ def solve_task(task: Task, predictor: Predictor, config: SolveConfig) -> list[li
         if not counts:
             per_test.append([])
             continue
+
+        # Shared guard for all three scorer branches: the fast paths divide
+        # by len(rescore_augmentations) and would otherwise raise an
+        # uninformative ZeroDivisionError (the fallback branch raises this
+        # same ValueError via rescore_candidates).
+        if not config.rescore_augmentations:
+            raise ValueError("rescoring needs at least one augmentation")
 
         pair_scorer = getattr(predictor, "log_probabilities_pairs", None)
         batch_scorer = getattr(predictor, "log_probabilities", None)
@@ -2111,23 +2195,52 @@ import torch
 # -- corpus construction -----------------------------------------------------
 
 
-def text_task_to_messages(task: TextTask, test_index: int = 0) -> tuple[ChatTurn, ...]:
+def text_task_to_messages(
+    task: TextTask, test_index: int = 0, include_demos: bool = True
+) -> tuple[ChatTurn, ...]:
     """Serialize demonstrations plus one test input as chat turns.
 
     The model is expected to complete the final assistant turn with the
     output text (for CORD: the canonical ``gt_parse`` JSON).
+    ``include_demos=False`` is the document-only serving configuration
+    (Addendum D): the prompt carries ONLY the test document; any task
+    knowledge must live in the adapter weights.
     """
 
     if not 0 <= test_index < len(task.test):
         raise TextTaskFormatError(f"{task.task_id}: test index {test_index} out of range")
     turns: list[ChatTurn] = []
+    if include_demos:
+        for pair in task.train:
+            if pair.output_text is None:
+                raise TextTaskFormatError(f"{task.task_id}: train pair missing output")
+            turns.append(ChatTurn("user", pair.input_text))
+            turns.append(ChatTurn("assistant", pair.output_text))
+    turns.append(ChatTurn("user", task.test[test_index].input_text))
+    return tuple(turns)
+
+
+def text_docmode_training_examples(
+    task: TextTask,
+) -> tuple[tuple[ChatTurn, ...], ...]:
+    """Document-only training sequences (Addendum F).
+
+    One example per train pair: (user: document) -> (assistant: target
+    JSON), with NO leave-one-out context. Trains the adapter on exactly
+    the serving configuration the payload economics describe — the
+    corrective to the D.6 finding that LOO-context adapters produce
+    prose, not JSON, on bare documents.
+    """
+
+    examples = []
     for pair in task.train:
         if pair.output_text is None:
             raise TextTaskFormatError(f"{task.task_id}: train pair missing output")
-        turns.append(ChatTurn("user", pair.input_text))
-        turns.append(ChatTurn("assistant", pair.output_text))
-    turns.append(ChatTurn("user", task.test[test_index].input_text))
-    return tuple(turns)
+        examples.append((
+            ChatTurn("user", pair.input_text),
+            ChatTurn("assistant", pair.output_text),
+        ))
+    return tuple(examples)
 
 
 def text_ttt_training_examples(
@@ -2205,24 +2318,28 @@ class TextPredictor(CausalLMPredictor):
             examples.extend(text_ttt_training_examples(task, seed))
         self.adapt_on_examples(examples)
 
-    def predict_text(self, task: TextTask, test_index: int, samples: int) -> list[str]:
+    def predict_text(
+        self, task: TextTask, test_index: int, samples: int,
+        include_demos: bool = True,
+    ) -> list[str]:
         """Raw completion texts (greedy first, then samples); empty ones dropped.
 
         Parsing/validation is the scorer's job (``score_text_output``), so the
         voting layer can still count near-miss candidates by canonical form.
         """
 
-        prompt = self._prompt_ids(text_task_to_messages(task, test_index))
+        prompt = self._prompt_ids(text_task_to_messages(task, test_index, include_demos))
         if prompt is None:
             return []
         return [text.strip() for text in self._sample_texts(prompt, samples) if text.strip()]
 
     def log_probabilities_text(
-        self, task: TextTask, test_index: int, outputs: Sequence[str]
+        self, task: TextTask, test_index: int, outputs: Sequence[str],
+        include_demos: bool = True,
     ) -> list[float]:
         """Mean supervised-token log-probability per candidate output text."""
 
-        base = text_task_to_messages(task, test_index)
+        base = text_task_to_messages(task, test_index, include_demos)
         return self.score_turn_sequences(
             [base + (ChatTurn("assistant", output),) for output in outputs]
         )
@@ -2305,7 +2422,8 @@ def select_text_attempts(
 
 
 def predict_text_voted(
-    predictor: TextPredictor, task: TextTask, test_index: int, samples: int = 5
+    predictor: TextPredictor, task: TextTask, test_index: int, samples: int = 5,
+    include_demos: bool = True,
 ) -> str | None:
     """The Addendum-A decode: greedy + sampled pool -> vote/rescore -> top-1.
 
@@ -2315,7 +2433,7 @@ def predict_text_voted(
     (``log_probabilities_text``), computed once per distinct text.
     """
 
-    texts = predictor.predict_text(task, test_index, samples)
+    texts = predictor.predict_text(task, test_index, samples, include_demos)
     if not texts:
         return None
     distinct = list(dict.fromkeys(texts))  # lp once per distinct text
@@ -2324,7 +2442,7 @@ def predict_text_voted(
     # tokens on a 151k vocab, which OOM-kills CPU containers. Chunking is
     # math-identical (per-sequence mean supervised-token lp).
     lps = [
-        predictor.log_probabilities_text(task, test_index, [text])[0]
+        predictor.log_probabilities_text(task, test_index, [text], include_demos)[0]
         for text in distinct
     ]
     lp_by_text = dict(zip(distinct, lps))
@@ -2599,8 +2717,18 @@ def make_schema(
     n_fields: int = 8,
     n_groups: int = 2,
     n_distractors: int = 4,
+    geometry: str = "fixed",
 ) -> NovelSchema:
     """Build one tenant schema with nesting and distractors.
+
+    ``geometry="fixed"`` (default) keeps the historical deterministic
+    shape — every tenant has the same group/kind layout, differing only
+    in vocabulary. This is the geometry the Addendum B gate ran on and
+    it MUST stay byte-identical for artifact reproducibility.
+    ``geometry="diverse"`` (Addendum E) derives the shape itself from
+    the seed: group count, field count, per-field value kinds and group
+    assignments all vary per tenant, answering the B.9.5 limitation
+    that fixed-mode tenants are vocabulary re-rolls of one shape.
 
     Fields are distributed across ``n_groups`` invented top-level objects
     so the target is nested rather than flat — flat key-value extraction is
@@ -2608,19 +2736,46 @@ def make_schema(
     schema in mind.
     """
 
+    rng = random.Random(seed)
+    if geometry == "diverse":
+        # Shape drawn from the seed BEFORE the vocabulary pool so fixed
+        # mode's pool consumption (and thus its schemas) is untouched.
+        n_groups = rng.randint(2, 4)
+        n_fields = rng.randint(max(6, n_groups), 12)
+        n_distractors = rng.randint(3, 7)
+    elif geometry == "diverse-compact":
+        # E-r1: shape-varying but bounded so k=30 LOO sequences fit the
+        # frozen 8192-token budget (E.4 made "diverse" unmeasurable at
+        # its largest draws).
+        n_groups = rng.randint(2, 3)
+        n_fields = rng.randint(max(6, n_groups), 9)
+        n_distractors = rng.randint(3, 5)
+    elif geometry != "fixed":
+        raise ValueError(f"unknown geometry: {geometry!r}")
     if n_fields < n_groups:
         raise ValueError("n_fields must be at least n_groups")
-    rng = random.Random(seed)
     # One pool, so a label can never coincide with a key or a distractor.
     pool = _unique_pseudowords(rng, n_fields * 2 + n_groups + n_distractors + 1)
     tenant_id = pool.pop()
     group_names = [pool.pop() for _ in range(n_groups)]
+    if geometry in ("diverse", "diverse-compact"):
+        # every group non-empty, remainder assigned at random
+        assignment = list(range(n_groups)) + [
+            rng.randrange(n_groups) for _ in range(n_fields - n_groups)
+        ]
+        rng.shuffle(assignment)
+        kinds = [rng.choice(("amount", "code", "date", "name"))
+                 for _ in range(n_fields)]
     fields: list[FieldSpec] = []
     for index in range(n_fields):
         doc_label = pool.pop()
         json_key = pool.pop()  # deliberately unrelated to doc_label
-        group = group_names[index % n_groups]
-        kind = ("amount", "code", "date", "name")[index % 4]
+        if geometry in ("diverse", "diverse-compact"):
+            group = group_names[assignment[index]]
+            kind = kinds[index]
+        else:
+            group = group_names[index % n_groups]
+            kind = ("amount", "code", "date", "name")[index % 4]
         fields.append(
             FieldSpec(
                 doc_label=doc_label,
@@ -2679,6 +2834,8 @@ def make_task(
     n_groups: int = 2,
     n_distractors: int = 4,
     task_id: str | None = None,
+
+    geometry: str = "fixed",
 ):
     """A ``TextTask`` over one invented tenant schema.
 
@@ -2689,7 +2846,8 @@ def make_task(
 
 
     schema = make_schema(
-        seed, n_fields=n_fields, n_groups=n_groups, n_distractors=n_distractors
+        seed, n_fields=n_fields, n_groups=n_groups,
+        n_distractors=n_distractors, geometry=geometry
     )
     total = n_train + n_test
     # Offset record seeds by the schema seed so two tenants never share
@@ -2709,11 +2867,11 @@ def make_task(
 
 
 # === entry: entry_novel_schema_c15_s1a.py ===
-"""Kaggle kernel entry: Addendum B novel-schema gate, 0.5B CPU.
+"""Kaggle kernel entry: Addendum C scale-rung gate, 1.5B GPU (fp16).
 
-The one experiment that can still rescue the quality thesis, run exactly as
-frozen in ENTERPRISE_EVAL_SPEC.md Addendum B (2026-08-12T19:40Z, before any
-record existed):
+The Addendum C scale rung (frozen 2026-08-17T20:35Z), run with all protocol
+values inherited from ENTERPRISE_EVAL_SPEC.md Addendum B (frozen
+2026-08-12T19:40Z) per C.2:
 
 - Corpus: synthetic novel-schema tenants (novel_schema.make_task) — the ONLY
   variable changed from Addendum A. Model, LoRA config, 1 epoch, decode,
@@ -2978,7 +3136,7 @@ def main() -> None:
                 with _torch.no_grad():
                     for n, p in lora_state.items():
                         p.copy_(saved[n].to(p.device, p.dtype))
-                model.train()  # parity with post-adapt state
+                model.eval()  # parity with post-adapt state (adapt_on_examples ends in eval())
                 adapt_seconds = _json.loads(open(f"{ckpt_stem}_meta.json").read())["adapt_seconds"]
                 resumed_adapter = True
                 print(f"resumed adapter: {adapter_path}", flush=True)
@@ -2987,10 +3145,12 @@ def main() -> None:
                 predictor.adapt_text(task, shuffle_seeds=(seed,))
                 adapt_seconds = _time.monotonic() - adapt_started
                 if arm == "adapted":
+                    _adapter_tmp = f"{adapter_path}.tmp"
                     _torch.save(
                         {n: p.detach().cpu() for n, p in model.named_parameters() if "lora_" in n},
-                        adapter_path,
+                        _adapter_tmp,
                     )
+                    _os.replace(_adapter_tmp, adapter_path)
                     _write_atomic(f"{ckpt_stem}_meta.json", {"adapt_seconds": adapt_seconds})
 
             results = []
@@ -3071,7 +3231,7 @@ def main() -> None:
                 elif mean_f1 > CEILING:
                     validity = "ceiling"
             report = {
-                "spec": "ENTERPRISE_EVAL_SPEC.md Addendum B (frozen 2026-08-12T19:40Z)",
+                "spec": "ENTERPRISE_EVAL_SPEC.md Addendum C (frozen 2026-08-17T20:35Z); protocol values per Addendum B (frozen 2026-08-12T19:40Z)",
                 "dataset": "synthetic novel-schema tenants (novel_schema.py), no external data",
                 "tenant": schema.tenant_id,
                 "schema": schema.describe(),  # artifact-only; never in any prompt

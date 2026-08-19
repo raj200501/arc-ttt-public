@@ -1,6 +1,6 @@
 {
  "artifact": "M1 document-only serving throughput, F configuration",
- "spec_context": "COST_APPENDIX 2026-08-19 M1; quality of the voted mode is the banked Addendum F PASS config; greedy mode quality is UNMEASURED",
+ "spec_context": "2026-08-19 cost-analysis measurement M1; quality of the voted mode is the banked Addendum F PASS config; greedy mode quality is UNMEASURED",
  "adapter": "novel_ckpt_f_0.5b_k30_seed3_docadapted_adapter.pt",
  "seed": 3,
  "tenant": "zilifo",

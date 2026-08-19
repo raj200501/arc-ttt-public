@@ -180,6 +180,16 @@ def test_dfs_predict_includes_greedy_when_search_comes_up_empty() -> None:
     model = tiny_model(len(tokenizer))
     task = make_task()
 
+    # Stub generate so the greedy completion is a fixed, parseable grid —
+    # otherwise a no-op dfs_include_greedy flag would be indistinguishable
+    # from the tiny model emitting an unparseable completion. (Single-column
+    # grid: the WordLevel decoder joins tokens with spaces, which only parse
+    # at line edges.)
+    stub = tokenizer("1\n2", return_tensors="pt", add_special_tokens=False).input_ids
+    model.generate = lambda input_ids, **kw: torch.cat(
+        [input_ids, stub.to(input_ids.device)], dim=1
+    )
+
     def build(include_greedy: bool) -> CausalLMPredictor:
         return CausalLMPredictor(
             model,
@@ -193,9 +203,8 @@ def test_dfs_predict_includes_greedy_when_search_comes_up_empty() -> None:
     without = build(False).predict(task, 0, 1)
     assert without == []  # tight cutoff excludes everything, greedy off
     with_greedy = build(True).predict(task, 0, 1)
-    # the tiny random model may emit an unparseable completion; the contract
-    # is only that a parseable greedy grid is appended when it exists
-    assert len(with_greedy) <= 1
+    # the stubbed greedy grid MUST reach the pool when the flag is on
+    assert with_greedy == [((1,), (2,))]
 
 
 def test_predict_frames_matches_per_frame_dfs_search() -> None:
@@ -235,13 +244,16 @@ def test_predict_frames_sampling_path_falls_back_per_frame() -> None:
     frames = [IDENTITY.apply_task(task), Augmentation(rotations=2).apply_task(task)]
 
     grids = predictor.predict_frames(frames, test_index=0, samples=1)
-    assert len(grids) == 2
-    assert all(isinstance(frame, list) for frame in grids)
+    assert len(grids) == len(frames)
+    # samples=1 forces greedy decoding, so the fallback is deterministic and
+    # must match the per-frame path frame by frame (the documented contract).
+    for frame_task, frame_grids in zip(frames, grids):
+        assert frame_grids == predictor.predict(frame_task, test_index=0, samples=1)
 
 
 def test_predict_frames_batched_greedy_produces_valid_grids() -> None:
-    # Greedy inclusion runs as one left-padded batch generate; each frame may
-    # gain at most one extra (deduplicated) grid, and every grid must parse.
+    # Greedy inclusion runs as one left-padded batch generate; with the tight
+    # cutoff each frame must gain exactly the (stubbed, parseable) greedy grid.
     tokenizer = tiny_tokenizer()
     model = tiny_model(len(tokenizer))
     predictor = CausalLMPredictor(
@@ -253,12 +265,20 @@ def test_predict_frames_batched_greedy_produces_valid_grids() -> None:
         torch.device("cpu"),
     )
     model.eval()
+    # Stub the batched generate with a fixed, parseable completion per row so
+    # a no-op greedy inclusion cannot pass as "at most one grid". Single-column
+    # grid: the WordLevel decoder joins tokens with spaces.
+    stub = tokenizer("1\n2", return_tensors="pt", add_special_tokens=False).input_ids
+    model.generate = lambda input_ids, **kw: torch.cat(
+        [input_ids, stub.to(input_ids.device).expand(input_ids.shape[0], -1)], dim=1
+    )
     task = make_task()
     frames = [IDENTITY.apply_task(task), Augmentation(rotations=1).apply_task(task)]
 
     grids = predictor.predict_frames(frames, test_index=0, samples=1)
+    assert len(grids) == len(frames)
     for frame in grids:
-        assert len(frame) <= 1  # tight cutoff: at most the greedy completion
+        assert len(frame) == 1  # tight cutoff: exactly the greedy completion
         for grid in frame:
             assert all(len(row) == len(grid[0]) for row in grid)
 

@@ -10,7 +10,6 @@ submitted, so selection returns an ordered list.
 
 from __future__ import annotations
 
-import math
 from collections import Counter
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
@@ -68,16 +67,20 @@ def rescore_candidates(
 
 
 def select_attempts(candidates: Iterable[Candidate], attempts: int = 2) -> tuple[Grid, ...]:
-    """Rank by (found_count + normalized probability score), descending.
+    """Rank lexicographically by (found_count, mean log-probability), descending.
 
-    The combined score follows the paper's shape: occurrence count plus the
-    geometric-mean probability term. exp(mean log p) lies in (0, 1], so it
-    breaks ties between equal counts without ever outweighing one extra find.
+    Order-equivalent to the paper's additive shape (count + exp(mean log p))
+    under exact arithmetic — exp is monotonic and bounded by 1, so the count
+    strictly dominates and the probability term only breaks ties among equal
+    counts — but the tuple key avoids float64 absorption: exp(mean log p)
+    underflows (or is absorbed by the integer count) for very negative mean
+    log-probabilities, which would make genuinely different candidates
+    compare exactly equal.
     """
 
     ranked = sorted(
         candidates,
-        key=lambda c: c.found_count + math.exp(c.mean_log_probability),
+        key=lambda c: (c.found_count, c.mean_log_probability),
         reverse=True,
     )
     return tuple(candidate.grid for candidate in ranked[:attempts])

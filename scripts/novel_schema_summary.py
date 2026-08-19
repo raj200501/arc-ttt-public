@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+from datetime import datetime, timezone
 from pathlib import Path
 
 GATE_DELTA = 0.05
@@ -65,11 +66,14 @@ def sign_test(deltas: list[float], tol: float = 0.01) -> dict:
     if n == 0:
         return {"wins": 0, "losses": 0, "ties": len(deltas), "p_value": None}
     tail = sum(math.comb(n, i) for i in range(min(wins, losses) + 1))
+    p = min(1.0, 2 * tail / 2**n)
     return {
         "wins": wins,
         "losses": losses,
         "ties": len(deltas) - n,
-        "p_value": round(min(1.0, 2 * tail / 2**n), 4),
+        # Never round a tiny p into a literal 0.0 (B.9.4: "not a probability
+        # of zero") — keep the magnitude; JSON carries e.g. 2.19e-47 fine.
+        "p_value": round(p, 4) if p >= 1e-4 else p,
     }
 
 
@@ -88,6 +92,7 @@ def load(directory: Path, date: str) -> dict:
 def analyse_k(arms: dict, k: int) -> dict:
     seed_deltas: list[float] = []
     pooled: list[float] = []
+    attrition: list[dict] = []
     validity_trips: list[dict] = []
     missing: list[int] = []
     errored: list[int] = []
@@ -125,6 +130,21 @@ def analyse_k(arms: dict, k: int) -> dict:
         a = {r["index"]: r["micro_f1"] for r in adapted["results"] if "micro_f1" in r}
         b = {r["index"]: r["micro_f1"] for r in kshot["results"] if "micro_f1" in r}
         shared = sorted(set(a) & set(b))
+        # B.9.2: every summary must carry an explicit attrition field —
+        # excluded documents (e.g. no_completion) are disclosed per seed.
+        attrition.append(
+            {
+                "seed": seed,
+                "eval_n": adapted.get("eval_n", len(adapted["results"])),
+                "scored": len(shared),
+                "excluded_no_completion": adapted.get(
+                    "eval_n", len(adapted["results"])
+                )
+                - len(shared),
+                "symmetric": ({r["index"] for r in adapted["results"]} - set(a))
+                == ({r["index"] for r in kshot["results"]} - set(b)),
+            }
+        )
         seed_deltas.append(adapted["mean_micro_f1"] - kshot["mean_micro_f1"])
         pooled.extend(a[i] - b[i] for i in shared)
 
@@ -136,6 +156,7 @@ def analyse_k(arms: dict, k: int) -> dict:
         "errored_seeds": errored,
         "heterogeneous_pairs_refused": heterogeneous,
         "validity_trips": validity_trips,
+        "attrition": attrition,
     }
     if seed_deltas:
         out["seed_deltas"] = [round(d, 4) for d in seed_deltas]
@@ -182,10 +203,17 @@ def verdict(gate_row: dict) -> tuple[str, str]:
     )
     ci_agrees = bool(rl.get("excludes_zero")) and rl.get("mean", 0) > 0
     if passes_mean and ci_agrees and sign_agrees:
+        # B.9.4: a rounded-to-zero p must be restated as a bound, never as
+        # "p=0.0" (float underflow, not a probability of zero).
+        p_str = (
+            "p<1e-15"
+            if st["p_value"] < 1e-15
+            else f"p={st['p_value']:.4g}"
+        )
         return "GO", (
             f"Gate PASSES at k={GATE_K}: mean {gate_row['mean_delta']:+.4f} "
             f">= +{GATE_DELTA}, CI excludes zero, sign test agrees "
-            f"({st['wins']}W/{st['losses']}L, p={st['p_value']}). "
+            f"({st['wins']}W/{st['losses']}L, {p_str}). "
             "Claimable per Addendum B B.6, always next to the CORD negative."
         )
     reasons = []
@@ -218,6 +246,9 @@ def main(argv: list[str] | None = None) -> int:
     report = {
         "spec": "ENTERPRISE_EVAL_SPEC.md Addendum B (frozen 2026-08-12T19:40Z)",
         "date": args.date,
+        # Recorded at verdict-computation time so downstream doc fillers
+        # quote an artifact value, never an invented default.
+        "decided": datetime.now(timezone.utc).date().isoformat(),
         "VERDICT": word,
         "verdict_detail": detail,
         "gate_k30": gate_row,

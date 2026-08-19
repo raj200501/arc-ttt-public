@@ -19,9 +19,12 @@ CPU/fp32 on free Kaggle kernels; artifacts carry full receipt trails,
 including `resumed` stamps from the checkpoint/resume system that
 survived repeated infrastructure kill-strikes during the gate.
 
-**Status (2026-08-12): 1.67 public, unchanged by v9 — the recall-bound
-widening was a clean preregistered null; next lever is the DFS time
-budget. First nonzero was 1.67 public on
+**Status (2026-08-15): 1.67 public ×3 — the recall-bound widening (v9)
+and the DFS time-budget raise to 90 s/task (v10) were both clean
+preregistered nulls; budget levers are exhausted, candidate-generation
+quality is the binding constraint, and leaderboard climbing is formally
+deprioritized (`experiments/kaggle_v10_scored_2026-08-15.json`).
+First nonzero was 1.67 public on
 ARC-AGI-2's hidden set** (v8; ~4/240 tasks at 150/240 real-prediction
 coverage). The road there is documented failure by failure: v6 scored
 0.00 (wrong-architecture GPU; accelerator pin via `machine_shape`, paper
@@ -29,7 +32,8 @@ coverage). The road there is documented failure by failure: v6 scored
 incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
-binding constraint, and that is the current work. 128 offline tests
+binding constraint — a multi-week solver program, deprioritized per the
+v10 verdict in favor of the enterprise gates and the paper track. 128 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.

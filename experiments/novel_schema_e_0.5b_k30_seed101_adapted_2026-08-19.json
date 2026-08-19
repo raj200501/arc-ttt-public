@@ -11,7 +11,7 @@
   "resumed": false,
   "seed": 101,
   "gate_role": "DECISION",
-  "validity": "ok",
+  "validity": "uninformative",
   "decode": "vote/rescore ON: 1 greedy + 4 sampled (T=0.7), canonical-JSON pooling, count+likelihood top-1",
   "config": {
     "rank": 16,
@@ -27,7 +27,7 @@
   "scored": 0,
   "invalid_json": 0,
   "no_completion": 60,
-  "mean_micro_f1": 0.0,
+  "mean_micro_f1": null,
   "results": [
     {
       "index": 0,

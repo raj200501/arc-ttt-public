@@ -3,7 +3,10 @@
   "submission_row": 55525902,
   "kernel_version": 10,
   "public_score": 1.67,
-  "prior_scores": {"v8": 1.67, "v9": 1.67},
+  "prior_scores": {
+    "v8": 1.67,
+    "v9": 1.67
+  },
   "scored_by_utc": "2026-08-15T21:36Z",
   "intervention": "DFS time budget 60 -> 90 s/task; all else v9 verbatim; 149 real predictions (v9: 150)",
   "preregistered_read_applied": {

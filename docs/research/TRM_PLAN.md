@@ -2,8 +2,8 @@
 
 Status: research complete, implementation not started. All facts verified 2026-08-08
 unless marked **[verify on GPU]**. Verification routes used this session: GitHub clones
-(SamsungSAILMontreal/TinyRecursiveModels at `scratchpad/trm-upstream`, 1ytic/NVARC at
-`scratchpad/NVARC` incl. the extracted solution paper), the **Kaggle API** (dataset
+(SamsungSAILMontreal/TinyRecursiveModels and 1ytic/NVARC, incl. the extracted
+solution paper), the **Kaggle API** (dataset
 metadata/files and both NVARC notebooks pulled with our project credentials — kaggle.com
 web pages remain blocked by the egress proxy), and web search. Clean-room rule for this
 component: the upstream TRM repo is MIT so we may vendor it verbatim; the NVARC repo has
@@ -36,8 +36,9 @@ scored *lower*, 20.28), and Qwen3-4B 27.22 → 27.22 (**zero gain**). "Most of t
 solved by TRM were solved by Qwen3"; Qwen3 rescoring picked on average ~1 extra puzzle
 from TRM. So this is a **+0.5–2 point** component for a mid-strength LLM and ~0 for a
 strong one — worth having while our LLM is weak (TRM standalone at 10.0 may even exceed
-our current LLM score), but it is not a 5-point lever. ROADMAP's "biggest lift" framing
-should be read as "biggest remaining *recipe* item", not biggest guaranteed delta.
+our current LLM score), but it is not a 5-point lever. ROADMAP now lists the TRM
+ensemble as DEMOTED per this plan — read it as the biggest remaining *recipe* item,
+not the biggest guaranteed delta.
 
 ## 1. What TRM inference requires
 
@@ -92,6 +93,15 @@ should be read as "biggest remaining *recipe* item", not biggest guaranteed delt
   eval-time override H_cycles 3→4 is weight-compatible — verified by them running it).
 
 ### 1.4 Runtime / VRAM envelope (Kaggle 4×L4, 96 GB total)
+
+> **Correction (2026-08-08, per KAGGLE_MECHANICS.md):** the 2026
+> ARC-AGI-2 Kaggle track provides **T4/P100 only**; our actual
+> interactive runs drew 2×Tesla T4 (~32 GB total). The "4×L4, 96 GB"
+> envelope below — and the paper's "2000 epochs ≈ 2h" anchor — describe
+> NVARC's 2025-vintage environment. Restate for 2×T4 before budgeting:
+> `torchrun --nproc-per-node 2`; wall-clock (and B3's ~2.5h TRM-TTT cap /
+> "all 4 GPUs" split) needs re-measurement on 2×T4, with epoch/aug-count
+> reduction as the fallback knob.
 
 - Their public TRM notebook ([kaggle.com/code/cpmpml/arc2-trm-v31](https://www.kaggle.com/code/cpmpml/arc2-trm-v31),
   pulled via `kaggle kernels pull`): builds the 128-aug test dataset in-notebook, then
@@ -210,8 +220,9 @@ Phase B — build:
    mirroring `tests/test_pipeline.py` style: TRM-only candidate wins iff score clears
    DFS candidates; w_trm parameterized; malformed-grid rejection.
 6. **B3 (3h): bundle + kernel budget split** (`kaggle/build_bundle.py`, entry script):
-   attach checkpoint dataset + wheels; sequence phases TRM-TTT (all 4 GPUs, hard cap
-   ~2.5h wall-clock with epoch-count fallback) → LLM TTT/DFS (remaining ~8.5h) →
+   attach checkpoint dataset + wheels; sequence phases TRM-TTT (all available GPUs —
+   2×T4 on the 2026 track, see the §1.4 correction; hard cap ~2.5h wall-clock, to be
+   re-measured on 2×T4, with epoch-count fallback) → LLM TTT/DFS (remaining ~8.5h) →
    merge/rescore. Add the TRM-standalone submission fallback path.
 7. **B4 (2h): end-to-end dry run on Lightning** with a 10-task slice; then A/B w_trm ∈
    {0, 1} on the public eval split. **[verify on GPU]**
@@ -247,12 +258,12 @@ Trigger: R1/R3 fail (weights don't load, or reproduce < ~7% pass@2 on public eva
 
 ## Sources
 
-- [github.com/SamsungSAILMontreal/TinyRecursiveModels](https://github.com/SamsungSAILMontreal/TinyRecursiveModels) — MIT LICENSE, `dataset/build_arc_dataset.py`, `evaluators/arc.py`, `config/` (cloned to scratchpad `trm-upstream/`, 2026-08-08)
+- [github.com/SamsungSAILMontreal/TinyRecursiveModels](https://github.com/SamsungSAILMontreal/TinyRecursiveModels) — MIT LICENSE, `dataset/build_arc_dataset.py`, `evaluators/arc.py`, `config/` (cloned 2026-08-08)
 - [arXiv:2510.04871](https://arxiv.org/abs/2510.04871) — TRM paper (abs page proxy-blocked; details via search results incl. [huggingface.co/papers/2510.04871](https://huggingface.co/papers/2510.04871))
-- [github.com/1ytic/NVARC](https://github.com/1ytic/NVARC) — `TRM/README.md` (train/eval commands, checkpoint provenance, local stats), `nvarc_2025.pdf` §4 (TRM pretrain/TTT/ensembling; extracted text in scratchpad), **no LICENSE file** (cloned)
+- [github.com/1ytic/NVARC](https://github.com/1ytic/NVARC) — `TRM/README.md` (train/eval commands, checkpoint provenance, local stats), `nvarc_2025.pdf` §4 (TRM pretrain/TTT/ensembling; text extracted from nvarc_2025.pdf), **no LICENSE file** (cloned)
 - [kaggle.com/datasets/cpmpml/arc-prize-trm-031](https://www.kaggle.com/datasets/cpmpml/arc-prize-trm-031) — CC0-1.0, 7 × 2,159,719,349-byte checkpoints (via Kaggle API `datasets metadata`/`files`, 2026-08-08); sibling datasets `cpmpml/arc-prize-trm-{training,evaluation}-data` also CC0-1.0
 - [kaggle.com/code/cpmpml/arc2-trm-v31](https://www.kaggle.com/code/cpmpml/arc2-trm-v31) — pure-TRM submission notebook (pulled via `kaggle kernels pull`, latest version = post-deadline 4000-epoch variant)
 - [kaggle.com/code/sorokin/arc2-qwen3-unsloth-flash-lora-batch4-queue](https://www.kaggle.com/code/sorokin/arc2-qwen3-unsloth-flash-lora-batch4-queue) — LLM notebook (pulled; latest version contains **no** TRM merge code — ensemble merge is unpublished)
 - `docs/research/KAGGLE_MECHANICS.md` §1/§4 — competition external-model + open-source rules (verified 2026-08-08)
 - [arXiv:2511.02886](https://arxiv.org/abs/2511.02886) — Trelis, "Test-time Adaptation of Tiny Recursive Models" (fallback pretraining recipe)
-- `src/arcttt/vote.py`, `src/arcttt/solve.py`, `kaggle/v1/bundled_pipeline.py` — our injection points (read this session)
+- `src/arcttt/vote.py`, `src/arcttt/solve.py`, `kaggle/v10/bundled_pipeline.py` — our injection points (read this session)

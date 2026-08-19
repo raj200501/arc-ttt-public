@@ -88,6 +88,13 @@ def main() -> int:
         for i in a:
             d = a[i] - k[i]
             deltas_all.append(d)
+            # Tie convention note (spec errata P9): this verifier counts a
+            # win/loss at |delta| > 1e-12 (float-noise tolerance), whereas
+            # the shipped B.3 rule in cord_paired_power.py uses tol=0.01
+            # ("micro-F1 differences below a point are not a win"). On the
+            # banked receipts the two conventions yield identical tallies
+            # (156W/0L/2T) and identical verdicts; the math here is frozen
+            # deliberately — do not change it without a spec errata.
             wins += d > 1e-12
             losses += d < -1e-12
             ties += abs(d) <= 1e-12

@@ -33,7 +33,7 @@ def to_grid(rows: object) -> Grid:
         elif len(row) != width:
             raise TaskFormatError("grid rows must share one width")
         for cell in row:
-            if not isinstance(cell, int) or not 0 <= cell < COLORS:
+            if isinstance(cell, bool) or not isinstance(cell, int) or not 0 <= cell < COLORS:
                 raise TaskFormatError("grid cells must be ints in [0, 10)")
         out.append(tuple(row))
     if len(out) > MAX_SIDE or (width or 0) > MAX_SIDE:

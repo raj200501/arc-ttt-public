@@ -16,7 +16,6 @@
     "what_would_have_falsified_this": "Any movement in either direction. A rise would have converted the recall class; a fall would have indicated the wider bound was admitting distractors and costing precision. Neither happened."
   },
   "caveat_on_resolution": "The public leaderboard quantizes at roughly 1/240 = 0.42 points, so 'flat' means the change moved fewer than about one hidden task in either direction. It does not exclude a sub-task-scale effect; it does exclude an effect large enough to matter against the ~10% Sept-1 bar.",
-  "kill_trigger_status": "ARC continues (nonzero, unchanged). The Sept 1 bar of ~10% still requires roughly a 4x hit-rate improvement and is untouched by this result.",
   "quota_note": "v10 cannot be pushed before the 2026-08-15 GPU refresh: quota is 33.29h used against a 30h allowance, currently OVERRUN. The lever is identified but not yet purchasable.",
   "submission_slot": "The 08-11 slot was spent by v9. No submission was made on the 08-12 slot: v10 is the only candidate and it is quota-blocked, and the non-negotiable forbids spending a slot on a file that cannot be produced."
 }

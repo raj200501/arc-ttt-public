@@ -298,8 +298,8 @@ Drift now fails at build time, on our machine.
 Gradient checkpointing interacts badly with both ends of the per-task loop.
 With the base model frozen and only LoRA parameters trainable, the
 checkpointed segments see no input requiring grad, and backward crashes;
-the fix is `enable_input_require_grads()` before enabling checkpointing, now
-guarded by a regression test. Symmetrically, checkpointing must be disabled
+the fix is `enable_input_require_grads()` before enabling checkpointing.
+Symmetrically, checkpointing must be disabled
 again before generation, which uses the KV cache; the adapt/eval transition
 in the predictor handles both edges. Neither interaction appears in any
 recipe writeup we know of, and both cost us GPU-hours.
@@ -351,7 +351,7 @@ refreshed from the same registry as larger runs land.
 | 4.5 | Augmentation count sweep | dihedral only | + color perms / + shuffle | TODO(artifact) | TODO(artifact) | TODO(artifact) (planned: `aug_sweep_*.json`) |
 | 4.6 | Base model scale | 0.5B (+400-task SFT) | champion 4B | 15 tasks / 22 pairs vs 8 tasks / 10 pairs | 0/22 (0.5B, honest zero) vs 1/10 (4B); non-paired task sets — indicative only | `t4_sft_eval_2026-08-08.json`, `t4_smoke_2026-08-08.json`, `t4_champ_eval_2026-08-08.json` |
 | 4.7 | LoRA rank feasibility sweep (16-aug TTT, single task) | r=16 / 64 / 128 | r=256 (champion rank) | 1 task (7b5033c1) | 630.0 / 484.8 / 577.2 / 585.0 s; peak 12.78 / 10.88 / 12.23 / 12.69 GB — all four ranks fit a 16 GB T4; r=64 is both fastest and lightest; basis for running r=256 in kernel v7 | `t4_rank_sweep_2026-08-08.json` |
-| 4.8 | Kernel coverage at fixed 12 h budget: generic cache iteration + level-0 ladder start (v7) vs probed cache API + use_cache=False rescoring + 4-frame search + pacing guard (v8) | v7: 167/240 attempted, 40 real (98 ValueError; 52/19/1 OOM ladder) | v8: TODO(artifact)/240 attempted | 240 hidden tasks, 2xT4, 12 h | TODO(artifact): fill from v8 interactive log postmortem; adversarial review projects 200-240 attempted | kaggle_v7_postmortem_2026-08-08.json; planned: kaggle_v8_postmortem json |
+| 4.8 | Kernel coverage at fixed 12 h budget: generic cache iteration + level-0 ladder start (v7) vs probed cache API + use_cache=False rescoring + 4-frame search + pacing guard (v8) | v7: 167/240 attempted, 40 real (98 ValueError; 52/19/1 OOM ladder) | v8: 137/240 tasks with a real attempt (150 real predictions) | 240 hidden tasks, 2xT4, 12 h | v8: 137/240 attempted (150 real predictions, 522 min; below the 200-240 pre-run projection); v7's 98-task _gather_cache ValueError eliminated | kaggle_v7_postmortem_2026-08-08.json; kaggle_v8_run_2026-08-09.json; kaggle_v8_interactive_run.log; planned: kaggle_v8_postmortem json |
 
 Context rows from the registry (`experiments/README.md`): the initial
 pipeline smoke test (`t4_smoke_2026-08-08.json`) measured 77 s/task mean at
@@ -396,7 +396,7 @@ On a single T4, on small slices of the ARC-AGI-2 public evaluation set:
 | Champion 4B, 4 augs, r=16 TTT + DFS | 72–282 | $0.010–0.078 | `t4_champ_dfs_eval_2026-08-08.json` |
 | Champion 4B, 4 augs, r=16 TTT + fixed DFS (crop-on-backtrack) | 116–365 | $0.016–0.101 | `t4_dfs_fixed_repeat_2026-08-08.json` |
 | Champion 4B, 8-aug TTT, DFS cutoff 0.05 | 458–965 | $0.064–0.27 | `t4_champ_diag_2026-08-08.json` |
-| Champion 4B, r=256 TTT, batched DFS (60 s budget), v8 kernel (2xT4, Kaggle) | TODO(artifact) (v7 comparator: 649 min x 2 GPUs / 167 attempted ≈ 466 GPU-s/task; v8 target <= 330) | n/a — competition-provided compute | planned: kaggle_v8_interactive_run.log + postmortem |
+| Champion 4B, r=256 TTT, batched DFS (60 s budget), v8 kernel (2xT4, Kaggle) | 522 min x 2 GPUs / 137 attempted ≈ 457 GPU-s/task (v7 comparator: 649 min x 2 GPUs / 167 attempted ≈ 466 GPU-s/task; both above the <= 330 per-task target) | n/a — competition-provided compute | kaggle_v8_run_2026-08-09.json; kaggle_v8_interactive_run.log |
 
 All ≈$/task figures additionally assume $1.00/credit (the provider's list
 price for on-demand credits).
@@ -419,13 +419,16 @@ adaptation cost sits in the cents-to-dimes range across implementations.
 ### 5.2 Dollars per accuracy point: not yet computable, by our own rules
 
 The quantity this section exists for — dollars per accuracy point, per
-component — cannot yet be honestly reported: our scored submission to date
-produced 0.00 (section 6.7), and local scored slices are too small to
-support a rate (1/9 scored pairs at best, section 4.3). Rather than back
-into a $/point number from a projection, we publish the cost side of the
-curve now, wired to the same artifacts as section 4, and will populate the
+component — cannot yet be honestly reported: our scored submissions to date
+are 0.00, 0.00, then 1.67 public three times running (v8–v10; sections 1,
+6.7, 7.1) — a single flat aggregate that does not decompose into
+per-component rates — and local scored slices are too small to support a
+rate (1/9 scored pairs at best, section 4.3). Rather than back into a
+$/point number from a projection, we publish the cost side of the curve
+now, wired to the same artifacts as section 4, and will populate the
 $/point column from scored runs as they land. TODO(artifact): fill in
-$/point per ablation arm once a non-zero scored run exists.
+$/point per ablation arm once scored runs differ across arms (v8–v10 are
+flat at 1.67, so per-arm attribution is not yet identifiable).
 
 ### 5.3 Why per-task cost is the number that matters
 
@@ -475,7 +478,7 @@ required token is missing (section 3.6).
 only LoRA parameters trainable, checkpointed segments see no input
 requiring grad and backward crashes — `enable_input_require_grads()` is
 mandatory; and checkpointing must be disabled again before cache-using
-generation. Both edges are now regression-tested (section 3.5).
+generation. Both edges are handled in the adapt/eval transition (section 3.5).
 
 **6.5 Hand-synced bundles drift (kernel v4).** Two indented intra-package
 imports survived a manual sync into the single-file kernel; local runs
@@ -634,11 +637,16 @@ identity: ~430 MB of resident activations per layer at 5.4k tokens is
 full activation storage, not checkpointed storage — despite
 ``gradient_checkpointing_enable()`` reporting success and the trunk flag
 reading ``True``. In this scoring image's transformers build, the
-checkpointing machinery is a silent no-op at layer level. The repair
-abandons the library mechanism: wrap each decoder layer in
-``torch.utils.checkpoint`` directly, print the wrapped-layer count so
-the log proves engagement, and restore original forwards before
-generation.
+checkpointing machinery is a silent no-op at layer level. The next
+instrumented attempt abandoned the library mechanism — wrap each decoder
+layer in ``torch.utils.checkpoint`` directly, print the wrapped-layer
+count so the log proves engagement, and restore original forwards before
+generation — and the scoring image defeated that too, as it did
+``torch.autograd.graph.save_on_cpu``: GPU memory held byte-stable at
+~11.3 GB throughout, though both mechanisms verified working locally on
+transformers 5.15. The actual repair abandoned the GPU path for the k=30
+pairs entirely: CPU/fp32, made feasible by the gradient-pinned chunked
+cross-entropy above (ENTERPRISE_EVAL_SPEC.md B.7-r4).
 
 Rule, and it is the same rule as 6.7 and 6.8 wearing new clothes: a
 framework flag is a claim, not a measurement. Flags said checkpointing
@@ -647,16 +655,16 @@ the failure site before hypothesizing twice about it — the one run we
 instrumented taught more than the three we reasoned about.
 
 Epilogue to the incident, for completeness (2026-08-17): the gate this
-infrastructure ultimately served — after a further migration of the
-k=30 pairs to CPU/fp32 and a checkpoint/resume layer added when an
-external canceller repeatedly killed 13-hour runs — decided GO on its
+infrastructure ultimately served — on that CPU/fp32 path, with a
+checkpoint/resume layer added when an external canceller repeatedly
+killed 13-hour runs — decided GO on its
 preregistered terms: mean paired delta +46.5 micro-F1 over seeds
 {1,2,3} against a +5 bar frozen before any data (receipt-level sign
 test 156W/0L; two unplanned same-environment replications agreeing to
 0.002-0.010). The full novel-schema study is its own artifact
 (ENTERPRISE_EVAL_SPEC.md Addendum B and the novel_schema_* records in
-experiments/), reported here only because this incident's repair is
-what made it measurable. Per that spec's claim rule, the positive
+experiments/), reported here only because this incident's repair — the
+chunked loss plus the CPU/fp32 migration — is what made it measurable. Per that spec's claim rule, the positive
 travels with its negative: the same adaptation recipe FAILED its
 preregistered gates on CORD at all three scales tested (Addendum A).
 
@@ -716,16 +724,18 @@ validation measured a 7.55× reduction in forward calls on the batched path
 (commit `44f39ff`; measured in that validation run but not yet captured in
 a registry artifact — TODO(artifact)); wall-clock gains on competition
 hardware are still to be measured (TODO(artifact)). That headroom converts directly into more
-augmentation frames, looser cutoffs, or higher LoRA rank within the same
-12-hour envelope — which is where the diagnostic above says the accuracy
-is.
+augmentation frames or higher LoRA rank within the same 12-hour
+envelope — candidate-generation levers, which is where the v9/v10
+preregistered nulls and the diagnostic above say the accuracy is (the
+cutoff itself is a banked null: v9 widened it 1.6 nats for exactly zero
+score change, and the preregistration rules out further widening).
 
 **TTT sharpening toward the champion configuration.** Our earlier
 validated runs used lite adapters (r=16–64); the rank sweep (row 4.7,
 `t4_rank_sweep_2026-08-08.json`) then validated the champion rank r=256 on
 a 16 GB T4, and kernel v7 ran r=256/alpha=32 with rslora end-to-end.
-Closing the remaining configuration gap — augmentation frames, search
-cutoff — guided by the teacher-forced diagnostic rather
+Closing the remaining configuration gap — augmentation frames (the
+search cutoff is a banked v9 null) — guided by the teacher-forced diagnostic rather
 than by end-to-end score alone, is the highest-signal-per-GPU-hour
 iteration available to us.
 
@@ -798,12 +808,11 @@ recipe on this task. (The 4B CPU replication intended to retire the
 device/dtype half proved infeasible — 4B fp32 exceeds the CPU session's
 memory — so the 4B rung's own number retains that caveat.)
 
-We hold to that reading with two bounds. The 1.5B rung is still in
-flight, so "two of three completed" is the accurate scope. And neither
-failure is individually significant (p=0.60, p=0.10 by sign test) against
-a gate whose minimum detectable effect exceeds its own threshold, so what
-the evidence supports is the absence of a demonstrated benefit, not a
-demonstrated harm. The confound named above is also only partly retired:
+We hold to that reading with two bounds. No rung's failure is
+individually significant (p=0.60 at 0.5B, p=0.42 at 1.5B, p=0.10 at 4B by
+sign test) against a gate whose minimum detectable effect exceeds its own
+threshold, so what the evidence supports is the absence of a demonstrated
+benefit, not a demonstrated harm. The confound named above is also only partly retired:
 0.5B and 4B differ in domain-specific SFT as well as in scale, so the
 recipe-level reading is the most parsimonious explanation of these
 artifacts rather than the only one they permit.

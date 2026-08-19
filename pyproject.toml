@@ -8,7 +8,10 @@ version = "0.0.1"
 description = "Test-time training lab for ARC Prize 2026"
 requires-python = ">=3.11"
 license = {text = "MIT"}
-dependencies = []
+# transformers upper bound: DynamicCache.crop's legacy positive-argument
+# interpretation is scheduled for removal in 5.18 (decode._crop_cache already
+# uses the negative non-deprecated form, but keep the tested range pinned).
+dependencies = ["transformers>=4.54,<5.18"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10", "ruff>=0.7,<1", "mypy>=1.13,<2"]

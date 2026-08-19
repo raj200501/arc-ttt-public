@@ -36,7 +36,7 @@ import sys
 from pathlib import Path
 
 
-def classify(incoming: dict, existing: dict) -> str:
+def classify(incoming: dict, existing: dict, partner: dict | None = None) -> str:
     if "error" in existing and "error" not in incoming:
         return "supersede-error"
     if "error" in incoming:
@@ -47,6 +47,16 @@ def classify(incoming: dict, existing: dict) -> str:
     if same_env:
         if existing.get("mean_micro_f1") == incoming.get("mean_micro_f1"):
             return "skip"
+        return "conflict"
+    # Rule 5's second condition: an existing arm that still matches its
+    # banked pair partner's environment is NOT the stale side of a dtype
+    # migration — refuse loudly for a human instead of moving it aside.
+    if (
+        partner is not None
+        and "error" not in partner
+        and existing.get("device") == partner.get("device")
+        and existing.get("dtype") == partner.get("dtype")
+    ):
         return "conflict"
     return "supersede-env"
 
@@ -75,7 +85,20 @@ def main(argv: list[str] | None = None) -> int:
             actions.append(f"banked NEW      {path.name}")
             continue
         existing = json.loads(dest.read_text())
-        outcome = classify(record, existing)
+        partner = None
+        for candidate in exp.glob(f"novel_schema_*_{args.date}.json"):
+            if candidate == dest:
+                continue
+            other = json.loads(candidate.read_text())
+            if (
+                other.get("rung") == record.get("rung")
+                and other.get("k") == record.get("k")
+                and other.get("seed") == record.get("seed")
+                and other.get("arm") != record.get("arm")
+            ):
+                partner = other
+                break
+        outcome = classify(record, existing, partner)
         if outcome == "skip":
             continue
         if outcome == "conflict":
@@ -85,7 +108,14 @@ def main(argv: list[str] | None = None) -> int:
             )
             continue
         superseded.mkdir(exist_ok=True)
-        shutil.move(str(dest), superseded / path.name)
+        # Never overwrite a previously preserved copy ("nothing is deleted"):
+        # pick a collision-free destination for repeat supersedes.
+        aside = superseded / path.name
+        n = 1
+        while aside.exists():
+            aside = superseded / f"{path.stem}.superseded{n}{path.suffix}"
+            n += 1
+        shutil.move(str(dest), aside)
         shutil.copy(path, dest)
         actions.append(f"banked {outcome:14} {path.name}")
 

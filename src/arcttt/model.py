@@ -64,7 +64,7 @@ class TTTConfig:
     raw_qwen_format: bool = False  # champion-style <|im_start|> framing, no system turn
     gradient_checkpointing: bool = False
     use_dfs: bool = False  # constrained DFS decoding instead of sampled generation
-    dfs_probability_cutoff: float = 0.2  # keep completions with per-step prob >= this
+    dfs_probability_cutoff: float = 0.2  # keep completions whose TOTAL probability exceeds this (DFS prunes at cumulative NLL -ln(cutoff))
     dfs_max_candidates: int = 32
     shuffle_examples: bool = False  # permute demonstration order per augmentation
     ttt_batch_size: int = 1  # examples per optimizer step (padded batch)
@@ -137,6 +137,15 @@ class CausalLMPredictor:
         self.model: Any = model
         self._grid_vocab: Any = None
 
+    def _pad_id(self) -> int:
+        """Padding token id with None-based fallback (a legitimate pad id of 0
+        must NOT fall through to eos — truthiness would drop it)."""
+
+        pad = self.tokenizer.pad_token_id
+        if pad is None:
+            pad = self.tokenizer.eos_token_id
+        return 0 if pad is None else int(pad)
+
     # -- adaptation ---------------------------------------------------------
 
     def adapt(self, task: Task, augmentations: Sequence[Augmentation]) -> None:
@@ -204,61 +213,76 @@ class CausalLMPredictor:
                     f"manually checkpointed {len(wrapped_layers)} decoder layers",
                     flush=True,
                 )
-        optimizer = torch.optim.AdamW(
-            lora_parameters(self.model), lr=self.config.learning_rate
-        )
-        encoded = [
-            batch
-            for turns in examples
-            if (batch := self._encode(turns, supervise_final=True)) is not None
-        ]
-        batch_size = max(1, self.config.ttt_batch_size)
-        if batch_size > 1:
-            # Sort by length so padded batches stay dense (batch_size 1 keeps
-            # the original example order and exact legacy behavior).
-            encoded.sort(key=lambda pair: pair[0].shape[1])
-        pad_id = self.tokenizer.pad_token_id or self.tokenizer.eos_token_id or 0
-        for _ in range(self.config.epochs):
-            for start in range(0, len(encoded), batch_size):
-                chunk = encoded[start : start + batch_size]
-                if len(chunk) == 1:
-                    input_ids, labels = chunk[0]
-                    attention_mask = torch.ones_like(input_ids)
-                else:
-                    width = max(ids.shape[1] for ids, _ in chunk)
-                    input_ids = torch.full(
-                        (len(chunk), width), pad_id, dtype=torch.long
-                    )
-                    labels = torch.full((len(chunk), width), -100, dtype=torch.long)
-                    attention_mask = torch.zeros(
-                        (len(chunk), width), dtype=torch.long
-                    )
-                    for row, (ids, label_row) in enumerate(chunk):
-                        length = ids.shape[1]
-                        input_ids[row, :length] = ids[0].cpu()
-                        labels[row, :length] = label_row[0].cpu()
-                        attention_mask[row, :length] = 1
-                    input_ids = input_ids.to(self.device)
-                    labels = labels.to(self.device)
-                    attention_mask = attention_mask.to(self.device)
-                optimizer.zero_grad()
-                if self.config.chunked_loss_tokens > 0:
-                    self._chunked_loss_backward(input_ids, attention_mask, labels)
-                else:
-                    loss = self.model(
-                        input_ids=input_ids,
-                        attention_mask=attention_mask,
-                        labels=labels,
-                    ).loss
-                    loss.backward()
-                optimizer.step()
-        for layer, original_forward in wrapped_layers:
-            layer.forward = original_forward
-        if self.config.gradient_checkpointing and hasattr(
-            self.model, "gradient_checkpointing_disable"
-        ):
-            self.model.gradient_checkpointing_disable()  # cached generation next
-        self.model.eval()
+        try:
+            optimizer = torch.optim.AdamW(
+                lora_parameters(self.model), lr=self.config.learning_rate
+            )
+            encoded = [
+                batch
+                for turns in examples
+                if (batch := self._encode(turns, supervise_final=True)) is not None
+            ]
+            dropped = len(examples) - len(encoded)
+            if dropped:
+                print(
+                    f"adapt_on_examples: dropped {dropped}/{len(examples)} examples over "
+                    f"max_sequence_tokens={self.config.max_sequence_tokens}",
+                    flush=True,
+                )
+            if not encoded:
+                print(
+                    "adapt_on_examples: ALL examples dropped — zero optimizer steps, "
+                    "adapter is a no-op (predictions = base model)",
+                    flush=True,
+                )
+            batch_size = max(1, self.config.ttt_batch_size)
+            if batch_size > 1:
+                # Sort by length so padded batches stay dense (batch_size 1 keeps
+                # the original example order and exact legacy behavior).
+                encoded.sort(key=lambda pair: pair[0].shape[1])
+            pad_id = self._pad_id()
+            for _ in range(self.config.epochs):
+                for start in range(0, len(encoded), batch_size):
+                    chunk = encoded[start : start + batch_size]
+                    if len(chunk) == 1:
+                        input_ids, labels = chunk[0]
+                        attention_mask = torch.ones_like(input_ids)
+                    else:
+                        width = max(ids.shape[1] for ids, _ in chunk)
+                        input_ids = torch.full(
+                            (len(chunk), width), pad_id, dtype=torch.long
+                        )
+                        labels = torch.full((len(chunk), width), -100, dtype=torch.long)
+                        attention_mask = torch.zeros(
+                            (len(chunk), width), dtype=torch.long
+                        )
+                        for row, (ids, label_row) in enumerate(chunk):
+                            length = ids.shape[1]
+                            input_ids[row, :length] = ids[0].cpu()
+                            labels[row, :length] = label_row[0].cpu()
+                            attention_mask[row, :length] = 1
+                        input_ids = input_ids.to(self.device)
+                        labels = labels.to(self.device)
+                        attention_mask = attention_mask.to(self.device)
+                    optimizer.zero_grad()
+                    if self.config.chunked_loss_tokens > 0:
+                        self._chunked_loss_backward(input_ids, attention_mask, labels)
+                    else:
+                        loss = self.model(
+                            input_ids=input_ids,
+                            attention_mask=attention_mask,
+                            labels=labels,
+                        ).loss
+                        loss.backward()
+                    optimizer.step()
+        finally:
+            for layer, original_forward in wrapped_layers:
+                layer.forward = original_forward
+            if self.config.gradient_checkpointing and hasattr(
+                self.model, "gradient_checkpointing_disable"
+            ):
+                self.model.gradient_checkpointing_disable()  # cached generation next
+            self.model.eval()
 
     def _chunked_loss_backward(
         self,
@@ -370,8 +394,7 @@ class CausalLMPredictor:
                     max_new_tokens=self.config.max_new_tokens,
                     do_sample=sample > 0,
                     temperature=self.config.temperature,
-                    pad_token_id=self.tokenizer.pad_token_id
-                    or self.tokenizer.eos_token_id,
+                    pad_token_id=self._pad_id(),
                 )
                 texts.append(
                     self.tokenizer.decode(
@@ -397,7 +420,7 @@ class CausalLMPredictor:
             max_score=-math.log(self.config.dfs_probability_cutoff),
             max_new_tokens=self.config.max_new_tokens,
             max_candidates=self.config.dfs_max_candidates,
-            deadline=time.time() + budget if budget is not None else None,
+            deadline=time.monotonic() + budget if budget is not None else None,
         )
         seen: set[Grid] = set()
         ordered: list[Grid] = []
@@ -413,8 +436,7 @@ class CausalLMPredictor:
                     attention_mask=attention_mask,
                     max_new_tokens=self.config.max_new_tokens,
                     do_sample=False,
-                    pad_token_id=self.tokenizer.pad_token_id
-                    or self.tokenizer.eos_token_id,
+                    pad_token_id=self._pad_id(),
                 )
             text = self.tokenizer.decode(
                 generated[0][prompt.shape[1] :], skip_special_tokens=True
@@ -464,7 +486,7 @@ class CausalLMPredictor:
             max_score=-math.log(self.config.dfs_probability_cutoff),
             max_new_tokens=self.config.max_new_tokens,
             max_candidates=self.config.dfs_max_candidates,
-            deadline=time.time() + budget if budget is not None else None,
+            deadline=time.monotonic() + budget if budget is not None else None,
             stats_out=frame_stats,
         )
         # Running tally of WHY searches stop, across the whole run. A run
@@ -495,7 +517,7 @@ class CausalLMPredictor:
     def _greedy_grids(self, prompts: Sequence[torch.Tensor]) -> list[Grid | None]:
         """Greedy completion per prompt via one left-padded batch generate."""
 
-        pad_id = self.tokenizer.pad_token_id or self.tokenizer.eos_token_id or 0
+        pad_id = self._pad_id()
         width = max(prompt.shape[1] for prompt in prompts)
         ids = torch.full((len(prompts), width), pad_id, dtype=torch.long)
         mask = torch.zeros((len(prompts), width), dtype=torch.long)
@@ -531,8 +553,12 @@ class CausalLMPredictor:
         """Score heterogeneous (task, test_index, output) pairs, chunked.
 
         One padded batch forward per chunk instead of one call per
-        augmentation frame; chunking bounds activation memory (the cut
-        16-token vocabulary keeps the logits tensor negligible)."""
+        augmentation frame; chunk_rows bounds activation memory — each chunk
+        still materializes FULL-vocab logits ([chunk_rows, width, ~152k]
+        float32, the dominant tensor; see the 152k-vocab OOM note at the top
+        of this file), so keep chunk_rows small. The 16-token grid vocabulary
+        only constrains DFS search in decode.py; it never shrinks scoring
+        logits."""
 
         encoded: list[tuple[torch.Tensor, torch.Tensor] | None] = []
         for task, test_index, output in pairs:
@@ -542,7 +568,7 @@ class CausalLMPredictor:
             encoded.append(self._encode(turns, supervise_final=True))
         scores = [float("-inf")] * len(pairs)
         live = [(i, e) for i, e in enumerate(encoded) if e is not None]
-        pad_id = self.tokenizer.pad_token_id or self.tokenizer.eos_token_id or 0
+        pad_id = self._pad_id()
         for start in range(0, len(live), chunk_rows):
             chunk = live[start : start + chunk_rows]
             width = max(e[0].shape[1] for _, e in chunk)
@@ -601,7 +627,7 @@ class CausalLMPredictor:
         scores = [float("-inf")] * len(sequences)
         if not live:
             return scores
-        pad_id = self.tokenizer.pad_token_id or self.tokenizer.eos_token_id or 0
+        pad_id = self._pad_id()
         width = max(e[0].shape[1] for _, e in live)
         ids = torch.full((len(live), width), pad_id, dtype=torch.long)
         labels = torch.full((len(live), width), -100, dtype=torch.long)

@@ -4,7 +4,7 @@
  "model": "gemini-3.5-flash-lite (cheapest current API tier, k-shot in-context, no adaptation; self-run and labeled as such)",
  "spec_relation": "Same corpus construction as the frontier baseline (make_task(seed, n_train=10, n_test=60)); scored on the first 20 eval docs per tenant (indices 0-19). Bounded subset \u2014 labeled as such, never pooled with the 60-doc kernel arms.",
  "protocol": "Exact text_task_to_messages turns mapped to the API's chat roles; temperature 0; single sample per receipt; scored with arcttt.text_ttt.score_text_output (same scorer as all arms). Raw predictions stored.",
- "honest_framing_REQUIRED": "Context arm for the cost analysis (COST_APPENDIX 2026-08-19): whether the cheap tier matches frontier quality on never-seen schemas. States nothing about any preregistered gate.",
+ "honest_framing_REQUIRED": "Context arm for the cost analysis (the 2026-08-19 cost analysis): whether the cheap tier matches frontier quality on never-seen schemas. States nothing about any preregistered gate.",
  "k": 10,
  "pooled_mean_micro_f1": 1.0,
  "pooled_n": 60,

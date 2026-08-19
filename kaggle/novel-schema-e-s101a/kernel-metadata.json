@@ -1,0 +1,16 @@
+{
+  "id": "rajskashikar/arc-ttt-novel-schema-e-s101a",
+  "title": "arc-ttt novel schema e s101a",
+  "code_file": "bundled_pipeline.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": true,
+  "competition_sources": [],
+  "model_sources": [],
+  "dataset_sources": [
+    "rajskashikar/cord-validation"
+  ],
+  "kernel_sources": []
+}

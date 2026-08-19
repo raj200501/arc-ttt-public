@@ -1,4 +1,4 @@
-# Iteration roadmap (updated 2026-08-11, post-v8)
+# Iteration roadmap (updated 2026-08-19, post-v10)
 
 ## Where things stand
 - kaggle-v7 scored 0.00 (submitted 00:13 UTC 08-09; scored 08-09): 40/240
@@ -15,20 +15,38 @@
   constraint: reaching the ~10% bar set for Sept 1 needs roughly a 4x
   hit-rate improvement — a solver-quality program, not a throughput
   program.
+- kaggle-v9 scored 1.67 on 08-12 — exactly flat vs v8: recall bound
+  widened 0.1->0.02 (+ candidate cap doubled), score unchanged;
+  preregistered FLAT branch taken: the bound was not binding, further
+  widening ruled out (kaggle_v9_scored_2026-08-12.json).
+- kaggle-v10 scored 1.67 on 08-15 — second exactly-flat single-variable
+  null: DFS time budget 60 -> 90 s/task, score unchanged. Budget levers
+  are exhausted; candidate-generation quality is the binding constraint
+  (a multi-week solver program); leaderboard climbing is formally
+  deprioritized and GPU quota goes to the enterprise gates
+  (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 83/83 green.
+- Test suite: 128 green (83/83 was the 08-11 count; see README).
 
 ## Landed since the first draft
 - DFS decoding with probability cutoff (v4d validated the code path).
 - Full 8-element dihedral sweep + color-permutation TTT sets (expanded_sweep)
   decoupled from prediction frames (SolveConfig.ttt_augmentations).
 - Example-shuffle TTT augmentation (deterministic per augmentation index).
-- Per-GPU task sharding in the kernel (4x per-task time budget).
+- Per-GPU task sharding in the kernel (2x per-task time budget on the
+  T4x2 environment — the 2026 track offers T4/P100 only; the earlier 4x
+  figure assumed the 2025-vintage L4x4 note retracted in
+  docs/research/KAGGLE_MECHANICS.md).
 
 ## Next algorithmic increments (ordered by expected score-per-effort)
+Note (2026-08-19): v9/v10 closed the budget levers — the DFS recall bound
+and time budget are preregistered nulls and further widening is ruled
+out. What remains is candidate-generation quality; with leaderboard
+climbing formally deprioritized (see above), the list below is the
+ordering for that solver program, not an active submission plan.
 1. **Act on the diagnostic**: if lp(true) is healthy, scale TTT (rank, augs,
-   epochs) into the enlarged 4-GPU budget; if not, fix serialization first.
+   epochs) into the enlarged 2-GPU (T4x2) budget; if not, fix serialization first.
 2. **LoRA rank 64-256 (rslora)** — champion ran r=256; measure T4/L4 step cost
    at rank 64/128/256 before committing the kernel budget.
 3. **Batched DFS expansion** — the per-beam KV-cache forward is the current

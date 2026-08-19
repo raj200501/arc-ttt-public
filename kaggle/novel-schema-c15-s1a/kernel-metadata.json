@@ -12,5 +12,6 @@
   "dataset_sources": [
     "rajskashikar/cord-validation"
   ],
-  "kernel_sources": []
+  "kernel_sources": [],
+  "machine_shape": "NvidiaTeslaT4"
 }

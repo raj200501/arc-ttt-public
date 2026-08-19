@@ -1,6 +1,7 @@
 """Minimal adaptation endpoint: POST a task, get ranked predictions.
 
-The product seed as a service (stdlib only — no framework dependency):
+The product seed as a service (HTTP layer is stdlib http.server — no web
+framework; the model stack requires torch + transformers):
 
     python -m arcttt.serve --model <hf-dir> --port 8332 [--raw-format --dfs]
 

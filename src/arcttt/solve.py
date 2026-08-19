@@ -44,7 +44,9 @@ def solve_task(task: Task, predictor: Predictor, config: SolveConfig) -> list[li
         predictions: list[tuple[Augmentation, Grid]] = []
         frame_predictor = getattr(predictor, "predict_frames", None)
         if callable(frame_predictor):
-            # One lockstep-batched pass over all augmentation frames.
+            # Hand all augmentation frames to the predictor at once; with DFS
+            # decoding this runs as one lockstep-batched pass, otherwise it
+            # falls back to per-frame predict().
             transformed_tasks = [
                 augmentation.apply_task(task) for augmentation in config.augmentations
             ]
@@ -65,6 +67,13 @@ def solve_task(task: Task, predictor: Predictor, config: SolveConfig) -> list[li
         if not counts:
             per_test.append([])
             continue
+
+        # Shared guard for all three scorer branches: the fast paths divide
+        # by len(rescore_augmentations) and would otherwise raise an
+        # uninformative ZeroDivisionError (the fallback branch raises this
+        # same ValueError via rescore_candidates).
+        if not config.rescore_augmentations:
+            raise ValueError("rescoring needs at least one augmentation")
 
         pair_scorer = getattr(predictor, "log_probabilities_pairs", None)
         batch_scorer = getattr(predictor, "log_probabilities", None)

@@ -64,12 +64,13 @@ def test_constrained_dfs_returns_scored_grids_within_cutoff() -> None:
         prompt,
         vocab,
         tokenizer,
-        max_score=-math.log(0.05),  # generous cutoff so the tiny model yields some grids
+        max_score=-math.log(0.001),  # generous cutoff so the tiny model yields some grids
         max_new_tokens=6,
         max_candidates=8,
     )
     # every returned item is a valid grid with a finite ascending score
     assert isinstance(results, list)
+    assert results  # the generous cutoff must actually admit grids
     scores = [score for _, score in results]
     assert scores == sorted(scores)
     for grid, score in results:

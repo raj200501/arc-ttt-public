@@ -60,10 +60,22 @@ def build_grid_vocab(tokenizer: Any) -> GridVocab:
         digit_ids.append(ids[0])
 
     newline_ids = set()
-    for candidate in ("\n", "Ċ"):
-        ids = safe_encode(candidate)
-        if len(ids) == 1:
-            newline_ids.add(ids[0])
+    ids = safe_encode("\n")
+    if len(ids) == 1:
+        newline_ids.add(ids[0])
+    # "Ċ" is the GPT2-style byte-level token NAME for "\n", not text —
+    # it must be looked up with convert_tokens_to_ids, never encode().
+    try:
+        candidate = tokenizer.convert_tokens_to_ids("Ċ")
+    except Exception:
+        candidate = None
+    if (
+        isinstance(candidate, int)
+        and candidate >= 0
+        and candidate != getattr(tokenizer, "unk_token_id", None)
+        and tokenizer.decode([candidate]) == "\n"
+    ):
+        newline_ids.add(candidate)
     if not newline_ids:
         raise TaskFormatError("no single-token newline found for grid decoding")
 
@@ -87,10 +99,13 @@ def build_grid_vocab(tokenizer: Any) -> GridVocab:
 def _cache_layers(cache: Any) -> list[tuple[torch.Tensor, torch.Tensor]]:
     """Per-layer (key, value) tensors of a KV cache, across transformers APIs.
 
-    Never iterates the cache object itself: on transformers >= 5 generic
-    iteration yields raw tensors, and unpacking a 4-D tensor "iterates" its
-    batch dimension — the v7 kernel lost 98 tasks to exactly that
-    (``ValueError: too many values to unpack``). Explicit attribute probes
+    Never iterates the cache object itself: what ``__iter__`` yields varies
+    by build — the Kaggle image's transformers (a 5.x build) yielded raw 4-D
+    tensors whose 2-way unpacking "iterates" the batch dimension, and current
+    5.x (e.g. 5.15.0) yields (keys, values, sliding_window) 3-tuples — and
+    either way ``key, value`` unpacking raises ``ValueError: too many values
+    to unpack``; the v7 kernel lost 98 tasks to exactly that.
+    Explicit attribute probes
     cover the layered API (>= 4.54, including 5.x), the key_cache/value_cache
     lists (4.36-4.53), and the legacy tuple-of-pairs format.
     """
@@ -121,7 +136,12 @@ def _crop_cache(cache: Any, length: int) -> Any:
     """Truncate a KV cache to ``length`` positions, whatever its concrete type."""
 
     if hasattr(cache, "crop"):
-        cache.crop(length)
+        excess = cache.get_seq_length() - length
+        if excess > 0:
+            # negative = remove that many tokens (non-deprecated on 4.x and
+            # 5.x; a positive "absolute target" is legacy and flips meaning
+            # to tokens_to_remove once transformers drops the legacy branch).
+            cache.crop(-excess)
         return cache
     return _rebuild_like(
         cache,
@@ -148,7 +168,8 @@ def constrained_dfs(
     would alias each other and corrupt sibling branches. The invariant is
     that when a frame (tokens, pending expansions) is on top of the stack,
     the cache holds exactly prompt + tokens. Bounded by ``max_candidates``
-    and, if given, a wall-clock ``deadline``.
+    and, if given, a ``deadline`` on the monotonic clock
+    (``time.monotonic()``).
     """
 
     device = model.device
@@ -157,7 +178,14 @@ def constrained_dfs(
     stop = set(vocab.stop_ids)
 
     with torch.no_grad():
-        primed = model(input_ids=prompt_ids.to(device), use_cache=True, return_dict=True)
+        # logits_to_keep=1: only the last position's logits are ever read,
+        # and full-prompt full-vocab logits are the dominant prime tensor.
+        primed = model(
+            input_ids=prompt_ids.to(device),
+            use_cache=True,
+            return_dict=True,
+            logits_to_keep=1,
+        )
     cache = primed.past_key_values
     prompt_length = prompt_ids.shape[1]
 
@@ -181,7 +209,7 @@ def constrained_dfs(
         ([], expansions_under_cutoff(primed.logits[:, -1].float(), 0.0))
     ]
     while stack and len(completed) < max_candidates:
-        if deadline is not None and time.time() > deadline:
+        if deadline is not None and time.monotonic() > deadline:
             break
         tokens, expansions = stack[-1]
         if not expansions:
@@ -321,12 +349,19 @@ def constrained_dfs_multi(
         batch[row, : prompt_lengths[row]] = ids[0].cpu()
         live[row, : prompt_lengths[row]] = True
     live = live.to(device)
+    # Only one position per row is ever read from the prime logits; keeping
+    # every position would materialize [rows, width, vocab] (tens of GiB at
+    # the 8-frame / 8192-token operating point). logits_to_keep with a 1-D
+    # index tensor keeps just the needed positions (transformers >= 4.49).
+    keep = sorted({length - 1 for length in prompt_lengths})
+    keep_pos = {position: index for index, position in enumerate(keep)}
     with torch.no_grad():
         primed = model(
             input_ids=batch.to(device),
             attention_mask=live.long(),
             use_cache=True,
             return_dict=True,
+            logits_to_keep=torch.tensor(keep, device=device),
         )
     cache = primed.past_key_values
     physical_length = width
@@ -334,7 +369,11 @@ def constrained_dfs_multi(
     states = []
     for row, length in enumerate(prompt_lengths):
         root = _expansions_under_cutoff(
-            primed.logits[row, length - 1].float(), 0.0, allowed, allowed_tensor, max_score
+            primed.logits[row, keep_pos[length - 1]].float(),
+            0.0,
+            allowed,
+            allowed_tensor,
+            max_score,
         )
         states.append(
             _FrameSearch(prompt_length=length, stack=[([], root)], slots=[], completed=[])
@@ -350,7 +389,7 @@ def constrained_dfs_multi(
                 )
                 state.done = True
                 return None
-            if deadline is not None and time.time() > deadline:
+            if deadline is not None and time.monotonic() > deadline:
                 state.stop_reason = "deadline"
                 state.done = True
                 return None

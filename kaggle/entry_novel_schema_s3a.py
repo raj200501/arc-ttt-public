@@ -48,6 +48,7 @@ import torch as _torch
 from arcttt.model import TTTConfig
 from arcttt.novel_schema import make_task
 from arcttt.text_ttt import TextPredictor, predict_text_voted, score_text_output
+from arcttt.lora import inject_lora, remove_lora
 
 RUNG = "0.5b"
 MODEL_ID = "Qwen/Qwen2.5-0.5B-Instruct"
@@ -270,7 +271,7 @@ def main() -> None:
                 with _torch.no_grad():
                     for n, p in lora_state.items():
                         p.copy_(saved[n].to(p.device, p.dtype))
-                model.train()  # parity with post-adapt state
+                model.eval()  # parity with post-adapt state (adapt_on_examples ends in eval())
                 adapt_seconds = _json.loads(open(f"{ckpt_stem}_meta.json").read())["adapt_seconds"]
                 resumed_adapter = True
                 print(f"resumed adapter: {adapter_path}", flush=True)
@@ -279,10 +280,12 @@ def main() -> None:
                 predictor.adapt_text(task, shuffle_seeds=(seed,))
                 adapt_seconds = _time.monotonic() - adapt_started
                 if arm == "adapted":
+                    _adapter_tmp = f"{adapter_path}.tmp"
                     _torch.save(
                         {n: p.detach().cpu() for n, p in model.named_parameters() if "lora_" in n},
-                        adapter_path,
+                        _adapter_tmp,
                     )
+                    _os.replace(_adapter_tmp, adapter_path)
                     _write_atomic(f"{ckpt_stem}_meta.json", {"adapt_seconds": adapt_seconds})
 
             results = []

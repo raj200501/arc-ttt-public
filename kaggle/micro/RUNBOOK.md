@@ -4,8 +4,9 @@ Bounded LoRA continued-training of **Qwen2.5-0.5B-Instruct** (not the
 champion 4B — the point is an adapter WE own, on license-clean public
 TRAINING data) as a Kaggle script kernel on the **free weekly 30h GPU
 quota**. Promotional Lightning credits are untouched; this is the
-"cheapest tier" G7 exit (GOALS.md), staged below Tier 1 of the
-internal own-model plan.
+"cheapest tier" G7 exit (GOALS.md — internal planning doc, not
+included in the public cut), staged below Tier 1 of the internal
+own-model plan.
 
 ## What the kernel does (kaggle/entry_micro_train.py → bundled_pipeline.py)
 
@@ -67,7 +68,8 @@ Credentials: `~/.kaggle/kaggle.json` only — never in git (standing rule).
   loop is budget-driven, so any tok/s still yields a complete artifact.
   CPU smoke measured ~4k tok/s on a toy model — meaningless for the T4
   number; the run itself is the measurement (same rule as Tier 1's
-  re-measure clause in OWN_MODEL_PLAN.md).
+  re-measure clause in OWN_MODEL_PLAN.md, internal — not included in
+  the public cut).
 
 ## Weekly quota math (free tier, 30 h GPU/week)
 

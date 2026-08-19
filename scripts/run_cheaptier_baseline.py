@@ -128,7 +128,7 @@ def main() -> int:
                     "scored with arcttt.text_ttt.score_text_output (same "
                     "scorer as all arms). Raw predictions stored.",
         "honest_framing_REQUIRED": "Context arm for the cost analysis "
-                    "(COST_APPENDIX 2026-08-19): whether the cheap tier "
+                    "(the 2026-08-19 cost analysis): whether the cheap tier "
                     "matches frontier quality on never-seen schemas. States "
                     "nothing about any preregistered gate.",
         "k": 10,

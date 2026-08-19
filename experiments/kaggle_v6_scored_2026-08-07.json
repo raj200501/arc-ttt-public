@@ -1,0 +1,16 @@
+{
+  "run": "kaggle_v6_submission_scored",
+  "submission_row": 55338854,
+  "kernel": "rajskashikar/arc-ttt-v1",
+  "kernel_version": 6,
+  "submitted_utc": "not recorded (2026-08-07 slot; exact timestamp only in internal kernel logs)",
+  "scored_by_utc": "not recorded (resolved ~30 min after submission per session record; exact timestamp only in leaderboard history)",
+  "public_score": 0.0,
+  "context": {
+    "real_predictions": 0,
+    "tasks_total": 240,
+    "known_run_defects": "Interactive run landed on a default-resolved non-bf16 GPU (P100-class), where bf16 compute hard-fails: every task raised an accelerator error in ~1 ms, so the kernel produced its valid all-fallback submission file with zero real predictions. Scoring resolved from that interactive run's own submission.json - there is no separate scoring rerun."
+  },
+  "finding": "0.00 from an all-fallback submission file: a hardware mismatch (P100-class draw vs bf16 pipeline) was converted into a silent zero by the graceful-fallback path. Not evidence about solver quality - no real prediction was scored.",
+  "provenance": "reconstructed 2026-08-19 from leaderboard history and session record; created post hoc for registry completeness"
+}

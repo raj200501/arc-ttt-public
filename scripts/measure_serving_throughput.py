@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """M1: measure document-only serving throughput of the F configuration.
 
-Motivation (COST_APPENDIX 2026-08-19): the honest cost comparison
+Motivation (the 2026-08-19 cost analysis): the honest cost comparison
 against frontier-API-with-prompt-caching hinges on one unmeasured
 number — how many documents per hour the adapted 0.5B actually serves.
 This measures it, in the EXACT configuration whose quality is banked
@@ -106,7 +106,7 @@ def main() -> int:
 
     artifact = {
         "artifact": "M1 document-only serving throughput, F configuration",
-        "spec_context": "COST_APPENDIX 2026-08-19 M1; quality of the "
+        "spec_context": "2026-08-19 cost-analysis measurement M1; quality of the "
                         "voted mode is the banked Addendum F PASS config; "
                         "greedy mode quality is UNMEASURED",
         "adapter": os.path.basename(adapter_path),

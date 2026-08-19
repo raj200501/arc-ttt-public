@@ -1,41 +1,44 @@
 {
-  "finding": "The frozen G-E2 gate is underpowered: its minimum detectable effect exceeds its own +5 F1 threshold",
-  "date_utc": "2026-08-11",
-  "spec": "ENTERPRISE_EVAL_SPEC.md Addendum A (frozen 2026-08-08)",
-  "status": "measured from artifacts; the gate is NOT changed by this finding",
-  "artifacts": [
-    "experiments/cord_paired_power_2026-08-11.json",
-    "experiments/cord_scale_0.5b_k5_seed{1,2,3}_{adapted,kshot}_2026-08-11.json"
+ "finding": "The frozen G-E2 gate is underpowered: its minimum detectable effect exceeds its own +5 F1 threshold",
+ "date_utc": "2026-08-11",
+ "spec": "ENTERPRISE_EVAL_SPEC.md Addendum A (frozen 2026-08-08)",
+ "status": "measured from artifacts; the gate is NOT changed by this finding",
+ "artifacts": [
+  "experiments/cord_paired_power_2026-08-11.json",
+  "experiments/cord_scale_0.5b_k5_seed{1,2,3}_{adapted,kshot}_2026-08-11.json"
+ ],
+ "evidence": {
+  "clean_pool": "0.5b k=5, all six arms kernel-produced, 60 paired receipts",
+  "mean_paired_delta_micro_f1": 0.0111,
+  "ci95": [
+   -0.0381,
+   0.0604
   ],
-  "evidence": {
-    "clean_pool": "0.5b k=5, all six arms kernel-produced, 60 paired receipts",
-    "mean_paired_delta_micro_f1": 0.0111,
-    "ci95": [-0.0381, 0.0604],
-    "sd_per_receipt": 0.191,
-    "mde_80pct_power": 0.069,
-    "gate_threshold": 0.05,
-    "receipts_needed_to_resolve_gate": 115,
-    "receipts_actually_available": 60,
-    "read": "The 95% interval spans roughly -3.8 to +6.0 F1. A true +5 F1 effect and a true zero effect are both inside it, so at n=60 this design cannot tell them apart."
-  },
-  "why_it_is_worse_than_it_looks": {
-    "seed_slices_overlap": "CORD validation is 100 rows and each seed evaluates shuffled[k:k+20], so the 60 draws at k=5 cover only 50 DISTINCT receipts (pairwise overlaps 4/4/3). Pooling treats them as 60 independent observations, so the interval above is optimistic and the true MDE is worse than 0.069.",
-    "ceiling_on_this_split": "Even devoting the entire validation split to evaluation gives at most 100-k ~= 90 distinct receipts, still short of the ~115 the observed spread requires. The frozen gate is therefore NOT resolvable on the current validation split at any eval_n.",
-    "k10_is_noisier_still": "At k=10 the per-receipt spread is roughly double k=5's (sd 0.35-0.45 vs 0.16-0.19), driven by invalid-JSON receipts scoring 0. The k=10 pool is additionally contaminated (seed 1 local, seed 3 kernel) and its interval is reported non-authoritative."
-  },
-  "what_this_does_NOT_mean": [
-    "It does not mean adaptation fails. It means this measurement cannot resolve a +5 F1 effect either way.",
-    "It does not invalidate the running 1.5B and 4B rungs. Their point estimates are the frozen deliverable and remain worth having.",
-    "It does not license changing eval_n, POOL_SAMPLES, seeds or the threshold mid-flight. The preregistration is frozen; altering it while runs are in progress is exactly the failure mode the freeze exists to prevent."
-  ],
-  "consequences_for_claims": {
-    "binding_rule": "When a rung's number lands, it is quoted as a point estimate WITH its interval, never as a bare 'G-E2 PASSED'. A pass whose interval includes zero is a suggestive result, not a measured mechanism, and must be described that way in the deck, the one-pager, the FAQ and the paper.",
-    "why_this_matters_commercially": "The wedge's pitch is 'measured mechanism, not a bet'. A +5 F1 headline that a technical diligence pass can widen to 'straddles zero' is worse than no headline, because it costs credibility on every other number in the package."
-  },
-  "proposed_amendment_do_not_apply_yet": {
-    "when": "only after the currently frozen 1.5B and 4B rungs complete and are reported as preregistered",
-    "change": "draw evaluation receipts from the 800-row CORD-v2 TRAIN split, held out from adaptation, instead of the 100-row validation split; raise eval_n until distinct paired receipts exceed the measured requirement (~115 at k=5 spread, more at k=10)",
-    "cost": "generation dominates arm cost (89%, memprobe 2026-08-11), so eval_n scales arm wall-clock almost linearly",
-    "discipline": "this is a preregistration AMENDMENT: it must be dated, written into Addendum A as a numbered revision, and every affected claim must state which version produced it"
-  }
+  "sd_per_receipt": 0.191,
+  "mde_80pct_power": 0.069,
+  "gate_threshold": 0.05,
+  "receipts_needed_to_resolve_gate": 115,
+  "receipts_actually_available": 60,
+  "read": "The 95% interval spans roughly -3.8 to +6.0 F1. A true +5 F1 effect and a true zero effect are both inside it, so at n=60 this design cannot tell them apart."
+ },
+ "why_it_is_worse_than_it_looks": {
+  "seed_slices_overlap": "CORD validation is 100 rows and each seed evaluates shuffled[k:k+20], so the 60 draws at k=5 cover only 50 DISTINCT receipts (pairwise overlaps 4/4/3). Pooling treats them as 60 independent observations, so the interval above is optimistic and the true MDE is worse than 0.069.",
+  "ceiling_on_this_split": "Even devoting the entire validation split to evaluation gives at most 100-k ~= 90 distinct receipts, still short of the ~115 the observed spread requires. The frozen gate is therefore NOT resolvable on the current validation split at any eval_n.",
+  "k10_is_noisier_still": "At k=10 the per-receipt spread is roughly double k=5's (sd 0.35-0.45 vs 0.16-0.19), driven by invalid-JSON receipts scoring 0. The k=10 pool is additionally contaminated (seed 1 local, seed 3 kernel) and its interval is reported non-authoritative."
+ },
+ "what_this_does_NOT_mean": [
+  "It does not mean adaptation fails. It means this measurement cannot resolve a +5 F1 effect either way.",
+  "It does not invalidate the running 1.5B and 4B rungs. Their point estimates are the frozen deliverable and remain worth having.",
+  "It does not license changing eval_n, POOL_SAMPLES, seeds or the threshold mid-flight. The preregistration is frozen; altering it while runs are in progress is exactly the failure mode the freeze exists to prevent."
+ ],
+ "consequences_for_claims": {
+  "binding_rule": "When a rung's number lands, it is quoted as a point estimate WITH its interval, never as a bare 'G-E2 PASSED'. A pass whose interval includes zero is a suggestive result, not a measured mechanism, and must be described that way in every material derived from it.",
+  "why_this_matters_commercially": "The wedge's pitch is 'measured mechanism, not a bet'. A +5 F1 headline that a technical diligence pass can widen to 'straddles zero' is worse than no headline, because it costs credibility on every other number in the package."
+ },
+ "proposed_amendment_do_not_apply_yet": {
+  "when": "only after the currently frozen 1.5B and 4B rungs complete and are reported as preregistered",
+  "change": "draw evaluation receipts from the 800-row CORD-v2 TRAIN split, held out from adaptation, instead of the 100-row validation split; raise eval_n until distinct paired receipts exceed the measured requirement (~115 at k=5 spread, more at k=10)",
+  "cost": "generation dominates arm cost (89%, memprobe 2026-08-11), so eval_n scales arm wall-clock almost linearly",
+  "discipline": "this is a preregistration AMENDMENT: it must be dated, written into Addendum A as a numbered revision, and every affected claim must state which version produced it"
+ }
 }
