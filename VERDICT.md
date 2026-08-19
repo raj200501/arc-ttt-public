@@ -20,7 +20,7 @@ issue.
 | Document-only serving, demo-trained adapter (Addendum D, partial) | seed-3: 0.0000, 0/60 valid JSON (prose collapse; mechanism reproduced and logged) | `experiments/novel_schema_d_0.5b_k30_seed3_doconly_2026-08-18.json`, spec D.6 | artifact |
 | Document-only, no adapter (D.5 comparability) | seeds 1,2: 0.0000, 0/60 valid JSON | `experiments/novel_schema_d_0.5b_k30_seed{1,2}_doczero_2026-08-18.json` | artifacts |
 | Addendum D verdict | PENDING (seeds 1,2 doconly in flight; bars frozen in D.2) | — | spec |
-| Doc-only-TRAINED adapters (Addendum F) | PENDING (bars frozen F.1, 2026-08-19T03:30Z, before any run) | — | spec + OTS |
+| Doc-only-TRAINED adapters (Addendum F) | seed-1 interim: 0.9407, 60/60 valid, +32.0 vs prompted baseline, adapt 271s; PRIMARY-VERIFIED; verdict binds on 3 seeds (bars frozen pre-run, OTS) | `experiments/novel_schema_f_0.5b_k30_seed1_docadapted_2026-08-19.json` | `verify_from_primary.py` |
 | Diverse-geometry gate (Addendum E) | PENDING (6 seeds, bars frozen E.2) | — | spec + OTS |
 | ARC Prize track | 1.67 public ×3 (v8/v9/v10); climb formally deprioritized | `experiments/kaggle_v{8,9,10}_scored_*.json` | artifacts |
 | Preregistration ordering | spec SHA-256 Bitcoin-anchored (OpenTimestamps), byte-exact snapshots shipped | `docs/research/snapshots_*` + `.ots` | `ots verify` |

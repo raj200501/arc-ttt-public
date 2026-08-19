@@ -1,0 +1,453 @@
+{
+  "spec": "ENTERPRISE_EVAL_SPEC.md Addendum B (frozen 2026-08-12T19:40Z)",
+  "dataset": "synthetic novel-schema tenants (novel_schema.py), no external data",
+  "tenant": "gobozi",
+  "schema": "tenant gobozi\n  gopizu -> muvepu.gavepu (amount)\n  rumefu -> lokura.tanaku (code)\n  depolo -> muvepu.tidosu (date)\n  tomelu -> lokura.muzane (name)\n  kirozu -> muvepu.tumuze (amount)\n  safidi -> lokura.vokamu (code)\n  nugige -> muvepu.mapevo (date)\n  subose -> lokura.ralaba (name)",
+  "rung": "0.5b",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "arm": "docadapted",
+  "k": 30,
+  "eval_n": 60,
+  "resumed": false,
+  "seed": 1,
+  "gate_role": "DECISION",
+  "validity": "ok",
+  "decode": "vote/rescore ON: 1 greedy + 4 sampled (T=0.7), canonical-JSON pooling, count+likelihood top-1",
+  "config": {
+    "rank": 16,
+    "alpha": 32,
+    "epochs": 1,
+    "max_new_tokens": 512,
+    "max_seq": 8192
+  },
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "adapt_seconds": 271.2,
+  "exact_match": 37,
+  "scored": 60,
+  "invalid_json": 0,
+  "no_completion": 0,
+  "mean_micro_f1": 0.9407,
+  "results": [
+    {
+      "index": 0,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Sede Geno\",\"ralaba\":\"Vupi Bibo\",\"tanaku\":\"NSJ-2018\",\"vokamu\":\"BAT-6023\"},\"muvepu\":{\"gavepu\":\"2317.35\",\"mapevo\":\"2026-02-04\",\"tidosu\":\"2023-11-24\",\"tumuze\":\"193.85\"}}"
+    },
+    {
+      "index": 1,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Gafa Difi\",\"ralaba\":\"Zipa Bane\",\"tanaku\":\"DAF-3447\",\"vokamu\":\"CFJ-6534\"},\"muvepu\":{\"gavepu\":\"5567.83\",\"mapevo\":\"2022-12-14\",\"tidosu\":\"2019-07-21\",\"tumuze\":\"1396.56\"}}"
+    },
+    {
+      "index": 2,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Veki Robe\",\"ralaba\":\"Nuru Piru\",\"tanaku\":\"DRL-1152\",\"vokamu\":\"ZBM-5800\"},\"muvepu\":{\"gavepu\":\"4027.47\",\"mapevo\":\"2020-07-26\",\"tidosu\":\"2019-05-14\",\"tumuze\":\"6920.71\"}}"
+    },
+    {
+      "index": 3,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Lage Vare\",\"ralaba\":\"Vudo Pabo\",\"tanaku\":\"AXP-3010\",\"vokamu\":\"STZ-4508\"},\"muvepu\":{\"gavepu\":\"525.34\",\"mapevo\":\"2019-06-01\",\"tidosu\":\"2022-12-18\",\"tumuze\":\"917.31\"}}"
+    },
+    {
+      "index": 4,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Fafi Sana\",\"ralaba\":\"Dinu Ropo\",\"tanaku\":\"EKK-6628\",\"vokamu\":\"AQQ-2098\"},\"muvepu\":{\"gavepu\":\"6388.47\",\"mapevo\":\"2023-12-02\",\"tidosu\":\"2024-01-06\",\"tumuze\":\"4648.16\"}}"
+    },
+    {
+      "index": 5,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Zamo Gubi\",\"ralaba\":\"Buna Rami\",\"tanaku\":\"AKD-1149\",\"vokamu\":\"PGL-4699\"},\"muvepu\":{\"gavepu\":\"6867.58\",\"mapevo\":\"2019-05-04\",\"tidosu\":\"2021-06-10\",\"tumuze\":\"884.59\"}}"
+    },
+    {
+      "index": 6,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.6667,
+      "prediction": "{\"lokura\":{\"muzane\":\"Maba Rudi\",\"ralaba\":\"KXE-2758\",\"tanaku\":\"Dabi Panu\"},\"muvepu\":{\"gavepu\":\"4817.82\",\"mapevo\":\"2023-11-12\",\"tidosu\":\"2021-09-28\",\"tumuze\":\"4342.18\"}}"
+    },
+    {
+      "index": 7,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Bobo Dogu\",\"ralaba\":\"Zedi Vefi\",\"tanaku\":\"PFX-5746\",\"vokamu\":\"DDQ-5726\"},\"muvepu\":{\"gavepu\":\"5621.04\",\"mapevo\":\"2020-07-19\",\"tidosu\":\"2022-11-02\",\"tumuze\":\"5023.96\"}}"
+    },
+    {
+      "index": 8,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Meme Pivu\",\"ralaba\":\"Sude Figo\",\"tanaku\":\"VAH-8289\",\"vokamu\":\"HKD-3798\"},\"muvepu\":{\"gavepu\":\"4845.91\",\"mapevo\":\"2023-11-18\",\"tidosu\":\"2023-05-18\",\"tumuze\":\"5566.2\"}}"
+    },
+    {
+      "index": 9,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"Fili Pazu\",\"ralaba\":\"Sado Bute\",\"tanaku\":\"UDU-4587\",\"vokamu\":\"NQG-1881\"},\"muvepu\":{\"gavepu\":\"7030.16\",\"mapevo\":\"2026-02-19\",\"tidosu\":\"2026-09-27\",\"tumuze\":\"7059.38\"}}"
+    },
+    {
+      "index": 10,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"Vare Gege\",\"ralaba\":\"Vare Gege\",\"tanaku\":\"ALX-8265\",\"vokamu\":\"GZN-8091\"},\"muvepu\":{\"gavepu\":\"8974.30\",\"mapevo\":\"2026-07-13\",\"tidosu\":\"2026-03-04\",\"tumuze\":\"6951.51\"}}"
+    },
+    {
+      "index": 11,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"Gubu Rosu\",\"ralaba\":\"Fosa Vizu\",\"tanaku\":\"ANK-7441\",\"muvepu\":\"EBK-1185\"},\"muvepu\":{\"gavepu\":\"3728.47\",\"mapevo\":\"2024-01-10\",\"tidosu\":\"2025-06-25\",\"tumuze\":\"1495.74\"}}"
+    },
+    {
+      "index": 12,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Kifi Buzi\",\"ralaba\":\"Dize Tada\",\"tanaku\":\"SFG-3719\",\"vokamu\":\"KMM-7888\"},\"muvepu\":{\"gavepu\":\"1724.18\",\"mapevo\":\"2024-03-24\",\"tidosu\":\"2021-08-21\",\"tumuze\":\"3284.04\"}}"
+    },
+    {
+      "index": 13,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Bezi Vumo\",\"ralaba\":\"Gadu Loso\",\"tanaku\":\"STQ-3349\",\"vokamu\":\"PEF-2305\"},\"muvepu\":{\"gavepu\":\"9434.49\",\"mapevo\":\"2019-08-04\",\"tidosu\":\"2023-09-06\",\"tumuze\":\"8480.74\"}}"
+    },
+    {
+      "index": 14,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Sika Sumi\",\"ralaba\":\"Dutu Rifu\",\"tanaku\":\"RAZ-2000\",\"vokamu\":\"CEH-2235\"},\"muvepu\":{\"gavepu\":\"8421.02\",\"mapevo\":\"2019-02-16\",\"tidosu\":\"2024-08-02\",\"tumuze\":\"3686.27\"}}"
+    },
+    {
+      "index": 15,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.6667,
+      "prediction": "{\"lokura\":{\"muzane\":\"Lebo Kolu\",\"ralaba\":\"Bini Pabi\",\"tanaku\":\"YVH-5150\",\"vokamu\":\"QHV-9941\"}}"
+    },
+    {
+      "index": 16,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"Kude Pina\",\"ralaba\":\"Kupe Pefa\",\"tanaku\":\"CFR-9558\",\"vokamu\":\"ZMV-9982\"},\"muvepu\":{\"gavepu\":\"5945.26\",\"mapevo\":\"2019-09-25\",\"tidosu\":\"2023-01-22\",\"tumuze\":\"3956.06\"}}"
+    },
+    {
+      "index": 17,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Nagu Muzi\",\"ralaba\":\"Pidi Zuno\",\"tanaku\":\"RDP-9047\",\"vokamu\":\"LYU-3257\"},\"muvepu\":{\"gavepu\":\"9982.98\",\"mapevo\":\"2022-05-12\",\"tidosu\":\"2020-08-17\",\"tumuze\":\"9420.52\"}}"
+    },
+    {
+      "index": 18,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Rara Bimu\",\"ralaba\":\"Zapu Dazi\",\"tanaku\":\"ZVB-8550\",\"vokamu\":\"YPR-2226\"},\"muvepu\":{\"gavepu\":\"8044.68\",\"mapevo\":\"2025-10-28\",\"tidosu\":\"2024-09-27\",\"tumuze\":\"4832.18\"}}"
+    },
+    {
+      "index": 19,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"Paze Tavu\",\"ralaba\":\"Some Gatu\",\"tanaku\":\"UCL-3303\",\"muvepu\":\"RGL-7841\"},\"muvepu\":{\"gavepu\":\"8620.61\",\"mapevo\":\"2019-12-23\",\"tidosu\":\"2021-06-24\",\"tumuze\":\"6475.68\"}}"
+    },
+    {
+      "index": 20,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"Viri Nara\",\"ralaba\":\"Fude Nona\",\"tanaku\":\"XQL-9269\",\"muvepu\":\"CNV-8720\"},\"muvepu\":{\"gavepu\":\"526.56\",\"mapevo\":\"2022-03-03\",\"tidosu\":\"2024-02-19\",\"tumuze\":\"1500.15\"}}"
+    },
+    {
+      "index": 21,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Seti Saza\",\"ralaba\":\"Gide Nere\",\"tanaku\":\"WTD-2287\",\"vokamu\":\"CEL-7608\"},\"muvepu\":{\"gavepu\":\"9852.89\",\"mapevo\":\"2020-02-04\",\"tidosu\":\"2021-04-15\",\"tumuze\":\"3895.15\"}}"
+    },
+    {
+      "index": 22,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Tuzo Fivu\",\"ralaba\":\"Rilo Zebi\",\"tanaku\":\"EEH-3769\",\"vokamu\":\"QDE-1148\"},\"muvepu\":{\"gavepu\":\"1356.96\",\"mapevo\":\"2022-11-13\",\"tidosu\":\"2020-07-13\",\"tumuze\":\"6521.31\"}}"
+    },
+    {
+      "index": 23,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Bide Kuvo\",\"ralaba\":\"Ruse Gako\",\"tanaku\":\"EAS-3270\",\"vokamu\":\"FGY-4228\"},\"muvepu\":{\"gavepu\":\"4694.00\",\"mapevo\":\"2025-05-11\",\"tidosu\":\"2024-07-02\",\"tumuze\":\"1720.24\"}}"
+    },
+    {
+      "index": 24,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"Sazu Pano\",\"ralaba\":\"Bube Zani\",\"tanaku\":\"MBM-4925\",\"vokamu\":\"BPX-2415\"},\"muvepu\":{\"gavepu\":\"5152.03\",\"mapevo\":\"2025-07-21\",\"tidosu\":\"2025-07-20\",\"tumuze\":\"4683.72\"}}"
+    },
+    {
+      "index": 25,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Geti Zoma\",\"ralaba\":\"Date Razi\",\"tanaku\":\"VWF-1891\",\"vokamu\":\"RHH-9253\"},\"muvepu\":{\"gavepu\":\"8711.88\",\"mapevo\":\"2024-01-02\",\"tidosu\":\"2025-09-11\",\"tumuze\":\"7679.38\"}}"
+    },
+    {
+      "index": 26,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Gega Letu\",\"ralaba\":\"Zila Tore\",\"tanaku\":\"ZPF-8175\",\"vokamu\":\"DYZ-6244\"},\"muvepu\":{\"gavepu\":\"4149.75\",\"mapevo\":\"2020-09-22\",\"tidosu\":\"2023-12-25\",\"tumuze\":\"6373.63\"}}"
+    },
+    {
+      "index": 27,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Geno Fubo\",\"ralaba\":\"Bime Gera\",\"tanaku\":\"RXW-2673\",\"vokamu\":\"ZCK-7449\"},\"muvepu\":{\"gavepu\":\"9260.53\",\"mapevo\":\"2024-03-03\",\"tidosu\":\"2024-06-04\",\"tumuze\":\"7714.73\"}}"
+    },
+    {
+      "index": 28,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.75,
+      "prediction": "{\"lokura\":{\"muzane\":\"BTN-8716\",\"ralaba\":\"Pugu Vipe\",\"tanaku\":\"DWP-7566\",\"vokamu\":\"CKP-8608\"},\"muvepu\":{\"gavepu\":\"797.99\",\"mapevo\":\"2020-04-11\",\"tidosu\":\"2021-01-14\",\"tumuze\":\"3561.69\"}}"
+    },
+    {
+      "index": 29,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Pidi Bovo\",\"ralaba\":\"Pafu Roro\",\"tanaku\":\"DEQ-4763\",\"vokamu\":\"AMU-8031\"},\"muvepu\":{\"gavepu\":\"1485.76\",\"mapevo\":\"2022-08-22\",\"tidosu\":\"2023-12-19\",\"tumuze\":\"3704.37\"}}"
+    },
+    {
+      "index": 30,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Tito Roda\",\"ralaba\":\"Visu Lizu\",\"tanaku\":\"NZQ-1145\",\"vokamu\":\"ABZ-9506\"},\"muvepu\":{\"gavepu\":\"6059.41\",\"mapevo\":\"2025-09-10\",\"tidosu\":\"2020-04-07\",\"tumuze\":\"1349.55\"}}"
+    },
+    {
+      "index": 31,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Zine Kogu\",\"ralaba\":\"Kupu Zoki\",\"tanaku\":\"SMN-7585\",\"vokamu\":\"DQG-8590\"},\"muvepu\":{\"gavepu\":\"2637.21\",\"mapevo\":\"2026-08-28\",\"tidosu\":\"2021-03-16\",\"tumuze\":\"7634.02\"}}"
+    },
+    {
+      "index": 32,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Nava Dino\",\"ralaba\":\"Bupo Sizo\",\"tanaku\":\"ZUT-4668\",\"vokamu\":\"PPL-2588\"},\"muvepu\":{\"gavepu\":\"8777.74\",\"mapevo\":\"2022-03-09\",\"tidosu\":\"2022-11-18\",\"tumuze\":\"8764.18\"}}"
+    },
+    {
+      "index": 33,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Fofe Tegu\",\"ralaba\":\"Feke Ruba\",\"tanaku\":\"UHY-5166\",\"vokamu\":\"UGA-3610\"},\"muvepu\":{\"gavepu\":\"5511.54\",\"mapevo\":\"2023-06-15\",\"tidosu\":\"2020-05-25\",\"tumuze\":\"8577.63\"}}"
+    },
+    {
+      "index": 34,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Foti Gone\",\"ralaba\":\"Kifu Puku\",\"tanaku\":\"MQM-4221\",\"vokamu\":\"KYC-2519\"},\"muvepu\":{\"gavepu\":\"3546.24\",\"mapevo\":\"2026-01-04\",\"tidosu\":\"2026-05-08\",\"tumuze\":\"2112.61\"}}"
+    },
+    {
+      "index": 35,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Pedo Luge\",\"ralaba\":\"Life Pile\",\"tanaku\":\"SYX-9313\",\"vokamu\":\"BTV-7264\"},\"muvepu\":{\"gavepu\":\"5208.26\",\"mapevo\":\"2026-08-16\",\"tidosu\":\"2024-05-07\",\"tumuze\":\"7572.43\"}}"
+    },
+    {
+      "index": 36,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Kesi Kesa\",\"ralaba\":\"Dugo Gedi\",\"tanaku\":\"TXQ-8322\",\"vokamu\":\"AMU-2192\"},\"muvepu\":{\"gavepu\":\"2034.88\",\"mapevo\":\"2021-11-27\",\"tidosu\":\"2025-11-25\",\"tumuze\":\"7502.74\"}}"
+    },
+    {
+      "index": 37,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"Lifo Kalu\",\"ralaba\":\"Kozo Dafu\",\"tanaku\":\"UDD-6916\",\"muvepu\":\"KDW-1613\"},\"muvepu\":{\"gavepu\":\"4607.85\",\"mapevo\":\"2022-08-16\",\"tidosu\":\"2026-02-26\",\"tumuze\":\"8659.26\"}}"
+    },
+    {
+      "index": 38,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Vena Mudu\",\"ralaba\":\"Bika Tuzu\",\"tanaku\":\"WLA-3408\",\"vokamu\":\"BJX-9170\"},\"muvepu\":{\"gavepu\":\"1091.91\",\"mapevo\":\"2023-10-26\",\"tidosu\":\"2020-07-03\",\"tumuze\":\"6305.46\"}}"
+    },
+    {
+      "index": 39,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"Kusu Peli\",\"ralaba\":\"Kamu Mapi\",\"tanaku\":\"QGD-4164\",\"vokamu\":\"VMT-6815\"},\"muvepu\":{\"gavepu\":\"6839.02\",\"mapevo\":\"2024-10-09\",\"tidosu\":\"2022-03-19\",\"tumuze\":\"3444.38\"}}"
+    },
+    {
+      "index": 40,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.75,
+      "prediction": "{\"lokura\":{\"muzane\":\"Tope Lepu\",\"ralaba\":\"Dapu Besa\",\"tanaku\":\"Gavepu\",\"vokamu\":\"HJZ-8306\"},\"muvepu\":{\"gavepu\":\"318.94\",\"mapevo\":\"2023-11-04\",\"tidosu\":\"2023-11-05\",\"tumuze\":\"8735.29\"}}"
+    },
+    {
+      "index": 41,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Taze Lini\",\"ralaba\":\"Fitu Ruzo\",\"tanaku\":\"Ker-8244\",\"vokamu\":\"SZX-9909\"},\"muvepu\":{\"gavepu\":\"6968.42\",\"mapevo\":\"2023-01-14\",\"tidosu\":\"2023-07-25\",\"tumuze\":\"6142.54\"}}"
+    },
+    {
+      "index": 42,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"Sife Bugu\",\"ralaba\":\"Vade Doda\",\"tanaku\":\"DBH-2027\",\"muvepu\":\"KJC-9531\"},\"muvepu\":{\"gavepu\":\"5529.80\",\"mapevo\":\"2022-01-21\",\"tidosu\":\"2021-11-14\",\"tumuze\":\"7949.21\"}}"
+    },
+    {
+      "index": 43,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Koda Bobo\",\"ralaba\":\"Reka Bele\",\"tanaku\":\"HUU-3682\",\"vokamu\":\"MZL-7612\"},\"muvepu\":{\"gavepu\":\"201.43\",\"mapevo\":\"2019-08-10\",\"tidosu\":\"2019-10-02\",\"tumuze\":\"2604.31\"}}"
+    },
+    {
+      "index": 44,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"Feso Konu\",\"ralaba\":\"Zube Kaka\",\"tanaku\":\"KMR-9299\",\"vokamu\":\"LJP-8132\"},\"muvepu\":{\"gavepu\":\"6752.14\",\"mapevo\":\"2022-12-07\",\"tidosu\":\"2025-03-28\",\"tumuze\":\"4967.03\"}}"
+    },
+    {
+      "index": 45,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Kalu Daro\",\"ralaba\":\"Dese Kiti\",\"tanaku\":\"TSR-9074\",\"vokamu\":\"ZFS-7836\"},\"muvepu\":{\"gavepu\":\"2550.19\",\"mapevo\":\"2024-11-09\",\"tidosu\":\"2020-01-13\",\"tumuze\":\"9993.65\"}}"
+    },
+    {
+      "index": 46,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Gini Vufi\",\"ralaba\":\"Leli Kifa\",\"tanaku\":\"EPK-6386\",\"vokamu\":\"QMN-7396\"},\"muvepu\":{\"gavepu\":\"2101.03\",\"mapevo\":\"2026-06-12\",\"tidosu\":\"2019-11-13\",\"tumuze\":\"5488.85\"}}"
+    },
+    {
+      "index": 47,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"lokura\":{\"muzane\":\"Busu Kusu\",\"ralaba\":\"Bola Lime\",\"tanaku\":\"UMC-8273\"},\"muvepu\":{\"gavepu\":\"8449.35\",\"mapevo\":\"2025-05-15\",\"tidosu\":\"2022-05-12\"}}"
+    },
+    {
+      "index": 48,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.75,
+      "prediction": "{\"lokura\":{\"muzane\":\"Fata Diba\",\"ralaba\":\"Molu Zora\",\"tanaku\":\"CZP-5904\",\"vokamu\":\"LRG-5409\"},\"muvepu\":{\"gavepu\":\"8570.60\",\"mapevo\":\"2021-01-19\",\"tidosu\":\"2021-11-06\",\"tumuze\":\"6853.39\"}}"
+    },
+    {
+      "index": 49,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Fuve Mizi\",\"ralaba\":\"Kize Lazo\",\"tanaku\":\"MBE-7655\",\"vokamu\":\"SUD-4697\"},\"muvepu\":{\"gavepu\":\"7985.34\",\"mapevo\":\"2020-01-22\",\"tidosu\":\"2022-07-18\",\"tumuze\":\"7508.59\"}}"
+    },
+    {
+      "index": 50,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"ALB-3788\",\"ralaba\":\"Sedi Lugi\",\"tanaku\":\"YRS-2494\",\"vokamu\":\"BXC-7709\"},\"muvepu\":{\"gavepu\":\"2487.31\",\"mapevo\":\"2026-03-24\",\"tidosu\":\"2021-02-09\",\"tumuze\":\"7095.99\"}}"
+    },
+    {
+      "index": 51,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"Suzu Foda\",\"ralaba\":\"Lodo Gevo\",\"tanaku\":\"Tup-7650\",\"vokamu\":\"SMH-2649\"},\"muvepu\":{\"gavepu\":\"5862.82\",\"mapevo\":\"2022-01-04\",\"tidosu\":\"2023-03-20\",\"tumuze\":\"9557.27\"}}"
+    },
+    {
+      "index": 52,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Doru Fobu\",\"ralaba\":\"Gika Foma\",\"tanaku\":\"RDC-6490\",\"vokamu\":\"VRS-6283\"},\"muvepu\":{\"gavepu\":\"5426.88\",\"mapevo\":\"2019-12-07\",\"tidosu\":\"2025-12-27\",\"tumuze\":\"7118.93\"}}"
+    },
+    {
+      "index": 53,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Suni Tase\",\"ralaba\":\"Tiru Maga\",\"tanaku\":\"ZFN-4527\",\"vokamu\":\"QXH-4626\"},\"muvepu\":{\"gavepu\":\"9672.69\",\"mapevo\":\"2021-10-22\",\"tidosu\":\"2025-01-12\",\"tumuze\":\"5552.95\"}}"
+    },
+    {
+      "index": 54,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.875,
+      "prediction": "{\"lokura\":{\"muzane\":\"Gavepu\",\"ralaba\":\"Zeke Repu\",\"tanaku\":\"GHR-8426\",\"vokamu\":\"SAZ-2168\"},\"muvepu\":{\"gavepu\":\"8328.97\",\"mapevo\":\"2026-05-02\",\"tidosu\":\"2024-07-22\",\"tumuze\":\"4648.62\"}}"
+    },
+    {
+      "index": 55,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Bade Fiti\",\"ralaba\":\"Puve Giro\",\"tanaku\":\"YTJ-6387\",\"vokamu\":\"HXG-6170\"},\"muvepu\":{\"gavepu\":\"9056.61\",\"mapevo\":\"2023-08-18\",\"tidosu\":\"2024-02-09\",\"tumuze\":\"1070.86\"}}"
+    },
+    {
+      "index": 56,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.75,
+      "prediction": "{\"lokura\":{\"muzane\":\"Roge Difa\",\"ralaba\":\"Fofa Muzo\",\"tanaku\":\"RRR-1425\",\"vokamu\":\"FXY-8841\"},\"muvepu\":{\"gavepu\":\"4484.94\",\"mapevo\":\"2023-10-01\",\"tidosu\":\"2026-07-23\",\"tumuze\":\"5898.21\"}}"
+    },
+    {
+      "index": 57,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Guti Toba\",\"ralaba\":\"Musi Gele\",\"tanaku\":\"JTE-7036\",\"vokamu\":\"LJZ-5964\"},\"muvepu\":{\"gavepu\":\"8569.91\",\"mapevo\":\"2023-02-03\",\"tidosu\":\"2020-11-12\",\"tumuze\":\"2824.24\"}}"
+    },
+    {
+      "index": 58,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Fodi Vepi\",\"ralaba\":\"Kiso Zofu\",\"tanaku\":\"UFS-6094\",\"vokamu\":\"ZJG-8668\"},\"muvepu\":{\"gavepu\":\"6771.31\",\"mapevo\":\"2026-11-01\",\"tidosu\":\"2026-07-26\",\"tumuze\":\"4530.67\"}}"
+    },
+    {
+      "index": 59,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"lokura\":{\"muzane\":\"Suvo Bizo\",\"ralaba\":\"Reke Bame\",\"tanaku\":\"PRQ-3775\",\"vokamu\":\"GUV-4598\"},\"muvepu\":{\"gavepu\":\"300.82\",\"mapevo\":\"2024-11-26\",\"tidosu\":\"2023-07-28\",\"tumuze\":\"1753.48\"}}"
+    }
+  ]
+}
