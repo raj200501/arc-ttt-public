@@ -1145,3 +1145,32 @@ schema as context-conditioned behavior). The corrective, preregistered
 before this verdict (Addendum F, doc-only-TRAINED adapters), has its
 first seed banked at 0.9407 with 60/60 valid JSON (F.3 interim,
 PRIMARY-VERIFIED); F's verdict binds on seeds 2 and 3.
+
+### F.4 Interim observation (2026-08-19 06:35Z — seed 2 landed; NOT a verdict)
+
+f-s2 docadapted: 0.5282, 59/60 valid JSON, adapt 272s,
+PRIMARY-VERIFIED. Against banked seed-2 arms: +2.5 vs kshot (below the
+per-seed pace of the +5 bar), −46.5 vs adapted-with-prompt. Two honest
+notes recorded before seed 3 decides the read: (a) the doc-only arm
+scored all 60 documents where the B arms excluded 22 for length — the
+serving mode reaches documents the demo-stuffed prompt cannot; the F.1
+read runs on scored-index intersections as frozen; (b) the seed spread
+(0.9407 vs 0.5282) suggests doc-only training quality depends on
+document length/complexity — a real scoping finding either way.
+
+### F.5 VERDICT: PASS (decided 2026-08-19 06:37Z, all three seeds banked, all PRIMARY-VERIFIED)
+
+Read 1 (unified claim, docadapted vs banked kshot-with-prompt on
+scored-index intersections): seed-mean +24.0 F1 (per-seed +32.0/+5.5/
++34.7) vs the +5.0 bar; receipt-level mean +26.6, CI low +22.3 > 0;
+sign test 126W/19L/13T — all three frozen conditions met. PASS.
+Read 2 (comparability): −22.4 seed-mean vs adapted-with-prompt
+(−4.1/−43.5/−19.7) — the measured quality cost of document-only
+serving, strongly seed-dependent. Honest scoping carried with the
+claim: seed-2 (the long-document tenant) passes marginally (+5.5 on
+its n=38 intersection) and pays the largest retention cost; the
+serving mode's sweet spot is compact schemas. Adapt cost in this
+regime: ~272s per tenant (~40x cheaper than LOO-context training).
+The B.9.1 caveat is hereby retired per D.3/F.1: the quality claim and
+the 20-58x payload economics hold in ONE measured configuration, with
+raw predictions published and independently re-scorable.
