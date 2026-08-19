@@ -44,10 +44,28 @@ def main(paths: list[str]) -> int:
             continue
         seed = record["seed"] if "seed" in record else int(
             re.search(r"seed(\d+)_", path.name).group(1))
-        geometry = "diverse" if "_e_" in path.name else "fixed"
-        task, _ = make_task(seed=seed, n_train=record["k"],
-                            n_test=record["eval_n"],
-                            task_id="verify", geometry=geometry)
+        # Resolve geometry by matching the artifact's stored schema text
+        # against each regenerated schema — never by filename guessing
+        # (Addendum E ran "diverse", E-r2 "diverse-compact"; a filename
+        # guess scored 60 false mismatches on the first E-r2 artifact).
+        # A failed match across all geometries is itself an integrity
+        # failure: the artifact's schema is not reproducible from its
+        # seed. Artifacts without a stored schema fall back to "fixed".
+        stored_schema = record.get("schema")
+        task = None
+        for geometry in ("fixed", "diverse", "diverse-compact"):
+            cand, schema = make_task(seed=seed, n_train=record["k"],
+                                     n_test=record["eval_n"],
+                                     task_id="verify", geometry=geometry)
+            if stored_schema is None or schema.describe() == stored_schema:
+                task = cand
+                break
+        if task is None:
+            print(f"{path.name}: stored schema does not match the "
+                  "regenerated schema under ANY geometry -> SCHEMA "
+                  "MISMATCH (integrity failure)")
+            failures += 1
+            continue
         mismatches = 0
         for r in with_pred:
             gold = task.test[r["index"]].output_text
