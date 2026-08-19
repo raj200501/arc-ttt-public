@@ -1193,3 +1193,21 @@ mixing protocols); every other value unchanged from E.1/E.2 including
 the +5 bar, both-statistics rule, and primary-evidence storage. The
 in-flight 101/102-series kernels are cancelled — their data would be
 unpoolable under the amendment.
+
+### E-r2 (frozen 2026-08-19T06:50Z, before any E-r2 run) — tokenizer-verified seeds
+
+E-r1's rough character-based budget estimate was wrong (recorded
+against ourselves): pseudoword corpora tokenize at ~1.4 chars/token,
+and the production tokenizer shows B's own fixed corpus ran at 8,068
+of 8,192 tokens — 124 of headroom. E-r1 seeds 201/202 measured 8,539-
+8,700 and produced the same all-excluded failure as E.4.
+
+Fix, with the screen stated precisely so it cannot be mistaken for
+cherry-picking: candidate seeds ascending from 201 are screened by
+TOKEN COUNT ONLY (decode prompt and max LOO training sequence both
+≤ 7,900 with the production tokenizer) — a measurability screen, blind
+to content and to any model output; no arm had run on any accepted
+seed at screening time. First six fitting: **{203, 204, 206, 207,
+208, 209}** (fields 6-7, groups 2-3 — shapes still vary). All other
+E-r1 values unchanged, including the +5 bar and both-statistics rule.
+Seeds 201/202's excluded artifacts stay banked as the record.
