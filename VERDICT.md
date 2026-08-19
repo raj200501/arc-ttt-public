@@ -17,9 +17,9 @@ issue.
 | k=10 replication | 10/10 tenants, +41.5 pooled, 569W/1L | `experiments/novel_schema_summary` k=10 section + per-arm files | artifacts |
 | Frontier context (comparability, self-run) | frontier k-shot 1.00; adapted 0.5B 0.954–0.985 (k=10 arms) | `experiments/novel_frontier_baseline_2026-08-16.json` | artifact |
 | Payload asymmetry (document-only endpoint, this corpus) | 20.0x–58.0x | `experiments/novel_payload_asymmetry_2026-08-15.json` | artifact |
-| Document-only serving, demo-trained adapter (Addendum D, partial) | seed-3: 0.0000, 0/60 valid JSON (prose collapse; mechanism reproduced and logged) | `experiments/novel_schema_d_0.5b_k30_seed3_doconly_2026-08-18.json`, spec D.6 | artifact |
+| Document-only serving, demo-trained adapter (Addendum D, partial) | seeds 2,3: both 0.0000, 0/60 valid JSON (prose collapse; mechanism reproduced — spec D.6; seed-2 fresh-adapter run rules out checkpoint staleness) | `experiments/novel_schema_d_0.5b_k30_seed{2,3}_doconly_2026-08-18.json` | artifacts |
 | Document-only, no adapter (D.5 comparability) | seeds 1,2: 0.0000, 0/60 valid JSON | `experiments/novel_schema_d_0.5b_k30_seed{1,2}_doczero_2026-08-18.json` | artifacts |
-| Addendum D verdict | PENDING (seeds 1,2 doconly in flight; bars frozen in D.2) | — | spec |
+| Addendum D verdict | PENDING (seed 1 doconly in flight; bars frozen in D.2) | — | spec |
 | Doc-only-TRAINED adapters (Addendum F) | seed-1 interim: 0.9407, 60/60 valid, +32.0 vs prompted baseline, adapt 271s; PRIMARY-VERIFIED; verdict binds on 3 seeds (bars frozen pre-run, OTS) | `experiments/novel_schema_f_0.5b_k30_seed1_docadapted_2026-08-19.json` | `verify_from_primary.py` |
 | Diverse-geometry gate (Addendum E) | PENDING (6 seeds, bars frozen E.2) | — | spec + OTS |
 | ARC Prize track | 1.67 public ×3 (v8/v9/v10); climb formally deprioritized | `experiments/kaggle_v{8,9,10}_scored_*.json` | artifacts |
