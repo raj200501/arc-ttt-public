@@ -10,8 +10,16 @@ recomputes every statistic from the per-receipt records — per-arm means,
 paired deltas, the sign test, receipt-level and cluster-level confidence
 intervals, validity windows, attrition — and cross-checks the published
 summary. Nothing is trusted from the summary; everything is derived from
-the receipts. The claim rules this verifies are frozen in
-docs/research/ENTERPRISE_EVAL_SPEC.md (Addendum B; corrections in B.9).
+the receipts. Trust boundary, stated plainly: this is an ARITHMETIC
+audit — the per-receipt scores themselves are the boundary. For
+artifacts that store raw predictions (Addendum E onward),
+verify_from_primary.py moves the boundary further: it regenerates the
+gold labels from the deterministic generator and re-scores every stored
+prediction with the real scorer. The full re-run path (kaggle/ entries,
+free tier) moves it all the way. The claim rules are frozen in
+docs/research/ENTERPRISE_EVAL_SPEC.md (Addendum B; corrections in
+B.9), whose hash is anchored via OpenTimestamps
+(ENTERPRISE_EVAL_SPEC.md.ots).
 
 Scoping reminder printed with the result (spec B.9.1): both arms carry
 the full 30-shot prompt — the delta measures adaptation ADDED ON TOP of

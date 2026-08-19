@@ -961,3 +961,110 @@ duplicate, +0.98; banked seed-3 kshot the lower, +0.21). The rule
 predates the data and the combined effect (~1.2 points against a +46.5
 mean) is immaterial, but the fact is recorded because a skeptic will
 notice it before we mention it — so we mention it.
+
+## Addendum D — Document-only serving gate (frozen 2026-08-18T18:05Z, before any run)
+
+The B.9.1 obligation, discharged: the gate that tests whether adapted
+quality survives the serving configuration the payload economics assume
+(adapter present, NO examples in the request). Frozen before any
+document-only decode has ever been run in this project. Free-tier
+CPU/fp32 — this gate needs no funding, only the idle CPU slots.
+
+### D.1 Arms
+
+Per seed {1,2,3}, one new arm: **doconly-adapted** — the gate-run
+adapter loaded, decode over the same 60 documents with a prompt
+containing ONLY the test document (include_demos=False; k recorded as
+30 because the adapter was trained on the k=30 corpus). Environment
+cpu/fp32, decode settings otherwise at B's frozen values. Adapter
+provenance, disclosed: seeds 1 and 3 restore the EXACT gate-run
+adapters bit-identically from the published novel_ckpt files; seed 2's
+gate pair predates the checkpoint layer, so its adapter is retrained
+with the identical frozen recipe (run-to-run adapter spread is bounded
+by B.9.3's honest estimate, ~1 F1 on the one genuine duplicate).
+Artifacts: novel_schema_d_0.5b_k30_seed{n}_doconly_2026-08-18.json.
+
+### D.2 Reads (declared now)
+
+- **Read 1 — retention (primary).** Per-seed retention delta =
+  mean(doconly-adapted) − mean(B adapted-with-prompt), on the
+  intersection of scored documents. PASS iff the seed-mean retention
+  delta is ≥ −5.0 F1 (quality within 5 points of the prompted adapted
+  arm) with the sign test not contradicting (losses may exceed wins by
+  at most the 5-point-equivalent; a seed-mean drop worse than −5 is a
+  FAIL and the payload economics claim is retired as stated in B.9.1).
+- **Read 2 — the unified business claim.** doconly-adapted vs the
+  banked B kshot-with-prompt arm: PASS iff seed-mean delta ≥ +5.0 F1
+  with interval and sign test agreeing (B.3 discipline). A pass means
+  quality AND the 20-58x payload advantage hold in ONE configuration —
+  the claim the product page may then state without the adjacent-
+  configurations caveat.
+- Attrition: doc-only prompts are shorter, so exclusions can only
+  shrink; all comparisons run on per-seed scored-index intersections
+  with counts published (B.9.2 discipline).
+
+### D.3 Outcome branches (pre-written)
+
+- Both reads PASS: the B.9.1 caveat is retired from all materials and
+  replaced by the measured one-configuration claim; this is public
+  artifact #2 of the lab cadence.
+- Read 1 FAILS: stated verbatim in every material that carried the
+  payload economics: "document-only quality does not survive; the
+  serving-cost claim applies only with demos included, whose payload
+  advantage is smaller and is republished accordingly." No spin.
+- Read 2 alone fails while Read 1 passes: retention holds but the
+  baseline comparison weakens; reported as such, the wedge re-scoped.
+
+### D.4 Execution
+
+B.7-r5/r6 machinery verbatim: arm-scoped checkpointed kernels, doc
+journals, banker-style first-terminal-wins, resumed stamps. Estimated
+runtime: seeds 1/3 decode-only; seed 2 adds one adapt. All on the five
+free CPU slots.
+
+### D.5 Comparability arm (declared 2026-08-19T04:20Z, before any run;
+### NOT a decision arm)
+
+**doczero** — the same document-only decode with NO adapter and NO
+demos (epochs 0, base 0.5B, bare document prompt), per seed. Purpose:
+isolate the adapter's full contribution in the serving configuration
+(doconly − doczero) and give Read 1/2 their floor context. Explicitly
+comparability-only under the B.3 discipline: whatever these arms show,
+they cannot pass or fail Addendum D — the decision reads are D.2's, as
+frozen. Artifacts: novel_schema_d_0.5b_k30_seed{n}_doczero_2026-08-18.json
+(same D date; the arm inherits D's freeze context). Runs on the idle
+CPU slots beside the gating arms.
+
+## Addendum E — Diverse-geometry gate (frozen 2026-08-19T04:55Z, before any run)
+
+The B.9.5 escalation, discharged as its own preregistered gate: does
+the Addendum B effect survive when the schema SHAPE itself varies per
+tenant, not just the vocabulary? Frozen before any diverse-geometry
+document has ever been generated for evaluation.
+
+### E.1 The single changed variable
+
+geometry="diverse" in the corpus generator (committed and tested before
+this freeze; fixed mode proven byte-identical to the banked B tenants):
+group count 2-4, field count 6-12, per-field value kinds and group
+assignments all seed-derived — every tenant a different shape. All else
+at B's frozen values: 0.5B, k=30, eval_n 60, cpu/fp32, epochs 1,
+LoRA r16/a32, scorer, pairing, B.5 validity windows, B.3 two-statistics
+rule, B.9.2 attrition discipline.
+
+### E.2 Decision
+
+Seeds {101,...,106} — six NEW pairs (twice B's seed count; the seed
+range is disjoint from every prior experiment). PASS iff the seed-mean
+paired delta (adapted − kshot) is ≥ +5.0 F1 with interval and sign test
+agreeing. Cluster CI over 6 seeds reported beside the receipt level.
+A pass retires the shared-geometry objection with n doubled; a fail is
+reported as the boundary of the effect (novelty may be carried by the
+fixed shape) — either outcome is publishable and the branches bind.
+
+### E.3 Execution
+
+B.7-r5/r6 arm-scoped checkpointed kernels, one arm per kernel, launched
+in waves on free CPU slots as the Addendum D board drains (12 arms
+total; ~2-3 waves). Artifacts:
+novel_schema_e_0.5b_k30_seed{n}_{arm}_2026-08-19.json.
