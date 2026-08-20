@@ -24,7 +24,7 @@ issue.
 | **Doc-only-TRAINED adapters (Addendum F)** | **PASS**: +24.0 seed-mean vs prompted baseline (+32.0/+5.5/+34.7; bar +5), CI low +22.3, sign 126W/19L; quality cost vs demo-context arm −22.4 (seed-dependent −4.1..−43.5); doc-only absolute micro-F1 by seed 0.9407/0.5282/0.7798; adapt ~272s/tenant; all three arms PRIMARY-VERIFIED | `experiments/novel_schema_f_0.5b_k30_seed{1,2,3}_docadapted_2026-08-19.json` + spec F.5 | `verify_from_primary.py` |
 | Diverse-geometry gate (Addendum E) | PENDING (6 seeds, bars frozen E.2) | — | spec + OTS |
 | ARC Prize track | 1.67 public ×3 (v8/v9/v10); climb formally deprioritized | `experiments/kaggle_v{8,9,10}_scored_*.json` | artifacts |
-| Blind-holdout standing offer | protocol frozen + OTS-stamped 2026-08-20 before any challenger | `docs/research/BLIND_HOLDOUT_PROTOCOL.md` + `.ots` | `ots verify` |
+| Blind-holdout standing offer | protocol frozen before any challenger; byte-exact snapshot OTS-stamped 2026-08-20T2030Z (amended same day pre-challenger: adaptation constraints, deliverables, single-submission, scorer pinning) | `docs/research/snapshots_BLIND_HOLDOUT_PROTOCOL_2026-08-20T2030Z.md` + `.ots` | `ots verify` (proof completes when the calendar aggregates) |
 | Preregistration ordering | spec SHA-256 Bitcoin-anchored (OpenTimestamps), byte-exact snapshots shipped | `docs/research/snapshots_*` + `.ots` | `ots verify` |
 
 Primary-evidence path (artifacts from Addendum E/F onward store raw
