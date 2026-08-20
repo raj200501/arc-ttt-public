@@ -99,6 +99,11 @@ def main() -> int:
     parser.add_argument("--max-new-tokens", type=int, default=512)
     parser.add_argument("--max-seq", type=int, default=8192)
     parser.add_argument("--device", default=None)
+    parser.add_argument("--allow-unpinned", action="store_true",
+                        help="dev/rehearsal only: proceed without a complete "
+                             "base-model pin. On a REAL challenge the pin is "
+                             "a required deliverable (TERMS T4) and this "
+                             "script refuses to emit an unpinned manifest.")
     args = parser.parse_args()
 
     import torch
@@ -160,8 +165,17 @@ def main() -> int:
         for f in sorted(snap.glob("*.safetensors")):
             base_pin["checkpoint_sha256"][f.name] = hashlib.sha256(
                 f.read_bytes()).hexdigest()
-    except Exception as e:  # best-effort: record why the pin is partial
+    except Exception as e:
         base_pin["pin_error"] = f"{type(e).__name__}: {e}"
+    if not (base_pin["revision"] and base_pin["checkpoint_sha256"]):
+        msg = ("base-model pin incomplete (TERMS T4 requires HF revision + "
+               f"checkpoint sha256): {base_pin.get('pin_error', 'fields missing')}")
+        if args.allow_unpinned:
+            print(f"[challenge] WARNING: {msg} — proceeding because "
+                  "--allow-unpinned (NOT valid for a real challenge)", flush=True)
+        else:
+            sys.exit(f"[challenge] REFUSING to emit deliverables: {msg} — "
+                     "fix the pin or pass --allow-unpinned for a rehearsal.")
 
     manifest = {
         "adapter_sha256": hashlib.sha256((out_dir / "adapter.pt").read_bytes()).hexdigest(),

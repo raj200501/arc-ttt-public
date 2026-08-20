@@ -259,16 +259,34 @@ def run_demo(args: argparse.Namespace) -> int:
     print(f"\n[1] GET {base}/health")
     print(f"    -> {json.dumps(health)}")
 
-    rows = [json.loads(line) for line in Path(args.data).read_text().splitlines()]
+    rows = [json.loads(line) for line in Path(args.data).read_text().splitlines()
+            if line.strip()]
     rng = random.Random(args.seed)
     rng.shuffle(rows)
     k, held = args.k, args.eval_n
-    task = from_cord_gt(rows[:k], rows[k : k + held],
-                        task_id=f"demo-k{k}-seed{args.seed}")
-    print(f"\n[2] Data: {len(rows)} real receipts on disk. Deterministic split "
+    if rows and "gt_parse" in rows[0]:
+        task = from_cord_gt(rows[:k], rows[k : k + held],
+                            task_id=f"demo-k{k}-seed{args.seed}")
+        noun = "real receipts"
+    else:
+        # Generic tenant format — {"text": ..., "gold": {...}} per line
+        # (the same rows the challenge kit consumes), so the demo can run
+        # on YOUR documents: --data mine.jsonl.
+        from arcttt.text_ttt import json_canonical
+        def pair(row: dict) -> TextPair:
+            return TextPair(input_text=row["text"],
+                            output_text=json_canonical(row["gold"]))
+        # gold stays on test pairs for the local scoreboard, exactly like
+        # from_cord_gt; the /adapt payload below only ever sends inputs.
+        task = TextTask(task_id=f"demo-k{k}-seed{args.seed}",
+                        train=tuple(pair(r) for r in rows[:k]),
+                        test=tuple(pair(r) for r in rows[k : k + held]))
+        task.validate()
+        noun = "documents"
+    print(f"\n[2] Data: {len(rows)} {noun} on disk. Deterministic split "
           f"(seed {args.seed}):")
-    print(f"    {k} receipts + their labelled JSON = the customer's examples")
-    print(f"    {held} receipts held out = the questions we grade the model on")
+    print(f"    {k} {noun} + their labelled JSON = the customer's examples")
+    print(f"    {held} held out = the questions we grade the model on")
 
     payload = {
         "seed": args.seed,
