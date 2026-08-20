@@ -1,0 +1,126 @@
+{
+  "what": "Per-tenant difficulty map over the 10 banked tenants: prompted (k-shot) vs adapted micro-F1 per tenant schema, assembled from the 2026-08-12 gate + replication artifacts. Every tenant needed weights on this corpus (all deltas positive); the spread of the prompted column is the difficulty signal a fleet of tenants would accumulate.",
+  "tenants": [
+    {
+      "tenant_seed": 1,
+      "k": 30,
+      "role": "gate",
+      "prompted_micro_f1": 0.6208,
+      "adapted_micro_f1": 0.9812,
+      "delta": 0.3604,
+      "adapt_seconds": 9651.4,
+      "scored_kshot": 60,
+      "scored_adapted": 60
+    },
+    {
+      "tenant_seed": 2,
+      "k": 30,
+      "role": "gate",
+      "prompted_micro_f1": 0.5033,
+      "adapted_micro_f1": 0.9934,
+      "delta": 0.4901,
+      "adapt_seconds": 11498.5,
+      "scored_kshot": 38,
+      "scored_adapted": 38
+    },
+    {
+      "tenant_seed": 3,
+      "k": 30,
+      "role": "gate",
+      "prompted_micro_f1": 0.4333,
+      "adapted_micro_f1": 0.9771,
+      "delta": 0.5438,
+      "adapt_seconds": 10496.4,
+      "scored_kshot": 60,
+      "scored_adapted": 60
+    },
+    {
+      "tenant_seed": 4,
+      "k": 10,
+      "role": "replication",
+      "prompted_micro_f1": 0.4708,
+      "adapted_micro_f1": 0.9667,
+      "delta": 0.4959,
+      "adapt_seconds": 55.2,
+      "scored_kshot": 60,
+      "scored_adapted": 60
+    },
+    {
+      "tenant_seed": 5,
+      "k": 10,
+      "role": "replication",
+      "prompted_micro_f1": 0.625,
+      "adapted_micro_f1": 0.9792,
+      "delta": 0.3542,
+      "adapt_seconds": 61.7,
+      "scored_kshot": 60,
+      "scored_adapted": 60
+    },
+    {
+      "tenant_seed": 6,
+      "k": 10,
+      "role": "replication",
+      "prompted_micro_f1": 0.6208,
+      "adapted_micro_f1": 0.9604,
+      "delta": 0.3396,
+      "adapt_seconds": 62.1,
+      "scored_kshot": 60,
+      "scored_adapted": 60
+    },
+    {
+      "tenant_seed": 7,
+      "k": 10,
+      "role": "replication",
+      "prompted_micro_f1": 0.6208,
+      "adapted_micro_f1": 0.9938,
+      "delta": 0.373,
+      "adapt_seconds": 62.5,
+      "scored_kshot": 60,
+      "scored_adapted": 60
+    },
+    {
+      "tenant_seed": 8,
+      "k": 10,
+      "role": "replication",
+      "prompted_micro_f1": 0.5833,
+      "adapted_micro_f1": 0.9604,
+      "delta": 0.3771,
+      "adapt_seconds": 63.7,
+      "scored_kshot": 60,
+      "scored_adapted": 60
+    },
+    {
+      "tenant_seed": 9,
+      "k": 10,
+      "role": "replication",
+      "prompted_micro_f1": 0.5729,
+      "adapted_micro_f1": 0.9854,
+      "delta": 0.4125,
+      "adapt_seconds": 63.1,
+      "scored_kshot": 60,
+      "scored_adapted": 60
+    },
+    {
+      "tenant_seed": 10,
+      "k": 10,
+      "role": "replication",
+      "prompted_micro_f1": 0.5167,
+      "adapted_micro_f1": 0.9688,
+      "delta": 0.4521,
+      "adapt_seconds": 62.4,
+      "scored_kshot": 60,
+      "scored_adapted": 60
+    }
+  ],
+  "delta_min": 0.3396,
+  "delta_max": 0.5438,
+  "delta_mean": 0.4199,
+  "prompted_range": [
+    0.4333,
+    0.625
+  ],
+  "sources": [
+    "novel_schema_0.5b_k30_seed{1,2,3}_{arm}_2026-08-12.json",
+    "novel_schema_0.5b_k10_seed{4..10}_{arm}_2026-08-12.json"
+  ]
+}

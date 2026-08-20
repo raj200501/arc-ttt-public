@@ -1,0 +1,1327 @@
+{
+  "what": "Addendum-F mechanism analysis: per-document micro-F1 vs document length and field count from stored raw predictions + the regenerated corpus, plus measured k=30 demo-prompt token counts against the frozen 8192 budget. FINDINGS: (1) F.4's length/complexity conjecture is NOT supported \u2014 documents, gold, and schemas are statistically identical across seeds (chars, tokens, leaf count), and within-seed short/long halves score the same; the seed-2 doc-only gap (0.5282) remains mechanistically OPEN. (2) The B-arm exclusions are a budget-edge effect, not long documents: every seed's k=30 demo prompt sits at 98-100% of the 8192 cap, and seed 2's straddle it exactly \u2014 demo-context serving runs AT its context ceiling for every tenant on this corpus, while doc-only prompts are ~150 tokens.",
+  "seeds": {
+    "1": {
+      "mean_micro_f1": 0.9407,
+      "n": 60,
+      "short_half_mean_f1": 0.9619,
+      "long_half_mean_f1": 0.9194,
+      "doc_chars_range": [
+        203,
+        215
+      ],
+      "per_doc": [
+        {
+          "index": 0,
+          "micro_f1": 1.0,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 1,
+          "micro_f1": 1.0,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 2,
+          "micro_f1": 1.0,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 3,
+          "micro_f1": 1.0,
+          "doc_chars": 204,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 4,
+          "micro_f1": 1.0,
+          "doc_chars": 204,
+          "gold_fields": 2,
+          "doc_tokens": 147
+        },
+        {
+          "index": 5,
+          "micro_f1": 1.0,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 155
+        },
+        {
+          "index": 6,
+          "micro_f1": 0.6667,
+          "doc_chars": 213,
+          "gold_fields": 2,
+          "doc_tokens": 156
+        },
+        {
+          "index": 7,
+          "micro_f1": 1.0,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 8,
+          "micro_f1": 1.0,
+          "doc_chars": 212,
+          "gold_fields": 2,
+          "doc_tokens": 158
+        },
+        {
+          "index": 9,
+          "micro_f1": 0.875,
+          "doc_chars": 211,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 10,
+          "micro_f1": 0.875,
+          "doc_chars": 204,
+          "gold_fields": 2,
+          "doc_tokens": 144
+        },
+        {
+          "index": 11,
+          "micro_f1": 0.875,
+          "doc_chars": 211,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 12,
+          "micro_f1": 1.0,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 13,
+          "micro_f1": 1.0,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 154
+        },
+        {
+          "index": 14,
+          "micro_f1": 1.0,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 15,
+          "micro_f1": 0.6667,
+          "doc_chars": 213,
+          "gold_fields": 2,
+          "doc_tokens": 157
+        },
+        {
+          "index": 16,
+          "micro_f1": 0.875,
+          "doc_chars": 212,
+          "gold_fields": 2,
+          "doc_tokens": 156
+        },
+        {
+          "index": 17,
+          "micro_f1": 1.0,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 147
+        },
+        {
+          "index": 18,
+          "micro_f1": 1.0,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 19,
+          "micro_f1": 0.875,
+          "doc_chars": 204,
+          "gold_fields": 2,
+          "doc_tokens": 145
+        },
+        {
+          "index": 20,
+          "micro_f1": 0.875,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 21,
+          "micro_f1": 1.0,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 22,
+          "micro_f1": 1.0,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 23,
+          "micro_f1": 1.0,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 24,
+          "micro_f1": 0.875,
+          "doc_chars": 212,
+          "gold_fields": 2,
+          "doc_tokens": 157
+        },
+        {
+          "index": 25,
+          "micro_f1": 1.0,
+          "doc_chars": 213,
+          "gold_fields": 2,
+          "doc_tokens": 155
+        },
+        {
+          "index": 26,
+          "micro_f1": 1.0,
+          "doc_chars": 213,
+          "gold_fields": 2,
+          "doc_tokens": 156
+        },
+        {
+          "index": 27,
+          "micro_f1": 1.0,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 28,
+          "micro_f1": 0.75,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 143
+        },
+        {
+          "index": 29,
+          "micro_f1": 1.0,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 155
+        },
+        {
+          "index": 30,
+          "micro_f1": 1.0,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 145
+        },
+        {
+          "index": 31,
+          "micro_f1": 1.0,
+          "doc_chars": 211,
+          "gold_fields": 2,
+          "doc_tokens": 156
+        },
+        {
+          "index": 32,
+          "micro_f1": 1.0,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 154
+        },
+        {
+          "index": 33,
+          "micro_f1": 1.0,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 147
+        },
+        {
+          "index": 34,
+          "micro_f1": 1.0,
+          "doc_chars": 212,
+          "gold_fields": 2,
+          "doc_tokens": 156
+        },
+        {
+          "index": 35,
+          "micro_f1": 1.0,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 36,
+          "micro_f1": 1.0,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 37,
+          "micro_f1": 0.875,
+          "doc_chars": 203,
+          "gold_fields": 2,
+          "doc_tokens": 147
+        },
+        {
+          "index": 38,
+          "micro_f1": 1.0,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 39,
+          "micro_f1": 0.875,
+          "doc_chars": 204,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 40,
+          "micro_f1": 0.75,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 41,
+          "micro_f1": 1.0,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 42,
+          "micro_f1": 0.875,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 43,
+          "micro_f1": 1.0,
+          "doc_chars": 212,
+          "gold_fields": 2,
+          "doc_tokens": 156
+        },
+        {
+          "index": 44,
+          "micro_f1": 0.875,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 143
+        },
+        {
+          "index": 45,
+          "micro_f1": 1.0,
+          "doc_chars": 213,
+          "gold_fields": 2,
+          "doc_tokens": 155
+        },
+        {
+          "index": 46,
+          "micro_f1": 1.0,
+          "doc_chars": 215,
+          "gold_fields": 2,
+          "doc_tokens": 161
+        },
+        {
+          "index": 47,
+          "micro_f1": 0.8571,
+          "doc_chars": 204,
+          "gold_fields": 2,
+          "doc_tokens": 144
+        },
+        {
+          "index": 48,
+          "micro_f1": 0.75,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 49,
+          "micro_f1": 1.0,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 50,
+          "micro_f1": 0.875,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 51,
+          "micro_f1": 0.875,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 52,
+          "micro_f1": 1.0,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 53,
+          "micro_f1": 1.0,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 54,
+          "micro_f1": 0.875,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 55,
+          "micro_f1": 1.0,
+          "doc_chars": 204,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 56,
+          "micro_f1": 0.75,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 156
+        },
+        {
+          "index": 57,
+          "micro_f1": 1.0,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 58,
+          "micro_f1": 1.0,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 59,
+          "micro_f1": 1.0,
+          "doc_chars": 204,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        }
+      ]
+    },
+    "2": {
+      "mean_micro_f1": 0.5282,
+      "n": 60,
+      "short_half_mean_f1": 0.5041,
+      "long_half_mean_f1": 0.5523,
+      "doc_chars_range": [
+        202,
+        213
+      ],
+      "per_doc": [
+        {
+          "index": 0,
+          "micro_f1": 0.125,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 154
+        },
+        {
+          "index": 1,
+          "micro_f1": 0.25,
+          "doc_chars": 202,
+          "gold_fields": 2,
+          "doc_tokens": 147
+        },
+        {
+          "index": 2,
+          "micro_f1": 0.625,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 155
+        },
+        {
+          "index": 3,
+          "micro_f1": 0.1429,
+          "doc_chars": 211,
+          "gold_fields": 2,
+          "doc_tokens": 155
+        },
+        {
+          "index": 4,
+          "micro_f1": 0.75,
+          "doc_chars": 211,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 5,
+          "micro_f1": 0.875,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 6,
+          "micro_f1": 0.5,
+          "doc_chars": 203,
+          "gold_fields": 2,
+          "doc_tokens": 147
+        },
+        {
+          "index": 7,
+          "micro_f1": 0.375,
+          "doc_chars": 203,
+          "gold_fields": 2,
+          "doc_tokens": 145
+        },
+        {
+          "index": 8,
+          "micro_f1": 0.75,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 9,
+          "micro_f1": 0.125,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 10,
+          "micro_f1": 0.4,
+          "doc_chars": 211,
+          "gold_fields": 2,
+          "doc_tokens": 154
+        },
+        {
+          "index": 11,
+          "micro_f1": 0.625,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 12,
+          "micro_f1": 0.8,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 13,
+          "micro_f1": 0.5,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 14,
+          "micro_f1": 0.625,
+          "doc_chars": 211,
+          "gold_fields": 2,
+          "doc_tokens": 154
+        },
+        {
+          "index": 15,
+          "micro_f1": 0.8,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 16,
+          "micro_f1": 0.75,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 17,
+          "micro_f1": 0.5333,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 18,
+          "micro_f1": 0.75,
+          "doc_chars": 204,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 19,
+          "micro_f1": 0.5,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 147
+        },
+        {
+          "index": 20,
+          "micro_f1": 0.25,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 158
+        },
+        {
+          "index": 21,
+          "micro_f1": 0.625,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 22,
+          "micro_f1": 0.75,
+          "doc_chars": 212,
+          "gold_fields": 2,
+          "doc_tokens": 159
+        },
+        {
+          "index": 23,
+          "micro_f1": 0.875,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 24,
+          "micro_f1": 0.5,
+          "doc_chars": 213,
+          "gold_fields": 2,
+          "doc_tokens": 158
+        },
+        {
+          "index": 25,
+          "micro_f1": 0.25,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 26,
+          "micro_f1": 0.4,
+          "doc_chars": 211,
+          "gold_fields": 2,
+          "doc_tokens": 157
+        },
+        {
+          "index": 27,
+          "micro_f1": 0.25,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 147
+        },
+        {
+          "index": 28,
+          "micro_f1": 0.0,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 154
+        },
+        {
+          "index": 29,
+          "micro_f1": 0.6667,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 155
+        },
+        {
+          "index": 30,
+          "micro_f1": 0.5,
+          "doc_chars": 204,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 31,
+          "micro_f1": 0.375,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 32,
+          "micro_f1": 0.2667,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 33,
+          "micro_f1": 0.75,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 154
+        },
+        {
+          "index": 34,
+          "micro_f1": 0.75,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 35,
+          "micro_f1": 0.0,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 156
+        },
+        {
+          "index": 36,
+          "micro_f1": 0.25,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 155
+        },
+        {
+          "index": 37,
+          "micro_f1": 0.375,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 157
+        },
+        {
+          "index": 38,
+          "micro_f1": 0.625,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 39,
+          "micro_f1": 0.625,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 40,
+          "micro_f1": 0.5,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 154
+        },
+        {
+          "index": 41,
+          "micro_f1": 0.5,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 156
+        },
+        {
+          "index": 42,
+          "micro_f1": 0.875,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 155
+        },
+        {
+          "index": 43,
+          "micro_f1": 0.75,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 44,
+          "micro_f1": 0.625,
+          "doc_chars": 213,
+          "gold_fields": 2,
+          "doc_tokens": 158
+        },
+        {
+          "index": 45,
+          "micro_f1": 0.875,
+          "doc_chars": 213,
+          "gold_fields": 2,
+          "doc_tokens": 158
+        },
+        {
+          "index": 46,
+          "micro_f1": 0.75,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 47,
+          "micro_f1": 0.3077,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 48,
+          "micro_f1": 0.375,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 49,
+          "micro_f1": 1.0,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 50,
+          "micro_f1": 0.375,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 147
+        },
+        {
+          "index": 51,
+          "micro_f1": 0.5,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 52,
+          "micro_f1": 0.5,
+          "doc_chars": 213,
+          "gold_fields": 2,
+          "doc_tokens": 158
+        },
+        {
+          "index": 53,
+          "micro_f1": 0.0,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 54,
+          "micro_f1": 0.5,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 55,
+          "micro_f1": 0.75,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 156
+        },
+        {
+          "index": 56,
+          "micro_f1": 0.625,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 57,
+          "micro_f1": 0.375,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 58,
+          "micro_f1": 0.625,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 59,
+          "micro_f1": 1.0,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        }
+      ]
+    },
+    "3": {
+      "mean_micro_f1": 0.7798,
+      "n": 60,
+      "short_half_mean_f1": 0.775,
+      "long_half_mean_f1": 0.7847,
+      "doc_chars_range": [
+        202,
+        213
+      ],
+      "per_doc": [
+        {
+          "index": 0,
+          "micro_f1": 1.0,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 146
+        },
+        {
+          "index": 1,
+          "micro_f1": 0.625,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 2,
+          "micro_f1": 0.625,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 3,
+          "micro_f1": 0.75,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 146
+        },
+        {
+          "index": 4,
+          "micro_f1": 1.0,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 154
+        },
+        {
+          "index": 5,
+          "micro_f1": 0.75,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 6,
+          "micro_f1": 0.875,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 7,
+          "micro_f1": 0.75,
+          "doc_chars": 213,
+          "gold_fields": 2,
+          "doc_tokens": 154
+        },
+        {
+          "index": 8,
+          "micro_f1": 0.75,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 9,
+          "micro_f1": 0.875,
+          "doc_chars": 213,
+          "gold_fields": 2,
+          "doc_tokens": 156
+        },
+        {
+          "index": 10,
+          "micro_f1": 0.875,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 11,
+          "micro_f1": 0.875,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 147
+        },
+        {
+          "index": 12,
+          "micro_f1": 0.75,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 147
+        },
+        {
+          "index": 13,
+          "micro_f1": 0.75,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 14,
+          "micro_f1": 0.625,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 143
+        },
+        {
+          "index": 15,
+          "micro_f1": 0.875,
+          "doc_chars": 211,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 16,
+          "micro_f1": 0.875,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 17,
+          "micro_f1": 0.75,
+          "doc_chars": 204,
+          "gold_fields": 2,
+          "doc_tokens": 144
+        },
+        {
+          "index": 18,
+          "micro_f1": 0.5,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 144
+        },
+        {
+          "index": 19,
+          "micro_f1": 0.5,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 20,
+          "micro_f1": 0.625,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 21,
+          "micro_f1": 0.625,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 22,
+          "micro_f1": 0.625,
+          "doc_chars": 211,
+          "gold_fields": 2,
+          "doc_tokens": 155
+        },
+        {
+          "index": 23,
+          "micro_f1": 1.0,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 24,
+          "micro_f1": 0.625,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 25,
+          "micro_f1": 0.625,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 26,
+          "micro_f1": 0.75,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 27,
+          "micro_f1": 1.0,
+          "doc_chars": 204,
+          "gold_fields": 2,
+          "doc_tokens": 144
+        },
+        {
+          "index": 28,
+          "micro_f1": 1.0,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 146
+        },
+        {
+          "index": 29,
+          "micro_f1": 1.0,
+          "doc_chars": 211,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 30,
+          "micro_f1": 0.625,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 145
+        },
+        {
+          "index": 31,
+          "micro_f1": 0.75,
+          "doc_chars": 212,
+          "gold_fields": 2,
+          "doc_tokens": 158
+        },
+        {
+          "index": 32,
+          "micro_f1": 0.75,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 33,
+          "micro_f1": 0.75,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 34,
+          "micro_f1": 1.0,
+          "doc_chars": 212,
+          "gold_fields": 2,
+          "doc_tokens": 154
+        },
+        {
+          "index": 35,
+          "micro_f1": 0.6154,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 36,
+          "micro_f1": 0.75,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 37,
+          "micro_f1": 0.875,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 38,
+          "micro_f1": 1.0,
+          "doc_chars": 211,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 39,
+          "micro_f1": 0.75,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 150
+        },
+        {
+          "index": 40,
+          "micro_f1": 0.75,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 145
+        },
+        {
+          "index": 41,
+          "micro_f1": 0.875,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 42,
+          "micro_f1": 0.75,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 145
+        },
+        {
+          "index": 43,
+          "micro_f1": 0.5,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 44,
+          "micro_f1": 0.625,
+          "doc_chars": 205,
+          "gold_fields": 2,
+          "doc_tokens": 144
+        },
+        {
+          "index": 45,
+          "micro_f1": 0.75,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 147
+        },
+        {
+          "index": 46,
+          "micro_f1": 0.875,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 151
+        },
+        {
+          "index": 47,
+          "micro_f1": 0.625,
+          "doc_chars": 210,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 48,
+          "micro_f1": 1.0,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 49,
+          "micro_f1": 0.8,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 50,
+          "micro_f1": 0.875,
+          "doc_chars": 202,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 51,
+          "micro_f1": 0.625,
+          "doc_chars": 204,
+          "gold_fields": 2,
+          "doc_tokens": 145
+        },
+        {
+          "index": 52,
+          "micro_f1": 0.625,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 53,
+          "micro_f1": 0.75,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 152
+        },
+        {
+          "index": 54,
+          "micro_f1": 0.875,
+          "doc_chars": 209,
+          "gold_fields": 2,
+          "doc_tokens": 153
+        },
+        {
+          "index": 55,
+          "micro_f1": 0.75,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 149
+        },
+        {
+          "index": 56,
+          "micro_f1": 0.75,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 57,
+          "micro_f1": 0.875,
+          "doc_chars": 208,
+          "gold_fields": 2,
+          "doc_tokens": 148
+        },
+        {
+          "index": 58,
+          "micro_f1": 1.0,
+          "doc_chars": 206,
+          "gold_fields": 2,
+          "doc_tokens": 145
+        },
+        {
+          "index": 59,
+          "micro_f1": 1.0,
+          "doc_chars": 207,
+          "gold_fields": 2,
+          "doc_tokens": 146
+        }
+      ]
+    }
+  },
+  "k30_prompt_tokens_vs_budget": {
+    "1": {
+      "mean": 8069,
+      "min": 8062,
+      "max": 8075,
+      "budget": 8192,
+      "sampled_every": 7
+    },
+    "2": {
+      "mean": 8192,
+      "min": 8184,
+      "max": 8195,
+      "budget": 8192,
+      "sampled_every": 7
+    },
+    "3": {
+      "mean": 8037,
+      "min": 8032,
+      "max": 8043,
+      "budget": 8192,
+      "sampled_every": 7
+    }
+  },
+  "sources": [
+    "novel_schema_f_0.5b_k30_seed{1,2,3}_docadapted_2026-08-19.json"
+  ]
+}

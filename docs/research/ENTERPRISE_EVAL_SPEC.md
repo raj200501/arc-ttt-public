@@ -1301,3 +1301,24 @@ construction they inherit); their governing gates are D (frozen 08-18
 T18:05Z), E/E-r2 (08-19), F (08-19T03:30Z). Mapping: novel_schema_d_*
 -> Addendum D; novel_schema_e_* -> E/E-r2; novel_schema_f_* -> F.
 Artifact bytes are not rewritten post hoc.
+
+**P11 — F.4's length/complexity conjecture tested and NOT supported;
+seed-2 "long-document tenant" characterization corrected (2026-08-20).**
+Computed from stored F raw predictions + the regenerated corpus
+(`experiments/novel_f_length_analysis_2026-08-20.json`,
+`scripts/tenant_analysis.py`): documents, gold objects, and schemas are
+statistically identical across the three F seeds (test docs ~150
+tokens, gold 8 leaves, train docs ~208 chars for every seed), and
+within-seed short/long halves score the same — so document
+length/complexity does not explain seed 2's 0.5282. The B-arm
+exclusions likewise are not "long documents": every seed's k=30
+LOO demo prompt measures 98-100% of the frozen 8192-token budget
+(seed 1: 8062-8075; seed 2: 8184-8195 — straddling the cap; seed 3:
+8032-8043), so which documents were excluded is tokenization jitter at
+the budget edge, and seed 2 is "the tenant whose prompts land ON the
+budget line," not a long-document tenant. Two consequences, stated per
+the claim rule: (a) demo-context serving at k=30 operates AT its
+context ceiling for every tenant on this corpus, while doc-only
+prompts run ~150 tokens (~54x headroom) — a measured structural limit
+of context-carried quality; (b) the mechanism behind seed 2's doc-only
+quality gap is OPEN — the F.4 conjecture is withdrawn, not replaced.

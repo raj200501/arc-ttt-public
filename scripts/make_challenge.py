@@ -38,8 +38,14 @@ TERMS_SKELETON = """# Blind-holdout challenge terms — {name}
 
 Protocol: BLIND_HOLDOUT_PROTOCOL.md as anchored in the newest snapshot
 in docs/research/ (the snapshot governs). Scorer: `score_text_output`
-at repository commit ⟨PIN COMMIT HERE⟩; aggregation is mean
+at repository commit {commit}; aggregation is mean
 per-document micro-F1 with invalid JSON scored 0.
+
+## Target schema (challenger: declare before sending)
+
+⟨FIELD NAMES + TYPES, and every normalization convention your gold
+relies on (date formats, digits-only numbers, casing) — non-verbatim
+gold is only fair if its conventions are declared here.⟩
 
 - Documents: {n_total} total — {n_train} labeled training pairs
   (train.jsonl), {n_holdout} held out (holdout.jsonl; gold withheld).
@@ -117,14 +123,20 @@ def cmd_split(args: argparse.Namespace) -> int:
     gold_sha = sha256_file(gold_path)
     (out / "TERMS.md").write_text(TERMS_SKELETON.format(
         name=args.name, n_total=len(rows), n_train=len(train),
-        n_holdout=len(holdout), seed=args.seed, gold_sha=gold_sha))
+        n_holdout=len(holdout), seed=args.seed, gold_sha=gold_sha,
+        commit=args.commit or "⟨PIN COMMIT HERE before sending⟩"))
 
     print(f"challenge package written to {out}/")
     print(f"  SEND:   train.jsonl ({len(train)} labeled), "
           f"holdout.jsonl ({len(holdout)} unlabeled), TERMS.md")
     print(f"  KEEP:   gold_holdout.jsonl  sha256 {gold_sha}")
     print("  anchor your gold before sending anything (protocol item 8):")
-    print(f"    ots stamp {gold_path}")
+    print(f"    ots stamp {gold_path}   (pip install opentimestamps-client)")
+    if not args.commit:
+        print("  BEFORE SENDING: pin the scorer commit in TERMS.md "
+              "(or re-run with --commit <sha>) and fill the schema section.")
+    print("  fill the '## Target schema' section in TERMS.md with your "
+          "field names and normalization conventions.")
     return 0
 
 
@@ -190,6 +202,8 @@ def main() -> int:
     p_split.add_argument("--seed", type=int, default=0, help="split seed (default 0)")
     p_split.add_argument("--out-dir", default="challenge", help="output directory")
     p_split.add_argument("--name", default="unnamed-challenge", help="challenge name for TERMS.md")
+    p_split.add_argument("--commit", default=None,
+                         help="repository commit to pin the scorer to in TERMS.md")
     p_split.set_defaults(func=cmd_split)
 
     p_score = sub.add_parser("score", help="one-time scoring pass with the pinned scorer")
