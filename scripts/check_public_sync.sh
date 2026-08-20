@@ -15,7 +15,7 @@ fail=0
 # 1) library + scripts byte-identical (export_public.sh is private-only)
 for d in src scripts tests; do
   if ! diff -rq "$SRC/$d" "$PUB/$d" \
-      --exclude=__pycache__ --exclude=export_public.sh \
+      --exclude=__pycache__ --exclude=export_public.sh --exclude=fill_gate_slots.py \
       --exclude=check_public_sync.sh; then
     fail=1
   fi

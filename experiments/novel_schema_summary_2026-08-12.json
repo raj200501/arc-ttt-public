@@ -1,8 +1,9 @@
 {
   "spec": "ENTERPRISE_EVAL_SPEC.md Addendum B (frozen 2026-08-12T19:40Z)",
   "date": "2026-08-12",
+  "decided": "2026-08-20",
   "VERDICT": "GO",
-  "verdict_detail": "Gate PASSES at k=30: mean +0.4648 >= +0.05, CI excludes zero, sign test agrees (156W/0L, p=0.0). Claimable per Addendum B B.6, always next to the CORD negative.",
+  "verdict_detail": "Gate PASSES at k=30: mean +0.4648 >= +0.05, CI excludes zero, sign test agrees (156W/0L, p<1e-15). Claimable per Addendum B B.6, always next to the CORD negative.",
   "gate_k30": {
     "k": 30,
     "role": "DECISION",
@@ -11,6 +12,29 @@
     "errored_seeds": [],
     "heterogeneous_pairs_refused": [],
     "validity_trips": [],
+    "attrition": [
+      {
+        "seed": 1,
+        "eval_n": 60,
+        "scored": 60,
+        "excluded_no_completion": 0,
+        "symmetric": true
+      },
+      {
+        "seed": 2,
+        "eval_n": 60,
+        "scored": 38,
+        "excluded_no_completion": 22,
+        "symmetric": true
+      },
+      {
+        "seed": 3,
+        "eval_n": 60,
+        "scored": 60,
+        "excluded_no_completion": 0,
+        "symmetric": true
+      }
+    ],
     "seed_deltas": [
       0.3604,
       0.4901,
@@ -29,7 +53,7 @@
         "wins": 156,
         "losses": 0,
         "ties": 2,
-        "p_value": 0.0
+        "p_value": 2.1895288505075267e-47
       },
       "mde_80pct": 0.0464
     }
@@ -42,6 +66,29 @@
     "errored_seeds": [],
     "heterogeneous_pairs_refused": [],
     "validity_trips": [],
+    "attrition": [
+      {
+        "seed": 1,
+        "eval_n": 60,
+        "scored": 60,
+        "excluded_no_completion": 0,
+        "symmetric": true
+      },
+      {
+        "seed": 2,
+        "eval_n": 60,
+        "scored": 60,
+        "excluded_no_completion": 0,
+        "symmetric": true
+      },
+      {
+        "seed": 3,
+        "eval_n": 60,
+        "scored": 60,
+        "excluded_no_completion": 0,
+        "symmetric": true
+      }
+    ],
     "seed_deltas": [
       0.398,
       0.4688,
@@ -60,7 +107,7 @@
         "wins": 171,
         "losses": 0,
         "ties": 9,
-        "p_value": 0.0
+        "p_value": 6.681911775230489e-52
       },
       "mde_80pct": 0.0434
     }

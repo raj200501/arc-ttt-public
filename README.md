@@ -3,9 +3,12 @@
 **Per-tenant small-model adaptation for document extraction, with
 preregistered, reproducible evals — failures published beside passes.**
 Every headline number reconciles to a machine-readable artifact
-(`VERDICT.md` is the map), the eval spec's hash is Bitcoin-anchored
-via OpenTimestamps before the data existed, and the verification is
-one command:
+(`VERDICT.md` is the map). Preregistration ordering: the spec's later
+gates (Addenda D/E/F onward) are Bitcoin-anchored via OpenTimestamps
+before their data existed; the original gate's 2026-08-12 freeze
+predates the first anchor and rests on git history — stated plainly,
+and all gates from D onward are chain-anchored pre-data. Verification
+is one command:
 
     python3 scripts/verify_verdict.py
     python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json
