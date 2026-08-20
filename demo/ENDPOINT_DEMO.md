@@ -40,6 +40,31 @@ cache (~950 MB; downloaded automatically on first run), and
 Everything is deterministic (fixed seed, greedy decoding), so a re-run
 reproduces the same model outputs; only the timings vary.
 
+## Run it on the winning regime — or your own documents
+
+The demo defaults to CORD receipts, where measured adaptation is
+net-neutral at this scale (the honest caveat below). To watch the
+regime the company is actually built on — novel tenant schemas the
+base model has never seen — point it at the checked-in novel-schema
+file:
+
+```bash
+DATA=demo/novel_demo.jsonl bash demo/run_endpoint_demo.sh
+```
+
+Captured run (2026-08-20, same 4-core CPU, k=10, seed 0): before
+adaptation the 30-shot-style prompt scores field F1 0.75 and 0.62 on
+the two held-out documents; after 424 s of LoRA adaptation on the
+same 10 examples the same model scores **1.00 and 1.00** — 8/8 gold
+fields on both. Same caveat as everywhere in this repo: n=2
+demonstrates the mechanism; the preregistered k=30 gate
+(VERDICT.md, +46.5 mean F1 over three tenant schemas, 156W/0L/2T)
+is the measured version of this delta.
+
+The `DATA=` file can be ANY JSONL of `{"text": ..., "gold": {...}}`
+rows — the same format the blind-holdout challenge kit emits — so a
+tenant can point the demo at their own documents unchanged.
+
 ## What the viewer is seeing
 
 1. `GET /health` — the endpoint is a live HTTP server holding the model.
