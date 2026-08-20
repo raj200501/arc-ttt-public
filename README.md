@@ -35,6 +35,14 @@ survived repeated infrastructure kill-strikes during the gate.
 
 
 
+**The protocol has run once, end to end (2026-08-20):** a labeled
+DRESS REHEARSAL — an adversarial AI agent authored 50 out-of-
+distribution waybills, kept its gold, and scored our blind single
+submission once: 0.8792 mean micro-F1, 30/30 valid JSON, hard tier
+0.679, failure taxonomy published (agent-authored corpus, NOT a real
+tenant — the row in VERDICT.md carries the full label).
+`experiments/blind_rehearsal_2026-08-20.json` has per-document scores.
+
 ## Check the preregistration ordering
 
 **Preregistration you can check without trusting us:** the eval spec's

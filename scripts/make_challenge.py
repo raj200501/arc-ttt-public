@@ -47,6 +47,17 @@ per-document micro-F1 with invalid JSON scored 0.
 relies on (date formats, digits-only numbers, casing) — non-verbatim
 gold is only fair if its conventions are declared here.⟩
 
+## Scorer semantics (disclosed by the founder — read before labeling)
+
+The pinned scorer matches (field-path, normalized-value) pairs with
+micro-F1. Its normalization: string values are whitespace-collapsed
+and CASEFOLDED (case-insensitive); numeric strings compare
+canonically ("12,000" == "12000" == 12000.0); booleans/null by JSON
+spelling; invalid JSON scores 0. The code at the pinned commit
+governs on any conflict with this summary. Sanity-check it against
+your own train gold before shipping: `make_challenge.py score
+--pred <your-gold-as-predictions> --gold <your-gold>` should be 1.0.
+
 - Documents: {n_total} total — {n_train} labeled training pairs
   (train.jsonl), {n_holdout} held out (holdout.jsonl; gold withheld).
 - Split: deterministic, seed {seed}, by this kit

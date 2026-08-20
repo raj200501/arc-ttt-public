@@ -99,6 +99,10 @@ def main() -> int:
     parser.add_argument("--max-new-tokens", type=int, default=512)
     parser.add_argument("--max-seq", type=int, default=8192)
     parser.add_argument("--device", default=None)
+    parser.add_argument("--kshot", action="store_true",
+                        help="baseline arm: NO adaptation; the training pairs "
+                             "ride in the prompt as demonstrations instead "
+                             "(paired-delta comparability for a challenge)")
     parser.add_argument("--allow-unpinned", action="store_true",
                         help="dev/rehearsal only: proceed without a complete "
                              "base-model pin. On a REAL challenge the pin is "
@@ -130,13 +134,19 @@ def main() -> int:
         lora_rank=args.rank, lora_alpha=args.alpha, epochs=args.epochs,
         max_new_tokens=args.max_new_tokens, max_sequence_tokens=args.max_seq,
         gradient_checkpointing=device.type == "cuda",
+        chunked_loss_tokens=512,  # the banked-arm loss path (see kernels)
     )
     predictor = TextPredictor(model, tokenizer, config, device)
 
-    started = time.monotonic()
-    predictor.adapt_on_examples(text_docmode_training_examples(task))
-    adapt_seconds = round(time.monotonic() - started, 1)
-    print(f"[challenge] adapted (doc-only recipe) in {adapt_seconds}s", flush=True)
+    if args.kshot:
+        adapt_seconds = 0.0
+        print("[challenge] k-shot baseline arm: no adaptation; "
+              "training pairs ride in the prompt", flush=True)
+    else:
+        started = time.monotonic()
+        predictor.adapt_on_examples(text_docmode_training_examples(task))
+        adapt_seconds = round(time.monotonic() - started, 1)
+        print(f"[challenge] adapted (doc-only recipe) in {adapt_seconds}s", flush=True)
 
     adapter = {name: p.detach().cpu() for name, p in model.named_parameters()
                if "lora_" in name}
@@ -146,7 +156,7 @@ def main() -> int:
     for i in range(len(holdout_rows)):
         t0 = time.monotonic()
         text = predict_text_voted(predictor, task, i, samples=args.samples,
-                                  include_demos=False)
+                                  include_demos=args.kshot)
         raw_texts.append(text)
         print(f"[challenge] doc {i + 1}/{len(holdout_rows)} "
               f"({round(time.monotonic() - t0, 1)}s)", flush=True)
@@ -187,6 +197,7 @@ def main() -> int:
         "config": {"rank": args.rank, "alpha": args.alpha, "epochs": args.epochs,
                    "samples": args.samples, "max_new_tokens": args.max_new_tokens,
                    "max_seq": args.max_seq, "device": str(device)},
+        "arm": "kshot" if args.kshot else "docadapted",
         "adapt_seconds": adapt_seconds,
         "raw_outputs": [{"id": r["id"], "text": t}
                         for r, t in zip(holdout_rows, raw_texts)],

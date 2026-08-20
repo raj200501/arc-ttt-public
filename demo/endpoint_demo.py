@@ -149,6 +149,11 @@ def run_server(args: argparse.Namespace) -> int:
         lora_rank=args.rank,
         lora_alpha=args.alpha,
         epochs=args.epochs,
+        # The banked-arm loss path (kernels use 512): sliced fp32 CE keeps
+        # allocations small and uniform — the legacy full-logits path grows
+        # the CPU allocator arena across LOO steps until the cgroup OOMs
+        # (observed on this box; math-identical per test_chunked_loss).
+        chunked_loss_tokens=512,
         max_new_tokens=args.max_new_tokens,
         max_sequence_tokens=args.max_seq,
         gradient_checkpointing=device.type == "cuda",
@@ -242,7 +247,7 @@ def show_results(task: TextTask, response: dict[str, Any],
               f"predicted fields against precision)"
               + ("" if score.valid_json else ", output was NOT valid JSON"))
         side_by_side("MODEL OUTPUT", pretty(prediction["text"]),
-                     "GOLD (human-labelled)", pretty(gold))
+                     "GOLD (dataset label)", pretty(gold))
     return scored
 
 
@@ -252,7 +257,8 @@ def run_demo(args: argparse.Namespace) -> int:
 
     print(RULE)
     print(" arc-ttt adaptation endpoint — live demo")
-    print(" task: receipt OCR text in  →  structured JSON out (CORD-v2, CC BY 4.0)")
+    print(" task: document text in  →  structured JSON out"
+          " (CORD-v2 receipts by default; any {text,gold} JSONL via DATA=)")
     print(RULE)
 
     health = wait_for_health(base)
