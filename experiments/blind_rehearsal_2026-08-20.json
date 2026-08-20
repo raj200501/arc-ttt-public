@@ -1,0 +1,95 @@
+{
+  "what": "BLIND-HOLDOUT PROTOCOL DRESS REHEARSAL \u2014 2026-08-20. The full protocol executed end-to-end for the first time: challenger-side kit split -> blind founder adaptation -> sealed single submission -> challenger-scored once with the pinned scorer. HONEST LABEL: the challenger was an AI agent and the 50 freight-waybill corpus was agent-AUTHORED (realistic post-OCR text with deliberate non-verbatim and structural traps, from outside the founder's generator distribution) \u2014 NOT a real company's scans. This is a protocol-integrity and transfer signal, not the real event; it caps what the number proves and we say so.",
+  "score": {
+    "mean_micro_f1": 0.8792,
+    "n_holdout": 30,
+    "invalid_or_missing": 0,
+    "scorer_line": "mean per-document micro-F1 over 30 holdout docs: 0.8792 (0 scored 0 as invalid/missing/duplicate)",
+    "by_challenger_tier": {
+      "easy": 0.95,
+      "medium": 0.931,
+      "mixed": 0.944,
+      "hard": 0.679
+    },
+    "per_doc": {
+      "WB-2026-0101": 1.0,
+      "WB-2026-0102": 1.0,
+      "az-0109": 1.0,
+      "az-0110": 0.75,
+      "frt_0104": 1.0,
+      "h-3301": 0.75,
+      "h-3303": 0.75,
+      "h-3304": 0.875,
+      "h-3305": 0.5,
+      "h-3307": 0.375,
+      "h-3311": 1.0,
+      "h-3312": 0.5,
+      "m-2201": 1.0,
+      "m-2204": 1.0,
+      "m-2205": 1.0,
+      "m-2206": 0.875,
+      "m-2208": 0.875,
+      "m-2209": 1.0,
+      "m-2210": 0.875,
+      "m-2211": 0.75,
+      "m-2212": 1.0,
+      "x-4401": 0.875,
+      "x-4403": 1.0,
+      "x-4404": 1.0,
+      "x-4407": 0.875,
+      "x-4413": 1.0,
+      "x-4414": 1.0,
+      "x-4415": 0.75,
+      "x-4416": 1.0,
+      "x-4419": 1.0
+    }
+  },
+  "setup": {
+    "documents": 50,
+    "train_pairs": 20,
+    "holdout": 30,
+    "challenger_gold_sha256": "13e9cc7f9955bff22997b7d95802c5b65531713f3f881e631828665b8797c2ef",
+    "terms_pinned_commit": "617449ee118556dafd70a630518ca5b8b433fcf8",
+    "kit_command": "make_challenge.py split --train-k 20 --seed 41",
+    "founder_command": "scripts/run_challenge.py --train /tmp/claude-0/-home-user-safer-1/5579d3eb-52a6-5cb4-9d8f-41a2529382c4/scratchpad/challenge-rehearsal/outbox/train.jsonl --holdout /tmp/claude-0/-home-user-safer-1/5579d3eb-52a6-5cb4-9d8f-41a2529382c4/scratchpad/challenge-rehearsal/outbox/holdout.jsonl --out-dir /tmp/claude-0/-home-user-safer-1/5579d3eb-52a6-5cb4-9d8f-41a2529382c4/scratchpad/challenge-rehearsal/founder-run --seed 1",
+    "seed": 1,
+    "model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "config": {
+      "rank": 16,
+      "alpha": 32,
+      "epochs": 1,
+      "samples": 5,
+      "max_new_tokens": 512,
+      "max_seq": 8192,
+      "device": "cpu"
+    },
+    "adapt_seconds": 53.6,
+    "adapter_sha256": "64baf52c0000f1e41f87364245de991ca4c28973bf773e99da0bf9c50dacaa31"
+  },
+  "generalization_observed_by_challenger": [
+    "non-verbatim date normalization incl. scheduled-vs-actual selection",
+    "governing-figure weights (net over tare/gross, reweigh, scale-over-quote, multi-HU totals)",
+    "non-verbatim charges (prose amounts, cents-omitted, post-credit totals)",
+    "distractor rejection (bill-to third parties, order dates, POs)",
+    "light OCR digit repair; interline second-leg selection",
+    "30/30 valid JSON - the Addendum-D prose-collapse mode did NOT recur out-of-distribution"
+  ],
+  "failure_modes_named_by_challenger": [
+    "no unit arithmetic (11.5 short tons -> '1150', not 23000)",
+    "role-order inversion breaks shipper/consignee (positional heuristic, not role understanding)",
+    "heavy OCR: fluent confabulation of names/cities instead of safe degradation ('Ta11ahassee' -> 'Tampa') - the dangerous production failure mode",
+    "name repair asymmetric to digit repair (copies or confabulates, does not restore)"
+  ],
+  "deliverables_gaps_found_and_cures": [
+    {
+      "gap": "manifest cited a workspace commit not present in the public repo (regenerability failed for the challenger)",
+      "cure": "src+scripts at public 89acea6 are byte-identical to the cited commit (sync-gate verified); real runs MUST execute from a clone of the public repo at the TERMS-pinned commit - run_challenge.py docstring updated"
+    },
+    {
+      "gap": "base model pinned by HF name only - no immutable revision or checkpoint sha256 (TERMS T4 unmet)",
+      "cure": "run_challenge.py now records the resolved HF revision and checkpoint file hashes best-effort; T4 remains a required manual check until then"
+    }
+  ],
+  "challenger_verdict_verbatim": "it survived contact, it did not win it - 0.88 on friendly-adversarial synthetic is a real signal and an honest ceiling, and the number publishes as-is",
+  "scorer_note": "pinned scorer is case-insensitive at token level (challenger observation, on the record)"
+}

@@ -18,6 +18,11 @@ the protocol deliverables:
 The founder never sees gold: this script reads only text fields from
 holdout.jsonl and never receives a gold file at all.
 
+REAL CHALLENGES run this from a fresh clone of the PUBLIC repo at the
+commit pinned in the challenge terms — the manifest's repo_commit must
+be a commit the challenger can fetch, or the regenerability deliverable
+fails (a dress rehearsal caught exactly this).
+
     python3 scripts/run_challenge.py --train train.jsonl \
         --holdout holdout.jsonl --out-dir run/ --seed 1
 """
@@ -147,9 +152,21 @@ def main() -> int:
                                 capture_output=True, text=True).stdout.strip()
     except OSError:
         commit = "unknown"
+    base_pin = {"name": args.model, "revision": None, "checkpoint_sha256": {}}
+    try:
+        base_pin["revision"] = getattr(model.config, "_commit_hash", None)
+        from huggingface_hub import snapshot_download
+        snap = pathlib.Path(snapshot_download(args.model, local_files_only=True))
+        for f in sorted(snap.glob("*.safetensors")):
+            base_pin["checkpoint_sha256"][f.name] = hashlib.sha256(
+                f.read_bytes()).hexdigest()
+    except Exception as e:  # best-effort: record why the pin is partial
+        base_pin["pin_error"] = f"{type(e).__name__}: {e}"
+
     manifest = {
         "adapter_sha256": hashlib.sha256((out_dir / "adapter.pt").read_bytes()).hexdigest(),
         "repo_commit": commit,
+        "base_model_pin": base_pin,
         "command": " ".join(sys.argv),
         "model": args.model,
         "seed": args.seed,
