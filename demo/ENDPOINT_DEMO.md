@@ -1,6 +1,8 @@
 # Endpoint demo: bring examples → adapted endpoint (CORD receipts)
 
-A 2-minute terminal demo proving the adaptation loop is running code, not
+A one-command terminal demo (~6–10 minutes end to end on a cold 4-core
+CPU box at the default k=10; the first run also downloads ~950 MB of
+weights) proving the adaptation loop is running code, not
 slides: an HTTP endpoint receives k example receipts (default k=10; OCR text + labelled
 JSON), fine-tunes a LoRA adapter on them at request time (test-time
 training), and answers held-out receipts with the changed weights — same
@@ -10,13 +12,13 @@ The captured transcript of a real run lives in
 `demo/endpoint_demo_transcript.txt` (genuine, unedited `tee` capture — a
 reference if the demo cannot be run live).
 
-**Transcript caveat.** The transcript is an unedited k=5 `tee` capture
-whose closing citation misstates the config ("k=10 … same config") and
-cites the seed-0 pair (field F1 0.661 → 0.788) without variance context —
-that pair is the favorable draw of the 4-arm sweep, whose mean is −1.3 F1
-(`experiments/cord_variance_summary_2026-08-08.json`). The citation is
-fixed in `demo/endpoint_demo.py`; a k=10 re-capture is pending. The
-transcript itself is left unedited on purpose.
+**About the transcript.** It is an unedited k=10 `tee` capture
+(2026-08-20, warm HF cache): before/after mean field F1 0.57 → 0.73 on
+the 2 held-out receipts (0.71/0.43 → 0.92/0.55). An independent
+cold-clone run on another 4-core box reproduced the same per-receipt
+scores exactly (deterministic seed + greedy decoding). n=2 remains a
+mechanism demo, not an eval — the transcript itself prints the measured
+CORD variance context (net-neutral at this dev scale).
 
 ## Reproduce
 
@@ -54,15 +56,19 @@ reproduces the same model outputs; only the timings vary.
 5. **Scoreboard** — before vs after, per receipt: fields correct and
    field F1. The only difference between the arms is the weight update.
 
-## Timing (from the captured k=5 run, single 4-core CPU)
+## Timing (from the captured k=10 run, single 4-core CPU)
 
 | stage | seconds |
 |---|---|
-| model load (from local HF cache) | 85.4 |
-| STEP A round-trip (2 queries, no adaptation) | 78.2 (answers 47.7 + 29.5) |
-| adaptation (LoRA on 5 examples, 1 epoch) | 157.8 |
-| STEP B round-trip (adapt + 2 queries) | 189.3 (answers 17.0 + 14.4) |
-| total demo wall time | 377.5 |
+| model load (from local HF cache) | 6.5 |
+| STEP A answers (2 queries, no adaptation) | 20.1 + 41.3 |
+| adaptation (LoRA on 10 examples, 1 epoch) | 543.3 |
+| STEP B answers (2 queries, adapted weights) | 13.6 + 17.5 |
+| total demo wall time | 644.1 |
+
+Cold first run adds the ~950 MB weight download plus ~80-90 s model
+load; adaptation time also varies with CPU contention (an uncontended
+run measured 396.6 s for the same step). Budget ~10 unattended minutes.
 
 ## Honest caveats
 

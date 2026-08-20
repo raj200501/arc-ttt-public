@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "arcttt"
 version = "0.0.1"
-description = "Test-time training lab for ARC Prize 2026"
+description = "Per-tenant adaptation lab: small-model document extraction with preregistered evals (grew out of an ARC Prize 2026 entry)"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 # transformers upper bound: DynamicCache.crop's legacy positive-argument
@@ -15,6 +15,10 @@ dependencies = ["transformers>=4.54,<5.18"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10", "ruff>=0.7,<1", "mypy>=1.13,<2"]
+# The demo/adaptation paths need torch; kept out of core deps so the scoring
+# and verify scripts stay installable anywhere (they are stdlib-only anyway).
+# CPU wheels: pip install torch --index-url https://download.pytorch.org/whl/cpu
+demo = ["torch>=2.4,<3"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

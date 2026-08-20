@@ -3,7 +3,9 @@
  task: receipt OCR text in  →  structured JSON out (CORD-v2, CC BY 4.0)
 ==============================================================================
 [serve] loading Qwen/Qwen2.5-0.5B-Instruct on cpu ...
-[serve] model loaded in 85.4s
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:00<00:43,  6.69it/s]Loading weights:  47%|████▋     | 135/290 [00:00<00:00, 633.49it/s]Loading weights:  74%|███████▍  | 215/290 [00:00<00:00, 674.08it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 632.89it/s]
+[serve] model loaded in 3.2s
 [serve] listening on 127.0.0.1:8341 | model Qwen/Qwen2.5-0.5B-Instruct
 [serve] "GET /health HTTP/1.1" 200 -
 
@@ -11,210 +13,213 @@
     -> {"status": "ok", "model": "Qwen/Qwen2.5-0.5B-Instruct", "requests_served": 0}
 
 [2] Data: 100 real receipts on disk. Deterministic split (seed 0):
-    5 receipts + their labelled JSON = the customer's examples
+    10 receipts + their labelled JSON = the customer's examples
     2 receipts held out = the questions we grade the model on
 
 ==============================================================================
  STEP A — BEFORE ADAPTATION
-  POST /adapt with adapt:false — the model sees the 5 examples in its
+  POST /adapt with adapt:false — the model sees the 10 examples in its
   prompt but its weights are untouched. This is standard few-shot prompting.
 ==============================================================================
-The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
 [serve] "POST /adapt HTTP/1.1" 200 -
 
-   endpoint round-trip 78.2s (no weight update: 1.0s)
+   endpoint round-trip 61.6s (no weight update: 0.2s)
 
    held-out receipt #1 — raw OCR text sent to the endpoint:
       | 1
-      | MINERAL 600 ML
-      | 7,727
+      | 20,000
+      | 20,000
+      | TT
+      | TOTAL 20,000
+      | CASH 100,000
+      | CHANGE 80,000
+   model answered in 20.1s (before) — recovered 6/7 gold fields; field F1 0.71 (F1 also counts extra predicted fields against precision)
+      MODEL OUTPUT                          | GOLD (human-labelled)
+      ------------------------------------- | -------------------------------------
+      {                                     | {
+       "menu": [                            |  "menu": {
+        {                                   |   "cnt": "1",
+         "cnt": "1",                        |   "nm": "TT",
+         "nm": "20,000",                    |   "price": "20,000",
+         "price": "20,000"                  |   "unitprice": "20,000"
+        },                                  |  },
+        {                                   |  "total": {
+         "cnt": "1",                        |   "cashprice": "100,000",
+         "nm": "TT",                        |   "changeprice": "80,000",
+         "price": "0",                      |   "total_price": "20,000"
+         "unitprice": "0"                   |  }
+        }                                   | }
+       ],                                   | 
+       "total": {                           | 
+        "cashprice": "100,000",             | 
+        "changeprice": "80,000",            | 
+        "total_price": "20,000"             | 
+       }                                    | 
+      }                                     | 
+
+   held-out receipt #2 — raw OCR text sent to the endpoint:
+      | ISI CAMPUR
       | 1
-      | BULGOGI RICE R
-      | 33,636
-      | Subtotal 41,364
-      | Tax 4,136
-      | Total 45,500
-      | CASH 50,000
-      | Cash CHANGE -4,500
-   model answered in 47.7s (before) — 11/11 gold fields correct, field F1 0.67
+      | 43,636
+      | 43.636
+      | A.MINERAL BOTOL
+      | 1
+      | 8.000
+      | 8.000
+      | TOTAL 51,636
+      | TAX 10.00 % 5,164
+      | GRAND TOTAL 56,800
+      | TUNAI 110,000
+      | KEMBALI 53.200
+   model answered in 41.3s (before) — recovered 9/13 gold fields; field F1 0.43 (F1 also counts extra predicted fields against precision)
       MODEL OUTPUT                          | GOLD (human-labelled)
       ------------------------------------- | -------------------------------------
       {                                     | {
        "menu": [                            |  "menu": [
         {                                   |   {
          "cnt": "1",                        |    "cnt": "1",
-         "nm": "MINERAL 600 ML",            |    "nm": "MINERAL 600 ML",
-         "price": "7,727"                   |    "price": "7,727"
-        },                                  |   },
-        {                                   |   {
-         "cnt": "1",                        |    "cnt": "1",
-         "nm": "Bulgogi Rice R",            |    "nm": "BULGOGI RICE R",
-         "price": "33,636"                  |    "price": "33,636"
-        },                                  |   }
-        {                                   |  ],
-         "cnt": "1",                        |  "sub_total": {
-         "nm": "Sub Total",                 |   "subtotal_price": "41,364",
-         "price": "41,364"                  |   "tax_price": "4,136"
-        },                                  |  },
-        {                                   |  "total": {
-         "cnt": "1",                        |   "cashprice": "50,000",
-         "nm": "Tax",                       |   "changeprice": "-4,500",
-         "price": "4,136"                   |   "total_price": "45,500"
-        },                                  |  }
-        {                                   | }
-         "cnt": "1",                        | 
-         "nm": "Total",                     | 
-         "price": "45,500"                  | 
-        }                                   | 
-       ],                                   | 
-       "sub_total": {                       | 
-        "subtotal_price": "41,364",         | 
-        "tax_price": "4,136",               | 
-        "total_price": "45,500"             | 
-       },                                   | 
-       "total": {                           | 
-        "cashprice": "50,000",              | 
-        "changeprice": "-4,500",            | 
-        "menuqty_cnt": "1",                 | 
-        "total_price": "45,500"             | 
-       }                                    | 
-      }                                     | 
-
-   held-out receipt #2 — raw OCR text sent to the endpoint:
-      | Kopi Susu Kolonel
-      | 1
-      | 23.000
-      | Total 23.000
-      | Tunai 50.000
-      | Kembali 27.000
-   model answered in 29.5s (before) — 5/6 gold fields correct, field F1 0.40
-      MODEL OUTPUT                          | GOLD (human-labelled)
-      ------------------------------------- | -------------------------------------
-      {                                     | {
-       "menu": [                            |  "menu": {
-        {                                   |   "cnt": "1",
-         "cnt": "1",                        |   "nm": "Kopi Susu Kolonel",
-         "nm": "Kopi Susu Kolonel",         |   "price": "23.000"
-         "price": "23.000"                  |  },
-        },                                  |  "total": {
-        {                                   |   "cashprice": "50.000",
-         "cnt": "1",                        |   "changeprice": "27.000",
-         "nm": "Total",                     |   "total_price": "23.000"
-         "price": "23.000"                  |  }
-        },                                  | }
-        {                                   | 
-         "cnt": "1",                        | 
-         "nm": "Tunai",                     | 
-         "price": "50.000"                  | 
+         "nm": "ISEI CAMPUR",               |    "nm": "ISI CAMPUR",
+         "price": "43,636"                  |    "price": "43.636",
+        },                                  |    "unitprice": "43,636"
+        {                                   |   },
+         "cnt": "1",                        |   {
+         "nm": "A.MINERAL BOTOL",           |    "cnt": "1",
+         "price": "8.000"                   |    "nm": "A.MINERAL BOTOL",
+        },                                  |    "price": "8.000",
+        {                                   |    "unitprice": "8.000"
+         "cnt": "1",                        |   }
+         "nm": "TOTAL",                     |  ],
+         "price": "51,636"                  |  "sub_total": {
+        },                                  |   "subtotal_price": "51,636",
+        {                                   |   "tax_price": "5,164"
+         "cnt": "1",                        |  },
+         "nm": "TAX",                       |  "total": {
+         "price": "10.00%",                 |   "cashprice": "110,000",
+         "unitprice": "5,164"               |   "changeprice": "53.200",
+        },                                  |   "total_price": "56,800"
+        {                                   |  }
+         "cnt": "1",                        | }
+         "nm": "GRAND TOTAL",               | 
+         "price": "56,800"                  | 
         },                                  | 
         {                                   | 
          "cnt": "1",                        | 
-         "nm": "Kembali",                   | 
-         "price": "27.000"                  | 
+         "nm": "TUNAI",                     | 
+         "price": "110,000"                 | 
+        },                                  | 
+        {                                   | 
+         "cnt": "1",                        | 
+         "nm": "KEMBALI",                   | 
+         "price": "53.200"                  | 
         }                                   | 
        ],                                   | 
        "sub_total": {                       | 
-        "subtotal_price": "23.000",         | 
-        "tax_price": "0",                   | 
-        "total_price": "23.000"             | 
+        "grand_total_price": "56,800",      | 
+        "subtotal_price": "51,636",         | 
+        "tax_price": "5,164"                | 
        },                                   | 
        "total": {                           | 
-        "cashprice": "0",                   | 
-        "changeprice": "27.000",            | 
+        "cashprice": "110,000",             | 
+        "changeprice": "53.200",            | 
         "menuqty_cnt": "1",                 | 
-        "total_price": "23.000"             | 
+        "total_price": "56,800"             | 
        }                                    | 
       }                                     | 
 
 ==============================================================================
  STEP B — ADAPT + RE-ASK
-  POST /adapt with adapt:true — same 5 examples, but now the endpoint
+  POST /adapt with adapt:true — same 10 examples, but now the endpoint
   trains a LoRA adapter on them (test-time training) before answering
   the same 2 held-out receipts with the adapted weights.
 ==============================================================================
 [serve] "POST /adapt HTTP/1.1" 200 -
 
-   endpoint round-trip 189.3s (weight update on 5 examples: 157.8s)
+   endpoint round-trip 574.4s (weight update on 10 examples: 543.3s)
 
    held-out receipt #1 — raw OCR text sent to the endpoint:
       | 1
-      | MINERAL 600 ML
-      | 7,727
+      | 20,000
+      | 20,000
+      | TT
+      | TOTAL 20,000
+      | CASH 100,000
+      | CHANGE 80,000
+   model answered in 13.6s (after) — recovered 6/7 gold fields; field F1 0.92 (F1 also counts extra predicted fields against precision)
+      MODEL OUTPUT                          | GOLD (human-labelled)
+      ------------------------------------- | -------------------------------------
+      {                                     | {
+       "menu": {                            |  "menu": {
+        "cnt": "1",                         |   "cnt": "1",
+        "nm": "TT",                         |   "nm": "TT",
+        "price": "20,000"                   |   "price": "20,000",
+       },                                   |   "unitprice": "20,000"
+       "total": {                           |  },
+        "cashprice": "100,000",             |  "total": {
+        "changeprice": "80,000",            |   "cashprice": "100,000",
+        "total_price": "20,000"             |   "changeprice": "80,000",
+       }                                    |   "total_price": "20,000"
+      }                                     |  }
+                                            | }
+
+   held-out receipt #2 — raw OCR text sent to the endpoint:
+      | ISI CAMPUR
       | 1
-      | BULGOGI RICE R
-      | 33,636
-      | Subtotal 41,364
-      | Tax 4,136
-      | Total 45,500
-      | CASH 50,000
-      | Cash CHANGE -4,500
-   model answered in 17.0s (after) — 8/11 gold fields correct, field F1 0.80
+      | 43,636
+      | 43.636
+      | A.MINERAL BOTOL
+      | 1
+      | 8.000
+      | 8.000
+      | TOTAL 51,636
+      | TAX 10.00 % 5,164
+      | GRAND TOTAL 56,800
+      | TUNAI 110,000
+      | KEMBALI 53.200
+   model answered in 17.5s (after) — recovered 6/13 gold fields; field F1 0.55 (F1 also counts extra predicted fields against precision)
       MODEL OUTPUT                          | GOLD (human-labelled)
       ------------------------------------- | -------------------------------------
       {                                     | {
        "menu": {                            |  "menu": [
         "cnt": "1",                         |   {
-        "nm": "MINERAL 600 ML",             |    "cnt": "1",
-        "price": "7,727"                    |    "nm": "MINERAL 600 ML",
-       },                                   |    "price": "7,727"
-       "sub_total": {                       |   },
-        "subtotal_price": "41,364",         |   {
-        "tax_price": "4,136"                |    "cnt": "1",
-       },                                   |    "nm": "BULGOGI RICE R",
-       "total": {                           |    "price": "33,636"
-        "cashprice": "50,000",              |   }
-        "changeprice": "-4,500",            |  ],
-        "menuqty_cnt": "1",                 |  "sub_total": {
-        "total_price": "45,500"             |   "subtotal_price": "41,364",
-       }                                    |   "tax_price": "4,136"
-      }                                     |  },
+        "nm": "ISI CAMPUR",                 |    "cnt": "1",
+        "price": "43,636"                   |    "nm": "ISI CAMPUR",
+       },                                   |    "price": "43.636",
+       "sub_total": {                       |    "unitprice": "43,636"
+        "grand_total_price": "56,800",      |   },
+        "subtotal_price": "51,636",         |   {
+        "tax_price": "10.00 %"              |    "cnt": "1",
+       },                                   |    "nm": "A.MINERAL BOTOL",
+       "total": {                           |    "price": "8.000",
+        "cashprice": "110,000",             |    "unitprice": "8.000"
+        "changeprice": "53.200",            |   }
+        "total_price": "56,800"             |  ],
+       }                                    |  "sub_total": {
+      }                                     |   "subtotal_price": "51,636",
+                                            |   "tax_price": "5,164"
+                                            |  },
                                             |  "total": {
-                                            |   "cashprice": "50,000",
-                                            |   "changeprice": "-4,500",
-                                            |   "total_price": "45,500"
+                                            |   "cashprice": "110,000",
+                                            |   "changeprice": "53.200",
+                                            |   "total_price": "56,800"
                                             |  }
                                             | }
-
-   held-out receipt #2 — raw OCR text sent to the endpoint:
-      | Kopi Susu Kolonel
-      | 1
-      | 23.000
-      | Total 23.000
-      | Tunai 50.000
-      | Kembali 27.000
-   model answered in 14.4s (after) — 2/6 gold fields correct, field F1 0.31
-      MODEL OUTPUT                          | GOLD (human-labelled)
-      ------------------------------------- | -------------------------------------
-      {                                     | {
-       "menu": {                            |  "menu": {
-        "cnt": "Kopi Susu Kolonel",         |   "cnt": "1",
-        "price": "23.000"                   |   "nm": "Kopi Susu Kolonel",
-       },                                   |   "price": "23.000"
-       "sub_total": {                       |  },
-        "subtotal_price": "23.000",         |  "total": {
-        "tax_price": "50.000"               |   "cashprice": "50.000",
-       },                                   |   "changeprice": "27.000",
-       "total": {                           |   "total_price": "23.000"
-        "kembaliprice": "27.000",           |  }
-        "menuqty_cnt": "1",                 | }
-        "total_price": "23.000"             | 
-       }                                    | 
-      }                                     | 
 
 ==============================================================================
  SCOREBOARD — same receipts, same prompt; only the weights changed
 ==============================================================================
    receipt        fields correct   field F1      fields correct   field F1
                           BEFORE                          AFTER
-   held-out #1            11/11       0.67                8/11       0.80
-   held-out #2              5/6       0.40                 2/6       0.31
-   mean                                0.53                           0.55
+   held-out #1              6/7       0.71                 6/7       0.92
+   held-out #2             9/13       0.43                6/13       0.55
+   mean                                0.57                           0.73
 
-   adaptation cost: 157.8s on CPU, 5 examples, one LoRA adapter
-   total demo wall time: 377.5s (single CPU, 0.5B-parameter open model)
+   adaptation cost: 543.3s on CPU, 10 examples, one LoRA adapter
+   total demo wall time: 644.1s (single CPU, 0.5B-parameter open model)
 
-   n=2 receipts is a live demo, not an eval. The measured result on
-   this dataset (k=10, 20 held-out receipts, same config) is in
-   experiments/cord_smoke_2026-08-08.json: field F1 0.661 → 0.788.
+   n=2 receipts is a live demo, not an eval. The measured
+   result on this dataset — 4 paired seed/k arms, 20 held-out receipts
+   each — is net-neutral: mean −1.3 F1, range −6.5 to +12.7
+   (experiments/cord_variance_summary_2026-08-08.json). The 0.661 → 0.788
+   pair is the seed-0 favorable arm of that sweep, not the mean.
 ==============================================================================
 [demo] endpoint stopped.

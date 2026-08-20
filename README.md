@@ -79,7 +79,24 @@ python3 scripts/verify_verdict.py
 It rebuilds every statistic of the k=30 gate from the raw per-receipt
 records (per-arm means, paired deltas, sign test, receipt-level and
 cluster-level CIs, validity windows, attrition) and cross-checks the
-published summary, exiting nonzero on any mismatch. To re-run the
+published summary, exiting nonzero on any mismatch.
+
+The corpus generator itself is a public entry point — regenerate any
+tenant's documents + gold deterministically and inspect them:
+
+```
+python3 scripts/export_novel_prompts.py --seed 1 --k 10 --limit 3 \
+    --prompts-out /tmp/docs.jsonl --gold-out /tmp/gold.jsonl
+```
+
+To run the adaptation demo or any model-loading path (the verify and
+scoring scripts above are stdlib-only and need none of this):
+
+```
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+pip install -e .
+bash demo/run_endpoint_demo.sh   # ~6-10 min on a 4-core CPU box
+``` To re-run the
 underlying experiment itself, any free Kaggle account suffices — the
 kernel entries under `kaggle/` are the exact runners that produced the
 artifacts. If you find any claim in this README not backed by its cited

@@ -88,11 +88,17 @@ def make_handler(service: AdaptService) -> type[BaseHTTPRequestHandler]:
     class Handler(BaseHTTPRequestHandler):
         def _send(self, status: int, body: dict[str, Any]) -> None:
             data = json.dumps(body).encode()
-            self.send_response(status)
-            self.send_header("Content-Type", "application/json")
-            self.send_header("Content-Length", str(len(data)))
-            self.end_headers()
-            self.wfile.write(data)
+            try:
+                self.send_response(status)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(data)))
+                self.end_headers()
+                self.wfile.write(data)
+            except (BrokenPipeError, ConnectionResetError):
+                # The single-threaded server answers queued requests after an
+                # impatient client (health polls during model load) has hung
+                # up; a stale socket deserves a log line, not a stack trace.
+                self.log_message("client disconnected before response (%s)", self.path)
 
         def do_GET(self) -> None:  # noqa: N802 (http.server API)
             if self.path == "/health":

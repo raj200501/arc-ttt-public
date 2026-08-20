@@ -33,3 +33,19 @@ exist only where a run produced them.
 | novel-schema (Addendum B gate) | Qwen2.5-0.5B-Instruct | preregistered k=30 DECISION gate, seeds 1-3, paired kshot vs adapted; k=10 comparability arms | GO: mean paired delta +46.5 F1 at k=30 (bar +5; receipt-level CI excludes zero; sign test 156W/0L); k=10 comparability +45.0; claimable only next to the CORD negative per B.6 | novel_schema_summary_2026-08-12.json; per-seed arms novel_schema_0.5b_k{10,30}_seed*_2026-08-12.json; duplicates/ (same-environment replications); novel_schema_cpu_oom_postmortem_* |
 | novel-schema B.8 replication | Qwen2.5-0.5B-Instruct | EXPLORATORY 10-tenant replication of the k=10 comparability point (not the gate; may never be quoted as the gate) | 10/10 tenants positive, deltas +34.0 to +49.6 F1, all sign tests p=0.0 | novel_schema_rep_summary_2026-08-12.json |
 | novel-schema Addenda D/E/F arms | Qwen2.5-0.5B-Instruct | D: doc-only / doc-zero arms; E: diverse-schema k=30 arms (incl. seed-101 token-budget exclusion, ruled uninformative per spec E.4); F: doc-adapted arms | per-arm results and validity rulings live in the spec (ENTERPRISE_EVAL_SPEC.md Addenda D/E/F) and the arm artifacts; E-r1 seed screen banked | novel_schema_d_*_2026-08-*.json; novel_schema_e_*_2026-08-*.json; novel_schema_f_*_2026-08-*.json; novel_schema_er_screen_*.json |
+
+## Kernel provenance (third-party timestamps)
+
+The gate arms ran as versions of public Kaggle kernels under
+[kaggle.com/rajskashikar/code](https://www.kaggle.com/rajskashikar/code)
+(slugs `arc-ttt-novel-schema*`: the base kernel and `-s{1,2,3}{a,k}`
+variants for the k=30 gate arms, `-rep` for the k=10 replication,
+`-d-*`/`-dz-*` for Addendum D, `-f-*` for Addendum F, `-er-*` for the
+Addendum E wave). Kaggle keeps a version history for every kernel with
+Kaggle-side run timestamps that we cannot edit. We publish the slugs so
+reviewers can check run ordering against the artifact dates themselves
+rather than take our word for it — this is exactly the check we'd run
+on someone else's repo. (The `lastRunTime` shown in kernel listings is
+the most recent run — several kernels were re-run for later addenda —
+so ordering questions should be answered from the per-version history,
+not the listing.)

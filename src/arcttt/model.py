@@ -393,7 +393,9 @@ class CausalLMPredictor:
                     attention_mask=attention_mask,
                     max_new_tokens=self.config.max_new_tokens,
                     do_sample=sample > 0,
-                    temperature=self.config.temperature,
+                    # temperature is a sampling knob; passing it on the greedy
+                    # first pass trips transformers' invalid-flag warning.
+                    temperature=self.config.temperature if sample > 0 else None,
                     pad_token_id=self._pad_id(),
                 )
                 texts.append(
