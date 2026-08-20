@@ -33,30 +33,9 @@ CPU/fp32 on free Kaggle kernels; artifacts carry full receipt trails,
 including `resumed` stamps from the checkpoint/resume system that
 survived repeated infrastructure kill-strikes during the gate.
 
-**Status (2026-08-15): 1.67 public ×3 — the recall-bound widening (v9)
-and the DFS time-budget raise to 90 s/task (v10) were both clean
-preregistered nulls; budget levers are exhausted, candidate-generation
-quality is the binding constraint, and leaderboard climbing is formally
-deprioritized (`experiments/kaggle_v10_scored_2026-08-15.json`).
-First nonzero was 1.67 public on
-ARC-AGI-2's hidden set** (v8; ~4/240 tasks at 150/240 real-prediction
-coverage). The road there is documented failure by failure: v6 scored
-0.00 (wrong-architecture GPU; accelerator pin via `machine_shape`, paper
-§6.7), v7 scored 0.00 at 40/240 coverage (transformers cache-API
-incident, fixed with explicit API probes + regression tests, paper
-§6.8), v8 closed both and scored. Honest read: the pipeline is proven
-end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
-binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 137 offline tests
-pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
-constrained DFS decoding → invert → vote/rescore → submission — is
-GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
-Teacher-forced diagnostics show the checkpoint assigns per-token
-probabilities of 85–97% (lp −0.16..−0.03) to true solutions under our
-serialization; current iteration targets candidate recall (search) and TTT
-sharpening. No claims beyond the artifacts in `experiments/`.
 
-## Verify the headline in 60 seconds
+
+## Check the preregistration ordering
 
 **Preregistration you can check without trusting us:** the eval spec's
 SHA-256 is anchored to the Bitcoin blockchain via OpenTimestamps —
@@ -68,7 +47,7 @@ matching `.ots`). Verify with
 Addendum D and E/F freezes therefore have independently checkable
 ordering: bars first, data second.
 
-## Run the verification
+## Verify the headline in 60 seconds
 
 Don't trust our summary — recompute it. Zero dependencies:
 
@@ -103,6 +82,31 @@ artifacts. If you find any claim in this README not backed by its cited
 artifact, open an issue; we publish our corrections (spec B.9) with the
 same prominence as our results.
 
+## ARC Prize origin (documented history)
+
+**Status (2026-08-15): 1.67 public ×3 — the recall-bound widening (v9)
+and the DFS time-budget raise to 90 s/task (v10) were both clean
+preregistered nulls; budget levers are exhausted, candidate-generation
+quality is the binding constraint, and leaderboard climbing is formally
+deprioritized (`experiments/kaggle_v10_scored_2026-08-15.json`).
+First nonzero was 1.67 public on
+ARC-AGI-2's hidden set** (v8; ~4/240 tasks at 150/240 real-prediction
+coverage). The road there is documented failure by failure: v6 scored
+0.00 (wrong-architecture GPU; accelerator pin via `machine_shape`, paper
+§6.7), v7 scored 0.00 at 40/240 coverage (transformers cache-API
+incident, fixed with explicit API probes + regression tests, paper
+§6.8), v8 closed both and scored. Honest read: the pipeline is proven
+end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
+binding constraint — a multi-week solver program, deprioritized per the
+v10 verdict in favor of the enterprise gates and the paper track. 141 offline tests
+pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
+constrained DFS decoding → invert → vote/rescore → submission — is
+GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
+Teacher-forced diagnostics show the checkpoint assigns per-token
+probabilities of 85–97% (lp −0.16..−0.03) to true solutions under our
+serialization; current iteration targets candidate recall (search) and TTT
+sharpening. No claims beyond the artifacts in `experiments/`.
+
 ## What's in the harness
 
 - **Clean-room reproduction** of the NVARC 2025 winning recipe from its
@@ -121,17 +125,24 @@ same prominence as our results.
 
 ## The plan (short version)
 
-1. **Step 0 (~$0):** Reproduce the open NVARC/TTT baseline lineage on the
-   ARC-AGI-2 Kaggle track using subsidized Kaggle compute. ✅ done:
-   first nonzero scored 2026-08-10 (1.67 public, v8) after two
-   published-postmortem 0.00s.
-2. **Step 1 (3–6 months):** Iterate toward a genuine leaderboard placement;
-   publish a cost-vs-accuracy TTT curve on one enterprise-shaped tail task.
-3. **Step 2:** The placement, the cost-vs-accuracy curve, the open repo,
-   and the ARC paper-track submission (due Nov 8) together establish a
-   verifiable public record of the capability.
-4. **Steps 3–4:** Productize the adaptation layer with design partners,
-   then scale it.
+1. **Done:** Build the adaptation + eval harness and prove the loop
+   end-to-end on subsidized compute (ARC track: first nonzero scored
+   2026-08-10 after two published-postmortem 0.00s; leaderboard
+   climbing since formally deprioritized — see the origin section).
+2. **Done:** The preregistered enterprise ladder on the harness — the
+   k=30 novelty gate (GO), the CORD negative (published), document-only
+   serving (D FAIL → F PASS), measured cost rows.
+3. **Now:** Real documents. Design-partner / blind-holdout runs on
+   corpora we didn't generate (the anchored protocol in
+   `docs/research/BLIND_HOLDOUT_PROTOCOL.md` is the standing offer;
+   `scripts/make_challenge.py` is the challenger-side kit — it splits
+   your labeled JSONL into a challenge package on your machine, so
+   gold never leaves it, and later scores the single submission with
+   the pinned scorer), plus the GPU serving crossover measurement and
+   one scale rung up.
+4. **Then:** Productize the per-tenant adapt-measure-verify loop with
+   design partners; the ARC paper-track submission (due Nov 8)
+   documents the harness lineage.
 
 ## Ground rules (carried over from prior work)
 
@@ -148,7 +159,7 @@ same prominence as our results.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 137 offline tests (tiny in-test models; no downloads).
+- `tests/` — 141 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured
