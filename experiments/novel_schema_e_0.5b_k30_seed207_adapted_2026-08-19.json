@@ -1,0 +1,453 @@
+{
+  "spec": "ENTERPRISE_EVAL_SPEC.md Addendum B (frozen 2026-08-12T19:40Z)",
+  "dataset": "synthetic novel-schema tenants (novel_schema.py), no external data",
+  "tenant": "romide",
+  "schema": "tenant romide\n  pibafa -> nopeke.pisomo (code)\n  kelame -> nopeke.sosuna (code)\n  vipudo -> maligu.bukula (name)\n  pogese -> nopeke.kupuli (amount)\n  seguvu -> nopeke.limize (code)\n  biroli -> nopeke.linemi (amount)\n  lapeta -> maligu.zepeza (amount)",
+  "rung": "0.5b",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "arm": "adapted",
+  "k": 30,
+  "eval_n": 60,
+  "resumed": false,
+  "seed": 207,
+  "gate_role": "DECISION",
+  "validity": "ok",
+  "decode": "vote/rescore ON: 1 greedy + 4 sampled (T=0.7), canonical-JSON pooling, count+likelihood top-1",
+  "config": {
+    "rank": 16,
+    "alpha": 32,
+    "epochs": 1,
+    "max_new_tokens": 512,
+    "max_seq": 8192
+  },
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "adapt_seconds": 8032.2,
+  "exact_match": 45,
+  "scored": 60,
+  "invalid_json": 0,
+  "no_completion": 0,
+  "mean_micro_f1": 0.9643,
+  "results": [
+    {
+      "index": 0,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Tano Zeki\",\"zepeza\":\"3924.24\"},\"nopeke\":{\"kupuli\":\"2077.69\",\"limize\":\"VLK-3999\",\"linemi\":\"6413.01\",\"pisomo\":\"FUK-6884\",\"sosuna\":\"ZCV-9731\"}}"
+    },
+    {
+      "index": 1,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Pemo Keze\",\"zepeza\":\"1870.61\"},\"nopeke\":{\"kupuli\":\"4661.89\",\"limize\":\"CHQ-7453\",\"linemi\":\"3797.30\",\"pisomo\":\"DGQ-1936\",\"sosuna\":\"SBS-6078\"}}"
+    },
+    {
+      "index": 2,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Gebu Banu\",\"zepeza\":\"8708.59\"},\"nopeke\":{\"kupuli\":\"5643.47\",\"limize\":\"ECC-2381\",\"linemi\":\"2467.39\",\"pisomo\":\"FSK-5355\",\"sosuna\":\"YSK-3898\"}}"
+    },
+    {
+      "index": 3,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Tane Muda\",\"zepeza\":\"9060.05\"},\"nopeke\":{\"kupuli\":\"927.75\",\"limize\":\"ADD-4339\",\"linemi\":\"9842.93\",\"pisomo\":\"VRU-5347\",\"sosuna\":\"ABX-4816\"}}"
+    },
+    {
+      "index": 4,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Lupo Futa\",\"zepeza\":\"6511.30\"},\"nopeke\":{\"kupuli\":\"1624.27\",\"limize\":\"WUJ-5550\",\"linemi\":\"8332.75\",\"pisomo\":\"QRF-7082\",\"sosuna\":\"BWN-3432\"}}"
+    },
+    {
+      "index": 5,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Zeka Nisu\",\"zepeza\":\"5946.93\"},\"nopeke\":{\"kupuli\":\"2749.14\",\"limize\":\"VBS-9639\",\"linemi\":\"9806.75\",\"pisomo\":\"KLZ-4230\",\"sosuna\":\"KPS-4201\"}}"
+    },
+    {
+      "index": 6,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Fabu Rela\",\"zepeza\":\"8857.88\"},\"nopeke\":{\"kupuli\":\"5725.05\",\"limize\":\"ZLS-9816\",\"linemi\":\"7525.60\",\"pisomo\":\"SGR-1498\",\"sosuna\":\"AQZ-9855\"}}"
+    },
+    {
+      "index": 7,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Siki Tama\",\"zepeza\":\"6187.28\"},\"nopeke\":{\"kupuli\":\"8468.25\",\"limize\":\"CLY-6510\",\"linemi\":\"196.12\",\"pisomo\":\"DRJ-2832\",\"sosuna\":\"ZYU-1418\"}}"
+    },
+    {
+      "index": 8,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Nalo Kate\",\"zepeza\":\"2735.56\"},\"nopeke\":{\"kupuli\":\"1236.27\",\"limize\":\"CWD-3032\",\"linemi\":\"1867.34\",\"pisomo\":\"TUZ-8946\",\"sosuna\":\"PZM-9908\"}}"
+    },
+    {
+      "index": 9,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Bafe Razu\",\"zepeza\":\"9290.26\"},\"nopeke\":{\"kupuli\":\"8190.02\",\"limize\":\"KLZ-4063\",\"linemi\":\"4066.83\",\"pisomo\":\"PVY-8976\",\"sosuna\":\"RSX-3417\"}}"
+    },
+    {
+      "index": 10,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Pika Zema\",\"zepeza\":\"4630.53\"},\"nopeke\":{\"kupuli\":\"7054.46\",\"limize\":\"LHZ-7090\",\"linemi\":\"4409.10\",\"pisomo\":\"EEZ-7540\",\"sosuna\":\"ZXL-6721\"}}"
+    },
+    {
+      "index": 11,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Zovo Zove\",\"zepeza\":\"8823.67\"},\"nopeke\":{\"kupuli\":\"6354.68\",\"limize\":\"GXB-7867\",\"linemi\":\"3088.41\",\"pisomo\":\"FNL-2331\",\"sosuna\":\"ABB-1231\"}}"
+    },
+    {
+      "index": 12,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Rino Fizo\",\"zepeza\":\"8176.94\"},\"nopeke\":{\"kupuli\":\"9663.12\",\"limize\":\"HEG-4083\",\"linemi\":\"509.44\",\"pisomo\":\"YYR-1919\",\"sosuna\":\"MLC-1296\"}}"
+    },
+    {
+      "index": 13,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Kono Peza\",\"zepeza\":\"9918.00\"},\"nopeke\":{\"kupuli\":\"4648.81\",\"limize\":\"QCD-8099\",\"linemi\":\"6009.33\",\"pisomo\":\"DAK-7418\",\"sosuna\":\"NYM-5822\"}}"
+    },
+    {
+      "index": 14,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Fupi Seva\",\"zepeza\":\"6147.30\"},\"nopeke\":{\"kupuli\":\"390.50\",\"limize\":\"ERL-3610\",\"linemi\":\"5146.04\",\"pisomo\":\"XHA-7165\",\"sosuna\":\"AZT-5494\"}}"
+    },
+    {
+      "index": 15,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Fose Gone\",\"zepeza\":\"8600.28\"},\"nopeke\":{\"kupuli\":\"6065.11\",\"limize\":\"GVH-8722\",\"linemi\":\"1348.35\",\"pisomo\":\"PMK-3252\",\"sosuna\":\"LJV-3768\"}}"
+    },
+    {
+      "index": 16,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Boku Fopo\",\"zepeza\":\"217.36\"},\"nopeke\":{\"kupuli\":\"8025.37\",\"limize\":\"FCL-1811\",\"linemi\":\"6084.52\",\"pisomo\":\"AKZ-9278\",\"sosuna\":\"NZA-4339\"}}"
+    },
+    {
+      "index": 17,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Mini Riba\",\"zepeza\":\"3483.43\"},\"nopeke\":{\"kupuli\":\"7373.29\",\"limize\":\"JHY-5428\",\"linemi\":\"1403.39\",\"pisomo\":\"UUQ-7596\",\"sosuna\":\"VRM-1746\"}}"
+    },
+    {
+      "index": 18,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Date Dudu\",\"zepeza\":\"4776.04\"},\"nopeke\":{\"kupuli\":\"5416.20\",\"limize\":\"GNH-4500\",\"linemi\":\"5276.63\",\"pisomo\":\"RLD-7445\",\"sosuna\":\"YRZ-8210\"}}"
+    },
+    {
+      "index": 19,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Buzi Lene\",\"zepeza\":\"561.96\"},\"nopeke\":{\"kupuli\":\"1445.69\",\"limize\":\"CHU-8500\",\"linemi\":\"6426.08\",\"pisomo\":\"UQT-3770\",\"sosuna\":\"HLW-5636\"}}"
+    },
+    {
+      "index": 20,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Gazo Veke\",\"zepeza\":\"4375.41\"},\"nopeke\":{\"kupuli\":\"9383.81\",\"limize\":\"WFL-7185\",\"linemi\":\"1176.99\",\"pisomo\":\"AYQ-7996\",\"sosuna\":\"HSA-6033\"}}"
+    },
+    {
+      "index": 21,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Zinu Miga\",\"zepeza\":\"2761.58\"},\"nopeke\":{\"kupuli\":\"6101.45\",\"limize\":\"QCS-3092\",\"linemi\":\"9018.91\",\"pisomo\":\"JRX-4431\",\"sosuna\":\"RWC-4832\"}}"
+    },
+    {
+      "index": 22,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Koza Ruva\",\"zepeza\":\"973.33\"},\"nopeke\":{\"kupuli\":\"8211.40\",\"limize\":\"QVT-4211\",\"linemi\":\"3380.20\",\"pisomo\":\"KCX-4978\",\"sosuna\":\"REK-4264\"}}"
+    },
+    {
+      "index": 23,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Vope Votu\",\"zepeza\":\"1228.80\"},\"nopeke\":{\"kupuli\":\"278.51\",\"limize\":\"DQZ-3656\",\"linemi\":\"2797.18\",\"pisomo\":\"TGA-8615\",\"sosuna\":\"VFX-9510\"}}"
+    },
+    {
+      "index": 24,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Liti Lizi\",\"zepeza\":\"1313.78\"},\"nopeke\":{\"kupuli\":\"6507.04\",\"limize\":\"HDH-9589\",\"linemi\":\"4329.24\",\"pisomo\":\"XYU-3480\",\"sosuna\":\"SDF-9414\"}}"
+    },
+    {
+      "index": 25,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Misi Vopa\",\"zepeza\":\"5434.55\"},\"nopeke\":{\"kupuli\":\"1249.11\",\"limize\":\"HAG-8194\",\"linemi\":\"8702.14\",\"pisomo\":\"XJT-8982\",\"sosuna\":\"ZDM-3230\"}}"
+    },
+    {
+      "index": 26,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Bogi Tagu\",\"zepeza\":\"4184.25\"},\"nopeke\":{\"kupuli\":\"2702.03\",\"limize\":\"YXD-9262\",\"linemi\":\"4731.65\",\"pisomo\":\"VFJ-5087\",\"sosuna\":\"FNH-4737\"}}"
+    },
+    {
+      "index": 27,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Zute Rara\",\"zepeza\":\"7377.15\"},\"nopeke\":{\"kupuli\":\"1127.66\",\"limize\":\"YPR-6361\",\"linemi\":\"2056.64\",\"pisomo\":\"PJB-8482\",\"sosuna\":\"FBN-6691\"}}"
+    },
+    {
+      "index": 28,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Niso Dubi\",\"zepeza\":\"8153.32\"},\"nopeke\":{\"kupuli\":\"6875.75\",\"limize\":\"LMA-9863\",\"linemi\":\"7537.13\",\"pisomo\":\"AAZ-3708\",\"sosuna\":\"EVK-6002\"}}"
+    },
+    {
+      "index": 29,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Rute Veda\",\"zepeza\":\"121.69\"},\"nopeke\":{\"kupuli\":\"9264.88\",\"limize\":\"ASS-5780\",\"linemi\":\"6025.88\",\"pisomo\":\"YSP-9866\",\"sosuna\":\"VZZ-2237\"}}"
+    },
+    {
+      "index": 30,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Lopo Devo\",\"zepeza\":\"1319.22\"},\"nopeke\":{\"kupuli\":\"990.32\",\"limize\":\"VHJ-3831\",\"linemi\":\"3015.37\",\"pisomo\":\"NGH-6838\",\"sosuna\":\"JXY-3666\"}}"
+    },
+    {
+      "index": 31,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Mono Velu\",\"zepeza\":\"3054.77\"},\"nopeke\":{\"kupuli\":\"8066.41\",\"limize\":\"FQZ-8944\",\"linemi\":\"294.31\",\"pisomo\":\"YXY-9854\",\"sosuna\":\"WCT-1762\"}}"
+    },
+    {
+      "index": 32,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Zodo Nipo\",\"zepeza\":\"8352.38\"},\"nopeke\":{\"kupuli\":\"4174.00\",\"limize\":\"SZY-7362\",\"linemi\":\"226.71\",\"pisomo\":\"XHG-8004\",\"sosuna\":\"NBV-2411\"}}"
+    },
+    {
+      "index": 33,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Nubo Deso\",\"zepeza\":\"2565.02\"},\"nopeke\":{\"kupuli\":\"3145.19\",\"limize\":\"KKX-1819\",\"linemi\":\"7521.92\",\"pisomo\":\"XBT-2419\",\"sosuna\":\"YZN-6888\"}}"
+    },
+    {
+      "index": 34,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Dafa Gusi\",\"zepeza\":\"8072.89\"},\"nopeke\":{\"kupuli\":\"3263.36\",\"limize\":\"VBE-3099\",\"linemi\":\"3623.24\",\"pisomo\":\"FDS-8644\",\"sosuna\":\"QWN-7470\"}}"
+    },
+    {
+      "index": 35,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Gosu Gopa\",\"zepeza\":\"6327.12\"},\"nopeke\":{\"kupuli\":\"861.42\",\"limize\":\"LEZ-6512\",\"linemi\":\"2567.58\",\"pisomo\":\"QYG-7298\",\"sosuna\":\"JAC-4145\"}}"
+    },
+    {
+      "index": 36,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Sebe Seri\",\"zepeza\":\"341.32\"},\"nopeke\":{\"kupuli\":\"1515.16\",\"limize\":\"RHG-8034\",\"linemi\":\"1567.40\",\"pisomo\":\"GTH-3656\",\"sosuna\":\"ETY-4908\"}}"
+    },
+    {
+      "index": 37,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Rali Pole\",\"zepeza\":\"5340.71\"},\"nopeke\":{\"kupuli\":\"7787.53\",\"limize\":\"KUN-4703\",\"linemi\":\"3518.95\",\"pisomo\":\"FHF-6876\",\"sosuna\":\"MAL-1126\"}}"
+    },
+    {
+      "index": 38,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Tolu Sofo\",\"zepeza\":\"9710.09\"},\"nopeke\":{\"kupuli\":\"2282.46\",\"limize\":\"TGL-7400\",\"linemi\":\"6943.46\",\"pisomo\":\"PRP-1421\",\"sosuna\":\"EWF-4642\"}}"
+    },
+    {
+      "index": 39,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Mivi Nole\",\"zepeza\":\"3508.56\"},\"nopeke\":{\"kupuli\":\"1370.18\",\"limize\":\"EQJ-2507\",\"linemi\":\"2297.97\",\"pisomo\":\"VBR-1031\",\"sosuna\":\"KJR-9542\"}}"
+    },
+    {
+      "index": 40,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Luge Tumo\",\"zepeza\":\"6493.85\"},\"nopeke\":{\"kupuli\":\"3392.97\",\"limize\":\"XHQ-7006\",\"linemi\":\"8993.80\",\"pisomo\":\"YUX-5512\",\"sosuna\":\"XLX-5400\"}}"
+    },
+    {
+      "index": 41,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Sofi Bafu\",\"zepeza\":\"1209.79\"},\"nopeke\":{\"kupuli\":\"8247.46\",\"limize\":\"TXQ-1990\",\"linemi\":\"8397.12\",\"pisomo\":\"YQY-3785\",\"sosuna\":\"VET-8856\"}}"
+    },
+    {
+      "index": 42,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Mamu Beru\",\"zepeza\":\"5829.12\"},\"nopeke\":{\"kupuli\":\"2353.20\",\"limize\":\"XBJ-6484\",\"linemi\":\"8013.31\",\"pisomo\":\"FSK-1397\",\"sosuna\":\"BBG-5067\"}}"
+    },
+    {
+      "index": 43,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Suvo Desu\",\"zepeza\":\"4448.05\"},\"nopeke\":{\"kupuli\":\"8596.31\",\"limize\":\"VEX-1116\",\"linemi\":\"7250.22\",\"pisomo\":\"WGD-9814\",\"sosuna\":\"HUQ-3945\"}}"
+    },
+    {
+      "index": 44,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Mavi Repi\",\"zepeza\":\"6472.34\"},\"nopeke\":{\"kupuli\":\"4460.46\",\"limize\":\"RVR-1363\",\"linemi\":\"9852.79\",\"pisomo\":\"HUL-5530\",\"sosuna\":\"MUS-8325\"}}"
+    },
+    {
+      "index": 45,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Zufu Rovu\",\"zepeza\":\"7152.64\"},\"nopeke\":{\"kupuli\":\"3146.02\",\"limize\":\"PPJ-8598\",\"linemi\":\"662.12\",\"pisomo\":\"WUQ-8268\",\"sosuna\":\"YLW-8334\"}}"
+    },
+    {
+      "index": 46,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Bive Fava\",\"zepeza\":\"4600.74\"},\"nopeke\":{\"kupuli\":\"9359.88\",\"limize\":\"AVS-3959\",\"linemi\":\"9158.35\",\"pisomo\":\"HZZ-7153\",\"sosuna\":\"VSX-9953\"}}"
+    },
+    {
+      "index": 47,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Tama Ripi\",\"zepeza\":\"3558.23\"},\"nopeke\":{\"kupuli\":\"5606.60\",\"limize\":\"YMX-4898\",\"linemi\":\"699.71\",\"pisomo\":\"WJQ-4110\",\"sosuna\":\"CMN-1445\"}}"
+    },
+    {
+      "index": 48,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Suvu Vufo\",\"zepeza\":\"1307.53\"},\"nopeke\":{\"kupuli\":\"8266.74\",\"limize\":\"RWH-3949\",\"linemi\":\"4083.64\",\"pisomo\":\"HGK-3973\",\"sosuna\":\"DMJ-7099\"}}"
+    },
+    {
+      "index": 49,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Sofi Liri\",\"zepeza\":\"7013.53\"},\"nopeke\":{\"kupuli\":\"5633.57\",\"limize\":\"GWH-9645\",\"linemi\":\"9906.27\",\"pisomo\":\"SRL-1465\",\"sosuna\":\"EZU-4203\"}}"
+    },
+    {
+      "index": 50,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Duku Pizu\",\"zepeza\":\"4443.67\"},\"nopeke\":{\"kupuli\":\"1069.11\",\"limize\":\"NMN-6749\",\"linemi\":\"2372.68\",\"pisomo\":\"NJB-6591\",\"sosuna\":\"PMX-1866\"}}"
+    },
+    {
+      "index": 51,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Tidi Daga\",\"zepeza\":\"9335.02\"},\"nopeke\":{\"kupuli\":\"2197.62\",\"limize\":\"LWM-6891\",\"linemi\":\"9273.55\",\"pisomo\":\"JFJ-4960\",\"sosuna\":\"WZS-1521\"}}"
+    },
+    {
+      "index": 52,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Take Nafe\",\"zepeza\":\"6186.18\"},\"nopeke\":{\"kupuli\":\"602.60\",\"limize\":\"TTS-8379\",\"linemi\":\"5375.44\",\"pisomo\":\"FJY-6875\",\"sosuna\":\"HYM-7749\"}}"
+    },
+    {
+      "index": 53,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Dufo Leka\",\"zepeza\":\"3082.77\"},\"nopeke\":{\"kupuli\":\"9855.33\",\"limize\":\"RVL-6185\",\"linemi\":\"7037.96\",\"pisomo\":\"TVA-4027\",\"sosuna\":\"FML-5420\"}}"
+    },
+    {
+      "index": 54,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Tumu Vilo\",\"zepeza\":\"2673.24\"},\"nopeke\":{\"kupuli\":\"9416.56\",\"limize\":\"SCP-2827\",\"linemi\":\"4880.03\",\"pisomo\":\"BFU-8371\",\"sosuna\":\"GFQ-8566\"}}"
+    },
+    {
+      "index": 55,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Fole Folo\",\"zepeza\":\"7626.12\"},\"nopeke\":{\"kupuli\":\"2326.73\",\"limize\":\"FFH-8417\",\"linemi\":\"7299.68\",\"pisomo\":\"ZJA-8990\",\"sosuna\":\"TFE-4210\"}}"
+    },
+    {
+      "index": 56,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Vuvo Gefe\",\"zepeza\":\"8735.21\"},\"nopeke\":{\"kupuli\":\"5946.21\",\"limize\":\"ENF-8333\",\"linemi\":\"1736.85\",\"pisomo\":\"DYW-7787\",\"sosuna\":\"KSR-4068\"}}"
+    },
+    {
+      "index": 57,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Pari Tema\",\"zepeza\":\"8814.69\"},\"nopeke\":{\"kupuli\":\"8502.63\",\"limize\":\"JTL-1611\",\"linemi\":\"136.93\",\"pisomo\":\"FRQ-2628\",\"sosuna\":\"JQD-4422\"}}"
+    },
+    {
+      "index": 58,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"maligu\":{\"bukula\":\"Zifa Gafa\",\"zepeza\":\"5681.87\"},\"nopeke\":{\"kupuli\":\"9531.26\",\"limize\":\"PLF-1191\",\"linemi\":\"6356.69\",\"pisomo\":\"LCZ-1564\",\"sosuna\":\"RCU-8912\"}}"
+    },
+    {
+      "index": 59,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"maligu\":{\"bukula\":\"Fave Zide\",\"zepeza\":\"1474.60\"},\"nopeke\":{\"kupuli\":\"6588.21\",\"limize\":\"BSC-6977\",\"linemi\":\"4050.18\",\"pisomo\":\"LWE-6166\",\"sosuna\":\"MRZ-5574\"}}"
+    }
+  ]
+}
