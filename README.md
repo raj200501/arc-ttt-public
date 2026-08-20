@@ -1,13 +1,24 @@
 # arc-ttt
 
-Test-time training (TTT) lab targeting **ARC Prize 2026** — the ARC-AGI-2
-Kaggle track, where per-instance test-time adaptation remains the dominant
-approach — plus cost-vs-accuracy TTT curves on enterprise-shaped tail tasks.
+**Per-tenant small-model adaptation for document extraction, with
+preregistered, reproducible evals — failures published beside passes.**
+Every headline number reconciles to a machine-readable artifact
+(`VERDICT.md` is the map), the eval spec's hash is Bitcoin-anchored
+via OpenTimestamps before the data existed, and the verification is
+one command:
+
+    python3 scripts/verify_verdict.py
+    python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json
+
+The harness began as a test-time-training entry for ARC Prize 2026
+(that origin, its scores, and its failure log are documented below —
+nothing is scrubbed); the enterprise adaptation gates are the active
+program.
 
 **Status (2026-08-17): the preregistered k=30 adaptation gate decided GO —
 mean +46.5 micro-F1 over 30-shot prompting across three novel-schema
 seeds (+36.0 / +49.0 / +54.4 vs a +5 bar frozen 2026-08-12 before any
-data; receipt-level sign test 156W/0L (p < 1e-15); CI excludes zero;
+data; receipt-level sign test 156W/0L/2T over 158 scored of 180 designed (p < 1e-15); CI excludes zero;
 `experiments/novel_schema_summary_2026-08-12.json`).** Stated per the
 spec's claim rule, always beside the CORD negative: on CORD receipts —
 a domain the base model already knows — the same adaptation recipe
