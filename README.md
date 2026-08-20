@@ -122,9 +122,10 @@ same prominence as our results.
   every reported number links to its artifact in `experiments/`.
 - **Fail-closed experiment discipline:** preregistered gates, pinned
   versions, machine-readable run records.
-- **Honest framing:** this repo is the competition entry and the research
-  lab; product- and company-level claims are made only where an artifact
-  backs them — the status line above says exactly where things stand.
+- **Honest framing:** this repo carries both the active adaptation
+  program and the ARC Prize competition entry it grew out of; product-
+  and company-level claims are made only where an artifact backs them —
+  the status line above says exactly where things stand.
 
 ## Repository layout
 
