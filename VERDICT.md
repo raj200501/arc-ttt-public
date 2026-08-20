@@ -21,9 +21,10 @@ issue.
 | Document-only serving, demo-trained adapter (Addendum D) | seeds 1,2,3: all 0.0000, 0/60 valid JSON (prose collapse; mechanism reproduced — spec D.6; seed-2 fresh-adapter run rules out checkpoint staleness) | `experiments/novel_schema_d_0.5b_k30_seed{1,2,3}_doconly_2026-08-18.json` | artifacts |
 | Document-only, no adapter (D.5 comparability) | seeds 1,2,3: all 0.0000, 0/60 valid JSON | `experiments/novel_schema_d_0.5b_k30_seed{1,2,3}_doczero_2026-08-18.json` | artifacts |
 | **Addendum D verdict** | **FAIL, both reads** (retention −98.4 vs −5 bar; unified −51.9, 0W/155L/3T; all seeds 0.0000; adapter contribution +0.0 over no-adapter) — published per the pre-written D.3 branch; corrective is Addendum F | `experiments/novel_schema_d_*` + spec D.7 | `read_addendum_d.py` |
-| **Doc-only-TRAINED adapters (Addendum F)** | **PASS**: +24.0 seed-mean vs prompted baseline (+32.0/+5.5/+34.7; bar +5), CI low +22.3, sign 126W/19L; quality cost vs demo-context arm −22.4 (seed-dependent −4.1..−43.5); adapt ~272s/tenant; all three arms PRIMARY-VERIFIED | `experiments/novel_schema_f_0.5b_k30_seed{1,2,3}_docadapted_2026-08-19.json` + spec F.5 | `verify_from_primary.py` |
+| **Doc-only-TRAINED adapters (Addendum F)** | **PASS**: +24.0 seed-mean vs prompted baseline (+32.0/+5.5/+34.7; bar +5), CI low +22.3, sign 126W/19L; quality cost vs demo-context arm −22.4 (seed-dependent −4.1..−43.5); doc-only absolute micro-F1 by seed 0.9407/0.5282/0.7798; adapt ~272s/tenant; all three arms PRIMARY-VERIFIED | `experiments/novel_schema_f_0.5b_k30_seed{1,2,3}_docadapted_2026-08-19.json` + spec F.5 | `verify_from_primary.py` |
 | Diverse-geometry gate (Addendum E) | PENDING (6 seeds, bars frozen E.2) | — | spec + OTS |
 | ARC Prize track | 1.67 public ×3 (v8/v9/v10); climb formally deprioritized | `experiments/kaggle_v{8,9,10}_scored_*.json` | artifacts |
+| Blind-holdout standing offer | protocol frozen + OTS-stamped 2026-08-20 before any challenger | `docs/research/BLIND_HOLDOUT_PROTOCOL.md` + `.ots` | `ots verify` |
 | Preregistration ordering | spec SHA-256 Bitcoin-anchored (OpenTimestamps), byte-exact snapshots shipped | `docs/research/snapshots_*` + `.ots` | `ots verify` |
 
 Primary-evidence path (artifacts from Addendum E/F onward store raw
