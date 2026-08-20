@@ -1,0 +1,453 @@
+{
+  "spec": "ENTERPRISE_EVAL_SPEC.md Addendum B (frozen 2026-08-12T19:40Z)",
+  "dataset": "synthetic novel-schema tenants (novel_schema.py), no external data",
+  "tenant": "mobofu",
+  "schema": "tenant mobofu\n  nosevo -> dibego.nelafe (date)\n  kobega -> venige.mekuna (amount)\n  genupi -> dibego.bapave (code)\n  memobo -> kiveti.luzesu (amount)\n  giposi -> dibego.sazira (amount)\n  pezesa -> venige.bunize (code)\n  rufume -> venige.kokuge (name)",
+  "rung": "0.5b",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "arm": "adapted",
+  "k": 30,
+  "eval_n": 60,
+  "resumed": true,
+  "seed": 208,
+  "gate_role": "DECISION",
+  "validity": "ok",
+  "decode": "vote/rescore ON: 1 greedy + 4 sampled (T=0.7), canonical-JSON pooling, count+likelihood top-1",
+  "config": {
+    "rank": 16,
+    "alpha": 32,
+    "epochs": 1,
+    "max_new_tokens": 512,
+    "max_seq": 8192
+  },
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "adapt_seconds": 10294.1,
+  "exact_match": 55,
+  "scored": 60,
+  "invalid_json": 0,
+  "no_completion": 0,
+  "mean_micro_f1": 0.9881,
+  "results": [
+    {
+      "index": 0,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"URQ-2300\",\"nelafe\":\"2020-02-17\",\"sazira\":\"6739.21\"},\"kiveti\":{\"luzesu\":\"3428.77\"},\"venige\":{\"bunize\":\"DSC-8701\",\"kokuge\":\"Nomi Lota\",\"mekuna\":\"2770.41\"}}"
+    },
+    {
+      "index": 1,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"XDD-5743\",\"nelafe\":\"2019-08-18\",\"sazira\":\"4943.28\"},\"kiveti\":{\"luzesu\":\"8241.00\"},\"venige\":{\"bunize\":\"KAV-5292\",\"kokuge\":\"Muro Disi\",\"mekuna\":\"835.17\"}}"
+    },
+    {
+      "index": 2,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"UHC-3256\",\"nelafe\":\"2019-03-11\",\"sazira\":\"4901.54\"},\"kiveti\":{\"luzesu\":\"1113.08\"},\"venige\":{\"bunize\":\"HCX-5896\",\"kokuge\":\"Pevi Vaso\",\"mekuna\":\"4418.71\"}}"
+    },
+    {
+      "index": 3,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"TQR-8390\",\"nelafe\":\"2020-04-15\",\"sazira\":\"4413.31\"},\"kiveti\":{\"luzesu\":\"3226.32\"},\"venige\":{\"bunize\":\"EZJ-8352\",\"kokuge\":\"Gove Leko\",\"mekuna\":\"8467.19\"}}"
+    },
+    {
+      "index": 4,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"ARU-5428\",\"nelafe\":\"2022-01-26\",\"sazira\":\"8187.97\"},\"kiveti\":{\"luzesu\":\"4379.21\"},\"venige\":{\"bunize\":\"MXQ-9754\",\"kokuge\":\"Vipa Malu\",\"mekuna\":\"2336.53\"}}"
+    },
+    {
+      "index": 5,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"WPY-3227\",\"nelafe\":\"2026-09-17\",\"sazira\":\"4970.96\"},\"kiveti\":{\"luzesu\":\"839.81\"},\"venige\":{\"bunize\":\"KVP-8264\",\"kokuge\":\"Fevu Befa\",\"mekuna\":\"9119.33\"}}"
+    },
+    {
+      "index": 6,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"WJF-6840\",\"nelafe\":\"2023-02-11\",\"sazira\":\"6945.59\"},\"kiveti\":{\"luzesu\":\"6250.87\"},\"venige\":{\"bunize\":\"KKN-9821\",\"kokuge\":\"Bogu Lesi\",\"mekuna\":\"9224.06\"}}"
+    },
+    {
+      "index": 7,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"PAW-9317\",\"nelafe\":\"2023-02-24\",\"sazira\":\"4801.50\"},\"kiveti\":{\"luzesu\":\"4627.36\"},\"venige\":{\"bunize\":\"JSZ-7521\",\"kokuge\":\"Labu Pifa\",\"mekuna\":\"198.32\"}}"
+    },
+    {
+      "index": 8,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"MBT-6962\",\"nelafe\":\"2026-01-26\",\"sazira\":\"8981.88\"},\"kiveti\":{\"luzesu\":\"9184.22\"},\"venige\":{\"bunize\":\"VLK-7345\",\"kokuge\":\"Vafa Lobe\",\"mekuna\":\"7645.16\"}}"
+    },
+    {
+      "index": 9,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"HAB-4283\",\"nelafe\":\"2022-04-14\",\"sazira\":\"7800.33\"},\"kiveti\":{\"luzesu\":\"4559.61\"},\"venige\":{\"bunize\":\"MKW-4880\",\"kokuge\":\"Tusi Tavi\",\"mekuna\":\"3607.69\"}}"
+    },
+    {
+      "index": 10,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"dibego\":{\"bapave\":\"PZH-2602\",\"nelafe\":\"2021-10-12\",\"sazira\":\"8489.09\"},\"kiveti\":{\"luzesu\":\"1620.18\"},\"venige\":{\"bunize\":\"HYK-5243\",\"kokuge\":\"Poru Nemi\",\"mekuna\":\"9492.18\"}}"
+    },
+    {
+      "index": 11,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"WBF-3334\",\"nelafe\":\"2026-09-21\",\"sazira\":\"1403.16\"},\"kiveti\":{\"luzesu\":\"6645.13\"},\"venige\":{\"bunize\":\"USL-1251\",\"kokuge\":\"Zoza Suga\",\"mekuna\":\"4166.95\"}}"
+    },
+    {
+      "index": 12,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"FDJ-6639\",\"nelafe\":\"2020-07-02\",\"sazira\":\"511.06\"},\"kiveti\":{\"luzesu\":\"5525.03\"},\"venige\":{\"bunize\":\"KNP-4106\",\"kokuge\":\"Togu Vufi\",\"mekuna\":\"710.56\"}}"
+    },
+    {
+      "index": 13,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"UWC-5129\",\"nelafe\":\"2020-02-26\",\"sazira\":\"6727.02\"},\"kiveti\":{\"luzesu\":\"2055.73\"},\"venige\":{\"bunize\":\"YWF-7817\",\"kokuge\":\"Kuge Kipu\",\"mekuna\":\"1678.21\"}}"
+    },
+    {
+      "index": 14,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"KXB-7820\",\"nelafe\":\"2021-07-02\",\"sazira\":\"7143.43\"},\"kiveti\":{\"luzesu\":\"1872.53\"},\"venige\":{\"bunize\":\"AGZ-3692\",\"kokuge\":\"Rika Mezi\",\"mekuna\":\"499.49\"}}"
+    },
+    {
+      "index": 15,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"CEY-5499\",\"nelafe\":\"2025-12-10\",\"sazira\":\"9681.08\"},\"kiveti\":{\"luzesu\":\"5740.58\"},\"venige\":{\"bunize\":\"BBF-5752\",\"kokuge\":\"Mupo Muta\",\"mekuna\":\"6010.61\"}}"
+    },
+    {
+      "index": 16,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"VCL-2656\",\"nelafe\":\"2026-09-06\",\"sazira\":\"7459.61\"},\"kiveti\":{\"luzesu\":\"6946.73\"},\"venige\":{\"bunize\":\"JLL-8639\",\"kokuge\":\"Lupa Dusu\",\"mekuna\":\"3787.43\"}}"
+    },
+    {
+      "index": 17,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"EBU-1355\",\"nelafe\":\"2022-12-23\",\"sazira\":\"3202.64\"},\"kiveti\":{\"luzesu\":\"8980.68\"},\"venige\":{\"bunize\":\"XGT-6705\",\"kokuge\":\"Zebi Lose\",\"mekuna\":\"4090.06\"}}"
+    },
+    {
+      "index": 18,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"RVR-8810\",\"nelafe\":\"2021-05-12\",\"sazira\":\"9016.58\"},\"kiveti\":{\"luzesu\":\"8599.45\"},\"venige\":{\"bunize\":\"PQL-3721\",\"kokuge\":\"Rebu Buko\",\"mekuna\":\"6890.88\"}}"
+    },
+    {
+      "index": 19,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"TZE-5674\",\"nelafe\":\"2022-01-25\",\"sazira\":\"3157.52\"},\"kiveti\":{\"luzesu\":\"4049.68\"},\"venige\":{\"bunize\":\"MXE-4022\",\"kokuge\":\"Kida Nuki\",\"mekuna\":\"9043.93\"}}"
+    },
+    {
+      "index": 20,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"XCG-6038\",\"nelafe\":\"2023-07-02\",\"sazira\":\"5069.82\"},\"kiveti\":{\"luzesu\":\"367.26\"},\"venige\":{\"bunize\":\"KRQ-6610\",\"kokuge\":\"Kabe Zunu\",\"mekuna\":\"4150.68\"}}"
+    },
+    {
+      "index": 21,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"WRM-5194\",\"nelafe\":\"2023-11-03\",\"sazira\":\"6472.88\"},\"kiveti\":{\"luzesu\":\"7393.02\"},\"venige\":{\"bunize\":\"ZDX-7558\",\"kokuge\":\"Raga Buse\",\"mekuna\":\"4159.06\"}}"
+    },
+    {
+      "index": 22,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"NDA-8236\",\"nelafe\":\"2020-04-09\",\"sazira\":\"8027.24\"},\"kiveti\":{\"luzesu\":\"2474.21\"},\"venige\":{\"bunize\":\"SMD-5763\",\"kokuge\":\"Vedu Sefi\",\"mekuna\":\"7041.47\"}}"
+    },
+    {
+      "index": 23,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"VVU-6206\",\"nelafe\":\"2021-01-28\",\"sazira\":\"3695.42\"},\"kiveti\":{\"luzesu\":\"2116.38\"},\"venige\":{\"bunize\":\"AXL-2932\",\"kokuge\":\"Zuza Tebi\",\"mekuna\":\"9729.82\"}}"
+    },
+    {
+      "index": 24,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"UQS-6819\",\"nelafe\":\"2022-08-06\",\"sazira\":\"2084.12\"},\"kiveti\":{\"luzesu\":\"790.30\"},\"venige\":{\"bunize\":\"CUZ-3774\",\"kokuge\":\"Puve Muri\",\"mekuna\":\"5701.67\"}}"
+    },
+    {
+      "index": 25,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"dibego\":{\"bapave\":\"PFH-4266\",\"nelafe\":\"2019-08-14\",\"sazira\":\"1335.67\"},\"kiveti\":{\"luzesu\":\"9609.51\"},\"venige\":{\"bunize\":\"ZYT-7395\",\"kokuge\":\"Doko Gevu\",\"mekuna\":\"3552.01\"}}"
+    },
+    {
+      "index": 26,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"AVG-2839\",\"nelafe\":\"2021-03-21\",\"sazira\":\"7078.90\"},\"kiveti\":{\"luzesu\":\"2466.96\"},\"venige\":{\"bunize\":\"ZJJ-8198\",\"kokuge\":\"Kara Kizo\",\"mekuna\":\"9001.54\"}}"
+    },
+    {
+      "index": 27,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"ADV-1585\",\"nelafe\":\"2022-09-07\",\"sazira\":\"4661.33\"},\"kiveti\":{\"luzesu\":\"3525.78\"},\"venige\":{\"bunize\":\"GVR-2656\",\"kokuge\":\"Lofo Bato\",\"mekuna\":\"3102.81\"}}"
+    },
+    {
+      "index": 28,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"CST-8615\",\"nelafe\":\"2026-06-01\",\"sazira\":\"3029.94\"},\"kiveti\":{\"luzesu\":\"9068.22\"},\"venige\":{\"bunize\":\"LZZ-9528\",\"kokuge\":\"Zana Fune\",\"mekuna\":\"265.83\"}}"
+    },
+    {
+      "index": 29,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"CQC-9044\",\"nelafe\":\"2023-09-20\",\"sazira\":\"5589.46\"},\"kiveti\":{\"luzesu\":\"6996.53\"},\"venige\":{\"bunize\":\"FNT-8125\",\"kokuge\":\"Kuda Fibi\",\"mekuna\":\"120.57\"}}"
+    },
+    {
+      "index": 30,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"DEA-7844\",\"nelafe\":\"2021-01-05\",\"sazira\":\"5054.88\"},\"kiveti\":{\"luzesu\":\"212.36\"},\"venige\":{\"bunize\":\"SLV-2632\",\"kokuge\":\"Fede Neru\",\"mekuna\":\"9979.06\"}}"
+    },
+    {
+      "index": 31,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"XTY-2928\",\"nelafe\":\"2020-04-21\",\"sazira\":\"7106.49\"},\"kiveti\":{\"luzesu\":\"7005.79\"},\"venige\":{\"bunize\":\"PVS-2114\",\"kokuge\":\"Kopa Nivu\",\"mekuna\":\"6296.96\"}}"
+    },
+    {
+      "index": 32,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"ZHF-7641\",\"nelafe\":\"2026-02-14\",\"sazira\":\"7840.64\"},\"kiveti\":{\"luzesu\":\"3473.52\"},\"venige\":{\"bunize\":\"CAX-1109\",\"kokuge\":\"Sanu Timo\",\"mekuna\":\"4423.08\"}}"
+    },
+    {
+      "index": 33,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"LVE-3424\",\"nelafe\":\"2022-08-28\",\"sazira\":\"329.10\"},\"kiveti\":{\"luzesu\":\"8895.31\"},\"venige\":{\"bunize\":\"RKM-1388\",\"kokuge\":\"Kadi Topu\",\"mekuna\":\"1027.67\"}}"
+    },
+    {
+      "index": 34,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"TDS-5663\",\"nelafe\":\"2025-06-10\",\"sazira\":\"232.38\"},\"kiveti\":{\"luzesu\":\"9093.34\"},\"venige\":{\"bunize\":\"BEA-2942\",\"kokuge\":\"Poza Sifi\",\"mekuna\":\"9675.25\"}}"
+    },
+    {
+      "index": 35,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"ZWY-4939\",\"nelafe\":\"2026-08-07\",\"sazira\":\"8156.10\"},\"kiveti\":{\"luzesu\":\"4856.73\"},\"venige\":{\"bunize\":\"ZFA-8198\",\"kokuge\":\"Doso Tobo\",\"mekuna\":\"2020.93\"}}"
+    },
+    {
+      "index": 36,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"VXL-5301\",\"nelafe\":\"2025-01-19\",\"sazira\":\"4040.38\"},\"kiveti\":{\"luzesu\":\"6707.19\"},\"venige\":{\"bunize\":\"JTX-6027\",\"kokuge\":\"Ropi Pozi\",\"mekuna\":\"5786.45\"}}"
+    },
+    {
+      "index": 37,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"MWD-3983\",\"nelafe\":\"2022-05-26\",\"sazira\":\"2185.53\"},\"kiveti\":{\"luzesu\":\"9608.81\"},\"venige\":{\"bunize\":\"DGY-1931\",\"kokuge\":\"Muvo Feza\",\"mekuna\":\"84.42\"}}"
+    },
+    {
+      "index": 38,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"YBK-9230\",\"nelafe\":\"2024-07-01\",\"sazira\":\"611.67\"},\"kiveti\":{\"luzesu\":\"7751.49\"},\"venige\":{\"bunize\":\"CVS-7326\",\"kokuge\":\"Dune Fesa\",\"mekuna\":\"7740.48\"}}"
+    },
+    {
+      "index": 39,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"HYS-5366\",\"nelafe\":\"2024-02-24\",\"sazira\":\"2918.40\"},\"kiveti\":{\"luzesu\":\"8884.15\"},\"venige\":{\"bunize\":\"FUN-7822\",\"kokuge\":\"Biba Firi\",\"mekuna\":\"6284.94\"}}"
+    },
+    {
+      "index": 40,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"ULX-3337\",\"nelafe\":\"2024-11-04\",\"sazira\":\"3725.88\"},\"kiveti\":{\"luzesu\":\"7372.37\"},\"venige\":{\"bunize\":\"JSQ-1940\",\"kokuge\":\"Danu Moko\",\"mekuna\":\"3078.66\"}}"
+    },
+    {
+      "index": 41,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"dibego\":{\"bapave\":\"HHH-5010\",\"nelafe\":\"2025-07-26\",\"sazira\":\"2017.57\"},\"kiveti\":{\"luzesu\":\"1172.73\"},\"venige\":{\"bunize\":\"PQZ-5266\",\"kokuge\":\"Bipi Dopa\",\"mekuna\":\"5153.91\"}}"
+    },
+    {
+      "index": 42,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"YJX-8061\",\"nelafe\":\"2024-03-11\",\"sazira\":\"5673.66\"},\"kiveti\":{\"luzesu\":\"2692.82\"},\"venige\":{\"bunize\":\"ZXJ-3919\",\"kokuge\":\"Fusu Kini\",\"mekuna\":\"9177.99\"}}"
+    },
+    {
+      "index": 43,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"RVY-6103\",\"nelafe\":\"2025-04-21\",\"sazira\":\"7215.10\"},\"kiveti\":{\"luzesu\":\"860.10\"},\"venige\":{\"bunize\":\"LQD-6763\",\"kokuge\":\"Feki Sofe\",\"mekuna\":\"3578.63\"}}"
+    },
+    {
+      "index": 44,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"WCD-4161\",\"nelafe\":\"2026-06-14\",\"sazira\":\"3238.55\"},\"kiveti\":{\"luzesu\":\"3376.75\"},\"venige\":{\"bunize\":\"TRV-9112\",\"kokuge\":\"Kobi Foro\",\"mekuna\":\"832.26\"}}"
+    },
+    {
+      "index": 45,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"JUR-3915\",\"nelafe\":\"2023-09-07\",\"sazira\":\"6823.76\"},\"kiveti\":{\"luzesu\":\"5631.80\"},\"venige\":{\"bunize\":\"GGM-5101\",\"kokuge\":\"Nufu Nofu\",\"mekuna\":\"3384.84\"}}"
+    },
+    {
+      "index": 46,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"HRA-1273\",\"nelafe\":\"2024-11-11\",\"sazira\":\"7077.03\"},\"kiveti\":{\"luzesu\":\"1314.08\"},\"venige\":{\"bunize\":\"KLK-7726\",\"kokuge\":\"Foti Mepi\",\"mekuna\":\"2955.75\"}}"
+    },
+    {
+      "index": 47,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"UPN-2519\",\"nelafe\":\"2026-11-09\",\"sazira\":\"1815.96\"},\"kiveti\":{\"luzesu\":\"460.78\"},\"venige\":{\"bunize\":\"AAJ-8279\",\"kokuge\":\"Luzo Veva\",\"mekuna\":\"461.88\"}}"
+    },
+    {
+      "index": 48,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"EXT-2527\",\"nelafe\":\"2025-10-22\",\"sazira\":\"848.00\"},\"kiveti\":{\"luzesu\":\"7627.48\"},\"venige\":{\"bunize\":\"NQN-6750\",\"kokuge\":\"Nofu Mami\",\"mekuna\":\"1354.38\"}}"
+    },
+    {
+      "index": 49,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"DUT-2266\",\"nelafe\":\"2024-07-21\",\"sazira\":\"3197.15\"},\"kiveti\":{\"luzesu\":\"6654.70\"},\"venige\":{\"bunize\":\"RPR-4833\",\"kokuge\":\"Nono Liri\",\"mekuna\":\"4526.68\"}}"
+    },
+    {
+      "index": 50,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"YLG-2009\",\"nelafe\":\"2025-08-11\",\"sazira\":\"6892.61\"},\"kiveti\":{\"luzesu\":\"6288.75\"},\"venige\":{\"bunize\":\"PAM-5214\",\"kokuge\":\"Zevi Pafi\",\"mekuna\":\"5845.64\"}}"
+    },
+    {
+      "index": 51,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"HJZ-1876\",\"nelafe\":\"2026-12-22\",\"sazira\":\"3904.82\"},\"kiveti\":{\"luzesu\":\"7283.04\"},\"venige\":{\"bunize\":\"KRT-9815\",\"kokuge\":\"Gila Mune\",\"mekuna\":\"7467.90\"}}"
+    },
+    {
+      "index": 52,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"BNY-8137\",\"nelafe\":\"2021-08-26\",\"sazira\":\"5574.06\"},\"kiveti\":{\"luzesu\":\"4087.94\"},\"venige\":{\"bunize\":\"KCW-8680\",\"kokuge\":\"Mogo Doni\",\"mekuna\":\"7187.02\"}}"
+    },
+    {
+      "index": 53,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"MNE-8351\",\"nelafe\":\"2020-06-17\",\"sazira\":\"3206.14\"},\"kiveti\":{\"luzesu\":\"4311.81\"},\"venige\":{\"bunize\":\"THW-7021\",\"kokuge\":\"Fiso Muzo\",\"mekuna\":\"9410.42\"}}"
+    },
+    {
+      "index": 54,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"AJU-8016\",\"nelafe\":\"2026-01-25\",\"sazira\":\"885.70\"},\"kiveti\":{\"luzesu\":\"3908.41\"},\"venige\":{\"bunize\":\"NQW-3969\",\"kokuge\":\"Vuru Nigi\",\"mekuna\":\"8110.89\"}}"
+    },
+    {
+      "index": 55,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"GTL-3951\",\"nelafe\":\"2022-12-20\",\"sazira\":\"6759.80\"},\"kiveti\":{\"luzesu\":\"641.69\"},\"venige\":{\"bunize\":\"AUD-5293\",\"kokuge\":\"Vake Padi\",\"mekuna\":\"771.81\"}}"
+    },
+    {
+      "index": 56,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"LUB-1833\",\"nelafe\":\"2022-01-13\",\"sazira\":\"3669.52\"},\"kiveti\":{\"luzesu\":\"1495.73\"},\"venige\":{\"bunize\":\"QHM-2395\",\"kokuge\":\"Goma Gipo\",\"mekuna\":\"4601.27\"}}"
+    },
+    {
+      "index": 57,
+      "valid_json": true,
+      "exact_match": true,
+      "micro_f1": 1.0,
+      "prediction": "{\"dibego\":{\"bapave\":\"REV-8555\",\"nelafe\":\"2026-05-17\",\"sazira\":\"47.26\"},\"kiveti\":{\"luzesu\":\"6853.29\"},\"venige\":{\"bunize\":\"QTW-6643\",\"kokuge\":\"Nana Vope\",\"mekuna\":\"5700.99\"}}"
+    },
+    {
+      "index": 58,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"dibego\":{\"bapave\":\"MXD-7203\",\"nelafe\":\"2019-01-14\",\"sazira\":\"8058.47\"},\"kiveti\":{\"luzesu\":\"9660.80\"},\"venige\":{\"bunize\":\"LYT-3299\",\"kokuge\":\"Fasa Mede\",\"mekuna\":\"6161.47\"}}"
+    },
+    {
+      "index": 59,
+      "valid_json": true,
+      "exact_match": false,
+      "micro_f1": 0.8571,
+      "prediction": "{\"dibego\":{\"bapave\":\"KTH-3346\",\"nelafe\":\"2019-04-22\",\"sazira\":\"3328.49\"},\"kiveti\":{\"luzesu\":\"1740.68\"},\"venige\":{\"bunize\":\"LJZ-8705\",\"kokuge\":\"Dase Kesi\",\"mekuna\":\"5928.10\"}}"
+    }
+  ]
+}
