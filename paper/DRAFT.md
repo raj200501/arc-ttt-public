@@ -50,7 +50,7 @@ We contribute:
   (serialization, per-task LoRA TTT, constrained DFS decoding, augmentation
   voting), written from the team's public descriptions and never from their
   code (section 2), released under MIT.
-- **A test harness** of 183 offline tests that runs without a GPU, network
+- **A test harness** of 190 offline tests that runs without a GPU, network
   access, or model downloads, including an oracle test that verifies the
   tree search token-exactly against a cache-free reference implementation —
   a test that caught a KV-cache aliasing bug which would otherwise have

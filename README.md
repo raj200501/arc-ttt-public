@@ -87,6 +87,19 @@ the headline gates support. Read 0.8792 as an adapted score, not as
 evidence that adapting beat prompting there.
 `experiments/blind_rehearsal_baseline_2026-08-21.json`.
 
+**Look at it rather than run it.** `demo/waybill_field_audit.html` is a
+single self-contained page — open it in a browser, nothing to install —
+showing all 30 held-out documents field by field: the source document,
+what each arm returned, and which of the tenant's eight fields each one
+got. Every value in it is the real recorded prediction; the page is
+regenerated from the artifacts by `scripts/build_field_audit.py`, so it
+is a view of the evidence rather than a drawing of it. The ties and the
+five losses are in the same rail as the wins, and it opens on the FAIL
+verdict. Start with document `m-2201`: the prompted model reads the
+waybill correctly and then answers in a schema it invented, while the
+adapted model returns the tenant's fields. That is the clearest picture
+of what this actually buys, and of what it does not.
+
 ## Check the preregistration ordering
 
 **Preregistration you can check without trusting us:** the eval spec's
@@ -173,7 +186,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 183 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 190 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -234,7 +247,7 @@ sharpening. No claims beyond the artifacts in `experiments/`.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 183 offline tests (tiny in-test models; no downloads).
+- `tests/` — 190 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

@@ -1387,3 +1387,118 @@ the symptom.
 Finder credit: reported by an outside reader who recomputed the published
 interval from the artifacts rather than accepting it, per the standing
 offer in `CORRECTIONS.md`.
+
+---
+
+# Addendum G — the adaptation-headroom law (frozen 2026-08-21, before any G data exists)
+
+## G.1 Where this hypothesis came from, stated plainly
+
+This addendum is **not** a fresh idea. It is a POST-HOC pattern noticed
+in already-banked data on 2026-08-21, and it is written down here
+*before* it is tested precisely because a post-hoc pattern is worth
+nothing until it has survived a preregistered test.
+
+The pattern: across every result this project has, the paired advantage
+of per-tenant adaptation over in-context prompting at 0.5B appears to be
+a **decreasing function of how well the prompted baseline already does.**
+
+| Corpus | Prompted baseline | Paired delta |
+|---|---|---|
+| Novel-schema synthetic (Addendum B, k=30) | 0.4333–0.6208 | **+46.5** |
+| Freight waybills, hard tier | 0.5218 | **+17.5** |
+| Freight waybills, medium tier | 0.7200 | **+21.1** |
+| Freight waybills, mixed tier | 0.9444 | **+0.0** |
+| Freight waybills, easy tier | 0.9750 | **−2.5** |
+| CORD receipts (Addendum A) | base model already knows the domain | **−7.3 / −11.5 / −4.5 (FAIL)** |
+
+If true, this single rule explains BOTH of this project's published
+failures and both of its passes, which is exactly why it deserves
+suspicion rather than celebration: a story that explains everything
+after the fact is the easiest kind to fool yourself with.
+
+## G.2 The confounder this test must survive
+
+**Ceiling effects trivially produce this correlation.** A baseline at
+0.975 cannot lose more than 0.025 and cannot gain more than 0.025, so
+any measure of raw delta MUST shrink as the baseline rises, whether or
+not adaptation is doing anything interesting. A reader who did not spot
+that would be right to discount the whole addendum.
+
+So this addendum reports two quantities and is explicit about what each
+one can and cannot establish:
+
+- **Raw delta.** What a buyer actually gets. Ceiling effects are part of
+  their reality, not an artifact to be removed. This is the gating
+  statistic.
+- **Captured-headroom fraction**, `(adapted − baseline) / (1 − baseline)`.
+  What survives the ceiling objection. If this is FLAT across the
+  baseline range, the law is a ceiling effect and this spec will say so
+  in those words — still a true and actionable buying rule, but NOT
+  evidence that adaptation is "better at hard documents." If it RISES as
+  the baseline falls, adaptation is capturing more of the available room
+  where prompting is weak, which is a stronger claim.
+
+The captured-headroom fraction is **reported, not gating.** No threshold
+is preregistered for it, because we do not have a principled prior for
+one and inventing a number here would be fake precision.
+
+## G.3 Design, frozen
+
+- **Tenants:** three fresh seeds, **401, 402, 403**, never used in any
+  prior addendum.
+- **Baseline-strength dial:** demonstration count **k ∈ {1, 3, 10, 30}**.
+  Fewer demonstrations makes the prompted arm weaker; this is the
+  cleanest available way to sweep baseline strength while holding the
+  corpus, the schema and the scorer fixed.
+- **Arms, per (seed, k) cell:** the prompted baseline, and the adapted
+  arm carrying the SAME k-shot prompt (spec B.9.1 scoping — adaptation
+  measured ON TOP of prompting, never against a bare model).
+- **Documents:** n_test = 20 per cell, disjoint from the demonstrations.
+- **Decode:** GREEDY (samples=1) on BOTH arms, matched. A richer decode
+  on one side would credit adaptation with the decode difference.
+- **Scorer:** `score_text_output`, mean per-document micro-F1, invalid
+  JSON scored 0 — unchanged from every other addendum.
+- **Cells:** 3 seeds × 4 k = **12**.
+
+## G.4 Preregistered readings
+
+Computed by `scripts/addendum_g_summary.py`, which is the only
+authorized reader of G arms.
+
+- **(a) PRIMARY.** Spearman rank correlation between a cell's prompted
+  baseline mean and that cell's raw paired delta, over all 12 cells,
+  is **≤ −0.60**.
+- **(b) SECONDARY.** Mean raw delta over the four lowest-baseline cells
+  minus mean raw delta over the four highest-baseline cells is
+  **≥ +10.0 F1**.
+- **PASS** requires (a) AND (b).
+- **PARTIAL** if exactly one holds; the addendum reports which, and does
+  not round the result up to a pass.
+- **REFUTED** if neither holds. In that case this spec states that the
+  unifying story is not supported by fresh data, the post-hoc table in
+  G.1 is labelled as an artifact of the corpora it came from, and
+  nothing downstream may cite the law.
+- **UNINFORMATIVE** if fewer than 10 of the 12 cells produce scoreable
+  paired arms, or if every prompted baseline lands within a 0.10 band
+  (the dial failed to move baseline strength, so the correlation is not
+  measurable regardless of what it computes).
+
+## G.5 What a PASS would and would not license
+
+Licensed: "the measured value of per-tenant adaptation at 0.5B is
+predictable in advance from a cheap measurement of the prompted baseline
+on the tenant's own documents." That is a buying rule and a
+qualification step, and it is what the product would sell.
+
+NOT licensed by G alone: any claim about scales above 0.5B (Addendum H),
+any claim about real customer documents (every G corpus is synthetic),
+and any claim that adaptation is *better at hard documents* unless the
+captured-headroom fraction in G.2 rises rather than staying flat.
+
+## G.6 Ordering
+
+This text is committed to git before any G arm is run, and the commit
+that adds it contains no G artifacts. That is the check: if an
+`experiments/novel_schema_g_*` file predates this section in git
+history, the preregistration is void and this spec says so.

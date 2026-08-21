@@ -1,0 +1,269 @@
+<title>Waybill Field Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap">
+<style>
+:root{
+  --ground:#EEF1F0; --panel:#FAFBFB; --sunk:#E3E8E6;
+  --ink:#16211F; --ink-soft:#4A5956; --ink-faint:#778582;
+  --rule:#C9D2CF; --rule-soft:#DBE2E0;
+  --match:#0F6B5C; --match-bg:#DCEBE7;
+  --miss:#A6421F; --miss-bg:#F3E0D8;
+  --extra:#7A6A2E; --extra-bg:#EFE9D6;
+  --accent:#0F6B5C;
+  --shadow:0 1px 2px rgba(20,33,31,.06),0 8px 24px -12px rgba(20,33,31,.18);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#101614; --panel:#161E1C; --sunk:#0B100F;
+    --ink:#E4EBE8; --ink-soft:#9FB0AC; --ink-faint:#71827E;
+    --rule:#2A3634; --rule-soft:#1F2A28;
+    --match:#5BC9AE; --match-bg:#12312A;
+    --miss:#E08A62; --miss-bg:#352016;
+    --extra:#CBB56A; --extra-bg:#2C2718;
+    --accent:#5BC9AE;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#101614; --panel:#161E1C; --sunk:#0B100F;
+  --ink:#E4EBE8; --ink-soft:#9FB0AC; --ink-faint:#71827E;
+  --rule:#2A3634; --rule-soft:#1F2A28;
+  --match:#5BC9AE; --match-bg:#12312A;
+  --miss:#E08A62; --miss-bg:#352016;
+  --extra:#CBB56A; --extra-bg:#2C2718;
+  --accent:#5BC9AE;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -14px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1240px;margin:0 auto;padding:38px 22px 80px}
+.lede{max-width:66ch}
+.eyebrow{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:600;
+  font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-faint);margin:0 0 10px;
+}
+h1{
+  font-size:clamp(28px,3.4vw,40px);line-height:1.12;margin:0 0 14px;
+  font-weight:700;letter-spacing:-.021em;text-wrap:balance;
+}
+.sub{margin:0 0 22px;color:var(--ink-soft);font-size:16.5px}
+.verdict{
+  display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--rule);
+  border-radius:3px;overflow:hidden;background:var(--panel);
+  box-shadow:var(--shadow);margin:26px 0 10px;
+}
+.vcell{padding:13px 18px;border-right:1px solid var(--rule-soft);flex:1 1 130px}
+.vcell:last-child{border-right:0}
+.vlab{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-size:11px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);
+  display:block;margin-bottom:3px;
+}
+.vnum{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:20px;
+  font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em;
+}
+.vnum.bad{color:var(--miss)}
+.vnote{font-size:12.5px;color:var(--ink-soft);margin:0 0 30px}
+.stamp{
+  display:inline-block;font-family:"IBM Plex Sans Condensed",sans-serif;
+  font-weight:600;font-size:12px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--miss);border:1.5px solid var(--miss);border-radius:2px;
+  padding:3px 9px;transform:rotate(-1.2deg);
+}
+.railhead{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:14px;flex-wrap:wrap;margin:34px 0 9px;
+  padding-bottom:8px;border-bottom:1px solid var(--rule);
+}
+h2{font-size:15px;margin:0;font-weight:600;letter-spacing:-.005em}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-soft)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:baseline}
+.rail{display:flex;gap:5px;overflow-x:auto;padding:10px 2px 12px;scrollbar-width:thin}
+.chip{
+  flex:0 0 auto;border:1px solid var(--rule);background:var(--panel);
+  border-radius:3px;padding:7px 9px 8px;cursor:pointer;min-width:76px;
+  font:inherit;color:inherit;text-align:left;transition:border-color .12s,transform .12s;
+}
+.chip:hover{border-color:var(--accent)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chip[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.chip .cid{
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;display:block;
+  color:var(--ink-soft);margin-bottom:3px;
+}
+.chip .cdelta{
+  font-family:"IBM Plex Mono",monospace;font-size:13.5px;font-weight:600;
+  font-variant-numeric:tabular-nums;
+}
+.up{color:var(--match)} .down{color:var(--miss)} .flat{color:var(--ink-faint)}
+.grid{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);gap:16px;margin-top:16px}
+@media (max-width:880px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{border:1px solid var(--rule);border-radius:3px;background:var(--panel);box-shadow:var(--shadow);overflow:hidden}
+.chead{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:10px 14px;border-bottom:1px solid var(--rule-soft);background:var(--sunk);
+}
+.ctitle{
+  font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:600;font-size:12px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);
+}
+.cscore{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+.doc{
+  margin:0;padding:15px 16px;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:12.2px;line-height:1.62;white-space:pre-wrap;word-break:break-word;
+  color:var(--ink-soft);max-height:520px;overflow:auto;
+}
+.fields{padding:6px 0 10px}
+.frow{display:grid;grid-template-columns:minmax(96px,.85fr) minmax(0,1.4fr);gap:10px;padding:6px 16px;align-items:start}
+.frow+.frow{border-top:1px solid var(--rule-soft)}
+.fkey{font-family:"IBM Plex Mono",monospace;font-size:11.6px;color:var(--ink-faint);word-break:break-all}
+.fval{font-family:"IBM Plex Mono",monospace;font-size:12.4px;word-break:break-word}
+.fval mark{background:var(--match-bg);color:var(--match);padding:1px 5px;border-radius:2px}
+.fval .x{background:var(--miss-bg);color:var(--miss);padding:1px 5px;border-radius:2px}
+.fval .none{color:var(--ink-faint);font-style:italic}
+.extra .fkey,.extra .fval span{color:var(--extra)}
+.extra .fval span{background:var(--extra-bg);padding:1px 5px;border-radius:2px}
+.cfoot{padding:9px 15px;border-top:1px solid var(--rule-soft);font-size:12.3px;color:var(--ink-soft);background:var(--sunk)}
+.reading{
+  margin-top:34px;border-top:1px solid var(--rule);padding-top:22px;
+  max-width:70ch;font-size:14.6px;color:var(--ink-soft);
+}
+.reading h2{margin-bottom:10px;color:var(--ink);font-size:16px}
+.reading p{margin:0 0 12px}
+.reading strong{color:var(--ink)}
+code{font-family:"IBM Plex Mono",monospace;font-size:.92em;background:var(--sunk);padding:1px 5px;border-radius:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<div class="wrap">
+<p class="eyebrow">Blind rehearsal &middot; 30 held-out freight waybills &middot; 2026-08-21</p>
+<div class="lede">
+<h1>What a tenant-adapted model changes, field by field</h1>
+<p class="sub">Two arms of the same 0.5B open model on the same documents, matched greedy decode. One was shown 20 labelled examples in its prompt. The other was adapted on those same 20. Every output below is the real recorded prediction &mdash; nothing here is illustrative.</p>
+</div>
+
+<div class="verdict">
+  <div class="vcell"><span class="vlab">Prompted</span><span class="vnum" id="v-p"></span></div>
+  <div class="vcell"><span class="vlab">Adapted</span><span class="vnum" id="v-a"></span></div>
+  <div class="vcell"><span class="vlab">Paired delta</span><span class="vnum" id="v-d"></span></div>
+  <div class="vcell"><span class="vlab">Sign test</span><span class="vnum" id="v-s"></span></div>
+  <div class="vcell"><span class="vlab">Preregistered verdict</span><br><span class="stamp">Fail</span></div>
+</div>
+<p class="vnote">The mean gain is roughly twice the +5.0 bar that was frozen before these arms ran &mdash; but the bar required the sign test to agree, and it does not. Both conditions were required, so this publishes as a failure. The reading that survives is narrower, and it is at the bottom of this page.</p>
+
+<div class="railhead">
+  <h2>Every held-out document, in order</h2>
+  <div class="legend">
+    <span><i class="dot" style="background:var(--match)"></i>matches gold</span>
+    <span><i class="dot" style="background:var(--miss)"></i>wrong or missing</span>
+    <span><i class="dot" style="background:var(--extra)"></i>field not in the schema</span>
+  </div>
+</div>
+<div class="rail" id="rail" role="tablist" aria-label="Held-out documents"></div>
+
+<div class="grid">
+  <section class="card">
+    <div class="chead"><span class="ctitle">Source document</span><span class="cscore" id="d-tier"></span></div>
+    <pre class="doc" id="d-text"></pre>
+  </section>
+  <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+    <section class="card">
+      <div class="chead"><span class="ctitle">Prompted &mdash; 20 examples in context</span><span class="cscore" id="p-score"></span></div>
+      <div class="fields" id="p-fields"></div>
+      <div class="cfoot" id="p-foot"></div>
+    </section>
+    <section class="card">
+      <div class="chead"><span class="ctitle">Adapted &mdash; same 20 examples, trained</span><span class="cscore" id="a-score"></span></div>
+      <div class="fields" id="a-fields"></div>
+      <div class="cfoot" id="a-foot"></div>
+    </section>
+  </div>
+</div>
+
+<div class="reading">
+<h2>How to read this</h2>
+<p><strong>17 of these 30 documents are ties</strong>, twelve of them perfect on both sides. Where in-context prompting already works, adaptation adds nothing &mdash; and on five documents it costs a field. That is visible above and it is not hidden here.</p>
+<p><strong>The gap is concentrated.</strong> Roughly 63% of the total delta comes from three documents where the prompted model returned no valid JSON at all and scored zero. The clearest cases &mdash; <code>m-2201</code> is the one to look at &mdash; are not about extracting better. The prompted model reads the document correctly and then answers in a schema it invented: <code>carrier_name</code>, <code>trailer_weight</code>, <code>pickup_location</code>. The adapted model returns the tenant's eight fields, in the tenant's spelling, normalized the tenant's way.</p>
+<p>So the honest claim from this run is <strong>schema conformance, not accuracy</strong>. On a real pipeline that distinction matters more than it sounds: a wrong value is a data-quality problem, and an invented key is an outage.</p>
+<p>This corpus was authored by an adversarial AI agent that we operated ourselves, on the same host, with the gold labels withheld in process and hash-committed before submission. That is procedural blindness, not third-party custody &mdash; it is a transfer signal, not a customer result. The standing offer to run this on documents we have never seen is open, and the terms are published.</p>
+</div>
+</div>
+
+<script>
+const DOCS = [{"id":"WB-2026-0101","tier":"easy","text":"STRAIGHT BILL OF LADING - SHORT FORM\n\nShipper: Harlan Fastener Works\nConsignee: Bluegate Assembly LLC\nOrigin: Toledo\nDestination: Fort Wayne\nShip Date: 2026-04-14\nWeight: 8250 lbs\nFreight Class: 70\nTotal Charges: $612.40\n\nDriver signature on file. Freight counted by shipper.\n","gold":{"shipper_name":"Harlan Fastener Works","consignee_name":"Bluegate Assembly LLC","origin_city":"Toledo","destination_city":"Fort Wayne","ship_date":"2026-04-14","weight_lbs":"8250","freight_class":"70","total_charge_usd":"612.40"},"prompted":{"consignee_name":"Bluegate Assembly LLC","destination_city":"Fort Wayne","freight_class":"70","origin_city":"Toledo","ship_date":"2026-04-14","shipper_name":"Harlan Fastener Works","total_charge_usd":"612.40","weight_lbs":"8250"},"adapted":{"consignee_name":"Bluegate Assembly LLC","destination_city":"Fort Wayne","freight_class":"70","origin_city":"Toledo","ship_date":"2026-04-14","shipper_name":"Harlan Fastener Works","total_charge_usd":"612.40","weight_lbs":"8250"},"sp":1.0,"sa":1.0},{"id":"WB-2026-0102","tier":"easy","text":"UNIFORM FREIGHT WAYBILL\n\nSHIPPER .......... Mercer Valley Dairy Co-op\nCONSIGNEE ........ Northstar Cold Storage\nFROM ............. Eau Claire\nTO ............... Duluth\nDATE OF SHIPMENT . 2026-05-02\nGROSS WEIGHT ..... 14200 lbs\nCLASS ............ 55\nTOTAL CHARGES .... $1,180.00\n\nReefer set at 38F continuous. Seal #044821.\n","gold":{"shipper_name":"Mercer Valley Dairy Co-op","consignee_name":"Northstar Cold Storage","origin_city":"Eau Claire","destination_city":"Duluth","ship_date":"2026-05-02","weight_lbs":"14200","freight_class":"55","total_charge_usd":"1180.00"},"prompted":{"consignee_name":"Northstar Cold Storage","destination_city":"Duluth","freight_class":"55","origin_city":"Eau Claire","ship_date":"2026-05-02","shipper_name":"Mercer Valley Dairy Co-op","total_charge_usd":"1180.00","weight_lbs":"14200"},"adapted":{"consignee_name":"Northstar Cold Storage","destination_city":"Duluth","freight_class":"55","origin_city":"Eau Claire","ship_date":"2026-05-02","shipper_name":"Mercer Valley Dairy Co-op","total_charge_usd":"1180.00","weight_lbs":"14200"},"sp":1.0,"sa":1.0},{"id":"az-0109","tier":"easy","text":"SHIPMENT CONFIRMATION / WAYBILL\n\nOrigin point: Flagstaff\nDestination point: Yuma\nShipper of record: High Desert Botanicals\nReceiving party: Sun Valley Distributors\nFreight class: 77.5\nShipment weight: 4,880 lbs\nDate shipped: 2026-08-03\nAmount due carrier: $841.00\n\nDry van. No temp control required.\n","gold":{"shipper_name":"High Desert Botanicals","consignee_name":"Sun Valley Distributors","origin_city":"Flagstaff","destination_city":"Yuma","ship_date":"2026-08-03","weight_lbs":"4880","freight_class":"77.5","total_charge_usd":"841.00"},"prompted":{"consignee_name":"Sun Valley Distributors","destination_city":"Yuma","freight_class":"77.5","origin_city":"Flagstaff","ship_date":"2026-08-03","shipper_name":"High Desert Botanicals","total_charge_usd":"841.00","weight_lbs":"4880"},"adapted":{"consignee_name":"Sun Valley Distributors","destination_city":"Yuma","freight_class":"77.5","origin_city":"Flagstaff","ship_date":"2026-08-03","shipper_name":"High Desert Botanicals","total_charge_usd":"841.00","weight_lbs":"4880"},"sp":1.0,"sa":1.0},{"id":"az-0110","tier":"easy","text":"WAYBILL\n\nConsignee: Copper State Plumbing Wholesale\nDestination: Tucson\nShipper: Rio Grande Fittings Corp.\nOrigin: El Paso\nShip date: 2026-01-19\nClass: 65\nWeight: 16,700 lbs\nTotal charges: $1,205.50\n","gold":{"shipper_name":"Rio Grande Fittings Corp.","consignee_name":"Copper State Plumbing Wholesale","origin_city":"El Paso","destination_city":"Tucson","ship_date":"2026-01-19","weight_lbs":"16700","freight_class":"65","total_charge_usd":"1205.50"},"prompted":{"consignee_name":"Copper State Plumbing Wholesale","destination_city":"Tucson","freight_class":"65","origin_city":"El Paso","ship_date":"2026-01-19","shipper_name":"Rio Grande Fittings Corp","total_charge_usd":"1205.50","weight_lbs":"16700"},"adapted":{"consignee_name":"Rio Grande Fittings Corp.","destination_city":"Tucson","freight_class":"65","origin_city":"El Paso","ship_date":"2026-01-19","shipper_name":"Copper State Plumbing Wholesale","total_charge_usd":"1205.50","weight_lbs":"16700"},"sp":0.875,"sa":0.75},{"id":"frt_0104","tier":"easy","text":"DELIVERY MANIFEST \u2014 SINGLE STOP\n\nFrom: Quill & Sons Paper Converters, Green Bay\nTo: Lakeshore Office Interiors, Milwaukee\nShip date: 2026-06-18\nFreight class 92.5\nNet weight 6,040 lbs\nTotal freight charge: $488.90\nPallets: 8, shrink-wrapped, no stack.\n","gold":{"shipper_name":"Quill & Sons Paper Converters","consignee_name":"Lakeshore Office Interiors","origin_city":"Green Bay","destination_city":"Milwaukee","ship_date":"2026-06-18","weight_lbs":"6040","freight_class":"92.5","total_charge_usd":"488.90"},"prompted":{"consignee_name":"Lakeshore Office Interiors","destination_city":"Milwaukee","freight_class":"92.5","origin_city":"Green Bay","ship_date":"2026-06-18","shipper_name":"Quill & Sons Paper Converters","total_charge_usd":"488.90","weight_lbs":"6040"},"adapted":{"consignee_name":"Lakeshore Office Interiors","destination_city":"Milwaukee","freight_class":"92.5","origin_city":"Green Bay","ship_date":"2026-06-18","shipper_name":"Quill & Sons Paper Converters","total_charge_usd":"488.90","weight_lbs":"6040"},"sp":1.0,"sa":1.0},{"id":"h-3301","tier":"hard","text":"STRA1GHT B1LL OF LAD1NG          [scan quality: poor]\n\nSh1pper: Grande R0nde Lumber C0.\nC0nsignee: Va11ey Truss & Frame\n0rigin: La Grande\nDestinati0n: Yakima\nShip date: 0ct0ber 9th, 2026 (scheduled) \u2014 ACTUAL PICKUP 10/12/26\nWeight: 26,4OO lbs\nClass: 5O\nT0tal charges: $1,742.9O\n","gold":{"shipper_name":"Grande Ronde Lumber Co.","consignee_name":"Valley Truss & Frame","origin_city":"La Grande","destination_city":"Yakima","ship_date":"2026-10-12","weight_lbs":"26400","freight_class":"50","total_charge_usd":"1742.90"},"prompted":{"consignee_name":"Va11ey Truss & Frame","destination_city":"Yakima","freight_class":"50","origin_city":"La Grande","ship_date":"2026-10-09","shipper_name":"Grande R0nde Lumber C0.","total_charge_usd":"1742.90","weight_lbs":"2640"},"adapted":{"consignee_name":"Va11ey Truss & Frame","destination_city":"Yakima","freight_class":"50","origin_city":"La Grande","ship_date":"2026-10-12","shipper_name":"Grand River Lumber Co.","total_charge_usd":"1742.90","weight_lbs":"26400"},"sp":0.5,"sa":0.75},{"id":"h-3303","tier":"hard","text":"WEIGH STATION COPY \u2014 WAYBILL\n\nShipper: Cumberland Aggregate Sales\nConsignee: Tri-County Paving\nOrigin: Knoxville     Destination: Asheville\nShip date: 5/l1/26\nTare: 15,100 lbs   Gross: 47,300 lbs   NET FREIGHT WT: 32,200 lbs\nClass: 50\nCharges: $1,910.00 total ($1,790.00 linehaul + $120.00 scale fee)\n","gold":{"shipper_name":"Cumberland Aggregate Sales","consignee_name":"Tri-County Paving","origin_city":"Knoxville","destination_city":"Asheville","ship_date":"2026-05-11","weight_lbs":"32200","freight_class":"50","total_charge_usd":"1910.00"},"prompted":{"consignee_name":"Tri-County Paving","destination_city":"Asheville","freight_class":"50","origin_city":"Knoxville","ship_date":"2026-05-11","shipper_name":"Cumberland Aggregate Sales","total_charge_usd":"1910.00","weight_lbs":"15100","gross_weight_lbs":"47300","net_freight_weight_lbs":"32200"},"adapted":{"consignee_name":"Tri-County Paving","destination_city":"Asheville","freight_class":"50","origin_city":"Knoxville","ship_date":"2026-01-05","shipper_name":"Cumberland Aggregate Sales","total_charge_usd":"1790.00","weight_lbs":"32200"},"sp":0.7778,"sa":0.75},{"id":"h-3304","tier":"hard","text":"WAYBILL \u2014 BULK COMMODITY\n\nShipper: Heartland Grain Partners\nConsignee: Lakeview Feed & Milling\nOrigin: Sioux Falls    Dest: Mankato\nShipped Sept. 3, 2026\nQuantity: 11.5 short tons\nClass: 50\nTotal freight: $1,265.30\n\n(Carrier converts tons at 2000 lbs/ton for billing.)\n","gold":{"shipper_name":"Heartland Grain Partners","consignee_name":"Lakeview Feed & Milling","origin_city":"Sioux Falls","destination_city":"Mankato","ship_date":"2026-09-03","weight_lbs":"23000","freight_class":"50","total_charge_usd":"1265.30"},"prompted":{"consignee_name":"Lakeview Feed & Milling","destination_city":"Mankato","freight_class":"50","origin_city":"Sioux Falls","ship_date":"2026-09-03","shipper_name":"Heartland Grain Partners","total_charge_usd":"1265.30","weight_lbs":"11500"},"adapted":{"consignee_name":"Lakeview Feed & Milling","destination_city":"Mankato","freight_class":"50","origin_city":"Sioux Falls","ship_date":"2026-09-03","shipper_name":"Heartland Grain Partners","total_charge_usd":"1265.30","weight_lbs":"1150"},"sp":0.875,"sa":0.875},{"id":"h-3305","tier":"hard","text":">>OCR OUTPUT - CONFIDENCE LOW<<\n\n5H1PPER: M0nadn0ck Wire R0pe C0rp\nC0N5IGNEE: Granite 5tate Marine 5upply\n0RIGIN: Keene        DE5T: P0rtland\n5HIP DATE: 12/O1/26  CLA55: 7O\nWEIGHT: 8,O5O LB5    T0TAL: $712.4O\n","gold":{"shipper_name":"Monadnock Wire Rope Corp","consignee_name":"Granite State Marine Supply","origin_city":"Keene","destination_city":"Portland","ship_date":"2026-12-01","weight_lbs":"8050","freight_class":"70","total_charge_usd":"712.40"},"prompted":null,"adapted":{"consignee_name":"Granite","destination_city":"Portland","freight_class":"705","origin_city":"Keene","ship_date":"2026-01-12","shipper_name":"Maddison","total_charge_usd":"712.40","weight_lbs":"8050"},"sp":0.0,"sa":0.5},{"id":"h-3307","tier":"hard","text":"SMUDGED CARBON COPY \u2014 WAYBILL\n\nShpr; Beacon Hi11 R0asting C0.      <- period keys read as ;\nCnee; Twin City Cafe Supp1y\n0rig; W0rcester   Dest; Hartf0rd\nShipped the third of November, 2026\nWt; 2,64O 1bs     C1ass; 6O\nCharges; $3O1.75\n","gold":{"shipper_name":"Beacon Hill Roasting Co.","consignee_name":"Twin City Cafe Supply","origin_city":"Worcester","destination_city":"Hartford","ship_date":"2026-11-03","weight_lbs":"2640","freight_class":"60","total_charge_usd":"301.75"},"prompted":null,"adapted":{"consignee_name":"Worcester","destination_city":"Hartford","freight_class":"60","origin_city":"New Haven","ship_date":"2026-11-03","shipper_name":"Twin City Cafe Supply","total_charge_usd":"317.11","weight_lbs":"2640"},"sp":0.0,"sa":0.5},{"id":"h-3311","tier":"hard","text":"WAYBILL \u2014 INTERLINE TRANSFER, SECOND LEG ONLY\n\nLeg 1 (already billed, ref only): Portland -> Spokane, 6/22/26\nLeg 2 (THIS WAYBILL):\n  Shipper of record: Inland Empire Paper Traders\n  Consignee: Bitterroot Print Works\n  Origin: Spokane\n  Destination: Missoula\n  Ship date: 6/24/26\n  Weight: 17,600 lbs   Class: 55\n  Charges this leg: $1,233.20\n","gold":{"shipper_name":"Inland Empire Paper Traders","consignee_name":"Bitterroot Print Works","origin_city":"Spokane","destination_city":"Missoula","ship_date":"2026-06-24","weight_lbs":"17600","freight_class":"55","total_charge_usd":"1233.20"},"prompted":{"consignee_name":"Bitterroot Print Works","destination_city":"Missoula","freight_class":"55","origin_city":"Spokane","ship_date":"2026-06-24","shipper_name":"Inland Empire Paper Traders","total_charge_usd":"1233.20","weight_lbs":"17600"},"adapted":{"consignee_name":"Bitterroot Print Works","destination_city":"Missoula","freight_class":"55","origin_city":"Spokane","ship_date":"2026-06-24","shipper_name":"Inland Empire Paper Traders","total_charge_usd":"1233.20","weight_lbs":"17600"},"sp":1.0,"sa":1.0},{"id":"h-3312","tier":"hard","text":"[TOP OF PAGE TORN \u2014 FIELDS RECONSTRUCTED BELOW SIGNATURE BLOCK]\n\n...er costs. Signature: J. Mendez, dock 4.\n\nRECONSTRUCTION (per carrier system, verified):\nshipper=Gu1fstream P1astics Extrusi0n; consignee=Emera1d C0ast\nP00l Supp1y; origin=Pensac01a; destination=Ta11ahassee;\nship_date=2026-09-30; weight=13,425 lbs; class=77.5;\ntotal=$1,O88.6O\n","gold":{"shipper_name":"Gulfstream Plastics Extrusion","consignee_name":"Emerald Coast Pool Supply","origin_city":"Pensacola","destination_city":"Tallahassee","ship_date":"2026-09-30","weight_lbs":"13425","freight_class":"77.5","total_charge_usd":"1088.60"},"prompted":{"consignee_name":"Emera1d C0ast P00l Support","destination_city":"Ta11ahassee","freight_class":"77.5","origin_city":"Pensacola","ship_date":"2026-09-30","shipper_name":"Gu1fstream P1astics Extrusi0n","total_charge_usd":"188.60","weight_lbs":"13425"},"adapted":{"consignee_name":"Emerald Coast Support","destination_city":"Tampa","freight_class":"77.5","origin_city":"Pensacola","ship_date":"2026-09-30","shipper_name":"Guilleford Shipping Company","total_charge_usd":"188.60","weight_lbs":"13425"},"sp":0.5,"sa":0.5},{"id":"m-2201","tier":"medium","text":"RATE CONF + WAYBILL COMBINED                  REF Q-99120\n\nCarrier: Blue Heron Transport (MC 771204)\nPO Number: 4471-A   Trailer: 53' dry #20871\n\nPickup at: Stonebridge Ceramics, Louisville\nDeliver to: Gallery Row Imports, Nashville\nPickup/ship date: Mar 3rd 2026\nFrt class 110, weight 5,225 lbs\nLinehaul $610.00 + fuel surcharge $74.20 = total charges $684.20\n\nDetention after 2 hrs at $45/hr. Not a distractor-free document.\n","gold":{"shipper_name":"Stonebridge Ceramics","consignee_name":"Gallery Row Imports","origin_city":"Louisville","destination_city":"Nashville","ship_date":"2026-03-03","weight_lbs":"5225","freight_class":"110","total_charge_usd":"684.20"},"prompted":{"carrier_name":"Blue Heron Transport","truck_number":"MC 771204","pickup_location":"Stonebridge Ceramics, Louisville","delivery_location":"Gallery Row Imports, Nashville","pickup_date":"2026-03-03","ship_date":"2026-03-03","trailer_weight":"5225 lbs","class":"110","total_charges":"684.20","detention_rate":"45/hr","detention_hours":2},"adapted":{"consignee_name":"Gallery Row Imports","destination_city":"Nashville","freight_class":"110","origin_city":"Louisville","ship_date":"2026-03-03","shipper_name":"Stonebridge Ceramics","total_charge_usd":"684.20","weight_lbs":"5225"},"sp":0.1053,"sa":1.0},{"id":"m-2204","tier":"medium","text":"From the desk of A. Okafor, shipping mgr.\n\nPlease find waybill details for today's outbound. We are shipping\n14 pallets of packaged adhesives from our Dayton plant, consigned\nto Riverworks Coatings out in Evansville. Shipper of record is\nBond-Rite Adhesives Corp. Pickup was completed on the 7th of May,\n2026. Scale ticket shows 21,300 pounds even. Freight class is 60\nper the NMFC lookup. Agreed total charges came to $1,479.30\nincluding fuel.\n\nRegards, A.O.\n","gold":{"shipper_name":"Bond-Rite Adhesives Corp.","consignee_name":"Riverworks Coatings","origin_city":"Dayton","destination_city":"Evansville","ship_date":"2026-05-07","weight_lbs":"21300","freight_class":"60","total_charge_usd":"1479.30"},"prompted":{"consignee_name":"Riverworks Coatings","destination_city":"Evansville","freight_class":"60","origin_city":"Dayton","ship_date":"2026-05-07","shipper_name":"Bond-Rite Adhesives Corp","total_charge_usd":"1479.30","weight_lbs":"21300"},"adapted":{"consignee_name":"RiverWorks Coatings","destination_city":"Evansville","freight_class":"60","origin_city":"Dayton","ship_date":"2026-05-07","shipper_name":"Bond-Rite Adhesives Corp.","total_charge_usd":"1479.30","weight_lbs":"21300"},"sp":0.875,"sa":1.0},{"id":"m-2205","tier":"medium","text":"LTL WAYBILL          PRO 5521-8802-7\n\nBill To (3rd party): Apex Freight Audit Services, Columbus\nShipper: Winfield Glassworks\nConsignee: Harbor Lights Hotel Supply\nOrigin: Wheeling\nDestination: Annapolis\nShipped 11 Feb 2026\nClass 250 (fragile, blown glass)\nWeight 2,760 lbs\nTotal charges $1,118.45\n\nNOTE: Bill-to party is NOT the shipper or consignee.\n","gold":{"shipper_name":"Winfield Glassworks","consignee_name":"Harbor Lights Hotel Supply","origin_city":"Wheeling","destination_city":"Annapolis","ship_date":"2026-02-11","weight_lbs":"2760","freight_class":"250","total_charge_usd":"1118.45"},"prompted":{"consignee_name":"Harbor Lights Hotel Supply","destination_city":"Annapolis","freight_class":"250","origin_city":"Wheeling","ship_date":"2026-01-11","shipper_name":"Winfield Glassworks","total_charge_usd":"1118.45","weight_lbs":"2760"},"adapted":{"consignee_name":"Harbor Lights Hotel Supply","destination_city":"Annapolis","freight_class":"250","origin_city":"Wheeling","ship_date":"2026-02-11","shipper_name":"Winfield Glassworks","total_charge_usd":"1118.45","weight_lbs":"2760"},"sp":0.875,"sa":1.0},{"id":"m-2206","tier":"medium","text":"WAYBILL (re-keyed from fax)\n\nconsignee - Sierra Vista Medical Supply\ndest - Fresno\nshipper - PacCoast Surgical Distribution\norig - Sacramento\nclass - 85\nship dt - 7/30/26\nwt - 6,015 lbs\ncharges - $598.7\n\nhazmat: none. residential: no.\n","gold":{"shipper_name":"PacCoast Surgical Distribution","consignee_name":"Sierra Vista Medical Supply","origin_city":"Sacramento","destination_city":"Fresno","ship_date":"2026-07-30","weight_lbs":"6015","freight_class":"85","total_charge_usd":"598.70"},"prompted":{"consignee_name":"Sierra Vista Medical Supply","destination_city":"Fresno","freight_class":"85","origin_city":"Sacramento","ship_date":"2026-07-30","shipper_name":"PacCoast Surgical Distribution","total_charge_usd":"598.70","weight_lbs":"6015"},"adapted":{"consignee_name":"Sierra Vista Medical Supply","destination_city":"Fresno","freight_class":"85","origin_city":"Sacramento","ship_date":"2026-07-30","shipper_name":"Pacific Coast Surgical Distribution","total_charge_usd":"598.70","weight_lbs":"6015"},"sp":1.0,"sa":0.875},{"id":"m-2208","tier":"medium","text":"WAYBILL SUMMARY LINE (system export)\n\nid=88213|shpr=Calloway Textile Mills|cnee=Fabric Row Wholesale|orig=Greenville|dest=Richmond|shipdate=2026-02-28|class=77.5|wt_lbs=12,900|charges=1,044.60 USD|equip=van\n","gold":{"shipper_name":"Calloway Textile Mills","consignee_name":"Fabric Row Wholesale","origin_city":"Greenville","destination_city":"Richmond","ship_date":"2026-02-28","weight_lbs":"12900","freight_class":"77.5","total_charge_usd":"1044.60"},"prompted":null,"adapted":{"consignee_name":"Fabric Row Wholesale","destination_city":"Richmond","freight_class":"77.5","origin_city":"Greenville","ship_date":"2026-02-28","shipper_name":"Allowce Textile Mills","total_charge_usd":"1044.60","weight_lbs":"12900"},"sp":0.0,"sa":0.875},{"id":"m-2209","tier":"medium","text":"FREIGHT TICKET \u2014 HANDWRITTEN, TRANSCRIBED\n\nshipper -> Dutch Hollow Furniture Barn\ngoing to -> The Verandah Home Store (consignee)\npicked up in Kingston, dropping in Albany\ndate on ticket reads \"Jan. 5th '26\"\ndriver wrote weight as 10,880 lbs\nclass marked 150 (furniture, setup)\ntotal due: $829.95\n","gold":{"shipper_name":"Dutch Hollow Furniture Barn","consignee_name":"The Verandah Home Store","origin_city":"Kingston","destination_city":"Albany","ship_date":"2026-01-05","weight_lbs":"10880","freight_class":"150","total_charge_usd":"829.95"},"prompted":{"consignee_name":"The Verandah Home Store","destination_city":"Albany","freight_class":"150","origin_city":"Kingston","ship_date":"2026-01-05","shipper_name":"Dutch Hollow Furniture Barn","total_charge_usd":"829.95","weight_lbs":"10880"},"adapted":{"consignee_name":"The Verandah Home Store","destination_city":"Albany","freight_class":"150","origin_city":"Kingston","ship_date":"2026-01-05","shipper_name":"Dutch Hollow Furniture Barn","total_charge_usd":"829.95","weight_lbs":"10880"},"sp":1.0,"sa":1.0},{"id":"m-2210","tier":"medium","text":"WAYBILL / POD COMBO SHEET\n\nDeliver To:  Ozark Trail Outfitters \u2014 consignee\n             Springfield\nShip From:   Ridgeline Canvas & Gear \u2014 shipper\n             Tulsa\n\nClass:       100        Shipped: 03/16/2026\nWeight:      5,540 lbs  Delivered: 03/17/2026\nCharges:     $612.00 flat, all-in\n\nReceived in good order except 1 carton crushed (noted).\n","gold":{"shipper_name":"Ridgeline Canvas & Gear","consignee_name":"Ozark Trail Outfitters","origin_city":"Tulsa","destination_city":"Springfield","ship_date":"2026-03-16","weight_lbs":"5540","freight_class":"100","total_charge_usd":"612.00"},"prompted":{"consignee_name":"Ozark Trail Outfitters","destination_city":"Springfield","freight_class":"100","origin_city":"Ridgeline Canvas & Gear","ship_date":"2026-03-16","shipper_name":"Ridgeline Canvas & Gear","total_charge_usd":"612.00","weight_lbs":"5540"},"adapted":{"consignee_name":"Ozark Trail Outfitters","destination_city":"Springfield","freight_class":"100","origin_city":"Tulsa","ship_date":"2026-03-17","shipper_name":"Ridgeline Canvas & Gear","total_charge_usd":"612.00","weight_lbs":"5540"},"sp":0.875,"sa":0.875},{"id":"m-2211","tier":"medium","text":"MEMO WAYBILL \u2014 INTERPLANT TRANSFER\n\nThis covers the transfer of finished goods between our own sites.\nShipping entity: Halverson Foods Plant 2\nReceiving entity: Halverson Foods DC East\nOut of: Cedar Rapids       Into: Rockford\nMoved on: the 14th day of June, 2026\nScale: 24,600 lbs gross\nClass 65 per standing agreement\nIntercompany freight charge booked: $1,310.00\n","gold":{"shipper_name":"Halverson Foods Plant 2","consignee_name":"Halverson Foods DC East","origin_city":"Cedar Rapids","destination_city":"Rockford","ship_date":"2026-06-14","weight_lbs":"24600","freight_class":"65","total_charge_usd":"1310.00"},"prompted":{"consignee_name":"Halverson Foods Plant 2","destination_city":"Rockford","freight_class":"65","origin_city":"Cedar Rapids","ship_date":"2026-06-14","shipper_name":"Halverson Foods DC East","total_charge_usd":"1310.00","weight_lbs":"24600"},"adapted":{"consignee_name":"Rockford","destination_city":"Rockford","freight_class":"65","origin_city":"Cedar Rapids","ship_date":"2026-06-14","shipper_name":"Halverson Foods DC East","total_charge_usd":"1310.00","weight_lbs":"24600"},"sp":0.75,"sa":0.75},{"id":"m-2212","tier":"medium","text":"WAYBILL \u2014 PARTIAL TRUCKLOAD\n\nQuote ref: PTL-2026-448 (quoted 5/28, shipped later)\nShipper:   Bighorn Composite Panels\nConsignee: Summit Modular Builders\nOrigin:    Casper\nDest:      Bozeman\nActual ship date: June 2, 2026\nWeight:    15,200 lbs     Class: 70\nCharges:   $1,688.25 (includes $120 tarp fee)\n","gold":{"shipper_name":"Bighorn Composite Panels","consignee_name":"Summit Modular Builders","origin_city":"Casper","destination_city":"Bozeman","ship_date":"2026-06-02","weight_lbs":"15200","freight_class":"70","total_charge_usd":"1688.25"},"prompted":{"consignee_name":"Summit Modular Builders","destination_city":"Bozeman","freight_class":"70","origin_city":"Casper","ship_date":"2026-06-02","shipper_name":"Bighorn Composite Panels","total_charge_usd":"1688.25","weight_lbs":"15200"},"adapted":{"consignee_name":"Summit Modular Builders","destination_city":"Bozeman","freight_class":"70","origin_city":"Casper","ship_date":"2026-06-02","shipper_name":"Bighorn Composite Panels","total_charge_usd":"1688.25","weight_lbs":"15200"},"sp":1.0,"sa":1.0},{"id":"x-4401","tier":"mixed","text":"WAYBILL CARD\n\nBeaumont | Lake Charles lane\nShipper: Spindletop Valve & Gauge\nConsignee: Acadiana Process Controls\nClass 70 \u2014 4,415 lbs \u2014 shipped 2026-03-25\nCharges: $529.85\n","gold":{"shipper_name":"Spindletop Valve & Gauge","consignee_name":"Acadiana Process Controls","origin_city":"Beaumont","destination_city":"Lake Charles","ship_date":"2026-03-25","weight_lbs":"4415","freight_class":"70","total_charge_usd":"529.85"},"prompted":{"consignee_name":"Acadiana Process Controls","destination_city":"Lake Charles","freight_class":"70","origin_city":"Spindletop Valve & Gauge","ship_date":"2026-03-25","shipper_name":"Spindletop Valve & Gauge","total_charge_usd":"529.85","weight_lbs":"4415"},"adapted":{"consignee_name":"Acadiana Process Controls","destination_city":"Lake Charles","freight_class":"70","origin_city":"Spindletop","ship_date":"2026-03-25","shipper_name":"Spindletop Valve & Gauge","total_charge_usd":"529.85","weight_lbs":"4415"},"sp":0.875,"sa":0.875},{"id":"x-4403","tier":"mixed","text":"WAYBILL \u2014 RETURN AUTHORIZATION ATTACHED (RA# 5512)\n\nReturning party (shipper on this move): Canyon Gear Retail Returns\nReceiving party (consignee): Vertex Outdoor Mfg.\nOrigin: Denver     Destination: Ogden\nShip date: 7/7/26\nWeight: 3,340 lbs   Class: 125\nCharges: $415.60 (return freight, collect)\n","gold":{"shipper_name":"Canyon Gear Retail Returns","consignee_name":"Vertex Outdoor Mfg.","origin_city":"Denver","destination_city":"Ogden","ship_date":"2026-07-07","weight_lbs":"3340","freight_class":"125","total_charge_usd":"415.60"},"prompted":{"consignee_name":"Vertex Outdoor Mfg.","destination_city":"Ogden","freight_class":"125","origin_city":"Denver","ship_date":"2026-07-07","shipper_name":"Canyon Gear Retail Returns","total_charge_usd":"415.60","weight_lbs":"3340"},"adapted":{"consignee_name":"Vertex Outdoor Mfg.","destination_city":"Ogden","freight_class":"125","origin_city":"Denver","ship_date":"2026-07-07","shipper_name":"Canyon Gear Retail Returns","total_charge_usd":"415.60","weight_lbs":"3340"},"sp":1.0,"sa":1.0},{"id":"x-4404","tier":"mixed","text":"EXPEDITED WAYBILL *** TEAM SERVICE ***\n\nSHPR Bayline Pharma Packaging / NEW HAVEN\nCNEE Commonwealth Rx Depot / PROVIDENCE\nSHIPPED 2026-01-08   CL 92.5   WT 1,180 LBS\nTOTAL CHGS $611.90 (expedite premium included)\n","gold":{"shipper_name":"Bayline Pharma Packaging","consignee_name":"Commonwealth Rx Depot","origin_city":"New Haven","destination_city":"Providence","ship_date":"2026-01-08","weight_lbs":"1180","freight_class":"92.5","total_charge_usd":"611.90"},"prompted":{"consignee_name":"Commonwealth Rx Depot","destination_city":"Providence","freight_class":"92.5","origin_city":"Bayline Pharma Packaging","ship_date":"2026-01-08","shipper_name":"New Haven Pharmacy","total_charge_usd":"611.90","weight_lbs":"1180"},"adapted":{"consignee_name":"Commonwealth Rx Depot","destination_city":"PROVIDENCE","freight_class":"92.5","origin_city":"NEW HAVEN","ship_date":"2026-01-08","shipper_name":"Bayline Pharma Packaging","total_charge_usd":"611.90","weight_lbs":"1180"},"sp":0.75,"sa":1.0},{"id":"x-4407","tier":"mixed","text":"WAYBILL WORKSHEET (typed from phone call)\n\ncaller gave: shipper \"Loess Hills Popcorn Co\", consignee \"Cornbelt\nSnack Distributors\", moving Council Bluffs to Des Moines, ships\nthe 9th of September 2026, about 8,700 lbs \u2014 scale later confirmed\n8,655 lbs exactly, use scale figure. class 60. charges quoted and\nlocked at $644.75.\n","gold":{"shipper_name":"Loess Hills Popcorn Co","consignee_name":"Cornbelt Snack Distributors","origin_city":"Council Bluffs","destination_city":"Des Moines","ship_date":"2026-09-09","weight_lbs":"8655","freight_class":"60","total_charge_usd":"644.75"},"prompted":{"consignee_name":"Cornbelt Snack Distributors","destination_city":"Des Moines","freight_class":"60","origin_city":"Council Bluffs","ship_date":"2026-09-09","shipper_name":"Loess Hills Popcorn Co","total_charge_usd":"644.75","weight_lbs":"8655"},"adapted":{"consignee_name":"Cornbelt Snack Distributors","destination_city":"Des Moines","freight_class":"60","origin_city":"Cincinnati","ship_date":"2026-09-09","shipper_name":"Loess Hills Popcorn Co","total_charge_usd":"644.75","weight_lbs":"8655"},"sp":1.0,"sa":0.875},{"id":"x-4413","tier":"mixed","text":"CONSOLIDATED WAYBILL \u2014 ONE SHIPPER, ONE CNEE, 3 HANDLING UNITS\n\nHU1: crated pump, 2,100 lbs\nHU2: skid of hose, 1,450 lbs\nHU3: fittings box, 275 lbs\nTOTAL WEIGHT: 3,825 lbs        CLASS (all): 70\nShipper: Cataract Pump & Irrigation\nConsignee: Orchard Mesa Water District\nOrigin: Grand Junction   Destination: Montrose\nShip date: 3/31/26\nTotal charges: $451.15\n","gold":{"shipper_name":"Cataract Pump & Irrigation","consignee_name":"Orchard Mesa Water District","origin_city":"Grand Junction","destination_city":"Montrose","ship_date":"2026-03-31","weight_lbs":"3825","freight_class":"70","total_charge_usd":"451.15"},"prompted":{"consignee_name":"Orchard Mesa Water District","destination_city":"Montrose","freight_class":"70","origin_city":"Grand Junction","ship_date":"2026-03-31","shipper_name":"Cataract Pump & Irrigation","total_charge_usd":"451.15","weight_lbs":"3825"},"adapted":{"consignee_name":"Orchard Mesa Water District","destination_city":"Montrose","freight_class":"70","origin_city":"Grand Junction","ship_date":"2026-03-31","shipper_name":"Cataract Pump & Irrigation","total_charge_usd":"451.15","weight_lbs":"3825"},"sp":1.0,"sa":1.0},{"id":"x-4414","tier":"mixed","text":"WAYBILL \u2014 WEIGHT CORRECTED IN TRANSIT\n\nShipper: Kettle Moraine Castings\nConsignee: Badger State Machine\nOrigin: Sheboygan    Destination: Madison\nShip date: 2026-05-19\nWeight as tendered: 13,700 lbs\nREWEIGH (governs billing): 14,150 lbs\nClass: 60\nCharges after reweigh: $1,077.90 (was $1,043.50)\n","gold":{"shipper_name":"Kettle Moraine Castings","consignee_name":"Badger State Machine","origin_city":"Sheboygan","destination_city":"Madison","ship_date":"2026-05-19","weight_lbs":"14150","freight_class":"60","total_charge_usd":"1077.90"},"prompted":{"consignee_name":"Badger State Machine","destination_city":"Madison","freight_class":"60","origin_city":"Sheboygan","ship_date":"2026-05-19","shipper_name":"Kettle Moraine Castings","total_charge_usd":"1077.90","weight_lbs":"14150"},"adapted":{"consignee_name":"Badger State Machine","destination_city":"Madison","freight_class":"60","origin_city":"Sheboygan","ship_date":"2026-05-19","shipper_name":"Kettle Moraine Castings","total_charge_usd":"1077.90","weight_lbs":"14150"},"sp":1.0,"sa":1.0},{"id":"x-4415","tier":"mixed","text":"WAYBILL \u2014 ALL LOWERCASE TELETYPE STYLE\n\nshpr caprock cotton compress llc\ncnee llano estacado textiles\norig lubbock dest abilene\nshipdate 10/28/26 class 55\nwt 19,350 lbs chgs $1,201.35 ppd\n","gold":{"shipper_name":"caprock cotton compress llc","consignee_name":"llano estacado textiles","origin_city":"Lubbock","destination_city":"Abilene","ship_date":"2026-10-28","weight_lbs":"19350","freight_class":"55","total_charge_usd":"1201.35"},"prompted":{"consignee_name":"Lubbock Textiles LLC","destination_city":"Abilene","freight_class":"55","origin_city":"Lubbock","ship_date":"2026-10-28","shipper_name":"Caprock Cotton Compress LLC","total_charge_usd":"1201.35","weight_lbs":"19350"},"adapted":{"consignee_name":"Lubbock Dest.","destination_city":"Abilene","freight_class":"55","origin_city":"Lubbock","ship_date":"2026-10-28","shipper_name":"CNE Lago Estacado Textiles","total_charge_usd":"1201.35","weight_lbs":"19350"},"sp":0.875,"sa":0.75},{"id":"x-4416","tier":"mixed","text":"WAYBILL\n\nShipper: Green Mountain Maple Exchange\nConsignee: Harborview Specialty Foods\nOrigin: Montpelier\nDestination: Portsmouth\nShip date: 2026-03-02  (do not confuse with order date 2/27/26)\nWeight: 4,060 lbs\nClass: 77.5\nTotal charges: $377.25\n","gold":{"shipper_name":"Green Mountain Maple Exchange","consignee_name":"Harborview Specialty Foods","origin_city":"Montpelier","destination_city":"Portsmouth","ship_date":"2026-03-02","weight_lbs":"4060","freight_class":"77.5","total_charge_usd":"377.25"},"prompted":{"consignee_name":"Harborview Specialty Foods","destination_city":"Portsmouth","freight_class":"77.5","origin_city":"Montpelier","ship_date":"2026-03-02","shipper_name":"Green Mountain Maple Exchange","total_charge_usd":"377.25","weight_lbs":"4060"},"adapted":{"consignee_name":"Harborview Specialty Foods","destination_city":"Portsmouth","freight_class":"77.5","origin_city":"Montpelier","ship_date":"2026-03-02","shipper_name":"Green Mountain Maple Exchange","total_charge_usd":"377.25","weight_lbs":"4060"},"sp":1.0,"sa":1.0},{"id":"x-4419","tier":"mixed","text":"FREIGHT WAYBILL \u2014 CENTS OMITTED IN TOTAL BOX\n\nShipper: Iron Range Fabrication\nConsignee: Superior Dockyards\nOrigin: Hibbing     Destination: Duluth\nShip date: 2026-09-17\nWeight: 20,150 lbs  Class: 60\nTOTAL BOX: $1,344   (itemization: $1,204.00 LH + $140.00 FSC)\n","gold":{"shipper_name":"Iron Range Fabrication","consignee_name":"Superior Dockyards","origin_city":"Hibbing","destination_city":"Duluth","ship_date":"2026-09-17","weight_lbs":"20150","freight_class":"60","total_charge_usd":"1344.00"},"prompted":{"consignee_name":"Superior Dockyards","destination_city":"Duluth","freight_class":"60","origin_city":"Hibbing","ship_date":"2026-09-17","shipper_name":"Iron Range Fabrication","total_charge_usd":"1344","weight_lbs":"20150"},"adapted":{"consignee_name":"Superior Dockyards","destination_city":"Duluth","freight_class":"60","origin_city":"Hibbing","ship_date":"2026-09-17","shipper_name":"Iron Range Fabrication","total_charge_usd":"1344.00","weight_lbs":"20150"},"sp":1.0,"sa":1.0}];
+const KEYS = ["shipper_name","consignee_name","origin_city","destination_city","ship_date","weight_lbs","freight_class","total_charge_usd"];
+const norm = v => String(v ?? "").toLowerCase().replace(/\s+/g," ").trim().replace(/,/g,"");
+const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const f2 = n => n.toFixed(3);
+
+function renderFields(target, footEl, pred, gold){
+  const box = document.getElementById(target);
+  box.innerHTML = "";
+  if (pred === null || pred === undefined){
+    box.innerHTML = '<div class="frow"><span class="fkey">&mdash;</span><span class="fval"><span class="x">no valid JSON returned</span></span></div>';
+    footEl.textContent = "Scored 0. An unparseable answer is not a low score in a pipeline; it is a failed record.";
+    return;
+  }
+  let hit = 0;
+  for (const k of KEYS){
+    const g = gold[k], p = pred[k];
+    const ok = p !== undefined && norm(p) === norm(g);
+    if (ok) hit++;
+    const val = p === undefined
+      ? '<span class="none">not returned</span>'
+      : (ok ? "<mark>"+esc(p)+"</mark>" : '<span class="x">'+esc(p)+"</span>");
+    box.insertAdjacentHTML("beforeend",
+      '<div class="frow"><span class="fkey">'+k+'</span><span class="fval">'+val+"</span></div>");
+  }
+  const extras = Object.keys(pred).filter(k => !KEYS.includes(k));
+  for (const k of extras){
+    box.insertAdjacentHTML("beforeend",
+      '<div class="frow extra"><span class="fkey">'+esc(k)+'</span><span class="fval"><span>'+esc(String(pred[k]))+"</span></span></div>");
+  }
+  footEl.textContent = hit + " of 8 schema fields correct"
+    + (extras.length ? " · " + extras.length + " key" + (extras.length>1?"s":"") + " invented outside the schema" : "");
+}
+
+function select(id){
+  const d = DOCS.find(x => x.id === id);
+  document.getElementById("d-text").textContent = d.text;
+  document.getElementById("d-tier").textContent = d.tier + " tier";
+  document.getElementById("p-score").textContent = f2(d.sp);
+  document.getElementById("a-score").textContent = f2(d.sa);
+  document.getElementById("p-score").className = "cscore " + (d.sp < d.sa ? "down" : "");
+  document.getElementById("a-score").className = "cscore " + (d.sa > d.sp ? "up" : d.sa < d.sp ? "down" : "");
+  renderFields("p-fields", document.getElementById("p-foot"), d.prompted, d.gold);
+  renderFields("a-fields", document.getElementById("a-foot"), d.adapted, d.gold);
+  for (const b of document.querySelectorAll(".chip"))
+    b.setAttribute("aria-pressed", String(b.dataset.id === id));
+}
+
+const rail = document.getElementById("rail");
+for (const d of DOCS){
+  const delta = d.sa - d.sp;
+  const cls = delta > 1e-9 ? "up" : delta < -1e-9 ? "down" : "flat";
+  const sign = delta > 1e-9 ? "+" : delta < -1e-9 ? "−" : "±";
+  const b = document.createElement("button");
+  b.className = "chip"; b.dataset.id = d.id; b.type = "button";
+  b.setAttribute("aria-pressed","false");
+  b.innerHTML = '<span class="cid">'+d.id+'</span><span class="cdelta '+cls+'">'+sign+Math.abs(delta).toFixed(2)+"</span>";
+  b.addEventListener("click", () => select(d.id));
+  rail.appendChild(b);
+}
+
+const mp = DOCS.reduce((s,d)=>s+d.sp,0)/DOCS.length;
+const ma = DOCS.reduce((s,d)=>s+d.sa,0)/DOCS.length;
+document.getElementById("v-p").textContent = f2(mp);
+document.getElementById("v-a").textContent = f2(ma);
+document.getElementById("v-d").textContent = "+" + f2(ma-mp);
+const w = DOCS.filter(d=>d.sa-d.sp>1e-9).length, l = DOCS.filter(d=>d.sa-d.sp<-1e-9).length;
+document.getElementById("v-s").textContent = w+"W/"+l+"L/"+(DOCS.length-w-l)+"T";
+document.getElementById("v-s").classList.add("bad");
+select("m-2201");
+</script>
