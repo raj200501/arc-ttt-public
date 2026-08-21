@@ -1322,3 +1322,27 @@ context ceiling for every tenant on this corpus, while doc-only
 prompts run ~150 tokens (~54x headroom) — a measured structural limit
 of context-carried quality; (b) the mechanism behind seed 2's doc-only
 quality gap is OPEN — the F.4 conjecture is withdrawn, not replaced.
+
+**P12 — B.9.4's receipt CI, and an unrecorded in-place edit (2026-08-21).**
+(a) The receipt-level CI read [42.9, 49.4] in B.9.4 and [42.8, 49.4] in
+the banked artifact. Cause: `verify_verdict.py` used the normal quantile
+(1.96) for the receipt interval while using a t quantile for the cluster
+interval in the same function, and `novel_schema_summary` — the
+authorized reader that produced the artifact — used t throughout. The
+0.033 F1-point gap sat inside that script's own 1e-3 cross-check
+tolerance, so nothing ever failed. The script now uses t for both; the
+correct value is **[42.8, 49.4]**, and `tests/test_readers_agree.py`
+pins the readers together so a future divergence is loud.
+(b) The B.9.4 figure was edited in place from 42.8 to 42.9 on 2026-08-19
+with no erratum — precisely what P3 forbids. The frozen text stands as
+written and this entry is the correction, per A.5.
+
+**P13 — P11(a) rescoped (2026-08-21).** P11 stated that demo-context
+serving at k=30 "operates AT its context ceiling for every tenant on this
+corpus." That holds for the fixed-geometry B corpus (98-100% of the 8192
+budget) but not universally: the E-r2 tenants, screened for budget fit
+before any arm ran, measure 6,619-7,447 decode tokens (81-91%). The
+ceiling binds where the shape is fixed. The related product limit stands
+and is worth stating plainly: a 12-field schema at k=30 overflows the
+frozen budget entirely (seed 101 returned 60/60 no-completion), so
+demo-context serving cannot reach wide-schema tenants at that k at all.

@@ -105,7 +105,14 @@ def main() -> int:
     n = len(deltas_all)
     mean = sum(deltas_all) / n
     sd = math.sqrt(sum((d - mean) ** 2 for d in deltas_all) / (n - 1))
-    half = 1.96 * sd / math.sqrt(n)
+    # t, not z. This function already uses t(0.975, df=2) for the cluster
+    # interval below; using the normal quantile for the receipt interval was
+    # an internal inconsistency that put this script 0.03 F1 points away
+    # from the artifact its own cross-check validates — inside the 1e-3
+    # tolerance, so it never surfaced, and it made VERDICT.md's "check it"
+    # column disagree with VERDICT.md's number. df=157 -> 1.980, matching
+    # novel_schema_summary.t95, which is the authorized reader.
+    half = 1.980 * sd / math.sqrt(n)
     ci_lo, ci_hi = mean - half, mean + half
 
     cmean = sum(seed_deltas) / 3

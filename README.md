@@ -2,9 +2,11 @@
 
 [![verify](https://github.com/raj200501/arc-ttt-public/actions/workflows/tests.yml/badge.svg)](https://github.com/raj200501/arc-ttt-public/actions/workflows/tests.yml)
 
-On every push, a GitHub-hosted runner — not this laptop — recomputes each
-headline verdict from the per-receipt artifacts and re-scores stored
-predictions against regenerated gold. The log is public and needs nothing
+On every push, a GitHub-hosted runner — not this laptop — recomputes the gate-1,
+gate-3 and gate-5 verdicts from the per-receipt artifacts and re-scores a
+gate-4 artifact against regenerated gold. (The CORD negative in gate 2
+has no recompute step — stated so the badge does not imply more coverage
+than it has.) The log is public and needs nothing
 installed. **This is not an independent replication:** our code, our
 artifacts, our workflow. It audits the arithmetic and the scoring, not
 the data distribution — that is what the blind-holdout offer is for.
@@ -15,7 +17,7 @@ actually fail.
 preregistered, reproducible evals — failures published beside passes.**
 Every headline number reconciles to a machine-readable artifact
 (`VERDICT.md` is the map). Preregistration ordering: the spec's later
-gates (Addenda D/E/F onward) are Bitcoin-anchored via OpenTimestamps
+gates (Addenda D/E/F onward) are chain-anchored (OpenTimestamps, Bitcoin)
 before their data existed; the original gate's 2026-08-12 freeze
 predates the first anchor and rests on git history — stated plainly,
 and the gates from D onward are chain-anchored pre-data — with one
@@ -24,7 +26,7 @@ bar and decision rule are in the chain-anchored snapshot, while the
 E-r2 measurability amendment (the compacted geometry and the token
 screen) was git-committed before its data and anchored the following
 day. Verification
-is one command:
+is two commands (three if you want the Addendum E gate too):
 
     python3 scripts/verify_verdict.py
     python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json
@@ -33,6 +35,10 @@ is one command:
 over six fresh shape-varying tenants against a +5 bar frozen before the
 data existed, 340W/5L/15T over 360 paired documents, zero excluded.
 Recompute it: `python3 scripts/addendum_e_summary.py`.
+
+**Every number we have withdrawn or revised is on one page:**
+[`CORRECTIONS.md`](CORRECTIONS.md) — including the ones that moved a
+headline, and the defects we found in our own verification path.
 
 **In a hurry? [`EVIDENCE.md`](EVIDENCE.md) is the whole ladder on one
 page** — five preregistered gates in the order they happened (two of
@@ -63,9 +69,10 @@ survived repeated infrastructure kill-strikes during the gate.
 
 
 **The protocol has run once, end to end (2026-08-20):** a labeled
-DRESS REHEARSAL — an adversarial AI agent authored 50 out-of-
-distribution waybills, kept its gold, and scored our blind single
-submission once: 0.8792 mean micro-F1, 30/30 valid JSON, hard tier
+DRESS REHEARSAL — an adversarial AI agent WE RAN OURSELVES, in a separate
+session on the same host, authored 50 out-of-distribution waybills,
+withheld its gold from us, and scored our blind single submission
+once: 0.8792 mean micro-F1, 30/30 valid JSON, hard tier
 0.679, failure taxonomy published (agent-authored corpus, NOT a real
 tenant — the row in VERDICT.md carries the full label).
 `experiments/blind_rehearsal_2026-08-20.json` has per-document scores.
@@ -110,7 +117,9 @@ scoring scripts above are stdlib-only and need none of this):
 pip install torch --index-url https://download.pytorch.org/whl/cpu
 pip install -e .
 bash demo/run_endpoint_demo.sh   # ~6-10 min on a 4-core CPU box
-``` To re-run the
+```
+
+To re-run the
 underlying experiment itself, any free Kaggle account suffices — the
 kernel entries under `kaggle/` are the exact runners that produced the
 artifacts. If you find any claim in this README not backed by its cited

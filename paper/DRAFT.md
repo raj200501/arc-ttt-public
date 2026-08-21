@@ -660,7 +660,7 @@ checkpoint/resume layer added when an external canceller repeatedly
 killed 13-hour runs — decided GO on its
 preregistered terms: mean paired delta +46.5 micro-F1 over seeds
 {1,2,3} against a +5 bar frozen before any data (receipt-level sign
-test 156W/0L; two unplanned same-environment replications agreeing to
+test 156W/0L/2T; two unplanned same-environment replications agreeing to
 0.002-0.010). The full novel-schema study is its own artifact
 (ENTERPRISE_EVAL_SPEC.md Addendum B and the novel_schema_* records in
 experiments/), reported here only because this incident's repair — the

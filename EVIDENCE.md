@@ -11,9 +11,11 @@ that is a bug — open an issue.
 
 [![verify](https://github.com/raj200501/arc-ttt-public/actions/workflows/tests.yml/badge.svg)](https://github.com/raj200501/arc-ttt-public/actions/workflows/tests.yml)
 
-On every push, a GitHub-hosted runner — not this laptop — recomputes each
-headline verdict from the per-receipt artifacts and re-scores stored
-predictions against regenerated gold. The log is public and needs nothing
+On every push, a GitHub-hosted runner — not this laptop — recomputes the gate-1,
+gate-3 and gate-5 verdicts from the per-receipt artifacts and re-scores a
+gate-4 artifact against regenerated gold. (The CORD negative in gate 2
+has no recompute step — stated so the badge does not imply more coverage
+than it has.) The log is public and needs nothing
 installed. **This is not an independent replication:** our code, our
 artifacts, our workflow. It audits the arithmetic and the scoring, not
 the data distribution — that is what the blind-holdout offer is for.
@@ -57,7 +59,7 @@ Today the cheap API wins on cost on this corpus, cold caches included. The GPU c
 
 The standing offer: **you** split your own documents on your own machine, keep the gold labels, and score a single submission with a scorer pinned to a commit named in advance. Terms were frozen and timestamped before any challenger existed (`docs/research/BLIND_HOLDOUT_PROTOCOL.md`, OTS-anchored snapshot).
 
-It has been executed once, as a **labeled dress rehearsal**: an adversarial AI agent **I ran myself, in a separate session** authored 50 freight waybills outside this generator's distribution, withheld its gold from me, and scored one blind submission — **0.8792 mean micro-F1, 30/30 valid JSON**. By its author's difficulty tiers: easy 0.950, medium 0.931, mixed 0.944, **hard 0.679**. Its named failure modes: **no unit arithmetic** ("11.5 short tons" → 1150, not 23000), **role-order inversion** (shipper/consignee swapped when the layout inverts), and **fluent confabulation under heavy OCR** ("Ta11ahassee" → "Tampa") — the dangerous one in production, published here because it is true. The rehearsal's recorded verdict: *"it survived contact, it did not win it."*
+It has been executed once, as a **labeled dress rehearsal**: an adversarial AI agent **I ran myself** authored 50 freight waybills outside this generator's distribution, withheld its gold from me, and scored one blind submission — **0.8792 mean micro-F1, 30/30 valid JSON**. By its author's difficulty tiers: easy 0.950, medium 0.931, mixed 0.944, **hard 0.679**. Its named failure modes: **no unit arithmetic** ("11.5 short tons" → 1150, not 23000), **role-order inversion** (shipper/consignee swapped when the layout inverts), and **fluent confabulation under heavy OCR** ("Ta11ahassee" → "Tampa") — the dangerous one in production, published here because it is true. The rehearsal's recorded verdict: *"it survived contact, it did not win it."*
 
 **The corpus was agent-authored, the challenger was an AI agent, and I operated it — same session, same host. Gold was withheld in process and hash-committed before my submission, but that is procedural blindness, not third-party custody. This is a protocol-integrity and transfer signal, not a real tenant's documents.** The rehearsal also caught two gaps in the deliverables paperwork (a commit reference the challenger could not fetch; a base model pinned by mutable name), one now hard-gated in code (the runner refuses to emit an unpinned submission) and one documented in the runner.
 
@@ -72,7 +74,7 @@ python3 scripts/addendum_e_summary.py      # recomputes gate 5 under its frozen 
 python3 scripts/read_addendum_d.py         # recomputes the failure in row 3
 ```
 
-Both verdict scripts are dependency-free. To go past arithmetic to primary evidence,
+All three verdict scripts are dependency-free. To go past arithmetic to primary evidence,
 `python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json` re-scores every
 stored prediction against gold regenerated from the deterministic corpus generator —
 it checks the *predictions*, not the summaries. 167 offline tests, no downloads:
@@ -82,8 +84,12 @@ it checks the *predictions*, not the summaries. 167 offline tests, no downloads:
 
 ## Honest ledger
 
+Every claim withdrawn or revised, with its cause and date, is collected
+in [`CORRECTIONS.md`](CORRECTIONS.md) — self-correction only counts as
+evidence if it is countable.
+
 - **Zero customers.** No real-workload win exists. The blind-holdout offer is open precisely because that is the missing evidence.
 - **One tenant at 0.53** in the serving mode the economics depend on, and its mechanism is **OPEN** — an earlier explanation (document length) was tested against the banked data, was not supported, and was withdrawn on the record rather than quietly revised.
 - **Everything above is 0.5B.** Whether the margin holds at 1.5B–2B, where in-context learning is stronger, is measured next and publishes either way.
 - **The ARC Prize track this harness grew out of scored 1.67% public** across three submissions and is formally deprioritized. It is disclosed, not featured.
-- **Preregistration ordering:** gates from row 3 onward are SHA-256 Bitcoin-anchored with byte-exact snapshots shipped. One precision rather than a footnote: gate 5's +5 bar and decision rule are in the chain-anchored snapshot, while its measurability amendment (the compacted geometry and the token screen) was git-committed before its data and anchored the following day. The row-1 freeze (2026-08-12) predates the public repository and rests on private git history — stated plainly rather than implied.
+- **Preregistration ordering:** gates from row 3 onward are SHA-256 chain-anchored (OpenTimestamps, Bitcoin) with byte-exact snapshots shipped. One precision rather than a footnote: gate 5's +5 bar and decision rule are in the chain-anchored snapshot, while its measurability amendment (the compacted geometry and the token screen) was git-committed before its data and anchored the following day. The row-1 freeze (2026-08-12) predates the public repository and rests on private git history — stated plainly rather than implied.
