@@ -32,7 +32,7 @@ actually fail.
 | 2 | Does it also help on a **real public dataset** the model already knows (CORD receipts)? | **FAIL** | **−7.3 / −11.5 / −4.5 F1** at 0.5B / 1.5B / 4B. Failed its preregistered gates at all three scales. This is the scoping result: adaptation buys *novel-schema conformance*, not general extraction quality. |
 | 3 | Can a demo-trained adapter serve a **bare document** (no examples in the prompt)? | **FAIL** | **0.0000 F1, 0/60 valid JSON**, all three seeds — the adapter had encoded the schema as context-conditioned behavior, so a bare document elicited prose. Adapter contribution over no-adapter: **+0.0**. Published under the pre-written failure branch. |
 | 4 | Does training **on the serving configuration** fix that? | **PASS** | **+24.0 F1** seed-mean over the prompted baseline (+32.0/+5.5/+34.7; bar +5), CI low +22.3, 126W/19L. Honest cost: **−22.4 F1** vs the demo-context arm, and the absolute document-only scores are **0.9407 / 0.5282 / 0.7798** — one of three tenants sits at 0.53, and seed 2 cleared its bar by only +5.5. ~272 s to adapt one tenant. |
-| 5 | Is the effect just an artifact of **one fixed corpus shape**? | **PASS** | **+40.4 F1** seed-mean over **six fresh, shape-varying tenants** (+26.4/+46.4/+35.3/+37.6/+46.2/+50.2), cluster CI [+32.75, +47.95], receipt CI [+38.1, +42.6], sign test **340W/5L/15T**, **zero documents excluded** of 360. Seeds were screened for token budget *before* any arm ran, so the exclusions that cost gate 1 twenty-two receipts do not arise. All 12 arms re-scored from raw predictions. |
+| 5 | Is the effect just an artifact of **one fixed corpus shape**? | **PASS** | **+40.4 F1** seed-mean over **six fresh, shape-varying tenants** (+26.4/+46.4/+35.3/+37.6/+46.2/+50.2), cluster CI [+31.0, +49.7], receipt CI [+38.1, +42.6], sign test **340W/5L/15T**, **zero documents excluded** of 360. Seeds were screened for token budget *before* any arm ran, so the exclusions that cost gate 1 twenty-two receipts do not arise. All 12 arms re-scored from raw predictions. |
 
 **What gates 1–5 do not show:** every corpus above is **synthetic** — deterministically generated tenant schemas, not a customer's documents. The one real dataset tried is row 2, and it failed. That gap is the point of the blind-holdout offer below.
 
@@ -77,7 +77,7 @@ python3 scripts/read_addendum_d.py         # recomputes the failure in row 3
 All three verdict scripts are dependency-free. To go past arithmetic to primary evidence,
 `python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json` re-scores every
 stored prediction against gold regenerated from the deterministic corpus generator —
-it checks the *predictions*, not the summaries. 167 offline tests, no downloads:
+it checks the *predictions*, not the summaries. 174 offline tests, no downloads:
 `python3 -m pytest tests/ -q`.
 
 ---
@@ -89,6 +89,8 @@ in [`CORRECTIONS.md`](CORRECTIONS.md) — self-correction only counts as
 evidence if it is countable.
 
 - **Zero customers.** No real-workload win exists. The blind-holdout offer is open precisely because that is the missing evidence.
+- **The rehearsal has no baseline arm.** 0.8792 is an adapted score with nothing to subtract from it, so it cannot say what adaptation contributed — the exact comparison every gate row above is built on. The paired baseline is now a PENDING row in [`VERDICT.md`](VERDICT.md) with its bar (+5.0) frozen before the arm runs, and it publishes either way.
+- **A published interval was wrong in our favour, and an outside reader found it.** Gate 5's cluster CI read [+32.75, +47.95] because the quantile table in our own reader invented a value for six seeds instead of computing t at df=5. Corrected here to [+31.0, +49.7] — ~19% wider. The verdict is untouched (the lower bound clears the +5 bar six-fold), the cause is in [`CORRECTIONS.md`](CORRECTIONS.md), and the estimator is now computed rather than looked up.
 - **One tenant at 0.53** in the serving mode the economics depend on, and its mechanism is **OPEN** — an earlier explanation (document length) was tested against the banked data, was not supported, and was withdrawn on the record rather than quietly revised.
 - **Everything above is 0.5B.** Whether the margin holds at 1.5B–2B, where in-context learning is stronger, is measured next and publishes either way.
 - **The ARC Prize track this harness grew out of scored 1.67% public** across three submissions and is formally deprioritized. It is disclosed, not featured.

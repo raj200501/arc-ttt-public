@@ -1346,3 +1346,44 @@ ceiling binds where the shape is fixed. The related product limit stands
 and is worth stating plainly: a 12-field schema at k=30 overflows the
 frozen budget entirely (seed 101 returned 60/60 no-completion), so
 demo-context serving cannot reach wide-schema tenants at that k at all.
+
+**P14 — the quantile function was wrong for every small cluster, and an
+outside reader found it (2026-08-21).** `t95()` in `novel_schema_summary`
+— the authorized reader, and therefore the estimator behind every
+interval this spec publishes — was a lookup table whose smallest entry
+was df=39, with a fallback returning the invented constant `2.09` for
+anything below it. Consequences, in order of severity:
+
+(a) **Addendum E's cluster interval (E.5) is corrected from
+[+32.75, +47.95] to [+31.0, +49.7].** E clusters over six seeds, df=5,
+where t(0.975, 5) = 2.5706; the published interval was computed at 2.09,
+roughly t at df≈19, making it **~19% too narrow and too narrow in the
+direction that flatters the result**. The Addendum E verdict is
+unchanged: the decision rule is the seed-mean against the +5 bar, the
+corrected lower bound +31.0 clears it six-fold, and the sign test and
+receipt interval are unaffected. Per A.5 the frozen text stands and this
+entry is the correction.
+
+(b) **P12(a) is superseded.** P12 recorded the k=30 receipt CI as
+"[42.8, 49.4]" after repairing a normal-vs-t inconsistency. That repair
+transcribed the constant 1.980 in place of t at df=157 (1.9752), which
+is the entire reason the figure moved to 42.8. With the quantile computed
+rather than copied, the correct value is **[42.9, 49.4]** — the same
+value the frozen B.9.4 text carries, reached for a different reason than
+P12(b)'s unlogged edit assumed. Three successive published values of one
+number, each wrong for its own reason, every one of them a copied
+constant.
+
+(c) **Remedy, at the level of the class rather than the instances.** The
+table is deleted. `t95()` computes the exact Student-t quantile by
+bisecting its CDF over a continued-fraction regularized incomplete beta
+(stdlib only, so the verify path still runs with nothing installed), and
+`verify_verdict.py` imports it instead of carrying constants, so the
+project has exactly one estimator. `tests/test_readers_agree.py` checks
+the computed quantiles against published tables and fails on the
+*presence of any hardcoded quantile* in either reader — the cause, not
+the symptom.
+
+Finder credit: reported by an outside reader who recomputed the published
+interval from the artifacts rather than accepting it, per the standing
+offer in `CORRECTIONS.md`.

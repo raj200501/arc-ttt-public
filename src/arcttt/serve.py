@@ -1,7 +1,19 @@
 """Minimal adaptation endpoint: POST a task, get ranked predictions.
 
-The product seed as a service (HTTP layer is stdlib http.server — no web
-framework; the model stack requires torch + transformers):
+SCOPE, stated first because a reader came here looking for the company
+and found the side quest instead: this endpoint is ARC-SHAPED. It speaks
+the grid-task JSON of the ARC Prize track this harness grew out of, NOT
+the document -> tenant-schema JSON that the enterprise gates measure and
+that the product is about. It demonstrates the adaptation loop's serving
+shape; it is not the product surface. For the document path see
+`demo/endpoint_demo.py`, and `scripts/run_challenge.py` for a real
+blind-holdout run; the enterprise evidence is in VERDICT.md.
+
+Said plainly rather than fixed with a rename: the gap between this file
+and the pitch is real, and closing it is product work.
+
+HTTP layer is stdlib http.server — no web framework; the model stack
+requires torch + transformers:
 
     python -m arcttt.serve --model <hf-dir> --port 8332 [--raw-format --dfs]
 

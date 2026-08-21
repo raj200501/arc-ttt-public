@@ -33,6 +33,9 @@ import math
 import pathlib
 import sys
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from novel_schema_summary import t95  # noqa: E402  (single estimator authority)
+
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 EXP = ROOT / "experiments"
 DATE = "2026-08-12"  # spec-freeze date carried in artifact filenames
@@ -105,19 +108,20 @@ def main() -> int:
     n = len(deltas_all)
     mean = sum(deltas_all) / n
     sd = math.sqrt(sum((d - mean) ** 2 for d in deltas_all) / (n - 1))
-    # t, not z. This function already uses t(0.975, df=2) for the cluster
-    # interval below; using the normal quantile for the receipt interval was
-    # an internal inconsistency that put this script 0.03 F1 points away
-    # from the artifact its own cross-check validates — inside the 1e-3
-    # tolerance, so it never surfaced, and it made VERDICT.md's "check it"
-    # column disagree with VERDICT.md's number. df=157 -> 1.980, matching
-    # novel_schema_summary.t95, which is the authorized reader.
-    half = 1.980 * sd / math.sqrt(n)
+    # Both intervals below take their quantile from novel_schema_summary,
+    # the authorized reader, so there is exactly one estimator in the repo.
+    # Three rounds of this number were wrong for three different reasons:
+    # the normal quantile here where the reader used t; then a transcribed
+    # constant (1.980) standing in for t at df=157; and, in the reader
+    # itself, a lookup table that invented 2.09 for every df below 39.
+    # Copying a constant is how all three happened, so nothing is copied
+    # any more — t95() computes the quantile and both callers ask it.
+    half = t95(n - 1) * sd / math.sqrt(n)
     ci_lo, ci_hi = mean - half, mean + half
 
     cmean = sum(seed_deltas) / 3
     csd = math.sqrt(sum((d - cmean) ** 2 for d in seed_deltas) / 2)
-    chalf = 4.303 * csd / math.sqrt(3)  # t(0.975, df=2)
+    chalf = t95(2) * csd / math.sqrt(3)
 
     # exact binomial sign test, ties dropped, one-sided P(X >= wins)
     m = wins + losses

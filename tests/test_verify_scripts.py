@@ -73,6 +73,12 @@ def _verdict_tree(tmp_path: Path) -> Path:
     (tmp_path / "scripts").mkdir()
     (tmp_path / "experiments").mkdir()
     shutil.copy(VERIFY_VERDICT, tmp_path / "scripts" / "verify_verdict.py")
+    # verify_verdict.py imports its t-quantile from the authorized reader
+    # rather than carrying a second copy of the constant — copying a
+    # constant is what produced three separate wrong intervals. So the
+    # tamper tree needs both files.
+    shutil.copy(REPO / "scripts" / "novel_schema_summary.py",
+                tmp_path / "scripts" / "novel_schema_summary.py")
     for name in [*ARM_FILES, SUMMARY_FILE]:
         shutil.copy(EXP / name, tmp_path / "experiments" / name)
     return tmp_path / "scripts" / "verify_verdict.py"

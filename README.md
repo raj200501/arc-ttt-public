@@ -69,8 +69,8 @@ survived repeated infrastructure kill-strikes during the gate.
 
 
 **The protocol has run once, end to end (2026-08-20):** a labeled
-DRESS REHEARSAL — an adversarial AI agent WE RAN OURSELVES, in a separate
-session on the same host, authored 50 out-of-distribution waybills,
+DRESS REHEARSAL — an adversarial AI agent WE RAN OURSELVES, in the same
+working session on the same host, authored 50 out-of-distribution waybills,
 withheld its gold from us, and scored our blind single submission
 once: 0.8792 mean micro-F1, 30/30 valid JSON, hard tier
 0.679, failure taxonomy published (agent-authored corpus, NOT a real
@@ -142,7 +142,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 167 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 174 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -203,7 +203,7 @@ sharpening. No claims beyond the artifacts in `experiments/`.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 167 offline tests (tiny in-test models; no downloads).
+- `tests/` — 174 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

@@ -1,66 +1,143 @@
-"""The two verdict readers must not disagree about the same interval.
+"""One estimator, one number — enforced, because it failed three times.
 
-`verify_verdict.py` used the normal quantile (1.96) for the receipt-level
-interval while using a t quantile for the cluster interval in the same
-function — and `novel_schema_summary.py`, the authorized reader that
-produced the banked artifact, used t throughout. The gap was 0.03 F1
-points: comfortably inside the script's own 1e-3 cross-check tolerance,
-so it never failed, and it put VERDICT.md's number (42.8, from the
-artifact) at odds with the command VERDICT.md tells you to run (which
-printed 42.9).
+History of a single published figure, the k=30 receipt-level CI lower
+bound, which has now been wrong for three different reasons:
 
-That is the exact failure the whole verification stack exists to
-prevent: two authorities, one number, no alarm. These tests make any
-future divergence loud.
+  1. `verify_verdict.py` used the normal quantile (1.96) for the receipt
+     interval while using t for the cluster interval in the same
+     function. The authorized reader used t throughout. Gap: 0.03 F1 --
+     inside the script's own 1e-3 cross-check tolerance, so nothing ever
+     failed, and VERDICT.md's number disagreed with the command VERDICT.md
+     told you to run.
+  2. The repair transcribed a constant (1.980) instead of asking the
+     reader for its quantile. It was closer, and still not t at df=157.
+  3. The reader's own `t95()` was a lookup table starting at df=39 with a
+     fallback that returned the invented value 2.09 below it. Addendum E
+     (df=5, true t=2.5706) therefore published a cluster interval ~19%
+     too narrow -- in the flattering direction. An outside reader found
+     this one by recomputing from our artifacts (erratum P13).
+
+Every one of the three was a copied constant. So the tests below pin the
+absence of copies, not the value of any particular interval: t95() is
+computed exactly, both readers call it, and VERDICT.md quotes what the
+script prints.
+
+Note on the banked artifact: its stored `ci95` field was computed by the
+defective estimator, and it is NOT rewritten -- artifacts are frozen and
+corrections sit beside them. So the check below recomputes the interval
+from the artifact's raw per-receipt records, which is the primary
+evidence and is unaffected. That is the repo's own rule ("summary not
+trusted") applied to its own summary.
 """
 
 from __future__ import annotations
 
 import json
+import math
 import re
 import subprocess
 import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-ARTIFACT = REPO / "experiments" / "novel_schema_summary_2026-08-12.json"
+SCRIPTS = REPO / "scripts"
+EXP = REPO / "experiments"
+DATE = "2026-08-12"
+SEEDS = (1, 2, 3)
+
+sys.path.insert(0, str(SCRIPTS))
+from novel_schema_summary import t95  # noqa: E402
 
 
 def _verify_verdict_output() -> str:
     result = subprocess.run(
-        [sys.executable, str(REPO / "scripts" / "verify_verdict.py")],
+        [sys.executable, str(SCRIPTS / "verify_verdict.py")],
         capture_output=True, text=True, cwd=REPO, timeout=300,
     )
     assert result.returncode == 0, result.stderr[-2000:]
     return result.stdout
 
 
-def test_receipt_interval_matches_the_banked_artifact() -> None:
-    stored = json.loads(ARTIFACT.read_text())["gate_k30"]["receipt_level"]["ci95"]
+def _printed_receipt_ci() -> tuple[str, str]:
     printed = re.search(r"receipt-level 95% CI \[([\d.]+), ([\d.]+)\]",
                         _verify_verdict_output())
     assert printed, "verify_verdict.py no longer prints the receipt CI"
-    for stored_value, printed_value in zip(stored, printed.groups()):
-        assert round(stored_value * 100, 1) == float(printed_value), (
-            f"reader disagreement: artifact {stored_value * 100:.4f} vs "
-            f"printed {printed_value}")
+    return printed.group(1), printed.group(2)
+
+
+def _paired_deltas_from_raw_receipts() -> list[float]:
+    """Rebuild the paired deltas from primary records, ignoring summaries."""
+    deltas: list[float] = []
+    for seed in SEEDS:
+        arms = {}
+        for arm in ("adapted", "kshot"):
+            path = EXP / f"novel_schema_0.5b_k30_seed{seed}_{arm}_{DATE}.json"
+            arms[arm] = {
+                row["index"]: row["micro_f1"]
+                for row in json.loads(path.read_text())["results"]
+                if "micro_f1" in row
+            }
+        for index in sorted(set(arms["adapted"]) & set(arms["kshot"])):
+            deltas.append(arms["adapted"][index] - arms["kshot"][index])
+    return deltas
+
+
+def test_receipt_interval_matches_a_recompute_from_raw_receipts() -> None:
+    deltas = _paired_deltas_from_raw_receipts()
+    n = len(deltas)
+    assert n == 158, f"expected 158 paired receipts, rebuilt {n}"
+    mean = sum(deltas) / n
+    sd = math.sqrt(sum((d - mean) ** 2 for d in deltas) / (n - 1))
+    half = t95(n - 1) * sd / math.sqrt(n)
+    for expected, printed in zip((mean - half, mean + half),
+                                 _printed_receipt_ci()):
+        assert round(expected * 100, 1) == float(printed), (
+            f"reader disagreement: raw-receipt recompute "
+            f"{expected * 100:.4f} vs printed {printed}")
 
 
 def test_verdict_md_quotes_the_same_interval_the_script_prints() -> None:
     """The 'check it' column must not contradict the number beside it."""
-    printed = re.search(r"receipt-level 95% CI \[([\d.]+), ([\d.]+)\]",
-                        _verify_verdict_output())
-    assert printed
-    lo, hi = printed.groups()
+    lo, hi = _printed_receipt_ci()
     verdict = (REPO / "VERDICT.md").read_text(encoding="utf-8")
     assert f"receipt-level [{lo}, {hi}]" in verdict, (
         f"VERDICT.md does not carry the interval the script prints "
         f"([{lo}, {hi}])")
 
 
-def test_both_readers_use_the_same_multiplier() -> None:
-    """Guard the cause, not just the symptom."""
-    source = (REPO / "scripts" / "verify_verdict.py").read_text()
-    assert "1.96 * sd" not in source, (
-        "verify_verdict.py is using the normal quantile for the receipt "
-        "interval again; the authorized reader uses t")
+def test_no_reader_carries_a_hardcoded_quantile() -> None:
+    """Guard the cause of all three failures: a copied constant."""
+    banned = ("1.96 * sd", "1.980 *", "4.303 *", "2.09")
+    for name in ("verify_verdict.py", "addendum_e_summary.py"):
+        source = (SCRIPTS / name).read_text()
+        # comments narrate this history on purpose; only code counts
+        code = "\n".join(line.split("#")[0] for line in source.splitlines())
+        for constant in banned:
+            assert constant not in code, (
+                f"{name} has a hardcoded quantile ({constant!r}) again; "
+                "both readers must call t95()")
+
+
+def test_t95_is_exact_not_a_table() -> None:
+    """Published values, including the df the old table silently missed."""
+    reference = {1: 12.7062, 2: 4.3027, 5: 2.5706, 10: 2.2281,
+                 30: 2.0423, 60: 2.0003, 157: 1.9752}
+    for df, want in reference.items():
+        assert abs(t95(df) - want) < 5e-4, (
+            f"t95({df}) = {t95(df)}, published value {want}")
+
+
+def test_addendum_e_cluster_interval_uses_five_degrees_of_freedom() -> None:
+    """The exact instance an outside reader caught: six seeds, df=5."""
+    result = subprocess.run(
+        [sys.executable, str(SCRIPTS / "addendum_e_summary.py")],
+        capture_output=True, text=True, cwd=REPO, timeout=300,
+    )
+    assert result.returncode == 0, result.stderr[-2000:]
+    printed = re.search(r"cluster CI95 \(n=6 seeds\): \[([\d.]+), ([\d.]+)\]",
+                        result.stdout)
+    assert printed, "addendum_e_summary.py no longer prints the cluster CI"
+    lo = float(printed.group(1))
+    assert 0.309 < lo < 0.312, (
+        f"cluster CI lower bound {lo} — at t=2.5706 (df=5) it is ~0.310; "
+        f"the old table's 2.09 gave ~0.3275")

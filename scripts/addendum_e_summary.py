@@ -201,8 +201,12 @@ def verdict(row: dict) -> tuple[str, str]:
             f"seed-mean {row['mean_delta']:+.4f} >= +{GATE_DELTA} over six "
             f"fresh tenants, receipt CI excludes zero, sign test agrees "
             f"({st['wins']}W/{st['losses']}L, {p_str}). Per E.2 this "
-            "retires the shared-geometry objection with n doubled: the "
-            "effect is not carried by one fixed corpus shape."
+            "NARROWS the shared-geometry objection with n doubled: the "
+            "effect is not carried by one fixed corpus shape at 6-7 "
+            "fields. It does not retire it — these shapes are SMALLER "
+            "than the 8-field gate corpus, shapes at or above it are not "
+            "measurable at k=30 under the frozen token budget, and every "
+            "tenant here still comes from the same generator family."
         )
     reasons = []
     if not passes_mean:

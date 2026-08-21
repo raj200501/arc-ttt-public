@@ -27,7 +27,9 @@
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 128 green (83/83 was the 08-11 count; see README).
+- Test suite: 174 green, pinned by tests/test_doc_counts_agree.py
+  (83/83 was the 08-11 count; the intermediate figures in this line were
+  stale five times before the count was pinned — see CORRECTIONS.md).
 
 ## Landed since the first draft
 - DFS decoding with probability cutoff (v4d validated the code path).

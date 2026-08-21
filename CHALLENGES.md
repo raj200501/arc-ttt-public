@@ -103,8 +103,15 @@ skeleton does not print: the base-checkpoint pin (name + immutable
 revision + checkpoint sha256), the prediction format, when the clock
 starts, confidentiality and adapter deletion, party roles if gold custody
 or OCR sits with someone else, a decision bar if the result is meant to
-decide something, and the calendar below. Ask for the full terms document
-before you countersign; it is what gets exchanged.
+decide something, and the calendar below. **The full terms document is
+published: [`docs/research/CHALLENGE_TERMS.md`](docs/research/CHALLENGE_TERMS.md)**
+— read it before you countersign. It is public specifically so you can
+hand it to counsel without asking me for it first. (It was not published
+until 2026-08-21: this page told you to countersign terms it did not let
+you read, and an outside reader correctly called that the thing blocking
+a real challenge. The anchored 42-line protocol contains no
+data-handling language at all, which is why the gap was invisible from
+the protocol alone.)
 
 **3. The pinned scorer.** The default is `score_text_output` at the
 public-repo commit named in your terms (`--commit`), aggregated as mean

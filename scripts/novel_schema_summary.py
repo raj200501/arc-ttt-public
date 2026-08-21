@@ -35,17 +35,94 @@ CEILING = 0.95
 SEEDS = (1, 2, 3)
 IDENTITY = {"rung", "k", "seed", "arm"}
 
-_T95 = {
-    39: 2.023, 59: 2.001, 79: 1.990, 99: 1.984, 119: 1.980, 179: 1.973,
-}
 _Z95 = 1.960
+
+# t95() used to be a lookup table starting at df=39, with a fallback that
+# returned the invented constant 2.09 for anything smaller — roughly t at
+# df≈19. Addendum E's cluster interval is six seeds (df=5), where the true
+# quantile is 2.5706, so the published interval was ~19% too narrow, and
+# too narrow in the direction that flatters us. An outside reader
+# recomputed it from our own artifacts and found it (2026-08-21; erratum
+# P13).
+#
+# A wider table would have fixed that instance and left the class: any df
+# the table missed still silently borrowed a neighbour's quantile. So the
+# table is gone. t95() now computes the exact Student-t quantile by
+# bisecting its CDF, which is evaluated through the regularized incomplete
+# beta function (continued fraction, Lentz). Stdlib only — the verify path
+# must keep running on a machine with nothing installed.
+
+
+def _betacf(a: float, b: float, x: float) -> float:
+    """Continued fraction for the incomplete beta function (Lentz)."""
+    tiny = 1e-300
+    qab, qap, qam = a + b, a + 1.0, a - 1.0
+    c = 1.0
+    d = 1.0 - qab * x / qap
+    if abs(d) < tiny:
+        d = tiny
+    d = 1.0 / d
+    h = d
+    for m in range(1, 300):
+        m2 = 2 * m
+        aa = m * (b - m) * x / ((qam + m2) * (a + m2))
+        d = 1.0 + aa * d
+        if abs(d) < tiny:
+            d = tiny
+        c = 1.0 + aa / c
+        if abs(c) < tiny:
+            c = tiny
+        d = 1.0 / d
+        h *= d * c
+        aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2))
+        d = 1.0 + aa * d
+        if abs(d) < tiny:
+            d = tiny
+        c = 1.0 + aa / c
+        if abs(c) < tiny:
+            c = tiny
+        d = 1.0 / d
+        delta = d * c
+        h *= delta
+        if abs(delta - 1.0) < 3e-16:
+            break
+    return h
+
+
+def _betainc(a: float, b: float, x: float) -> float:
+    """Regularized incomplete beta I_x(a, b)."""
+    if x <= 0.0:
+        return 0.0
+    if x >= 1.0:
+        return 1.0
+    front = math.exp(
+        math.lgamma(a + b) - math.lgamma(a) - math.lgamma(b)
+        + a * math.log(x) + b * math.log1p(-x)
+    )
+    if x < (a + 1.0) / (a + b + 2.0):
+        return front * _betacf(a, b, x) / a
+    return 1.0 - front * _betacf(b, a, 1.0 - x) / b
+
+
+def student_t_cdf(t: float, df: int) -> float:
+    """P(T <= t) for Student's t with df degrees of freedom."""
+    x = df / (df + t * t)
+    tail = 0.5 * _betainc(df / 2.0, 0.5, x)
+    return 1.0 - tail if t > 0 else tail
 
 
 def t95(df: int) -> float:
-    if df in _T95:
-        return _T95[df]
-    smaller = [d for d in _T95 if d < df]
-    return _T95[max(smaller)] if smaller else 2.09 if df > 0 else float("nan")
+    """Two-sided 95% Student-t quantile: t(0.975, df). Exact, any df >= 1."""
+    if df < 1:
+        return float("nan")
+    lo, hi = 0.0, 400.0
+    for _ in range(200):
+        mid = (lo + hi) / 2.0
+        if student_t_cdf(mid, df) < 0.975:
+            lo = mid
+        else:
+            hi = mid
+    return round((lo + hi) / 2.0, 4)
 
 
 def mean(v: list[float]) -> float:

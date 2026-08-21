@@ -67,10 +67,22 @@ your own train gold before shipping: `make_challenge.py score
 - Submission: predictions.jsonl, one line per holdout id
   ({{"id": ..., "prediction": {{...}}}}), each id exactly once;
   missing or duplicate ids score 0 for that document. Single
-  submission; 72h from document receipt.
+  submission; 72h turnaround, the clock starting at the EARLIER of the
+  Adapter's written receipt confirmation or 24h after your delivery
+  timestamp (CHALLENGE_TERMS.md section 6 — this skeleton previously
+  said "72h from document receipt", a third wording that conflicted
+  with both the anchored protocol and CHALLENGES.md).
 - Deliverables with the submission: adapter weights + sha256, exact
   repo commit, exact adaptation command, seed.
+- Baseline parity: declare a baseline of your choosing on the same
+  holdout with the same scorer, or record that you decline. A blind
+  number without one is ambiguous by construction.
 - Result publishes either way, terms attached.
+
+THIS IS A SKELETON, NOT THE TERMS. The full document -- confidentiality,
+data handling, the deletion deadline, party roles, the clock definition,
+publication rights -- is docs/research/CHALLENGE_TERMS.md in the public
+repo. Read it before countersigning; it is what gets exchanged.
 """
 
 
