@@ -141,3 +141,15 @@ def test_addendum_e_cluster_interval_uses_five_degrees_of_freedom() -> None:
     assert 0.309 < lo < 0.312, (
         f"cluster CI lower bound {lo} — at t=2.5706 (df=5) it is ~0.310; "
         f"the old table's 2.09 gave ~0.3275")
+
+    # And the docs must quote what the script prints. The receipt CI went
+    # wrong for hours precisely because one authority printed a number and
+    # another published a different one, with nothing comparing them; the
+    # E interval had the same hole until this line.
+    hi = float(printed.group(2))
+    quoted = f"[+{lo * 100:.1f}, +{hi * 100:.1f}]"
+    for name in ("VERDICT.md", "EVIDENCE.md"):
+        text = (REPO / name).read_text(encoding="utf-8")
+        assert quoted in text, (
+            f"{name} does not carry the Addendum E cluster interval its own "
+            f"script prints ({quoted})")

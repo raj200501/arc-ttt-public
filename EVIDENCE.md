@@ -42,6 +42,8 @@ actually fail.
 
 On this corpus, **a frontier model and the cheapest API tier both score 1.00 by plain prompting** (60/60 exact, same protocol, same scorer). The corpus is saturated at the top of the market; the measured wins above are *at 0.5B*, against that model's own prompt. Quality differentiation on real workloads is unproven, and claiming otherwise from these artifacts would be wrong.
 
+**And the prompted baseline is much stronger on realistic documents than the headline corpus implies.** On the synthetic novel-schema corpus the same model's 30-shot prompt scores 0.4333–0.6208, which is what makes +46.5 possible. On the freight-waybill corpus a 20-shot prompt scores **0.7836**. The gap the product has to earn is far narrower where the documents look real — measured, not estimated, in the paired run below.
+
 **Cost, also against interest** (rates dated 2026-08-19, arithmetic in `VERDICT.md`):
 
 | Serving path | Cost per 1,000 documents |
@@ -74,10 +76,18 @@ python3 scripts/addendum_e_summary.py      # recomputes gate 5 under its frozen 
 python3 scripts/read_addendum_d.py         # recomputes the failure in row 3
 ```
 
+**Or run it on your own documents.** One JSONL of your labeled documents, one command, and you get the same paired comparison every gate row above is built on — prompted baseline vs adapted, matched decode, scored against your gold with the pinned scorer, per-document:
+
+```bash
+python3 scripts/try_your_documents.py --docs mydocs.jsonl   # needs torch; adapts weights
+```
+
+It is **not** blind, it fixes **no** bar in advance, and it is one corpus — it prints all three of those next to its own result, and if your prompted baseline is already saturated it says plainly that there is nothing here for you to buy. The version that is *evidence* is the blind-holdout offer below.
+
 All three verdict scripts are dependency-free. To go past arithmetic to primary evidence,
 `python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json` re-scores every
 stored prediction against gold regenerated from the deterministic corpus generator —
-it checks the *predictions*, not the summaries. 174 offline tests, no downloads:
+it checks the *predictions*, not the summaries. 183 offline tests, no downloads:
 `python3 -m pytest tests/ -q`.
 
 ---
@@ -89,9 +99,9 @@ in [`CORRECTIONS.md`](CORRECTIONS.md) — self-correction only counts as
 evidence if it is countable.
 
 - **Zero customers.** No real-workload win exists. The blind-holdout offer is open precisely because that is the missing evidence.
-- **The rehearsal has no baseline arm.** 0.8792 is an adapted score with nothing to subtract from it, so it cannot say what adaptation contributed — the exact comparison every gate row above is built on. The paired baseline is now a PENDING row in [`VERDICT.md`](VERDICT.md) with its bar (+5.0) frozen before the arm runs, and it publishes either way.
+- **The rehearsal's paired baseline FAILED its bar, and it is the most useful thing measured this week.** 0.8792 was an adapted score with nothing to subtract from it, so the missing arm was run against a rule frozen first. Matched greedy decode, same 30 waybills: prompted **0.7836**, adapted **0.8833**, delta **+9.97** — twice the +5 bar, CI excluding zero — but the sign test disagreed (**8W/5L/17T, p=0.29**), so the two-statistics rule returns **FAIL** and the row says FAIL. The rule caught what it is for: 17 of 30 documents tie, and **63% of the delta comes from 3 documents where the prompted arm emitted invalid JSON**. On this realistic corpus the measured benefit is concentrated in **output-format reliability, not extraction accuracy** — narrower than the headline gates support, and it is the first paired number this project has on document-shaped data.
 - **A published interval was wrong in our favour, and an outside reader found it.** Gate 5's cluster CI read [+32.75, +47.95] because the quantile table in our own reader invented a value for six seeds instead of computing t at df=5. Corrected here to [+31.0, +49.7] — ~19% wider. The verdict is untouched (the lower bound clears the +5 bar six-fold), the cause is in [`CORRECTIONS.md`](CORRECTIONS.md), and the estimator is now computed rather than looked up.
 - **One tenant at 0.53** in the serving mode the economics depend on, and its mechanism is **OPEN** — an earlier explanation (document length) was tested against the banked data, was not supported, and was withdrawn on the record rather than quietly revised.
-- **Everything above is 0.5B.** Whether the margin holds at 1.5B–2B, where in-context learning is stronger, is measured next and publishes either way.
+- **Everything above is 0.5B, and that is the objection most likely to be fatal.** The delta exists partly *because* 0.5B is weak at in-context learning — a stronger base model is better at the very baseline this result is measured against, so the margin should shrink by construction. How much is the open question. The 1.5B/2B rung is now a **PENDING row in [`VERDICT.md`](VERDICT.md) with its bar and all three preregistered readings frozen before the arms exist**, including the one that says the headline is a small-model artifact. Failed rungs stay on the figure.
 - **The ARC Prize track this harness grew out of scored 1.67% public** across three submissions and is formally deprioritized. It is disclosed, not featured.
 - **Preregistration ordering:** gates from row 3 onward are SHA-256 chain-anchored (OpenTimestamps, Bitcoin) with byte-exact snapshots shipped. One precision rather than a footnote: gate 5's +5 bar and decision rule are in the chain-anchored snapshot, while its measurability amendment (the compacted geometry and the token screen) was git-committed before its data and anchored the following day. The row-1 freeze (2026-08-12) predates the public repository and rests on private git history — stated plainly rather than implied.

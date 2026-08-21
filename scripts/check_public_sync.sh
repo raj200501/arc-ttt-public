@@ -12,14 +12,61 @@ PUB="${1:?usage: check_public_sync.sh <public-working-copy>}"
 
 fail=0
 
-# 1) library + scripts byte-identical (export_public.sh is private-only)
+# 1) library + scripts byte-identical.
+#    The exclusions must stay in lockstep with the same list in
+#    export_public.sh — test_render_send.py exercises the outbound-email
+#    renderer and necessarily names real targets, so the leak gate
+#    rejects it and it is deliberately private. Anything private-only is
+#    named here so a DELIBERATE omission cannot be confused with drift,
+#    and so drift cannot hide behind a deliberate omission.
 for d in src scripts tests; do
   if ! diff -rq "$SRC/$d" "$PUB/$d" \
       --exclude=__pycache__ --exclude=export_public.sh --exclude=fill_gate_slots.py \
-      --exclude=check_public_sync.sh; then
+      --exclude=check_public_sync.sh --exclude=test_render_send.py; then
     fail=1
   fi
 done
+
+# 1b) the private-only list is a hole in gate 1, so verify each entry is
+#     private-only ON PURPOSE: still present in the source tree, and
+#     actually excluded by export_public.sh. An entry that silently
+#     disappeared from the source would otherwise never be noticed.
+for private_only in test_render_send.py export_public.sh fill_gate_slots.py; do
+  if ! find "$SRC/src" "$SRC/scripts" "$SRC/tests" -name "$private_only" \
+      | grep -q .; then
+    echo "EXCLUDED-BUT-MISSING from the source tree: $private_only" >&2
+    fail=1
+  fi
+  # Match the stem as a FIXED string: export_public.sh writes the names
+  # as regexes with escaped dots ("fill_gate_slots\.py"), so a pattern
+  # built from the plain filename silently misses them.
+  if ! grep -qF "${private_only%.py}" "$SRC/scripts/export_public.sh"; then
+    echo "excluded here but NOT by export_public.sh: $private_only" >&2
+    fail=1
+  fi
+done
+
+# 1c) the documented test count must match the tree it is documented in.
+#     The public tree has fewer tests (see 1); its docs are rewritten by
+#     export_public.sh, and this re-checks that the rewrite happened —
+#     a stale count is what two outside readers caught by running
+#     `pytest -q`, which is the one command this pitch invites.
+pub_tests=$(cd "$PUB" && python3 -m pytest tests/ -q --collect-only \
+  -p no:cacheprovider 2>/dev/null | grep -oE '[0-9]+ tests? collected' \
+  | grep -oE '^[0-9]+' || true)
+if [ -n "$pub_tests" ]; then
+  for doc in README.md EVIDENCE.md ROADMAP.md paper/DRAFT.md; do
+    [ -f "$PUB/$doc" ] || continue
+    if grep -oE '[0-9]+ offline tests' "$PUB/$doc" \
+        | grep -qvE "^${pub_tests} offline tests$"; then
+      echo "PUBLIC $doc claims a test count this tree does not have" >&2
+      echo "  (tree collects ${pub_tests})" >&2
+      fail=1
+    fi
+  done
+else
+  echo "WARNING: could not collect the public test count" >&2
+fi
 
 # 2) no experiment artifact present privately but missing publicly.
 #    *.journal.jsonl are resumable run-state, not artifacts — their

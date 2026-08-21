@@ -66,8 +66,6 @@ CPU/fp32 on free Kaggle kernels; artifacts carry full receipt trails,
 including `resumed` stamps from the checkpoint/resume system that
 survived repeated infrastructure kill-strikes during the gate.
 
-
-
 **The protocol has run once, end to end (2026-08-20):** a labeled
 DRESS REHEARSAL — an adversarial AI agent WE RAN OURSELVES, in the same
 working session on the same host, authored 50 out-of-distribution waybills,
@@ -76,6 +74,18 @@ once: 0.8792 mean micro-F1, 30/30 valid JSON, hard tier
 0.679, failure taxonomy published (agent-authored corpus, NOT a real
 tenant — the row in VERDICT.md carries the full label).
 `experiments/blind_rehearsal_2026-08-20.json` has per-document scores.
+
+**And the paired baseline that number was missing has now been run —
+it FAILED (2026-08-21).** Matched greedy decode, same 30 documents:
+prompted 0.7836, adapted 0.8833, delta +9.97 — twice the +5 bar — but
+the sign test disagreed (8W/5L/17T, p=0.29) and the preregistered rule
+needs both, so it publishes as a failure. 17 of 30 documents tie, and
+63% of the delta comes from 3 documents where the prompted arm emitted
+invalid JSON. On this realistic corpus the measured benefit is
+**output-format reliability, not extraction accuracy** — narrower than
+the headline gates support. Read 0.8792 as an adapted score, not as
+evidence that adapting beat prompting there.
+`experiments/blind_rehearsal_baseline_2026-08-21.json`.
 
 ## Check the preregistration ordering
 
@@ -110,8 +120,29 @@ python3 scripts/export_novel_prompts.py --seed 1 --k 10 --limit 3 \
     --prompts-out /tmp/docs.jsonl --gold-out /tmp/gold.jsonl
 ```
 
-To run the adaptation demo or any model-loading path (the verify and
-scoring scripts above are stdlib-only and need none of this):
+## Run it on your own documents
+
+Recomputing our numbers only proves our arithmetic. This points the same
+machinery at YOUR data: one JSONL of labeled documents (`{"id", "text",
+"gold"}` per line), one command, and you get the paired comparison every
+gate row is built on — the prompted baseline against the adapted model,
+matched decode, scored per document against your own gold with the
+pinned scorer.
+
+```
+python3 scripts/try_your_documents.py --docs mydocs.jsonl
+```
+
+Stated by the script itself, beside its own result: it is **not blind**
+(it reads your gold to score), it fixes **no bar in advance** (you can
+re-run until you like the number — so could we), and it is one corpus,
+one schema, one run. If your prompted baseline is already saturated it
+says outright that there is no headroom and nothing here for you to buy.
+The version that is *evidence* is the blind-holdout offer in
+[`CHALLENGES.md`](CHALLENGES.md).
+
+To run that, the adaptation demo, or any model-loading path (the verify
+and scoring scripts above are stdlib-only and need none of this):
 
 ```
 pip install torch --index-url https://download.pytorch.org/whl/cpu
@@ -142,7 +173,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 174 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 183 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -203,7 +234,7 @@ sharpening. No claims beyond the artifacts in `experiments/`.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 174 offline tests (tiny in-test models; no downloads).
+- `tests/` — 183 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

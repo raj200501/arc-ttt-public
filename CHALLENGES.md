@@ -33,6 +33,33 @@ rehearsal's recorded verdict, verbatim: *"it survived contact, it did not
 win it — 0.88 on friendly-adversarial synthetic is a real signal and an
 honest ceiling, and the number publishes as-is."*
 
+**Row 0's missing baseline arm has now been run, and it FAILED its bar
+(2026-08-21).** 0.8792 was an adapted score with nothing to subtract
+from it, so the missing arm was run against a rule frozen and published
+first. Matched greedy decode on the same 30 waybills: prompted
+**0.7836**, adapted **0.8833**, paired delta **+9.97** — twice the +5
+bar, CI excluding zero — but the sign test disagreed (**8W/5L/17T,
+p=0.29**), and the preregistered two-statistics rule requires both. So
+the verdict is **FAIL**, and it publishes as FAIL.
+
+The rule caught exactly what it is for. **17 of 30 documents tie** (12
+of them both-perfect), and **63% of the total delta comes from the 3
+documents where the prompted arm emitted invalid JSON and scored 0.**
+Where both arms produce valid JSON it is close to a wash, and every
+adapted loss is a single field. The honest reading: on this realistic
+corpus, adaptation's measured benefit is **output-format reliability,
+not extraction accuracy**.
+
+So read 0.8792 as "a small adapted model scored this on that corpus" —
+not as evidence that adapting beat prompting on it, because the paired
+test says it did not, by our own rule. Artifact:
+[`experiments/blind_rehearsal_baseline_2026-08-21.json`](experiments/blind_rehearsal_baseline_2026-08-21.json).
+
+This is also why §5a of the terms now *requires* a challenger to declare
+a baseline or record that they declined. A blind number without one is
+ambiguous by construction — and row 0 is the proof, since its headline
+survived a week before the arm that qualifies it existed.
+
 What the rehearsal's challenger recorded as generalizing: non-verbatim
 date normalization (including scheduled-vs-actual selection),
 governing-figure selection (net over tare/gross, reweigh, scale-over-quote,
@@ -160,7 +187,7 @@ misleading, because 72 hours is only my leg:
 |---|---|---|
 | Countersigned terms from your yes | ~2 days *(offered estimate, not a measured number)* | both |
 | Documents delivered | typically 1–3 weeks *(offered estimate)* — driven by your legal and your data export, not by me | **yours** |
-| Predictions, single submission | **72 hours from my written receipt confirmation** — the clock starts when I confirm in writing that both files arrived, passed the format validator, and are readable; not at your send timestamp. If they fail the validator I report that within 2 hours with the validator's exact output and the clock does not start. | **mine** |
+| Predictions, single submission | **72 hours, starting at the EARLIER of (a) my written receipt confirmation or (b) 24 hours after your delivery timestamp.** Corrected 2026-08-21: this row used to say the clock starts only at my confirmation, which the anchored protocol does not say and which would have let me delay indefinitely by never confirming. The validator refinement can shorten my clock and can never extend it. If the files fail the format validator I report that within 2 hours with the validator's exact output, and (b) pauses only for the time you take to resend. Binding text: [`CHALLENGE_TERMS.md` §6](docs/research/CHALLENGE_TERMS.md). | **mine** |
 | Your scoring | 48 hours from submission, one pass, pinned scorer | **yours** |
 | Reveal and publication | simultaneous reveal, published within a day either way | both |
 

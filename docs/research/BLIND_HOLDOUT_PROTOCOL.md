@@ -35,6 +35,21 @@ Standing offer to any challenger (fund, researcher, or company):
 10. Amendments to this protocol after a challenge begins bind only
     future challenges.
 
+**Note added 2026-08-21 (does not amend §6; the anchored snapshot
+governs).** "Receipt" in §6 was defined three different ways across this
+protocol, `CHALLENGES.md`, and the kit's generated terms — and two of
+the three were looser for us than this one. The binding definition is
+now in `CHALLENGE_TERMS.md` §6: the 72-hour clock starts at the
+**earlier** of our written receipt confirmation or 24 hours after the
+challenger's delivery timestamp. That can only shorten our clock
+relative to the anchored sentence above, never extend it, which is why
+it is a clarification and not an amendment.
+
+The full terms — confidentiality, data handling, the deletion deadline,
+party roles, baseline parity, publication rights — are published at
+`docs/research/CHALLENGE_TERMS.md`. This 42-line protocol carries none
+of that language, and until 2026-08-21 nothing public did.
+
 A byte-exact dated snapshot of this document is OpenTimestamps-
 anchored (snapshots_BLIND_HOLDOUT_PROTOCOL_<date>.md + .ots beside
 this file) so the offer's terms cannot be quietly rewritten after a

@@ -1,0 +1,196 @@
+{
+  "what": "Blind-rehearsal PAIRED BASELINE \u2014 the arm the rehearsal lacked. Bar frozen and published in VERDICT.md before these arms ran.",
+  "rule": {
+    "bar_delta": 0.05,
+    "requires": "seed-mean delta >= bar AND sign test agrees",
+    "publishes_either_way": true
+  },
+  "decode": {
+    "both_arms": "greedy (samples=1), matched",
+    "note": "the banked 0.8792 used voted decode (samples=5); the k-shot arm cannot run voted, so pairing voted-vs-greedy would credit adaptation with the decode difference"
+  },
+  "baseline_kshot_greedy": {
+    "mean_micro_f1": 0.7836,
+    "invalid_or_missing": 3
+  },
+  "adapted_greedy": {
+    "mean_micro_f1": 0.8833,
+    "invalid_or_missing": 0
+  },
+  "paired": {
+    "mean_delta": 0.0997,
+    "ci95": [
+      0.002,
+      0.1975
+    ],
+    "n": 30,
+    "sign_test": {
+      "wins": 8,
+      "losses": 5,
+      "ties": 17,
+      "p_value": 0.29052734375
+    }
+  },
+  "verdict": "FAIL",
+  "why": {
+    "clears_mean_bar": true,
+    "sign_test_agrees": false,
+    "rule": "both required; the two-statistics rule exists so a mean carried by a few documents cannot pass alone",
+    "ties": 17,
+    "ties_both_perfect": 12,
+    "baseline_zero_docs": 3,
+    "share_of_delta_from_baseline_zero_docs": 0.6267
+  },
+  "per_doc": {
+    "WB-2026-0101": {
+      "baseline": 1.0,
+      "adapted": 1.0,
+      "delta": 0.0
+    },
+    "WB-2026-0102": {
+      "baseline": 1.0,
+      "adapted": 1.0,
+      "delta": 0.0
+    },
+    "az-0109": {
+      "baseline": 1.0,
+      "adapted": 1.0,
+      "delta": 0.0
+    },
+    "az-0110": {
+      "baseline": 0.875,
+      "adapted": 0.75,
+      "delta": -0.125
+    },
+    "frt_0104": {
+      "baseline": 1.0,
+      "adapted": 1.0,
+      "delta": 0.0
+    },
+    "h-3301": {
+      "baseline": 0.5,
+      "adapted": 0.75,
+      "delta": 0.25
+    },
+    "h-3303": {
+      "baseline": 0.7778,
+      "adapted": 0.75,
+      "delta": -0.0278
+    },
+    "h-3304": {
+      "baseline": 0.875,
+      "adapted": 0.875,
+      "delta": 0.0
+    },
+    "h-3305": {
+      "baseline": 0.0,
+      "adapted": 0.5,
+      "delta": 0.5
+    },
+    "h-3307": {
+      "baseline": 0.0,
+      "adapted": 0.5,
+      "delta": 0.5
+    },
+    "h-3311": {
+      "baseline": 1.0,
+      "adapted": 1.0,
+      "delta": 0.0
+    },
+    "h-3312": {
+      "baseline": 0.5,
+      "adapted": 0.5,
+      "delta": 0.0
+    },
+    "m-2201": {
+      "baseline": 0.1053,
+      "adapted": 1.0,
+      "delta": 0.8947
+    },
+    "m-2204": {
+      "baseline": 0.875,
+      "adapted": 1.0,
+      "delta": 0.125
+    },
+    "m-2205": {
+      "baseline": 0.875,
+      "adapted": 1.0,
+      "delta": 0.125
+    },
+    "m-2206": {
+      "baseline": 1.0,
+      "adapted": 0.875,
+      "delta": -0.125
+    },
+    "m-2208": {
+      "baseline": 0.0,
+      "adapted": 0.875,
+      "delta": 0.875
+    },
+    "m-2209": {
+      "baseline": 1.0,
+      "adapted": 1.0,
+      "delta": 0.0
+    },
+    "m-2210": {
+      "baseline": 0.875,
+      "adapted": 0.875,
+      "delta": 0.0
+    },
+    "m-2211": {
+      "baseline": 0.75,
+      "adapted": 0.75,
+      "delta": 0.0
+    },
+    "m-2212": {
+      "baseline": 1.0,
+      "adapted": 1.0,
+      "delta": 0.0
+    },
+    "x-4401": {
+      "baseline": 0.875,
+      "adapted": 0.875,
+      "delta": 0.0
+    },
+    "x-4403": {
+      "baseline": 1.0,
+      "adapted": 1.0,
+      "delta": 0.0
+    },
+    "x-4404": {
+      "baseline": 0.75,
+      "adapted": 1.0,
+      "delta": 0.25
+    },
+    "x-4407": {
+      "baseline": 1.0,
+      "adapted": 0.875,
+      "delta": -0.125
+    },
+    "x-4413": {
+      "baseline": 1.0,
+      "adapted": 1.0,
+      "delta": 0.0
+    },
+    "x-4414": {
+      "baseline": 1.0,
+      "adapted": 1.0,
+      "delta": 0.0
+    },
+    "x-4415": {
+      "baseline": 0.875,
+      "adapted": 0.75,
+      "delta": -0.125
+    },
+    "x-4416": {
+      "baseline": 1.0,
+      "adapted": 1.0,
+      "delta": 0.0
+    },
+    "x-4419": {
+      "baseline": 1.0,
+      "adapted": 1.0,
+      "delta": 0.0
+    }
+  }
+}
