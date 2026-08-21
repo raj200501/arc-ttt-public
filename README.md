@@ -13,6 +13,12 @@ is one command:
     python3 scripts/verify_verdict.py
     python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json
 
+**In a hurry? [`EVIDENCE.md`](EVIDENCE.md) is the whole ladder on one
+page** — five preregistered gates in the order they happened (two of
+them failures), the comparison that cuts against the result, the cost
+table stated against interest, and the one blind-holdout run, each
+number carrying the caveat that makes it true.
+
 The harness began as a test-time-training entry for ARC Prize 2026
 (that origin, its scores, and its failure log are documented below —
 nothing is scrubbed); the enterprise adaptation gates are the active
