@@ -29,7 +29,7 @@ import sys
 def main(paths: list[str]) -> int:
     sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "src"))
     from arcttt.novel_schema import make_task
-    from arcttt.text_ttt import score_text_output
+    from arcttt.scoring import score_text_output
 
     failures = 0
     for raw in paths:

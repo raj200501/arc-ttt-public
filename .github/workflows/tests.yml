@@ -19,3 +19,25 @@ jobs:
           pip install -e .[dev]
       - name: Run offline test suite
         run: python -m pytest tests/ -q
+
+  verify-headline-numbers:
+    # Split out from the test job on purpose: both verify scripts are
+    # stdlib-only, so this job cannot go red for reasons unrelated to the
+    # numbers (no torch wheel, no pip index, no transformers pin). A badge
+    # that fails for an unrelated reason is worse than no badge on a repo
+    # whose whole claim is that the numbers hold up.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Recompute the k=30 gate verdict from raw per-receipt records
+        run: python3 scripts/verify_verdict.py
+      - name: Recompute the Addendum E verdict under its frozen rule
+        run: python3 scripts/addendum_e_summary.py
+      - name: Recompute the Addendum D failure
+        run: python3 scripts/read_addendum_d.py
+      - name: Re-score stored predictions against regenerated gold
+        run: python3 scripts/verify_from_primary.py experiments/novel_schema_f_0.5b_k30_seed1_docadapted_2026-08-19.json

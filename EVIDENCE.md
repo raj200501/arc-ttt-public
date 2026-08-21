@@ -64,7 +64,7 @@ python3 scripts/read_addendum_d.py         # recomputes the failure in row 3
 Both verdict scripts are dependency-free. To go past arithmetic to primary evidence,
 `python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json` re-scores every
 stored prediction against gold regenerated from the deterministic corpus generator —
-it checks the *predictions*, not the summaries. 151 offline tests, no downloads:
+it checks the *predictions*, not the summaries. 167 offline tests, no downloads:
 `python3 -m pytest tests/ -q`.
 
 ---

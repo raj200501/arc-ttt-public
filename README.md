@@ -7,11 +7,21 @@ Every headline number reconciles to a machine-readable artifact
 gates (Addenda D/E/F onward) are Bitcoin-anchored via OpenTimestamps
 before their data existed; the original gate's 2026-08-12 freeze
 predates the first anchor and rests on git history — stated plainly,
-and all gates from D onward are chain-anchored pre-data. Verification
+and the gates from D onward are chain-anchored pre-data — with one
+precision that belongs here rather than in a footnote: Addendum E's +5
+bar and decision rule are in the chain-anchored snapshot, while the
+E-r2 measurability amendment (the compacted geometry and the token
+screen) was git-committed before its data and anchored the following
+day. Verification
 is one command:
 
     python3 scripts/verify_verdict.py
     python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json
+
+**Latest gate (2026-08-20): Addendum E PASSED** — +40.4 F1 seed-mean
+over six fresh shape-varying tenants against a +5 bar frozen before the
+data existed, 340W/5L/15T over 360 paired documents, zero excluded.
+Recompute it: `python3 scripts/addendum_e_summary.py`.
 
 **In a hurry? [`EVIDENCE.md`](EVIDENCE.md) is the whole ladder on one
 page** — five preregistered gates in the order they happened (two of
@@ -112,7 +122,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 151 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 167 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -173,7 +183,7 @@ sharpening. No claims beyond the artifacts in `experiments/`.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 151 offline tests (tiny in-test models; no downloads).
+- `tests/` — 167 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

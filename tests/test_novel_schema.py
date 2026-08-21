@@ -127,11 +127,13 @@ def test_labels_keys_and_distractors_never_collide_within_a_schema() -> None:
 def test_canonical_json_matches_the_projects_definition_without_importing_it() -> None:
     """Drift guard on the deliberately-duplicated canonicaliser.
 
-    ``novel_schema`` re-implements ``text_ttt.json_canonical`` so the corpus
-    generator does not depend on torch. That duplication is only safe while
-    the two agree, so this reads text_ttt's SOURCE (importing it would pull
-    in torch and defeat the purpose) and asserts the call is identical. If
-    canonicalization changes there, this fails and forces the update here.
+    ``novel_schema`` re-implements ``json_canonical`` so the corpus generator
+    carries no import of the adaptation engine at all. The canonical
+    definition now lives in ``arcttt.scoring`` (split out of ``text_ttt`` so
+    the verification path runs without torch), so this reads THAT module's
+    source and asserts the call is identical. Kept as a source read rather
+    than an import: the point is to catch drift in the definition, and
+    reading the text is what makes the duplication safe to keep.
     """
 
     import ast
@@ -140,7 +142,7 @@ def test_canonical_json_matches_the_projects_definition_without_importing_it() -
     from arcttt.novel_schema import _json_canonical
 
     source = (
-        Path(__file__).resolve().parent.parent / "src" / "arcttt" / "text_ttt.py"
+        Path(__file__).resolve().parent.parent / "src" / "arcttt" / "scoring.py"
     ).read_text()
     expected_call = (
         'json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)'
