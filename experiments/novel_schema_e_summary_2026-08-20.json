@@ -1,0 +1,148 @@
+{
+  "addendum": "E (E-r2)",
+  "geometry": "diverse-compact",
+  "frozen_seeds": [
+    203,
+    204,
+    206,
+    207,
+    208,
+    209
+  ],
+  "bar": 0.05,
+  "k": 30,
+  "pairs_complete": 6,
+  "missing_seeds": [],
+  "heterogeneous_pairs_refused": [],
+  "validity_trips": [],
+  "attrition": [
+    {
+      "seed": 203,
+      "eval_n": 60,
+      "scored": 60,
+      "excluded_no_completion": 0,
+      "symmetric": true
+    },
+    {
+      "seed": 204,
+      "eval_n": 60,
+      "scored": 60,
+      "excluded_no_completion": 0,
+      "symmetric": true
+    },
+    {
+      "seed": 206,
+      "eval_n": 60,
+      "scored": 60,
+      "excluded_no_completion": 0,
+      "symmetric": true
+    },
+    {
+      "seed": 207,
+      "eval_n": 60,
+      "scored": 60,
+      "excluded_no_completion": 0,
+      "symmetric": true
+    },
+    {
+      "seed": 208,
+      "eval_n": 60,
+      "scored": 60,
+      "excluded_no_completion": 0,
+      "symmetric": true
+    },
+    {
+      "seed": 209,
+      "eval_n": 60,
+      "scored": 60,
+      "excluded_no_completion": 0,
+      "symmetric": true
+    }
+  ],
+  "per_seed": [
+    {
+      "seed": 203,
+      "adapted": 0.9917,
+      "kshot": 0.7278,
+      "delta": 0.2639,
+      "adapt_seconds": 8069.4,
+      "resumed": true
+    },
+    {
+      "seed": 204,
+      "adapted": 0.9833,
+      "kshot": 0.5194,
+      "delta": 0.4639,
+      "adapt_seconds": 10443.9,
+      "resumed": true
+    },
+    {
+      "seed": 206,
+      "adapted": 0.9361,
+      "kshot": 0.5833,
+      "delta": 0.3528,
+      "adapt_seconds": 9931.9,
+      "resumed": true
+    },
+    {
+      "seed": 207,
+      "adapted": 0.9643,
+      "kshot": 0.5881,
+      "delta": 0.3762,
+      "adapt_seconds": 8032.2,
+      "resumed": false
+    },
+    {
+      "seed": 208,
+      "adapted": 0.9881,
+      "kshot": 0.5262,
+      "delta": 0.4619,
+      "adapt_seconds": 10294.1,
+      "resumed": true
+    },
+    {
+      "seed": 209,
+      "adapted": 0.9929,
+      "kshot": 0.4905,
+      "delta": 0.5024,
+      "adapt_seconds": 8536.5,
+      "resumed": true
+    }
+  ],
+  "seed_deltas": [
+    0.2639,
+    0.4639,
+    0.3528,
+    0.3762,
+    0.4619,
+    0.5024
+  ],
+  "mean_delta": 0.4035,
+  "cluster_level": {
+    "n_seeds": 6,
+    "mean": 0.4035,
+    "ci95": [
+      0.3275,
+      0.4795
+    ],
+    "excludes_zero": true
+  },
+  "receipt_level": {
+    "n": 360,
+    "mean": 0.4035,
+    "ci95": [
+      0.3808,
+      0.4262
+    ],
+    "excludes_zero": true,
+    "sign_test": {
+      "wins": 340,
+      "losses": 5,
+      "ties": 15,
+      "p_value": 1.1203356356292317e-93
+    }
+  },
+  "verdict": "PASS",
+  "rationale": "Addendum E PASSES at k=30 on shape-varying geometry: seed-mean +0.4035 >= +0.05 over six fresh tenants, receipt CI excludes zero, sign test agrees (340W/5L, p<1e-15). Per E.2 this retires the shared-geometry objection with n doubled: the effect is not carried by one fixed corpus shape.",
+  "computed_at": "2026-08-21T04:19:05.401291+00:00"
+}
