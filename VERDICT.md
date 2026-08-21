@@ -10,7 +10,7 @@ issue.
 |---|---|---|---|
 | Novel-schema k=30 gate (Addendum B) | GO: +46.5 mean F1 over seeds {1,2,3} (+36.0/+49.0/+54.4) vs +5 bar | `experiments/novel_schema_summary_2026-08-12.json` | `python3 scripts/verify_verdict.py` |
 | Sign test | 156W / 0L / 2T over 158 scored paired receipts of 180 designed | same | same |
-| CIs | receipt-level [42.9, 49.4]; cluster-level (3 seeds) [23.1, 69.9] — both clear the bar | same | same |
+| CIs | receipt-level [42.8, 49.4]; cluster-level (3 seeds) [23.1, 69.9] — both clear the bar | same | same |
 | Baseline validity (not a floor) | kshot arms 0.4333–0.6208, inside preregistered [0.15, 0.95] window | per-arm `novel_schema_0.5b_k30_seed*_kshot_2026-08-12.json` | same |
 | Scoping of +46.5 | adaptation ADDED ON TOP of the same model's 30-shot prompt, at 0.5B | spec B.9.1 | read the spec |
 | CORD negative (the scoping result) | FAILED gates at all three scales: −7.3 / −11.5 / −4.5 F1 | `experiments/ge2_*_result_*.json` | artifacts |

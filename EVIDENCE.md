@@ -9,6 +9,17 @@ Every number below is reconciled to a named artifact in
 same size as the passes. If a number here disagrees with its artifact,
 that is a bug — open an issue.
 
+[![verify](https://github.com/raj200501/arc-ttt-public/actions/workflows/tests.yml/badge.svg)](https://github.com/raj200501/arc-ttt-public/actions/workflows/tests.yml)
+
+On every push, a GitHub-hosted runner — not this laptop — recomputes each
+headline verdict from the per-receipt artifacts and re-scores stored
+predictions against regenerated gold. The log is public and needs nothing
+installed. **This is not an independent replication:** our code, our
+artifacts, our workflow. It audits the arithmetic and the scoring, not
+the data distribution — that is what the blind-holdout offer is for.
+Mutation tests (`tests/test_verify_scripts.py`) pin that the check can
+actually fail.
+
 ---
 
 ## The ladder, in the order it happened

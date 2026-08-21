@@ -1,5 +1,16 @@
 # arc-ttt
 
+[![verify](https://github.com/raj200501/arc-ttt-public/actions/workflows/tests.yml/badge.svg)](https://github.com/raj200501/arc-ttt-public/actions/workflows/tests.yml)
+
+On every push, a GitHub-hosted runner — not this laptop — recomputes each
+headline verdict from the per-receipt artifacts and re-scores stored
+predictions against regenerated gold. The log is public and needs nothing
+installed. **This is not an independent replication:** our code, our
+artifacts, our workflow. It audits the arithmetic and the scoring, not
+the data distribution — that is what the blind-holdout offer is for.
+Mutation tests (`tests/test_verify_scripts.py`) pin that the check can
+actually fail.
+
 **Per-tenant small-model adaptation for document extraction, with
 preregistered, reproducible evals — failures published beside passes.**
 Every headline number reconciles to a machine-readable artifact
