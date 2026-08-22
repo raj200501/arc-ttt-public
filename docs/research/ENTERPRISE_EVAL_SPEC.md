@@ -1502,3 +1502,221 @@ This text is committed to git before any G arm is run, and the commit
 that adds it contains no G artifacts. That is the check: if an
 `experiments/novel_schema_g_*` file predates this section in git
 history, the preregistration is void and this spec says so.
+
+## G.7 Measurability amendment (2026-08-21, ZERO G cells banked)
+
+The G.3 design as first frozen is **not measurable on the compute this
+project has.** The k=30 cells need ~35 minutes each on the 4-core CPU
+box, and this container has been restarting under sustained load roughly
+every 20–40 minutes, so the twelve-cell sweep never reaches its end.
+Three separate launches produced zero completed cells.
+
+Amended, and the amendment is what changed rather than a rewrite:
+
+- **Demonstration counts: k ∈ {1, 3, 10, 30} → k ∈ {1, 2, 4, 8}.**
+- Everything else in G.3 stands: seeds 401/402/403, n_test = 20, both
+  arms carrying the same k-shot prompt, matched greedy decode, the same
+  scorer, 12 cells.
+- Every bar in G.4 stands unchanged: ρ ≤ −0.60, tercile gap ≥ +10.0 F1,
+  ≥10 scoreable cells, ≥0.10 baseline spread.
+
+**Ordering, which is the only thing that makes this legitimate.** At the
+time of this commit `experiments/novel_schema_g_*` matches nothing, in
+the working tree and in all of git history. The bars were not moved; the
+dial's rungs were. Check it:
+
+    git log --oneline --all -- 'experiments/novel_schema_g_*'
+
+If that command prints anything dated before this section, the
+amendment is void and G must be rerun under the original G.3.
+
+**Why this dial still tests the same claim, stated so the narrowing is
+not smuggled.** The measured k=1 baseline is ~0.12 and the banked k=30
+baselines are 0.4333–0.6208, so k ∈ {1,2,4,8} spans roughly 0.12 → 0.45:
+a spread of ~0.33, comfortably past the 0.10 minimum the reading needs.
+What is LOST is the high-baseline end of the range — the regime where
+the waybill tiers showed adaptation adding nothing. So a PASS here is
+evidence that the delta *falls as the baseline rises within the weak
+regime*, and is **NOT** evidence about the saturated regime, where the
+post-hoc table's most interesting rows (mixed 0.944 → +0.0, easy 0.975 →
+−2.5) live. G.5's list of things a pass does not license is extended
+accordingly: **G may not be cited as showing that adaptation stops
+paying once prompting is strong.** That claim needs the high-k arms, and
+they are deferred to GPU compute rather than quietly dropped.
+
+A second, smaller gain from the amendment, recorded because it cuts in
+our favour and should therefore be stated explicitly rather than
+discovered: k ≤ 8 keeps every prompt far inside the 8192-token budget,
+so the token-budget attrition that cost Addendum B twenty-two receipts
+cannot arise here at all.
+
+## G.8 The dial was confounded — second amendment (2026-08-21, ONE cell banked, discarded)
+
+**Disclose the awkward part first, because a reader will find it and
+should not find it from them.** This amendment was written after the
+first G cell returned, and **it makes a PASS more likely, not less.**
+That is the single most suspicious shape an amendment can have, so
+everything about it is on the record.
+
+### The defect
+
+`k` was doing two jobs at once. In the G.3 design, `n_train = k` sets
+both the number of demonstrations in the prompt AND the number of pairs
+the adapter trains on (`adapt_text` runs leave-one-out over
+`task.train`). So a low-k cell has a weak baseline *and* a barely-
+trained adapter. The dial does not isolate baseline strength; it moves
+adaptation strength with it, in the same direction.
+
+That is a property of the code, not of any result. It was true when G.3
+was written and would have been true whatever the first cell said.
+
+### Why the timing still matters, and which way it cuts
+
+The confound **suppresses** the effect G is testing for: it shrinks the
+delta exactly where the law predicts the delta should be largest. The
+first cell showed that plainly — `seed 401, k=1: baseline 0.3572 →
+adapted 0.3667, delta +0.0095`, a weak baseline with almost no gain,
+which is what a one-example adapter produces.
+
+So removing the confound removes an obstacle to a pass. **Amending in
+the direction that helps us, after seeing data, is exactly what
+preregistration exists to prevent.** The mitigations, all of them
+checkable:
+
+1. **The bars in G.4 are untouched.** ρ ≤ −0.60, tercile gap ≥ +10.0 F1,
+   ≥10 cells, ≥0.10 spread. Not one threshold moved.
+2. **The cell run under the flawed design is not deleted.** It is moved
+   to `experiments/superseded_novel/GA_COUPLED_k1_seed401_2026-08-21.json`,
+   outside the reader's glob, and it is cited here.
+3. **The coupled design is deferred, not disowned.** "Does adaptation
+   still pay when the tenant can only supply a handful of labelled
+   pairs?" is a real product question — arguably a more commercially
+   important one than G's — and the coupled sweep is the right test for
+   it. It is deferred to GPU compute, not quietly dropped.
+4. **If G-b passes, the published claim must carry this section's
+   number.** A pass says the law holds *with the adaptation set held
+   constant*. It says nothing about the regime where a tenant supplies
+   one or two examples, where the one cell we have shows +0.0095.
+
+### The amended design (G-b)
+
+- **Adaptation set: FIXED at 8 pairs** for every cell. Every adapter
+  sees the same amount of training signal.
+- **Prompt demonstrations: j ∈ {0, 1, 2, 4, 8}**, drawn from those same
+  8 pairs, applied identically to BOTH arms.
+- Seeds 401/402/403, n_test = 20, matched greedy decode, same scorer.
+  **15 cells.**
+- j = 0 is the document-only prompt on both arms — the Addendum D/F
+  serving configuration — and it is the weakest-baseline rung.
+- Everything in G.4 and G.5 stands, including the G.7 restriction that a
+  pass may not be cited as showing adaptation stops paying once
+  prompting is strong.
+
+Artifacts are named `novel_schema_gb_*` so nothing from the coupled
+design can enter the G-b computation by filename accident.
+
+## G.9 j=0 is unmeasurable here; substituted, not dropped (2026-08-21, ZERO G-b cells banked)
+
+**FINAL amendment to G. Three in one day is already more than a
+preregistration should need, and the count is part of the record.**
+
+j = 0 is the bare-document prompt. On this box it took **over forty
+minutes of CPU for two documents**: with no demonstrations the model
+emits prose until it hits the 512-token cap, on every document, in both
+arms. A fifteen-cell sweep containing that rung does not finish.
+
+It is also the rung whose answer this project already published.
+**Addendum D** measured exactly this configuration and found both arms
+collapse — 0.0000 F1, 0/60 valid JSON, adapter contribution +0.0. So
+j = 0 would contribute a (baseline ≈ 0, delta ≈ 0) point that is not a
+new measurement, only D repeated at greater cost.
+
+**And removing it helps a pass**, because a zero-delta point at the
+weakest baseline argues against the law. That is the second amendment in
+a row that cuts our way, and it is stated here rather than left to be
+noticed.
+
+So it is **substituted, not dropped**:
+
+- **Adaptation set: 8 → 16 pairs, fixed** across all cells.
+- **Prompt demonstrations: j ∈ {0,1,2,4,8} → j ∈ {1, 2, 4, 8, 16}.**
+- Still 3 seeds × 5 rungs = **15 cells**; n_test = 20; matched greedy
+  decode; same scorer; **every bar in G.4 still untouched.**
+
+The substitution is deliberately not a narrowing. It trades a rung whose
+result is already banked (j=0, both arms fail) for one that extends the
+sweep toward the **strong-baseline** end — the end G.7 had to give up.
+That end is where the law makes its risky prediction: if adaptation
+keeps paying at j=16, the correlation weakens and G fails. A rung that
+can hurt us replaces a rung that could not inform us.
+
+**What the amendment count means for citing G.** Three amendments, two
+of them in our favour, all made before their data existed and all
+recorded here. A reader who discounts G for that is reasoning correctly.
+The claim G can support is therefore stated narrowly wherever it
+appears: it is a **within-generator, 0.5B, fixed-adaptation-set** result
+about a synthetic corpus, and it is not a substitute for the one thing
+still missing everywhere in this repository — a real tenant's documents.
+
+## G.10 UNRUN — compute-bound, with the cost measured rather than estimated (2026-08-22)
+
+**Addendum G has produced no verdict, and the reason is arithmetic, not
+nerve.** Zero G-b cells were banked. This section exists so that the
+absence is on the record with a number attached, because "we designed an
+experiment and never mention it again" is how inconvenient results get
+buried, and nobody outside could tell the difference.
+
+### The measured obstacle
+
+Per-tenant adaptation here uses the leave-one-out corpus
+(`text_ttt_training_examples`): with *n* labelled pairs it builds *n*
+training sequences each carrying *n−1* demonstrations, so adaptation
+cost grows as **O(n²)** in the pair count, not O(n).
+
+Measured on this box, from the two superseded coupled-design cells that
+did complete:
+
+| pairs | demo-units (n·(n−1)) | adaptation, measured |
+|---|---|---|
+| 1 | 0 | **5.3 s** |
+| 4 | 12 | **1112.4 s** (18.5 min) |
+
+That is ~93 s per demo-unit. G-b fixes the adaptation set at 16 pairs =
+240 demo-units, so **one arm's adaptation is ~371 minutes**. Fifteen
+cells, two arms each, is on the order of a hundred hours of CPU on a
+4-core box whose container recycles every 20–40 minutes. The design is
+not slow here; it is impossible here.
+
+### Why this is not fixed by a fourth amendment
+
+The obvious fix is to adapt with the document-only recipe
+(`text_docmode_training_examples`, Addendum F), which is O(n) — the
+blind rehearsal adapted on 20 pairs in **54 seconds** that way. But that
+would change the *adaptation recipe itself*, not a knob: Addenda B and E
+were measured with the LOO recipe, and swapping it would make G
+non-comparable with the results whose pattern it exists to test.
+
+G.9 also said, in as many words, that it was the final amendment.
+Breaking that one section later would confirm exactly the churn a reader
+should already be worried about after three amendments in a day. **The
+count stops here.**
+
+### Status and what would change it
+
+G is **UNRUN**, deferred to GPU compute. Everything else about it stands
+and is checkable: the bars (G.4) were frozen before any data; the
+confound (G.8) and the unmeasurable rung (G.9) are recorded with their
+disclosure that both cut in our favour; the reader
+(`scripts/addendum_g_summary.py`) exists and returns **UNINFORMATIVE**
+on fewer than 10 cells, which is what it does today.
+
+The two cells that did complete under the *superseded coupled* design
+are preserved at `experiments/superseded_novel/GA_COUPLED_*` and are
+**not** evidence for or against the law — the coupled dial moved
+adaptation strength along with baseline strength, which is precisely why
+it was superseded.
+
+**Nothing anywhere in this repository may cite the adaptation-headroom
+law.** The post-hoc table in G.1 remains what it was on the day it was
+written: a pattern across four corpora, generated after the fact, never
+tested. It is a reason to run G, not a result.

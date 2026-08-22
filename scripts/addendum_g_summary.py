@@ -70,9 +70,9 @@ def spearman(xs: list[float], ys: list[float]) -> float:
 def load_cells() -> list[dict]:
     cells = []
     for path in sorted(glob.glob(str(REPO / "experiments" /
-                                     "novel_schema_g_*.json"))):
+                                     "novel_schema_gb_*.json"))):
         record = json.loads(pathlib.Path(path).read_text())
-        if record.get("addendum") != "G":
+        if record.get("addendum") != "G-b":
             continue
         assert record["device"] == "cpu" and record["dtype"] == "torch.float32", (
             f"{path}: unexpected environment stamp")
@@ -86,15 +86,15 @@ def main() -> int:
     if not cells:
         sys.exit("no Addendum G artifacts found")
 
-    cells.sort(key=lambda c: (c["seed"], c["k"]))
+    cells.sort(key=lambda c: (c["seed"], c["j"]))
     print(f"Addendum G — adaptation-headroom law, {len(cells)} cells "
           f"(bar frozen before any arm ran)\n")
-    print(f"{'seed':>5}{'k':>4}{'prompted':>11}{'adapted':>10}{'delta':>10}"
-          f"{'headroom captured':>20}{'valid JSON k/a':>17}")
+    print(f"{'seed':>5}{'j':>4}{'prompted':>11}{'adapted':>10}{'delta':>10}"
+          f"{'headroom captured':>20}{'valid JSON p/a':>17}")
     for c in cells:
         frac = c.get("captured_headroom_fraction")
         frac_s = f"{frac:+.3f}" if frac is not None else "  n/a"
-        print(f"{c['seed']:>5}{c['k']:>4}{c['kshot_mean_micro_f1']:>11.4f}"
+        print(f"{c['seed']:>5}{c['j']:>4}{c['kshot_mean_micro_f1']:>11.4f}"
               f"{c['adapted_mean_micro_f1']:>10.4f}"
               f"{c['paired_mean_delta']:>+10.4f}{frac_s:>20}"
               f"{str(c['kshot_valid_json']) + '/' + str(c['adapted_valid_json']):>17}")
@@ -108,7 +108,7 @@ def main() -> int:
 
     if len(cells) < MIN_CELLS or spread < MIN_BASELINE_SPREAD:
         why = ("too few scoreable cells" if len(cells) < MIN_CELLS
-               else "the k dial did not move baseline strength")
+               else "the j dial did not move baseline strength")
         print(f"\nVERDICT: UNINFORMATIVE — {why}. Per G.4 the correlation is "
               "not interpreted.")
         return 0

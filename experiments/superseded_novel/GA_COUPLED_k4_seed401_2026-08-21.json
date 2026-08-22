@@ -1,0 +1,145 @@
+{
+  "addendum": "G",
+  "seed": 401,
+  "k": 4,
+  "rung": "0.5b",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "decode": "greedy (samples=1), matched on both arms",
+  "n_test": 20,
+  "schema": "tenant zevafa\n  tipezo -> lodane.bubada (amount)\n  sisoso -> nalepa.butevo (code)\n  relepa -> lodane.rusime (date)\n  rukara -> nalepa.dasofi (name)\n  tutaro -> lodane.tuniri (amount)\n  gikiku -> nalepa.leravo (code)\n  sibofu -> lodane.pofolo (date)\n  safipe -> nalepa.zotaka (name)",
+  "adapt_seconds": 1112.4,
+  "kshot_mean_micro_f1": 0.566324,
+  "adapted_mean_micro_f1": 0.91875,
+  "paired_mean_delta": 0.352426,
+  "captured_headroom_fraction": 0.812648,
+  "kshot_valid_json": 19,
+  "adapted_valid_json": 20,
+  "per_doc": [
+    {
+      "index": 0,
+      "kshot": 0.7058823529411765,
+      "adapted": 0.875,
+      "delta": 0.169118
+    },
+    {
+      "index": 1,
+      "kshot": 0.625,
+      "adapted": 1.0,
+      "delta": 0.375
+    },
+    {
+      "index": 2,
+      "kshot": 0.0,
+      "adapted": 1.0,
+      "delta": 1.0
+    },
+    {
+      "index": 3,
+      "kshot": 0.47058823529411764,
+      "adapted": 0.875,
+      "delta": 0.404412
+    },
+    {
+      "index": 4,
+      "kshot": 0.75,
+      "adapted": 1.0,
+      "delta": 0.25
+    },
+    {
+      "index": 5,
+      "kshot": 0.75,
+      "adapted": 1.0,
+      "delta": 0.25
+    },
+    {
+      "index": 6,
+      "kshot": 0.625,
+      "adapted": 0.875,
+      "delta": 0.25
+    },
+    {
+      "index": 7,
+      "kshot": 0.75,
+      "adapted": 1.0,
+      "delta": 0.25
+    },
+    {
+      "index": 8,
+      "kshot": 0.375,
+      "adapted": 1.0,
+      "delta": 0.625
+    },
+    {
+      "index": 9,
+      "kshot": 0.5,
+      "adapted": 0.875,
+      "delta": 0.375
+    },
+    {
+      "index": 10,
+      "kshot": 0.375,
+      "adapted": 0.875,
+      "delta": 0.5
+    },
+    {
+      "index": 11,
+      "kshot": 0.4,
+      "adapted": 1.0,
+      "delta": 0.6
+    },
+    {
+      "index": 12,
+      "kshot": 0.75,
+      "adapted": 1.0,
+      "delta": 0.25
+    },
+    {
+      "index": 13,
+      "kshot": 0.5,
+      "adapted": 0.375,
+      "delta": -0.125
+    },
+    {
+      "index": 14,
+      "kshot": 0.5,
+      "adapted": 1.0,
+      "delta": 0.5
+    },
+    {
+      "index": 15,
+      "kshot": 0.75,
+      "adapted": 1.0,
+      "delta": 0.25
+    },
+    {
+      "index": 16,
+      "kshot": 0.25,
+      "adapted": 0.875,
+      "delta": 0.625
+    },
+    {
+      "index": 17,
+      "kshot": 0.75,
+      "adapted": 0.75,
+      "delta": 0.0
+    },
+    {
+      "index": 18,
+      "kshot": 0.875,
+      "adapted": 1.0,
+      "delta": 0.125
+    },
+    {
+      "index": 19,
+      "kshot": 0.625,
+      "adapted": 1.0,
+      "delta": 0.375
+    }
+  ],
+  "host": {
+    "platform": "Linux-6.18.44-fc-v21-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  }
+}

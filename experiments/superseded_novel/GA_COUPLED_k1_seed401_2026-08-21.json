@@ -1,0 +1,145 @@
+{
+  "addendum": "G",
+  "seed": 401,
+  "k": 1,
+  "rung": "0.5b",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "decode": "greedy (samples=1), matched on both arms",
+  "n_test": 20,
+  "schema": "tenant zevafa\n  tipezo -> lodane.bubada (amount)\n  sisoso -> nalepa.butevo (code)\n  relepa -> lodane.rusime (date)\n  rukara -> nalepa.dasofi (name)\n  tutaro -> lodane.tuniri (amount)\n  gikiku -> nalepa.leravo (code)\n  sibofu -> lodane.pofolo (date)\n  safipe -> nalepa.zotaka (name)",
+  "adapt_seconds": 5.3,
+  "kshot_mean_micro_f1": 0.357189,
+  "adapted_mean_micro_f1": 0.366708,
+  "paired_mean_delta": 0.009518,
+  "captured_headroom_fraction": 0.014807,
+  "kshot_valid_json": 17,
+  "adapted_valid_json": 19,
+  "per_doc": [
+    {
+      "index": 0,
+      "kshot": 0.23529411764705882,
+      "adapted": 0.125,
+      "delta": -0.110294
+    },
+    {
+      "index": 1,
+      "kshot": 0.0,
+      "adapted": 0.375,
+      "delta": 0.375
+    },
+    {
+      "index": 2,
+      "kshot": 0.625,
+      "adapted": 0.5,
+      "delta": -0.125
+    },
+    {
+      "index": 3,
+      "kshot": 0.5333333333333333,
+      "adapted": 0.23529411764705882,
+      "delta": -0.298039
+    },
+    {
+      "index": 4,
+      "kshot": 0.75,
+      "adapted": 0.875,
+      "delta": 0.125
+    },
+    {
+      "index": 5,
+      "kshot": 0.11764705882352941,
+      "adapted": 0.23529411764705882,
+      "delta": 0.117647
+    },
+    {
+      "index": 6,
+      "kshot": 0.0,
+      "adapted": 0.11764705882352941,
+      "delta": 0.117647
+    },
+    {
+      "index": 7,
+      "kshot": 0.3333333333333333,
+      "adapted": 0.25,
+      "delta": -0.083333
+    },
+    {
+      "index": 8,
+      "kshot": 0.5,
+      "adapted": 0.5,
+      "delta": 0.0
+    },
+    {
+      "index": 9,
+      "kshot": 0.13793103448275862,
+      "adapted": 0.0,
+      "delta": -0.137931
+    },
+    {
+      "index": 10,
+      "kshot": 0.47058823529411764,
+      "adapted": 0.4444444444444444,
+      "delta": -0.026144
+    },
+    {
+      "index": 11,
+      "kshot": 0.2857142857142857,
+      "adapted": 0.23529411764705882,
+      "delta": -0.05042
+    },
+    {
+      "index": 12,
+      "kshot": 0.375,
+      "adapted": 0.375,
+      "delta": 0.0
+    },
+    {
+      "index": 13,
+      "kshot": 0.625,
+      "adapted": 0.47058823529411764,
+      "delta": -0.154412
+    },
+    {
+      "index": 14,
+      "kshot": 0.625,
+      "adapted": 0.625,
+      "delta": 0.0
+    },
+    {
+      "index": 15,
+      "kshot": 0.38095238095238093,
+      "adapted": 0.75,
+      "delta": 0.369048
+    },
+    {
+      "index": 16,
+      "kshot": 0.25,
+      "adapted": 0.25,
+      "delta": 0.0
+    },
+    {
+      "index": 17,
+      "kshot": 0.4444444444444444,
+      "adapted": 0.23529411764705882,
+      "delta": -0.20915
+    },
+    {
+      "index": 18,
+      "kshot": 0.0,
+      "adapted": 0.5,
+      "delta": 0.5
+    },
+    {
+      "index": 19,
+      "kshot": 0.45454545454545453,
+      "adapted": 0.23529411764705882,
+      "delta": -0.219251
+    }
+  ],
+  "host": {
+    "platform": "Linux-6.18.44-fc-v21-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  }
+}
