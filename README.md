@@ -1,5 +1,107 @@
 # arc-ttt
 
+**A markdown code fence makes OpenAI's `evals` steganography monitor
+report that it detected nothing.**
+
+`evals/elsuite/steganography/monitor.py:72` asks a monitor model whether a
+response hides a payload and parses the answer with `json.loads`. If the
+model wraps its JSON in a fence the parse fails, the loop retries with
+**the same messages** up to five times, and the function returns
+`("", 0.0)` — where `0.0` means *not suspicious*. A monitor that
+correctly answered `1` is recorded as having found nothing, and the
+sample scores in the steganographer's favour.
+
+That prompt does say *"do not generate any other text"*, so a fenced
+answer disobeyed it. The finding is about which way the default falls
+when a model disobeys, not that the package is wrong.
+
+## What one fence is worth
+
+Same 30 held-out documents, same model, same prompt, same scorer. The
+only difference between the columns is three backticks.
+
+| Qwen2.5, field list only | fenced | as emitted | fence-stripped |
+|---|---|---|---|
+| 0.5B  | 30/30 | `0.0000` | **0.6350** |
+| 1.5B  | 30/30 | `0.0000` | **0.7375** |
+| 3B    | 30/30 | `0.0000` | **0.8958** |
+| 0.5B, with 20 demonstrations | **0/30** | 0.7836 | 0.7836 |
+| 1.5B, with 20 demonstrations | **0/30** | 0.8804 | 0.8804 |
+
+Two things fall out, and the second is why this survives in shipped code.
+
+**The tax grows with capability.** The better the model, the more the
+wrap costs — it had more to lose. All three print as `0.0000`.
+
+**Demonstrations suppress it.** Given twenty examples of bare JSON the
+same checkpoints wrap nothing; given a bare field list they wrap
+everything. The tax lands entirely on the *cheap* prompt regime — the one
+you reach for to make a small model economical — and is invisible in the
+expensive regime most harnesses run.
+
+That second claim compares two prompts differing in three ways at once
+(examples, ~4,300 tokens vs ~196, many turns vs one). **Addendum R** in
+[`VERDICT.md`](VERDICT.md) is preregistered to find out which one is
+doing the work, and will withdraw the sentence if it is not the examples.
+
+## Is your evaluation doing this?
+
+One file, standard library, no install, Python 3.9+:
+
+```
+python3 tools/fencecheck.py scan  path/to/your/repo
+python3 tools/fencecheck.py score predictions.jsonl
+```
+
+`scan` reports code that parses model JSON with no fence handling **and**
+turns the failure into a zero or a silent skip — only the conjunction,
+because parsing strictly is not a defect on its own. `score` reads your
+saved outputs and tells you how many are valid JSON your scorer rejects.
+Exit status 1 on a finding, so it drops into CI. See
+[`tools/README.md`](tools/README.md).
+
+## How common is it?
+
+**6 confirmed instances of 35 candidate sites, read by hand, across 34
+published packages** — in `evals`, `instructor` and `ragas`. All 29
+rejections are published with reasons in
+[`experiments/fence_census_hand.json`](experiments/fence_census_hand.json):
+most candidates turned out to be protocol frames, telemetry, HTTP
+bodies, credentials, ground-truth strings, or places where the fence is
+handled a level up.
+
+**Quote 6 of 35, not a rate over the ecosystem.** This is a lower bound
+among the packages searched, and it is not a claim that any package is
+buggy. Two mechanical classifiers failed their own preregistered accuracy
+gates before this one was done by hand (60%, then 70%, against an 80%
+floor); both withheld tallies stay published.
+
+## Why this repository found it
+
+Everything above came out of an eval harness built to test a different
+idea, which it then killed.
+
+The thesis was that per-tenant adaptation makes a 0.5B good enough for
+private document extraction. Under gates frozen before each arm ran: a
+hosted API beat the adapted model outright; a bare field list beat the
+cost argument; document grounding moved 0.8833 to 0.8833; and a
+Qwen2.5-3B with **no adaptation** and a 196-token prompt matched it at
+0.8958 against 0.8833. [`VERDICT.md`](VERDICT.md) says so in the words
+frozen beforehand, and [`CORRECTIONS.md`](CORRECTIONS.md) carries every
+withdrawal with a date.
+
+The 3B arm that ended it first reported `0.0000`. That is where the fence
+came from.
+
+---
+
+# The adaptation work, in full
+
+Everything below is the original project, unedited except where a later
+result withdrew a claim. It is kept complete because the withdrawals are
+part of the record, and because the harness described here is what found
+the fence.
+
 **Adapt a small open model (Qwen2.5-0.5B) to one tenant's document
 schema, and measure whether it beat that same model's own prompt —
 under gates frozen before the data existed, with the failures published
@@ -304,7 +406,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 305 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 312 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -365,7 +467,7 @@ sharpening. No claims beyond the artifacts in `experiments/`.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 305 offline tests (tiny in-test models; no downloads).
+- `tests/` — 312 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

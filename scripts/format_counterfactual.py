@@ -68,7 +68,7 @@ def load_jsonl(path: pathlib.Path) -> list[dict]:
 
 
 def score_one(prediction: object, gold_obj: dict) -> float:
-    from arcttt.text_ttt import score_text_output
+    from arcttt.scoring import score_text_output
 
     if prediction is None:
         return 0.0
