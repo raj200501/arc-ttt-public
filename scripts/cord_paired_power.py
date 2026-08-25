@@ -38,6 +38,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import sys
 from pathlib import Path
 
 GATE_DELTA = 0.05  # +5 F1 points, spec Addendum A / G-E2
@@ -47,24 +48,18 @@ IDENTITY_KEYS = {"rung", "k", "seed", "arm"}
 # scipy: the Kaggle/dev images do not carry scipy and a wrong CI is worse
 # than no CI. Values beyond the table fall back to the normal limit (1.960),
 # which is the correct asymptote and only ever slightly anticonservative.
-_T95 = {
-    1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571, 6: 2.447, 7: 2.365,
-    8: 2.306, 9: 2.262, 10: 2.228, 11: 2.201, 12: 2.179, 13: 2.160,
-    14: 2.145, 15: 2.131, 16: 2.120, 17: 2.110, 18: 2.101, 19: 2.093,
-    20: 2.086, 25: 2.060, 30: 2.042, 40: 2.021, 50: 2.009, 59: 2.001,
-    60: 2.000, 80: 1.990, 100: 1.984, 120: 1.980,
-}
 _Z80_POWER = 0.842  # one-sided z at 80% power
 _Z95 = 1.960
 
-
-def t95(df: int) -> float:
-    if df <= 0:
-        return float("nan")
-    if df in _T95:
-        return _T95[df]
-    smaller = [d for d in _T95 if d < df]
-    return _T95[max(smaller)] if smaller else _Z95
+# t95 is IMPORTED, not redefined. The 2026-08-21 correction said the
+# lookup table was "deleted, not extended" and that "the repo has one
+# estimator" -- and this file still carried a second table, so the class
+# the correction claimed to close was open in one place for a day. It is
+# closed here, and `tests/test_readers_agree.py` now scans every script
+# rather than a named pair, so the next copy fails a test instead of an
+# audit.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from novel_schema_summary import t95  # noqa: E402  (single estimator authority)
 
 
 def mean(values: list[float]) -> float:

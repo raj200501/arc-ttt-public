@@ -1,0 +1,20 @@
+{
+  "what": "Every scale-rung arm that stored raw model output, scored twice: exactly as emitted, and with one markdown fence removed.",
+  "why": "An arm scored 0.0000 with 30 of 30 outputs unparseable, and the outputs were correct extractions inside ```json fences. The un-repaired number is the one that flatters this project, and it is the one the runner reported alone.",
+  "the_asymmetry_that_must_be_stated": "OUR arms were produced by run_challenge.py, which does a bare json.loads and records a null on failure -- they never received this repair either. The adapted model is trained on the output format and does not fence, so in practice the repair costs it nothing; but that is an empirical claim about our arm and not a reason the rival's arm should be denied a repair any deployment would perform. Where a comparison turns on the fence, BOTH numbers are published and the fence-stripped one governs.",
+  "rows": [
+    {
+      "artifact": "waybill_scale_rung_0.5b_kshot_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "mode": "kshot",
+      "banked_mean_micro_f1": 0.7836,
+      "mean_as_is": 0.7836,
+      "invalid_as_is": 3,
+      "mean_fence_stripped": 0.7836,
+      "invalid_fence_stripped": 3,
+      "documents_fenced": 0,
+      "delta_from_fence_alone": 0.0,
+      "reading": "The fence is not what decided this arm."
+    }
+  ]
+}

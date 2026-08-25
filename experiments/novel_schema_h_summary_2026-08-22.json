@@ -1,0 +1,85 @@
+{
+  "addendum": "H",
+  "rule": {
+    "bar_delta": 0.05,
+    "requires": "seed-mean delta >= bar AND the sign test agreeing",
+    "saturation_guard": 0.95,
+    "frozen_in": "ENTERPRISE_EVAL_SPEC.md Addendum H.3 and the VERDICT.md row, both committed before any arm ran"
+  },
+  "reader_written": "before the arms landed, deliberately",
+  "control": {
+    "arm": "arbitrary mapping (control, re-run on this host)",
+    "seeds_present": [
+      1,
+      2,
+      3
+    ],
+    "seeds_missing": [],
+    "seed_deltas": [
+      0.3695,
+      0.3375,
+      0.525
+    ],
+    "seed_mean_delta": 0.4107,
+    "seed_mean_baseline": 0.5289,
+    "seed_mean_adapted": 0.9396,
+    "pooled_sign_test": {
+      "wins": 56,
+      "losses": 0,
+      "ties": 4,
+      "p_value": 1.3877787807814457e-17
+    },
+    "baseline_saturated": false
+  },
+  "mnemonic": {
+    "arm": "mnemonic mapping (the ablation)",
+    "seeds_present": [
+      1,
+      2,
+      3
+    ],
+    "seeds_missing": [],
+    "seed_deltas": [
+      0.1187,
+      0.1625,
+      0.2812
+    ],
+    "seed_mean_delta": 0.1875,
+    "seed_mean_baseline": 0.7875,
+    "seed_mean_adapted": 0.975,
+    "pooled_sign_test": {
+      "wins": 40,
+      "losses": 2,
+      "ties": 18,
+      "p_value": 2.0554580260068178e-10
+    },
+    "baseline_saturated": false
+  },
+  "no_distractors": {
+    "arm": "arbitrary mapping, no distractor lines (H-B)",
+    "seeds_present": [
+      1,
+      2,
+      3
+    ],
+    "seeds_missing": [],
+    "seed_deltas": [
+      0.2562,
+      0.3949,
+      0.2125
+    ],
+    "seed_mean_delta": 0.2879,
+    "seed_mean_baseline": 0.6892,
+    "seed_mean_adapted": 0.9771,
+    "pooled_sign_test": {
+      "wins": 46,
+      "losses": 2,
+      "ties": 12,
+      "p_value": 4.1815439999481896e-12
+    },
+    "baseline_saturated": false
+  },
+  "verdict": "(a) SURVIVES",
+  "why": "The mnemonic-mapping delta is +0.1875 with the sign test agreeing (40W/2L/18T, p=2.06e-10). The effect is NOT an artifact of the arbitrary label->key mapping. This is the strongest cheap control proposed against this result.",
+  "mapping_cost": 0.2232
+}

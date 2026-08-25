@@ -1,0 +1,1145 @@
+{
+  "what": "How far each banked artifact can be re-derived by a stranger, classified mechanically.",
+  "levels": {
+    "PRIMARY": "raw predictions stored; gold regenerable; every prediction re-scorable. Trust boundary is the generator seed plus the scorer code.",
+    "ARITHMETIC": "per-item scores stored, predictions not. The aggregation is checkable; the step from model output to score is not.",
+    "AGGREGATE": "summary statistics only. Not re-derivable.",
+    "EXTERNAL": "third-party quote, labelled as such, not ours to verify."
+  },
+  "counts": {
+    "AGGREGATE": 64,
+    "ARITHMETIC": 80,
+    "EXTERNAL": 7,
+    "PRIMARY": 36
+  },
+  "total_artifacts": 187,
+  "primary_verifiable_fraction": 0.1925,
+  "why_the_total_is_banked": "Outbound copy cites this total ('179 banked artifacts') and the reconciliation gate had been matching it against an unrelated 179 in an unrelated artifact -- a figure that traced to nothing, passing because some number of that value happened to exist somewhere. A cited figure has to be a figure this map deliberately publishes.",
+  "artifacts": [
+    {
+      "artifact": "blind_rehearsal_2026-08-20.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 4734
+    },
+    {
+      "artifact": "blind_rehearsal_baseline_2026-08-21.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 3965
+    },
+    {
+      "artifact": "blind_rehearsal_regenerated_2026-08-23.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1926
+    },
+    {
+      "artifact": "cord_frontier_baseline_2026-08-09.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 3248
+    },
+    {
+      "artifact": "cord_k10_seed2_adapted_2026-08-08.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2595
+    },
+    {
+      "artifact": "cord_k10_seed2_kshot_2026-08-08.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2606
+    },
+    {
+      "artifact": "cord_k10_seed3_adapted_2026-08-08.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2605
+    },
+    {
+      "artifact": "cord_k10_seed3_kshot_2026-08-08.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2610
+    },
+    {
+      "artifact": "cord_k30_seed1_kshot_2026-08-08.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2601
+    },
+    {
+      "artifact": "cord_k5_seed1_adapted_2026-08-08.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2591
+    },
+    {
+      "artifact": "cord_k5_seed1_kshot_2026-08-08.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2612
+    },
+    {
+      "artifact": "cord_paired_power_2026-08-11.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 8413
+    },
+    {
+      "artifact": "cord_scale_0.5b_k10_seed1_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2855
+    },
+    {
+      "artifact": "cord_scale_0.5b_k10_seed1_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2857
+    },
+    {
+      "artifact": "cord_scale_0.5b_k10_seed2_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2856
+    },
+    {
+      "artifact": "cord_scale_0.5b_k10_seed2_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2868
+    },
+    {
+      "artifact": "cord_scale_0.5b_k10_seed3_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2865
+    },
+    {
+      "artifact": "cord_scale_0.5b_k10_seed3_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2864
+    },
+    {
+      "artifact": "cord_scale_0.5b_k5_seed1_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2861
+    },
+    {
+      "artifact": "cord_scale_0.5b_k5_seed1_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2864
+    },
+    {
+      "artifact": "cord_scale_0.5b_k5_seed2_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2860
+    },
+    {
+      "artifact": "cord_scale_0.5b_k5_seed2_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2866
+    },
+    {
+      "artifact": "cord_scale_0.5b_k5_seed3_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2859
+    },
+    {
+      "artifact": "cord_scale_0.5b_k5_seed3_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2861
+    },
+    {
+      "artifact": "cord_scale_1.5b_k10_seed1_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2848
+    },
+    {
+      "artifact": "cord_scale_1.5b_k10_seed1_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2848
+    },
+    {
+      "artifact": "cord_scale_1.5b_k10_seed2_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2854
+    },
+    {
+      "artifact": "cord_scale_1.5b_k10_seed2_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2851
+    },
+    {
+      "artifact": "cord_scale_1.5b_k10_seed3_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2857
+    },
+    {
+      "artifact": "cord_scale_1.5b_k10_seed3_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2852
+    },
+    {
+      "artifact": "cord_scale_4b_cpu_oom_2026-08-11.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 2003
+    },
+    {
+      "artifact": "cord_scale_4b_k10_seed1_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2864
+    },
+    {
+      "artifact": "cord_scale_4b_k10_seed1_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2852
+    },
+    {
+      "artifact": "cord_scale_4b_k10_seed2_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2855
+    },
+    {
+      "artifact": "cord_scale_4b_k10_seed2_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2853
+    },
+    {
+      "artifact": "cord_scale_4b_k10_seed3_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2854
+    },
+    {
+      "artifact": "cord_scale_4b_k10_seed3_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2856
+    },
+    {
+      "artifact": "cord_scale_4b_k30_seed1_adapted_2026-08-11.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 139
+    },
+    {
+      "artifact": "cord_scale_4b_k30_seed1_kshot_2026-08-11.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 137
+    },
+    {
+      "artifact": "cord_scale_4b_k30_seed2_adapted_2026-08-11.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 139
+    },
+    {
+      "artifact": "cord_scale_4b_k30_seed2_kshot_2026-08-11.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 137
+    },
+    {
+      "artifact": "cord_scale_4b_k30_seed3_adapted_2026-08-11.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 139
+    },
+    {
+      "artifact": "cord_scale_4b_k30_seed3_kshot_2026-08-11.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 137
+    },
+    {
+      "artifact": "cord_scale_4b_k5_seed1_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2837
+    },
+    {
+      "artifact": "cord_scale_4b_k5_seed1_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2856
+    },
+    {
+      "artifact": "cord_scale_4b_k5_seed2_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2854
+    },
+    {
+      "artifact": "cord_scale_4b_k5_seed2_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2846
+    },
+    {
+      "artifact": "cord_scale_4b_k5_seed3_adapted_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2863
+    },
+    {
+      "artifact": "cord_scale_4b_k5_seed3_kshot_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2850
+    },
+    {
+      "artifact": "cord_scale_summary_2026-08-11.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 11105
+    },
+    {
+      "artifact": "cord_smoke_2026-08-08.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2601
+    },
+    {
+      "artifact": "cord_smoke_baseline_2026-08-08.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2605
+    },
+    {
+      "artifact": "cord_variance_summary_2026-08-08.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 5871
+    },
+    {
+      "artifact": "fence_census.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 646403
+    },
+    {
+      "artifact": "fence_census_hand.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 16226
+    },
+    {
+      "artifact": "fence_census_run2.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 553891
+    },
+    {
+      "artifact": "fence_rescore.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1933
+    },
+    {
+      "artifact": "format_counterfactual_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 4799
+    },
+    {
+      "artifact": "ge2_0.5b_result_2026-08-11.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 2694
+    },
+    {
+      "artifact": "ge2_1.5b_result_2026-08-14.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 2052
+    },
+    {
+      "artifact": "ge2_4b_result_2026-08-11.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 6549
+    },
+    {
+      "artifact": "ge2_power_finding_2026-08-11.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 3629
+    },
+    {
+      "artifact": "kaggle_v10_scored_2026-08-15.json",
+      "level": "EXTERNAL",
+      "why": "figures are third-party quotes, labelled as such and not ours to verify",
+      "bytes": 1614
+    },
+    {
+      "artifact": "kaggle_v10_submitted_2026-08-15.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1070
+    },
+    {
+      "artifact": "kaggle_v6_scored_2026-08-07.json",
+      "level": "EXTERNAL",
+      "why": "figures are third-party quotes, labelled as such and not ours to verify",
+      "bytes": 1449
+    },
+    {
+      "artifact": "kaggle_v7_postmortem_2026-08-08.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1133
+    },
+    {
+      "artifact": "kaggle_v7_scored_2026-08-09.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 998
+    },
+    {
+      "artifact": "kaggle_v8_run_2026-08-09.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1312
+    },
+    {
+      "artifact": "kaggle_v8_scored_2026-08-10.json",
+      "level": "EXTERNAL",
+      "why": "figures are third-party quotes, labelled as such and not ours to verify",
+      "bytes": 1124
+    },
+    {
+      "artifact": "kaggle_v9_run_2026-08-11.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 2999
+    },
+    {
+      "artifact": "kaggle_v9_scored_2026-08-12.json",
+      "level": "EXTERNAL",
+      "why": "figures are third-party quotes, labelled as such and not ours to verify",
+      "bytes": 2557
+    },
+    {
+      "artifact": "memprobe_1.5b_cpu_2026-08-11.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 737
+    },
+    {
+      "artifact": "novel_adapt_cost_2026-08-15.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 825
+    },
+    {
+      "artifact": "novel_cheaptier_baseline_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 24957
+    },
+    {
+      "artifact": "novel_f_length_analysis_2026-08-20.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 30048
+    },
+    {
+      "artifact": "novel_frontier_baseline_2026-08-16.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 10181
+    },
+    {
+      "artifact": "novel_greedy_quality_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 20132
+    },
+    {
+      "artifact": "novel_payload_asymmetry_2026-08-15.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1016
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed10_adapted_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7558
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed10_kshot_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7644
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed1_adapted_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7526
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed1_kshot_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7617
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed2_adapted_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7545
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed2_kshot_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7629
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed3_adapted_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7512
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed3_kshot_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7633
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed4_adapted_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7562
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed4_kshot_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7640
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed5_adapted_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7546
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed5_kshot_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7647
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed6_adapted_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7577
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed6_kshot_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7643
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed7_adapted_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7529
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed7_kshot_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7651
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed8_adapted_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7570
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed8_kshot_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7650
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed9_adapted_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7541
+    },
+    {
+      "artifact": "novel_schema_0.5b_k10_seed9_kshot_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7652
+    },
+    {
+      "artifact": "novel_schema_0.5b_k30_seed1_adapted_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7534
+    },
+    {
+      "artifact": "novel_schema_0.5b_k30_seed1_kshot_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7641
+    },
+    {
+      "artifact": "novel_schema_0.5b_k30_seed2_adapted_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 6528
+    },
+    {
+      "artifact": "novel_schema_0.5b_k30_seed2_kshot_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 6599
+    },
+    {
+      "artifact": "novel_schema_0.5b_k30_seed3_adapted_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7541
+    },
+    {
+      "artifact": "novel_schema_0.5b_k30_seed3_kshot_2026-08-12.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7631
+    },
+    {
+      "artifact": "novel_schema_cpu_oom_postmortem_2026-08-14.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 2248
+    },
+    {
+      "artifact": "novel_schema_d_0.5b_k30_seed1_doconly_2026-08-18.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7624
+    },
+    {
+      "artifact": "novel_schema_d_0.5b_k30_seed1_doczero_2026-08-18.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7622
+    },
+    {
+      "artifact": "novel_schema_d_0.5b_k30_seed2_doconly_2026-08-18.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7626
+    },
+    {
+      "artifact": "novel_schema_d_0.5b_k30_seed2_doczero_2026-08-18.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7622
+    },
+    {
+      "artifact": "novel_schema_d_0.5b_k30_seed3_doconly_2026-08-18.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7625
+    },
+    {
+      "artifact": "novel_schema_d_0.5b_k30_seed3_doczero_2026-08-18.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 7622
+    },
+    {
+      "artifact": "novel_schema_e_0.5b_k30_seed101_adapted_2026-08-19.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 5017
+    },
+    {
+      "artifact": "novel_schema_e_0.5b_k30_seed203_adapted_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 19388
+    },
+    {
+      "artifact": "novel_schema_e_0.5b_k30_seed203_kshot_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 19549
+    },
+    {
+      "artifact": "novel_schema_e_0.5b_k30_seed204_adapted_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 19999
+    },
+    {
+      "artifact": "novel_schema_e_0.5b_k30_seed204_kshot_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 20199
+    },
+    {
+      "artifact": "novel_schema_e_0.5b_k30_seed206_adapted_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 19392
+    },
+    {
+      "artifact": "novel_schema_e_0.5b_k30_seed206_kshot_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 19506
+    },
+    {
+      "artifact": "novel_schema_e_0.5b_k30_seed207_adapted_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 20540
+    },
+    {
+      "artifact": "novel_schema_e_0.5b_k30_seed207_kshot_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 20719
+    },
+    {
+      "artifact": "novel_schema_e_0.5b_k30_seed208_adapted_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 21392
+    },
+    {
+      "artifact": "novel_schema_e_0.5b_k30_seed208_kshot_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 21611
+    },
+    {
+      "artifact": "novel_schema_e_0.5b_k30_seed209_adapted_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 20554
+    },
+    {
+      "artifact": "novel_schema_e_0.5b_k30_seed209_kshot_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 20802
+    },
+    {
+      "artifact": "novel_schema_e_summary_2026-08-20.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 3173
+    },
+    {
+      "artifact": "novel_schema_er_seed_screen_2026-08-19.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1844
+    },
+    {
+      "artifact": "novel_schema_f_0.5b_k30_seed1_docadapted_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 22195
+    },
+    {
+      "artifact": "novel_schema_f_0.5b_k30_seed2_docadapted_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 22964
+    },
+    {
+      "artifact": "novel_schema_f_0.5b_k30_seed3_docadapted_2026-08-19.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 22318
+    },
+    {
+      "artifact": "novel_schema_h_0.5b_k10_seed1_arbitrary_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 13541
+    },
+    {
+      "artifact": "novel_schema_h_0.5b_k10_seed1_mnemonic_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 13504
+    },
+    {
+      "artifact": "novel_schema_h_0.5b_k10_seed1_nodecoy_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 13471
+    },
+    {
+      "artifact": "novel_schema_h_0.5b_k10_seed2_arbitrary_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 13500
+    },
+    {
+      "artifact": "novel_schema_h_0.5b_k10_seed2_mnemonic_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 13468
+    },
+    {
+      "artifact": "novel_schema_h_0.5b_k10_seed2_nodecoy_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 13520
+    },
+    {
+      "artifact": "novel_schema_h_0.5b_k10_seed3_arbitrary_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 13509
+    },
+    {
+      "artifact": "novel_schema_h_0.5b_k10_seed3_mnemonic_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 13520
+    },
+    {
+      "artifact": "novel_schema_h_0.5b_k10_seed3_nodecoy_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 13480
+    },
+    {
+      "artifact": "novel_schema_h_summary_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 2084
+    },
+    {
+      "artifact": "novel_schema_rep_summary_2026-08-12.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 2897
+    },
+    {
+      "artifact": "novel_schema_summary_2026-08-12.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 2587
+    },
+    {
+      "artifact": "novel_serving_throughput_cpu_2026-08-19.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 11812
+    },
+    {
+      "artifact": "novel_tenant_difficulty_map_2026-08-20.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 3167
+    },
+    {
+      "artifact": "per_tenant_verdicts_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 5724
+    },
+    {
+      "artifact": "project_timeline.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1079
+    },
+    {
+      "artifact": "prompt_payload_asymmetry_2026-08-14.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1216
+    },
+    {
+      "artifact": "schema_conformance_decomposition_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 11284
+    },
+    {
+      "artifact": "self_correction_ledger.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1507
+    },
+    {
+      "artifact": "summary.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 3173
+    },
+    {
+      "artifact": "t4_champ_dfs_eval_2026-08-08.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 864
+    },
+    {
+      "artifact": "t4_champ_diag_2026-08-08.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 6488
+    },
+    {
+      "artifact": "t4_champ_eval_2026-08-08.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 865
+    },
+    {
+      "artifact": "t4_dfs_fixed_repeat_2026-08-08.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1078
+    },
+    {
+      "artifact": "t4_rank_sweep_2026-08-08.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 515
+    },
+    {
+      "artifact": "t4_sft_eval_2026-08-08.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1962
+    },
+    {
+      "artifact": "t4_smoke_2026-08-08.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 388
+    },
+    {
+      "artifact": "waybill_cost_2026-08-22.json",
+      "level": "EXTERNAL",
+      "why": "figures are third-party quotes, labelled as such and not ours to verify",
+      "bytes": 3470
+    },
+    {
+      "artifact": "waybill_cost_ours_2026-08-22.json",
+      "level": "EXTERNAL",
+      "why": "figures are third-party quotes, labelled as such and not ours to verify",
+      "bytes": 1614
+    },
+    {
+      "artifact": "waybill_error_modes_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 6863
+    },
+    {
+      "artifact": "waybill_grounded_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 9974
+    },
+    {
+      "artifact": "waybill_grounded_repaired_NOT_EVIDENCE_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 6564
+    },
+    {
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 13405
+    },
+    {
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 13350
+    },
+    {
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_run3_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 16644
+    },
+    {
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_run4_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 16640
+    },
+    {
+      "artifact": "waybill_market_kshot_k0_run1_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 21777
+    },
+    {
+      "artifact": "waybill_market_kshot_k0_run2_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 21034
+    },
+    {
+      "artifact": "waybill_market_kshot_k0_run3_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 20133
+    },
+    {
+      "artifact": "waybill_market_kshot_k0schema_run1_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 18632
+    },
+    {
+      "artifact": "waybill_market_kshot_k0schema_run2_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 18663
+    },
+    {
+      "artifact": "waybill_market_kshot_k0schema_run3_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 18672
+    },
+    {
+      "artifact": "waybill_market_kshot_k2_run1_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 16713
+    },
+    {
+      "artifact": "waybill_market_kshot_k2_run2_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 16741
+    },
+    {
+      "artifact": "waybill_market_kshot_k2_run3_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 16741
+    },
+    {
+      "artifact": "waybill_market_kshot_k5_run1_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 16912
+    },
+    {
+      "artifact": "waybill_market_kshot_k5_run2_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 16741
+    },
+    {
+      "artifact": "waybill_market_kshot_k5_run3_2026-08-22.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 16853
+    },
+    {
+      "artifact": "waybill_market_kshot_summary_2026-08-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 3007
+    },
+    {
+      "artifact": "waybill_market_summary_2026-08-22.json",
+      "level": "EXTERNAL",
+      "why": "figures are third-party quotes, labelled as such and not ours to verify",
+      "bytes": 5631
+    },
+    {
+      "artifact": "waybill_matched_batch_2026-08-25.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 50686
+    },
+    {
+      "artifact": "waybill_scale_rung_1.5b_2026-08-25.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 5108
+    },
+    {
+      "artifact": "waybill_scale_rung_1.5b_schema_2026-08-25.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 2717
+    },
+    {
+      "artifact": "waybill_scale_rung_1.5b_schema_REPRO_2026-08-25.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 13614
+    },
+    {
+      "artifact": "waybill_scale_rung_3b_schema_2026-08-25.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 13115
+    },
+    {
+      "artifact": "waybill_serving_arch_2026-08-22.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 5347
+    },
+    {
+      "artifact": "waybill_serving_arch_amendment_2026-08-23.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 6354
+    },
+    {
+      "artifact": "waybill_serving_throughput_2026-08-22.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 5169
+    }
+  ],
+  "the_uncomfortable_one": "The +46.5 headline is the least verifiable number here, and this classifier is stricter about it than the prose first written beside it was. `novel_schema_summary_2026-08-12.json` is AGGREGATE -- a summary with no per-item data at all -- and its ARMS are ARITHMETIC: per-receipt scores, no predictions. So the step from model output to score cannot be re-checked by anyone, including us, at any level. It is the most cited number in this repository and the only headline that is neither primary-verifiable nor regenerable. Re-running those arms with predictions stored is the fix, it costs about nine CPU-hours, and it is not done.",
+  "aggregate_but_regenerable": "AGGREGATE is not always as weak as it sounds, and the distinction matters. Addendum K's artifact (waybill_grounded_2026-08-22.json) stores no predictions because the writer excluded them -- but every INPUT it consumed is published (the banked adapted arm's predictions, the 30 documents, the gold) and the recipe is pinned to a named commit, so a reader regenerates it in seconds with the command in its VERDICT row. Contrast the +46.5 arms, whose model outputs were discarded at generation time and are gone for good. Both read AGGREGATE here; only one is recoverable, and this classifier deliberately does not upgrade either, because ambiguity downgrades.",
+  "downgrade_rule": "Ambiguity downgrades. If stored predictions cannot be found this reports ARITHMETIC even where the artifact claims more, because the failure being guarded against is a page implying more checkability than it has."
+}

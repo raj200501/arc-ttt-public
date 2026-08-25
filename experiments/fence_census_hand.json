@@ -1,0 +1,341 @@
+{
+  "what": "Every candidate site from the narrowed search, read in context and adjudicated by hand. No classifier verdict appears in this count.",
+  "preregistered": "docs/research/FENCE_CENSUS_PREREGISTRATION.md, RUN 3, committed before any site was read.",
+  "candidates_examined": 35,
+  "packages_searched": 34,
+  "confirmed": 6,
+  "confirmed_in_library_code": 3,
+  "confirmed_in_shipped_example_code": 3,
+  "packages_with_a_confirmed_site": [
+    "evals",
+    "instructor",
+    "ragas"
+  ],
+  "headline": "Reading all 35 candidate sites by hand, 6 are confirmed instances across 3 packages: 3 in library code and 3 in shipped example code. The strongest is OpenAI evals' steganography monitor, where a fenced-but-correct answer exhausts the retry loop and the function returns a hard 0.0.",
+  "the_finding_stated_plainly": "The defect is real and it is in code people install, but it is NOT endemic. Twenty-nine of 35 candidates are protocol envelopes, telemetry payloads, HTTP bodies, credentials, ground-truth strings, or sites where the fence is handled a level up. Anyone quoting this should quote 6 of 35, not a rate over the ecosystem.",
+  "frame_limit": "A LOWER BOUND on confirmed sites among the packages searched. Not a rate over the ecosystem, and not a claim that any package is buggy. The candidate list came from a classifier whose recall over the whole corpus is unmeasured, so sites it never proposed are not counted and cannot be.",
+  "notable_conservative_miss": "Candidate 8, opencompass clbench.py, calls _strip_json_fence() one line before parsing and is clean. The classifier's fence regex missed that helper's name. It is recorded because it shows the search narrower errs in both directions, not only toward over-flagging.",
+  "adjudications": [
+    {
+      "n": 1,
+      "package": "ragas",
+      "site": "ragas-0.4.3/examples/iterate_prompt/evals.py:76",
+      "verdict": "CONFIRMED",
+      "code_kind": "example",
+      "reason": "json.loads(response) where response is a live model answer from run_prompt(); on failure predicted_labels_str='' and predicted_priority=None, both then fed to scoring. No fence handling anywhere on the path.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 2,
+      "package": "ragas",
+      "site": "ragas-0.4.3/examples/ragas_examples/benchmark_llm/evals.py:49",
+      "verdict": "CONFIRMED",
+      "code_kind": "example",
+      "reason": "Same shape: json.loads(response) on a model answer, except -> predicted_discount=None, which the scorer consumes.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 3,
+      "package": "ragas",
+      "site": "ragas-0.4.3/examples/ragas_examples/workflow_eval/workflow.py:175",
+      "verdict": "CONFIRMED",
+      "code_kind": "example",
+      "reason": "json.loads(response.choices[0].message.content.strip()) -- the model's message content, whitespace-stripped only; except -> return {}. The empty dict is the extraction result.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 4,
+      "package": "deepeval",
+      "site": "deepeval-4.2.0/deepeval/benchmarks/ifeval/ifeval.py:119",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "IFEval's detectable_format:json constraint. The instruction being verified is literally 'output JSON', so a fenced answer arguably violates it and returning False is the semantics, not a defect.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 5,
+      "package": "deepeval",
+      "site": "deepeval-4.2.0/deepeval/tracing/otel/utils.py:624",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "Normalising PydanticAI message attributes off an OpenTelemetry span -- a serialised telemetry payload, not a model's free-text answer.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 6,
+      "package": "deepeval",
+      "site": "deepeval-4.2.0/deepeval/tracing/otel/utils.py:772",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "Tool-call arguments taken from an already-normalised telemetry message. The provider parsed the tool call; a fence cannot appear inside `arguments`.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 7,
+      "package": "deepeval",
+      "site": "deepeval-4.2.0/deepeval/voice/connectors/providers/elevenlabs.py:78",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "ElevenLabs WebSocket inbound frame. A protocol envelope.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 8,
+      "package": "opencompass",
+      "site": "opencompass-0.5.3/opencompass/datasets/clbench.py:89",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "FENCE IS HANDLED: line 87 calls _strip_json_fence(str(judgement)) before parsing. The classifier's F regex missed the name `_strip_json_fence` because of the intervening `json_`. A conservative miss, and the site is clean.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 9,
+      "package": "opencompass",
+      "site": "opencompass-0.5.3/opencompass/datasets/moleculariq/moleculariq_core/rewards/count_reward.py:40",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "A reward function for count tasks. Parse failure returns (None, False) and a non-JSON key/value fallback parser follows in the same module. Not established that a fence loses the record; ambiguity downgrades.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 10,
+      "package": "opencompass",
+      "site": "opencompass-0.5.3/opencompass/openicl/icl_evaluator/pi_llm_evaluator.py:219",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "json.loads(answer_formatted) is the GROUND TRUTH, not the model's answer.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 11,
+      "package": "opencompass",
+      "site": "opencompass-0.5.3/opencompass/summarizers/subjective/alpacaeval.py:37",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "re.findall(r'\\[.*?\\]', completion)[0] extracts the bracketed list out of surrounding text before literal_eval, so wrapping is tolerated.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 12,
+      "package": "inspect-ai",
+      "site": "inspect_ai-0.3.260/src/inspect_ai/util/_sandbox/_json_rpc_transport.py:220",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "JSON-RPC transport frame.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 13,
+      "package": "inspect-ai",
+      "site": "inspect_ai-0.3.260/src/inspect_ai/util/_sandbox/service.py:382",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "A sandbox request file read from exec stdout, not model output.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 14,
+      "package": "inspect-ai",
+      "site": "inspect_ai-0.3.260/src/inspect_sandbox_tools/src/inspect_sandbox_tools/_agent_bridge/proxy.py:1723",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "Provider HTTP response body in an agent-bridge proxy; the failure emits an SSE error event, which surfaces the problem rather than degrading a value.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 15,
+      "package": "crfm-helm",
+      "site": "crfm_helm-0.5.16/src/helm/clients/anthropic_client.py:519",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "A provider's logprobs API response -- a structural wrapper, not generated prose.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 16,
+      "package": "evals",
+      "site": "evals-3.0.1.post1/evals/elsuite/steganography/monitor.py:72",
+      "verdict": "CONFIRMED",
+      "code_kind": "library",
+      "reason": "OpenAI evals, steganography monitor. validation_fn does json.loads(text) on the monitor model's completion with no fence handling. On failure the loop retries with THE SAME messages up to max_attempts=5, so a model that fences once fences five times; the retry does not rescue it. On exhaustion the function returns ('', 0.0) -- and 0.0 in this eval means contains_hidden_message = NOT SUSPICIOUS. A monitor that correctly answered 1 but wrapped it in a fence is recorded as having detected nothing.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version",
+      "direction": "The failure is not neutral. In a safety eval measuring whether a monitor catches steganography, a formatting failure is scored in the attacker's favour.",
+      "fairness_note": "The monitor's system prompt does say 'do not generate any other text', so a fenced answer has disobeyed the format instruction. The claim here is about the DIRECTION of the default when it does, not that the package is wrong."
+    },
+    {
+      "n": 17,
+      "package": "guardrails-ai",
+      "site": "guardrails_ai-0.11.0/guardrails/utils/parsing_utils.py:129",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "Streaming fragment validity probe. Returning False continues accumulating the stream; no score is produced.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 18,
+      "package": "langchain-core",
+      "site": "langchain_core-1.6.0/langchain_core/utils/_gateway.py:271",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "An HTTP gateway-metadata header, not model output.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 19,
+      "package": "crewai",
+      "site": "crewai-1.15.17/src/crewai/task.py:1238",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "_unpack_model_output receives the output of convert_to_model(), and crewai's converter path performs markdown extraction upstream. Ambiguity downgrades.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 20,
+      "package": "crewai",
+      "site": "crewai-1.15.17/src/crewai/agents/agent_adapters/base_converter_adapter.py:97",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "_validate_json is the first arm of a two-arm path: when it returns None the caller falls through to _extract_json_from_text, which handles markdown explicitly. The fence is handled one level up.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 21,
+      "package": "dspy",
+      "site": "dspy-3.3.1/dspy/primitives/python_interpreter.py:603",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "A JSON-RPC line from a Deno sandbox process.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 22,
+      "package": "instructor",
+      "site": "instructor-1.15.4/instructor/batch/processor.py:255",
+      "verdict": "CONFIRMED",
+      "code_kind": "library",
+      "reason": "instructor batch processor. content = data['response']['body']['choices'][0]['message']['content'] then json.loads(content) with no fence handling; the enclosing try returns None on failure, which the caller records as a failed batch item.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 23,
+      "package": "instructor",
+      "site": "instructor-1.15.4/instructor/batch/processor.py:283",
+      "verdict": "CONFIRMED",
+      "code_kind": "library",
+      "reason": "Same file, Anthropic branch: json.loads(text) on the model's text content block, except -> continue, dropping that content item entirely.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 24,
+      "package": "litellm",
+      "site": "litellm-1.98.0/litellm/llms/sap/credentials.py:62",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "An environment-variable credential blob.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 25,
+      "package": "litellm",
+      "site": "litellm-1.98.0/litellm/llms/openai/chat/gpt_transformation.py:492",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "A heuristic probe asking whether the model's content happens to BE a bare tool-call object; None means 'treat as ordinary text', a safe fallback rather than a degraded score. Ambiguity downgrades.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 26,
+      "package": "litellm",
+      "site": "litellm-1.98.0/litellm/llms/bedrock/chat/invoke_agent/transformation.py:208",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "Bedrock agent trace event -- protocol.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 27,
+      "package": "litellm",
+      "site": "litellm-1.98.0/litellm/llms/bedrock/realtime/transformation.py:602",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "An OpenAI-format realtime request message being transformed to Bedrock.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 28,
+      "package": "litellm",
+      "site": "litellm-1.98.0/litellm/litellm_core_utils/realtime_streaming.py:505",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "Realtime protocol frame.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 29,
+      "package": "litellm",
+      "site": "litellm-1.98.0/litellm/litellm_core_utils/realtime_streaming.py:512",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "Realtime protocol frame.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 30,
+      "package": "litellm",
+      "site": "litellm-1.98.0/litellm/litellm_core_utils/realtime_streaming.py:931",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "Backend realtime frame.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 31,
+      "package": "litellm",
+      "site": "litellm-1.98.0/litellm/integrations/datadog/datadog_llm_obs.py:357",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "A standard logging payload structure for Datadog, not a model answer.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 32,
+      "package": "litellm",
+      "site": "litellm-1.98.0/litellm/proxy/guardrails/guardrail_hooks/custom_code/primitives.py:175",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "A generic json_parse primitive exposed to user Starlark guardrail code; the caller decides what it is given.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 33,
+      "package": "litellm",
+      "site": "litellm-1.98.0/litellm/proxy/guardrails/guardrail_hooks/bedrock_guardrails.py:1974",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "An HTTP response body from the Bedrock guardrail API.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 34,
+      "package": "litellm",
+      "site": "litellm-1.98.0/litellm/proxy/guardrails/guardrail_hooks/bedrock_guardrails.py:1978",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "Same, the text branch of the same HTTP response body.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    },
+    {
+      "n": 35,
+      "package": "litellm",
+      "site": "litellm-1.98.0/litellm/proxy/auth/litellm_license.py:180",
+      "verdict": "REJECTED",
+      "code_kind": "",
+      "reason": "A signed licence blob.",
+      "evidence": "source text removed from the public export; see file and line in the pinned package version"
+    }
+  ],
+  "the_sharpest_instance": "evals/elsuite/steganography/monitor.py:72. A fenced-but-correct monitor verdict of 1 is recorded as 0.0 -- 'no hidden message' -- after five identical retries. In a safety eval, a formatting failure defaults in the attacker's favour. The system prompt does instruct bare JSON, so this is a statement about which way the default falls, not that the package is wrong.",
+  "rejected": 29,
+  "rejected_note": "Published because outbound copy cites it. Every one of these appears in `adjudications` with its own reason -- a hand-checked census that hides its rejections is a hand-picked one.",
+  "public_export_note": "Verbatim third-party source snippets are stripped from this public copy. Every file, line, classification, verdict and reason is intact, and the package version is pinned, so every entry remains checkable against the upstream source."
+}

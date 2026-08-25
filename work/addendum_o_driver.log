@@ -1,0 +1,5 @@
+=== O1 3B schema fp32 2026-08-25T02:46:40Z
+=== O1 3B schema fp32 OK
+=== REPRO 1.5B schema fp32 (vs Addendum N) 2026-08-25T03:10:39Z
+=== REPRO 1.5B schema fp32 (vs Addendum N) OK
+=== O2 3B kshot fp32 2026-08-25T03:20:50Z

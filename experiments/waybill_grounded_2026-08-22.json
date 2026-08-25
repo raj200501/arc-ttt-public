@@ -1,0 +1,295 @@
+{
+  "addendum": "K",
+  "recipe_sha256": "e211185c98ee31fe64b4dab860f72704a33b6078cb70952bc026320f95d2b589",
+  "recipe_frozen_at_commit": "48ee9df",
+  "what": "Is the gap to the hosted model a capability gap or an implementation one?",
+  "preregistered": "VERDICT.md Addendum K, frozen before any component was built. Recipe frozen by commit before the holdout was scored with it.",
+  "reader_written": "before the holdout was scored, deliberately",
+  "recipe": {
+    "mechanisms": [
+      "span snapping",
+      "OCR repair by character class"
+    ],
+    "reads_gold": false,
+    "copy_fields_source": "TRAIN split only",
+    "copy_fields": [
+      "consignee_name",
+      "destination_city",
+      "freight_class",
+      "origin_city",
+      "shipper_name",
+      "total_charge_usd",
+      "weight_lbs"
+    ]
+  },
+  "bar": {
+    "restores_claim": 0.95,
+    "materially_closed": 0.9
+  },
+  "ours_adapted": {
+    "mean_before": 0.8833,
+    "mean_after": 0.8833,
+    "documents_grounding_touched": 7,
+    "documents_grounding_damaged": 2,
+    "damage": [
+      {
+        "id": "h-3305",
+        "before": 0.5,
+        "after": 0.375,
+        "changes": {
+          "freight_class": "'705' -> '0N5' (snapped)",
+          "weight_lbs": "'8050' -> '8,50' (snapped)"
+        }
+      },
+      {
+        "id": "h-3307",
+        "before": 0.5,
+        "after": 0.375,
+        "changes": {
+          "freight_class": "'60' -> '0' (snapped)"
+        }
+      }
+    ]
+  },
+  "ours_prompted": {
+    "mean_before": 0.7836,
+    "mean_after": 0.7919,
+    "documents_grounding_touched": 4,
+    "documents_grounding_damaged": 0,
+    "damage": []
+  },
+  "hosted_runs_grounded": [
+    {
+      "mean_before": 1.0,
+      "mean_after": 0.9542,
+      "documents_grounding_touched": 6,
+      "documents_grounding_damaged": 6,
+      "damage": [
+        {
+          "id": "m-2208",
+          "before": 1.0,
+          "after": 0.875,
+          "changes": {
+            "shipper_name": "'Calloway Textile Mills' -> 'id=bb2l3|shpr=Calloway Textile Mills|cnee=Fabric' (snapped)"
+          }
+        },
+        {
+          "id": "h-3301",
+          "before": 1.0,
+          "after": 0.875,
+          "changes": {
+            "freight_class": "'50' -> '0' (snapped)"
+          }
+        },
+        {
+          "id": "h-3304",
+          "before": 1.0,
+          "after": 0.875,
+          "changes": {
+            "weight_lbs": "'23000' -> '2000' (snapped)"
+          }
+        },
+        {
+          "id": "h-3305",
+          "before": 1.0,
+          "after": 0.75,
+          "changes": {
+            "freight_class": "'70' -> '0' (snapped)",
+            "weight_lbs": "'8050' -> '8,50' (snapped)"
+          }
+        },
+        {
+          "id": "h-3307",
+          "before": 1.0,
+          "after": 0.875,
+          "changes": {
+            "freight_class": "'60' -> '0' (snapped)"
+          }
+        },
+        {
+          "id": "h-3312",
+          "before": 1.0,
+          "after": 0.375,
+          "changes": {
+            "consignee_name": "'Emerald Coast Pool Supply' -> 'consignee=Emerald Coast Pool Supply' (snapped)",
+            "destination_city": "'Tallahassee' -> 'destination=Tallahassee' (snapped)",
+            "origin_city": "'Pensacola' -> 'origin=Pensacola' (snapped)",
+            "shipper_name": "'Gulfstream Plastics Extrusion' -> 'shipper=Gulfstream Plastics Extrusion' (snapped)",
+            "total_charge_usd": "'1088.60' -> '1,888.6' (snapped)"
+          }
+        }
+      ],
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_2026-08-22.json"
+    },
+    {
+      "mean_before": 0.9708,
+      "mean_after": 0.9542,
+      "documents_grounding_touched": 6,
+      "documents_grounding_damaged": 5,
+      "damage": [
+        {
+          "id": "m-2208",
+          "before": 1.0,
+          "after": 0.875,
+          "changes": {
+            "shipper_name": "'Calloway Textile Mills' -> 'id=bb2l3|shpr=Calloway Textile Mills|cnee=Fabric' (snapped)"
+          }
+        },
+        {
+          "id": "h-3301",
+          "before": 1.0,
+          "after": 0.875,
+          "changes": {
+            "freight_class": "'50' -> '0' (snapped)"
+          }
+        },
+        {
+          "id": "h-3304",
+          "before": 1.0,
+          "after": 0.875,
+          "changes": {
+            "weight_lbs": "'23000' -> '2000' (snapped)"
+          }
+        },
+        {
+          "id": "h-3305",
+          "before": 1.0,
+          "after": 0.75,
+          "changes": {
+            "freight_class": "'70' -> '0' (snapped)",
+            "weight_lbs": "'8050' -> '8,50' (snapped)"
+          }
+        },
+        {
+          "id": "h-3312",
+          "before": 1.0,
+          "after": 0.375,
+          "changes": {
+            "consignee_name": "'Emerald Coast Pool Supply' -> 'consignee=Emerald Coast Pool Supply' (snapped)",
+            "destination_city": "'Tallahassee' -> 'destination=Tallahassee' (snapped)",
+            "origin_city": "'Pensacola' -> 'origin=Pensacola' (snapped)",
+            "shipper_name": "'Gulfstream Plastics Extrusion' -> 'shipper=Gulfstream Plastics Extrusion' (snapped)",
+            "total_charge_usd": "'1088.60' -> '1,888.6' (snapped)"
+          }
+        }
+      ],
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_run3_2026-08-22.json"
+    },
+    {
+      "mean_before": 0.975,
+      "mean_after": 0.9542,
+      "documents_grounding_touched": 6,
+      "documents_grounding_damaged": 5,
+      "damage": [
+        {
+          "id": "m-2208",
+          "before": 1.0,
+          "after": 0.875,
+          "changes": {
+            "shipper_name": "'Calloway Textile Mills' -> 'id=bb2l3|shpr=Calloway Textile Mills|cnee=Fabric' (snapped)"
+          }
+        },
+        {
+          "id": "h-3301",
+          "before": 1.0,
+          "after": 0.875,
+          "changes": {
+            "freight_class": "'50' -> '0' (snapped)"
+          }
+        },
+        {
+          "id": "h-3304",
+          "before": 1.0,
+          "after": 0.875,
+          "changes": {
+            "weight_lbs": "'23000' -> '2000' (snapped)"
+          }
+        },
+        {
+          "id": "h-3305",
+          "before": 1.0,
+          "after": 0.75,
+          "changes": {
+            "freight_class": "'70' -> '0' (snapped)",
+            "weight_lbs": "'8050' -> '8,50' (snapped)"
+          }
+        },
+        {
+          "id": "h-3312",
+          "before": 1.0,
+          "after": 0.375,
+          "changes": {
+            "consignee_name": "'Emerald Coast Pool Supply' -> 'consignee=Emerald Coast Pool Supply' (snapped)",
+            "destination_city": "'Tallahassee' -> 'destination=Tallahassee' (snapped)",
+            "origin_city": "'Pensacola' -> 'origin=Pensacola' (snapped)",
+            "shipper_name": "'Gulfstream Plastics Extrusion' -> 'shipper=Gulfstream Plastics Extrusion' (snapped)",
+            "total_charge_usd": "'1088.60' -> '1,888.6' (snapped)"
+          }
+        }
+      ],
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_run4_2026-08-22.json"
+    }
+  ],
+  "hosted_ungrounded_banked": {
+    "mean": 0.9865,
+    "range": [
+      0.9708,
+      1.0
+    ]
+  },
+  "hosted_grounded_range": [
+    0.9542,
+    0.9542
+  ],
+  "paired_grounded_vs_grounded": [
+    {
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_2026-08-22.json",
+      "hosted_mean_grounded": 0.9542,
+      "mean_delta_ours_minus_theirs": -0.0708,
+      "sign_test": {
+        "compared": "ours grounded - hosted grounded",
+        "wins": 1,
+        "losses": 9,
+        "ties": 20,
+        "observed_direction": "theirs > ours",
+        "p_value_ours_greater": 0.9990234375,
+        "p_value_theirs_greater": 0.0107421875,
+        "p_value_in_observed_direction": 0.0107421875
+      }
+    },
+    {
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_run3_2026-08-22.json",
+      "hosted_mean_grounded": 0.9542,
+      "mean_delta_ours_minus_theirs": -0.0708,
+      "sign_test": {
+        "compared": "ours grounded - hosted grounded",
+        "wins": 1,
+        "losses": 9,
+        "ties": 20,
+        "observed_direction": "theirs > ours",
+        "p_value_ours_greater": 0.9990234375,
+        "p_value_theirs_greater": 0.0107421875,
+        "p_value_in_observed_direction": 0.0107421875
+      }
+    },
+    {
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_run4_2026-08-22.json",
+      "hosted_mean_grounded": 0.9542,
+      "mean_delta_ours_minus_theirs": -0.0708,
+      "sign_test": {
+        "compared": "ours grounded - hosted grounded",
+        "wins": 1,
+        "losses": 9,
+        "ties": 20,
+        "observed_direction": "theirs > ours",
+        "p_value_ours_greater": 0.9990234375,
+        "p_value_theirs_greater": 0.0107421875,
+        "p_value_in_observed_direction": 0.0107421875
+      }
+    }
+  ],
+  "verdict": "(c) NOT AN IMPLEMENTATION ARTIFACT",
+  "why": "Grounded, our adapted 0.5B scores 0.8833, below the frozen 0.9 bar. **The gap is not an implementation artifact and the Addendum I scoping stands unchanged**, in the words frozen before this ran.",
+  "fairness_note": "Grounding is an inference-time component of a serving stack, not a scoring adjustment: it reads the document and the model's own output and never reads gold. So it is available to the hosted model too, and every arm above is grounded by the same code. Citing our grounded score against their un-grounded one would repeat the fence-strip asymmetry this project already had to correct.",
+  "disclosure": "The holdout error taxonomy was inspected during diagnosis (it was published by the challenger on 2026-08-20), so this is not a blind design. The mechanisms are justified from TRAIN statistics and the published taxonomy, the recipe was frozen by commit before the holdout was scored, and the holdout was scored once -- but a reader should discount accordingly, and the blind-holdout offer remains the only thing that retires the objection."
+}

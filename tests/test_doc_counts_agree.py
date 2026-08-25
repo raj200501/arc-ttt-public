@@ -78,3 +78,62 @@ def test_a_superseded_document_opts_out_visibly() -> None:
     assert not sync.is_superseded("a normal document about 999 offline tests")
     # ...and not by burying the word far below where anyone would see it
     assert not sync.is_superseded("x" * 700 + "SUPERSEDED")
+
+
+def test_the_matcher_recognises_a_bare_count() -> None:
+    """The third phrasing to escape the list, found 2026-08-25.
+
+    "a public harness with 303\\n  tests, 179 banked artifacts" carries no
+    "offline", no "green" and no hyphen, so every pattern passed over it
+    while the fixer reported a clean run.
+    """
+    samples = ("a public harness with 999 tests, 179 banked artifacts",
+               "a public harness with 999\n  tests, and a ledger",
+               "the harness ships 999 tests.")
+    for text in samples:
+        found = {int(m.group(1))
+                 for pattern in sync.CLAIM_PATTERNS
+                 for m in pattern.finditer(text)}
+        assert found == {999}, f"{text!r} still escapes the matcher: {found}"
+
+
+def test_an_unknown_phrasing_is_reported_rather_than_passed_over() -> None:
+    """The real fix is not another pattern; it is refusing to be silent.
+
+    Three phrasings have escaped CLAIM_PATTERNS, each found only after it
+    had already shipped. Enumerating the sentences nobody thought of is
+    impossible by construction, so the fixer must report what it can see
+    and cannot match instead of calling the run clean.
+    """
+    import tempfile
+    from pathlib import Path as _Path
+    with tempfile.TemporaryDirectory() as tmp:
+        doc = _Path(tmp) / "note.md"
+        # A ratio: the exact shape that left "83/83 tests" standing in
+        # outbound copy for six drift cycles.
+        doc.write_text("an MIT-licensed harness with 83/83 tests (public)",
+                       encoding="utf-8")
+        uncovered = sync.uncovered_claims(doc, 303)
+    assert uncovered, (
+        "a claim shape no pattern matches was passed over in silence — "
+        "which is how this number drifted three times")
+    assert "83" in uncovered[0][1]
+
+
+def test_the_suspect_scan_does_not_cry_wolf() -> None:
+    """A check that fires on prose trains the reader to ignore it.
+
+    Its first, wider version produced ten hits over the tree, nine of
+    them about test *items* rather than the suite. A gate nobody reads is
+    the same as no gate.
+    """
+    import tempfile
+    from pathlib import Path as _Path
+    noise = ("scored on 100 test receipts\n"
+             "10 ranked attempts per test\n"
+             "held out 128 for the test split\n"
+             "22 scored test documents\n")
+    with tempfile.TemporaryDirectory() as tmp:
+        doc = _Path(tmp) / "note.md"
+        doc.write_text(noise, encoding="utf-8")
+        assert sync.uncovered_claims(doc, 303) == []

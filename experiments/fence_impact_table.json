@@ -1,0 +1,101 @@
+{
+  "what": "What one markdown fence costs, per checkpoint and per prompt regime, on the same 30 held-out documents with the same pinned scorer.",
+  "method": "Each arm scored twice from its stored RAW model text: exactly as emitted, and with one fence removed. Nothing else differs between the two columns.",
+  "arms": [
+    {
+      "model": "Qwen2.5-0.5B-Instruct",
+      "regime": "schema",
+      "artifact": "waybill_scale_rung_0.5b_schema_2026-08-25.json",
+      "n": 30,
+      "fenced": 30,
+      "fence_rate": 1.0,
+      "mean_as_emitted": 0.0,
+      "invalid_as_emitted": 30,
+      "mean_fence_stripped": 0.635,
+      "invalid_fence_stripped": 0,
+      "fence_tax": 0.635,
+      "mean_prompt_tokens": 196,
+      "cost_per_1k_documents_usd": 0.5439
+    },
+    {
+      "model": "Qwen2.5-0.5B-Instruct",
+      "regime": "k-shot (20)",
+      "artifact": "waybill_scale_rung_0.5b_kshot_2026-08-25.json",
+      "n": 30,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "mean_as_emitted": 0.7836,
+      "invalid_as_emitted": 3,
+      "mean_fence_stripped": 0.7836,
+      "invalid_fence_stripped": 3,
+      "fence_tax": 0.0,
+      "mean_prompt_tokens": 4142,
+      "cost_per_1k_documents_usd": 1.3072
+    },
+    {
+      "model": "Qwen2.5-1.5B-Instruct",
+      "regime": "schema",
+      "artifact": "waybill_scale_rung_1.5b_schema_REPRO_2026-08-25.json",
+      "n": 30,
+      "fenced": 30,
+      "fence_rate": 1.0,
+      "mean_as_emitted": 0.0,
+      "invalid_as_emitted": 30,
+      "mean_fence_stripped": 0.7375,
+      "invalid_fence_stripped": 0,
+      "fence_tax": 0.7375,
+      "mean_prompt_tokens": 196,
+      "cost_per_1k_documents_usd": 1.6009
+    },
+    {
+      "model": "Qwen2.5-1.5B-Instruct",
+      "regime": "k-shot (20)",
+      "artifact": "waybill_scale_rung_1.5b_kshot_RAW_2026-08-25.json",
+      "n": 30,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "mean_as_emitted": 0.8804,
+      "invalid_as_emitted": 0,
+      "mean_fence_stripped": 0.8804,
+      "invalid_fence_stripped": 0,
+      "fence_tax": 0.0,
+      "mean_prompt_tokens": 4142,
+      "cost_per_1k_documents_usd": 3.462
+    },
+    {
+      "model": "Qwen2.5-3B-Instruct",
+      "regime": "schema",
+      "artifact": "waybill_scale_rung_3b_schema_2026-08-25.json",
+      "n": 30,
+      "fenced": 30,
+      "fence_rate": 1.0,
+      "mean_as_emitted": 0.0,
+      "invalid_as_emitted": 30,
+      "mean_fence_stripped": 0.8958,
+      "invalid_fence_stripped": 0,
+      "fence_tax": 0.8958,
+      "mean_prompt_tokens": 196,
+      "cost_per_1k_documents_usd": 3.6992
+    }
+  ],
+  "not_measurable": [
+    {
+      "model": "Qwen2.5-3B-Instruct",
+      "regime": "k-shot (20)",
+      "artifact": "waybill_scale_rung_3b_kshot_2026-08-25.json",
+      "why": "not banked"
+    }
+  ],
+  "fence_rate_by_regime": {
+    "schema (field list only)": [
+      1.0
+    ],
+    "k-shot (20 demonstrations)": [
+      0.0
+    ]
+  },
+  "the_finding": "Demonstrations suppress the fence. In the schema regime every checkpoint measured wraps its answer on every document; in the k-shot regime, given twenty examples of bare JSON, the same checkpoints wrap none. So the fence tax falls entirely on the CHEAP prompt regime -- the one you would use to make a small model economical -- and is invisible in the expensive regime that most benchmark harnesses run.",
+  "the_tax_grows_with_capability": "In the schema regime the fence costs more the better the model is, because a better model had more to lose. Every arm is reported as 0.0000 as emitted, so the loss is invisible in the number a harness prints.",
+  "scope": "One corpus, thirty agent-authored documents, one seed, greedy, CPU, one model family. It says nothing about checkpoints or families not listed, and a fence rate measured on 30 documents of one shape is not a fence rate in general.",
+  "what_it_does_not_show": "It does not show any published benchmark number is wrong. It shows what the defect costs WHERE IT FIRES, on this corpus. Whether a given harness fires it is the separate question the hand-adjudicated census answers, and the two are reported side by side rather than multiplied together."
+}

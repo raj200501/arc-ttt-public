@@ -118,6 +118,37 @@ def test_no_reader_carries_a_hardcoded_quantile() -> None:
                 "both readers must call t95()")
 
 
+def test_exactly_one_script_defines_t95() -> None:
+    """The 2026-08-21 correction said the table was "deleted, not
+    extended" and that "the repo has one estimator". That was true of the
+    two readers it named and FALSE of the repo: `cord_paired_power.py`
+    kept its own lookup table, with the same nearest-smaller-df fallback
+    the correction was written about, for a day afterwards.
+
+    Naming two files was the bug. This scans every script, so the next
+    copy fails a test rather than waiting for an audit -- which is what
+    closing a defect CLASS has to mean.
+    """
+    definers = sorted(path.name for path in SCRIPTS.glob("*.py")
+                      if re.search(r"^def t95\b", path.read_text(), re.M))
+    assert definers == ["novel_schema_summary.py"], (
+        f"t95 is defined in {definers}; exactly one script may define it "
+        "and every other caller must import that one")
+
+
+def test_no_script_carries_a_student_t_lookup_table() -> None:
+    """A table is the defect class, whatever the file or variable is
+    called. Fingerprints are quantiles that only appear in such a table
+    (df=1, 2, 5) -- the small df where the old fallback did its damage."""
+    for path in sorted(SCRIPTS.glob("*.py")):
+        code = "\n".join(line.split("#")[0]
+                         for line in path.read_text().splitlines())
+        for fingerprint in ("12.706", "4.303", "2.5706", "2.571"):
+            assert fingerprint not in code, (
+                f"{path.name} carries a t-quantile table entry "
+                f"({fingerprint!r}); call t95() instead")
+
+
 def test_t95_is_exact_not_a_table() -> None:
     """Published values, including the df the old table silently missed."""
     reference = {1: 12.7062, 2: 4.3027, 5: 2.5706, 10: 2.2281,
@@ -147,7 +178,11 @@ def test_addendum_e_cluster_interval_uses_five_degrees_of_freedom() -> None:
     # another published a different one, with nothing comparing them; the
     # E interval had the same hole until this line.
     hi = float(printed.group(2))
-    quoted = f"[+{lo * 100:.1f}, +{hi * 100:.1f}]"
+    # Two decimal places, matching the artifact's own stored precision and
+    # tests/test_evidence_card.py. These two checks disagreed on rounding
+    # for one commit on 2026-08-22 and each passed alone; one convention,
+    # both readers, or the next drift hides in the gap between them.
+    quoted = f"[+{lo * 100:.2f}, +{hi * 100:.2f}]"
     for name in ("VERDICT.md", "EVIDENCE.md"):
         text = (REPO / name).read_text(encoding="utf-8")
         assert quoted in text, (

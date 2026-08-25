@@ -1,0 +1,208 @@
+{
+  "what": "The frozen two-statistics rule applied PER TENANT rather than pooled, for every paired gate arm in the repository.",
+  "status": "POST-HOC re-reading of banked artifacts under the already-frozen rule. It does NOT restate any gate verdict -- the gates were preregistered on the pooled statistic and stand as decided. Published because the pooled and per-tenant treatments were being applied asymmetrically, and the asymmetry favoured us.",
+  "rule": {
+    "bar_delta": 0.05,
+    "requires": "mean delta >= bar AND sign test p < 0.05 with wins > losses"
+  },
+  "tenants_passing_individually": "11/12",
+  "tenants_failing_individually": [
+    "gate4_addendum_F_document_mode:2"
+  ],
+  "gates": [
+    {
+      "gate": "gate1_addendum_B_k30",
+      "comparison": "adaptation vs the same model's 30-shot prompt",
+      "tenants_passing_individually": "3/3",
+      "tenants_failing_individually": [],
+      "tenants": [
+        {
+          "tenant": "1",
+          "n": 60,
+          "mean_delta": 0.3604,
+          "sign_test": {
+            "wins": 58,
+            "losses": 0,
+            "ties": 2,
+            "p_value": 3.469446951953614e-18
+          },
+          "clears_bar": true,
+          "sign_test_agrees": true,
+          "per_tenant_verdict": "PASS"
+        },
+        {
+          "tenant": "2",
+          "n": 38,
+          "mean_delta": 0.4901,
+          "sign_test": {
+            "wins": 38,
+            "losses": 0,
+            "ties": 0,
+            "p_value": 3.637978807091713e-12
+          },
+          "clears_bar": true,
+          "sign_test_agrees": true,
+          "per_tenant_verdict": "PASS"
+        },
+        {
+          "tenant": "3",
+          "n": 60,
+          "mean_delta": 0.5437,
+          "sign_test": {
+            "wins": 60,
+            "losses": 0,
+            "ties": 0,
+            "p_value": 8.673617379884035e-19
+          },
+          "clears_bar": true,
+          "sign_test_agrees": true,
+          "per_tenant_verdict": "PASS"
+        }
+      ]
+    },
+    {
+      "gate": "gate4_addendum_F_document_mode",
+      "comparison": "document-mode adapted vs the same 30-shot prompt",
+      "tenants_passing_individually": "2/3",
+      "tenants_failing_individually": [
+        "2"
+      ],
+      "tenants": [
+        {
+          "tenant": "1",
+          "n": 60,
+          "mean_delta": 0.3198,
+          "sign_test": {
+            "wins": 58,
+            "losses": 1,
+            "ties": 1,
+            "p_value": 1.0408340855860843e-16
+          },
+          "clears_bar": true,
+          "sign_test_agrees": true,
+          "per_tenant_verdict": "PASS"
+        },
+        {
+          "tenant": "2",
+          "n": 38,
+          "mean_delta": 0.0548,
+          "sign_test": {
+            "wins": 18,
+            "losses": 15,
+            "ties": 5,
+            "p_value": 0.3641662404406816
+          },
+          "clears_bar": true,
+          "sign_test_agrees": false,
+          "per_tenant_verdict": "FAIL"
+        },
+        {
+          "tenant": "3",
+          "n": 60,
+          "mean_delta": 0.3465,
+          "sign_test": {
+            "wins": 50,
+            "losses": 3,
+            "ties": 7,
+            "p_value": 2.759792394613214e-12
+          },
+          "clears_bar": true,
+          "sign_test_agrees": true,
+          "per_tenant_verdict": "PASS"
+        }
+      ]
+    },
+    {
+      "gate": "gate5_addendum_E_r2",
+      "comparison": "six fresh shape-varying tenants",
+      "tenants_passing_individually": "6/6",
+      "tenants_failing_individually": [],
+      "tenants": [
+        {
+          "tenant": "203",
+          "n": 60,
+          "mean_delta": 0.2639,
+          "sign_test": {
+            "wins": 53,
+            "losses": 0,
+            "ties": 7,
+            "p_value": 1.1102230246251565e-16
+          },
+          "clears_bar": true,
+          "sign_test_agrees": true,
+          "per_tenant_verdict": "PASS"
+        },
+        {
+          "tenant": "204",
+          "n": 60,
+          "mean_delta": 0.4639,
+          "sign_test": {
+            "wins": 59,
+            "losses": 1,
+            "ties": 0,
+            "p_value": 5.2909066017292616e-17
+          },
+          "clears_bar": true,
+          "sign_test_agrees": true,
+          "per_tenant_verdict": "PASS"
+        },
+        {
+          "tenant": "206",
+          "n": 60,
+          "mean_delta": 0.3528,
+          "sign_test": {
+            "wins": 56,
+            "losses": 3,
+            "ties": 1,
+            "p_value": 5.946632075648495e-14
+          },
+          "clears_bar": true,
+          "sign_test_agrees": true,
+          "per_tenant_verdict": "PASS"
+        },
+        {
+          "tenant": "207",
+          "n": 60,
+          "mean_delta": 0.3762,
+          "sign_test": {
+            "wins": 55,
+            "losses": 1,
+            "ties": 4,
+            "p_value": 7.91033905045424e-16
+          },
+          "clears_bar": true,
+          "sign_test_agrees": true,
+          "per_tenant_verdict": "PASS"
+        },
+        {
+          "tenant": "208",
+          "n": 60,
+          "mean_delta": 0.4619,
+          "sign_test": {
+            "wins": 58,
+            "losses": 0,
+            "ties": 2,
+            "p_value": 3.469446951953614e-18
+          },
+          "clears_bar": true,
+          "sign_test_agrees": true,
+          "per_tenant_verdict": "PASS"
+        },
+        {
+          "tenant": "209",
+          "n": 60,
+          "mean_delta": 0.5024,
+          "sign_test": {
+            "wins": 59,
+            "losses": 0,
+            "ties": 1,
+            "p_value": 1.734723475976807e-18
+          },
+          "clears_bar": true,
+          "sign_test_agrees": true,
+          "per_tenant_verdict": "PASS"
+        }
+      ]
+    }
+  ]
+}

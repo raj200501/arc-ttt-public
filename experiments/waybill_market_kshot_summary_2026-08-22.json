@@ -1,0 +1,82 @@
+{
+  "addendum": "J",
+  "what": "Does the hosted model need the 20 demonstrations that our payload-asymmetry cost argument depends on?",
+  "preregistered": "VERDICT.md Addendum J, with the schema-declared arm added after the first k=0 cell and BEFORE the rest of the sweep -- an ordering that makes it an experiment rather than a rescue.",
+  "reader_written": "before the sweep finished, deliberately",
+  "comparison_k20": {
+    "mean": 0.9865,
+    "range": [
+      0.9708,
+      1.0
+    ],
+    "prompt_tokens_per_1k_docs": 4332000
+  },
+  "our_adapted_0_5b": 0.8833,
+  "arms": {
+    "k=0": {
+      "runs": 3,
+      "means": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean_of_runs": 0.0,
+      "range": [
+        0.0,
+        0.0
+      ],
+      "invalid_json_worst": 30,
+      "prompt_tokens_per_1k_docs": 106000
+    },
+    "k=0+schema": {
+      "runs": 3,
+      "means": [
+        0.9,
+        0.9208,
+        0.8583
+      ],
+      "mean_of_runs": 0.893,
+      "range": [
+        0.8583,
+        0.9208
+      ],
+      "invalid_json_worst": 0,
+      "prompt_tokens_per_1k_docs": 172000
+    },
+    "k=2": {
+      "runs": 3,
+      "means": [
+        0.9667,
+        0.975,
+        0.975
+      ],
+      "mean_of_runs": 0.9722,
+      "range": [
+        0.9667,
+        0.975
+      ],
+      "invalid_json_worst": 0,
+      "prompt_tokens_per_1k_docs": 498000
+    },
+    "k=5": {
+      "runs": 3,
+      "means": [
+        0.9292,
+        0.9542,
+        0.9542
+      ],
+      "mean_of_runs": 0.9459,
+      "range": [
+        0.9292,
+        0.9542
+      ],
+      "invalid_json_worst": 0,
+      "prompt_tokens_per_1k_docs": 1083000
+    }
+  },
+  "verdict": "(c) ASYMMETRY REAL, BUYS US NOTHING ON QUALITY",
+  "why": "The schema-declared arm scores 0.8930: below k=20's 0.9865 but still at or above our adapted 0.8833. The demonstrations are worth something, so the payload asymmetry is real (25x fewer prompt tokens without them) -- but a buyer can drop them, stay above us on quality, and pay far less. The claim narrows to cost at a quality we do not have.",
+  "cheapest_arm_holding_quality": "k=2",
+  "letter_versus_substance": "**The letter of the frozen readings and their substance disagree, and the substance is against us.** The readings key on k=0, where the model scores 0.0000, so reading (b) applies by the wording. But k=2 already scores 0.9722 -- within the frozen 0.02 tolerance of k=20 -- on 498,000 prompt tokens per 1,000 documents against 4,332,000, a 8.7x reduction. The hosted model does not need 20 demonstrations; it needs a couple. A preregistration is a commitment, not a shield, so this is stated rather than left to the wording that favours us.",
+  "bare_k0_note": "The bare k=0 arm is reported but is NOT evidence for us. Its failure mode is invalid JSON, not wrong field names -- the model answers in prose when told nothing, which is the format problem a free constrained decoder fixes. Citing it as proof that demonstrations are load-bearing would be beating a strawman."
+}

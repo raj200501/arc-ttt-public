@@ -1,0 +1,158 @@
+{
+  "NOT_EVIDENCE": "This artifact is NOT Addendum K's result and is cited nowhere as evidence. Addendum K's holdout was scored ONCE, under the recipe frozen at commit 48ee9df, and returned reading (c) -- see waybill_grounded_2026-08-22.json. Three tokenizer defects were then found by inspecting what grounding DAMAGED on those same 30 documents. This file is the repaired recipe re-run on them, so its number is holdout-informed by construction: the defects it fixes were identified from the very documents it is scored on. It is banked for engineering honesty -- so the repair's effect is on the record rather than described -- and it needs a fresh blind corpus before it means anything, which is what the blind-holdout offer is for. Note also what it does NOT change: grounding lifts the hosted arm too, to 0.9958, so grounded-against-grounded we go from 1W/9L to 0W/11L/19T at p=4.9e-04. A mechanism available to both sides cannot close a relative gap.",
+  "addendum": "K",
+  "recipe_sha256": "3c80698a06910ecd707a34e85c062247020a9a196909d8ceaeeae276d1321e8a",
+  "what": "Is the gap to the hosted model a capability gap or an implementation one?",
+  "preregistered": "VERDICT.md Addendum K, frozen before any component was built. Recipe frozen by commit before the holdout was scored with it.",
+  "reader_written": "before the holdout was scored, deliberately",
+  "recipe": {
+    "mechanisms": [
+      "span snapping",
+      "OCR repair by character class"
+    ],
+    "reads_gold": false,
+    "copy_fields_source": "TRAIN split only",
+    "copy_fields": [
+      "consignee_name",
+      "destination_city",
+      "freight_class",
+      "origin_city",
+      "shipper_name",
+      "total_charge_usd",
+      "weight_lbs"
+    ]
+  },
+  "bar": {
+    "restores_claim": 0.95,
+    "materially_closed": 0.9
+  },
+  "ours_adapted": {
+    "mean_before": 0.8833,
+    "mean_after": 0.9,
+    "documents_grounding_touched": 5,
+    "documents_grounding_damaged": 0,
+    "damage": []
+  },
+  "ours_prompted": {
+    "mean_before": 0.7836,
+    "mean_after": 0.8044,
+    "documents_grounding_touched": 3,
+    "documents_grounding_damaged": 0,
+    "damage": []
+  },
+  "hosted_runs_grounded": [
+    {
+      "mean_before": 1.0,
+      "mean_after": 0.9958,
+      "documents_grounding_touched": 1,
+      "documents_grounding_damaged": 1,
+      "damage": [
+        {
+          "id": "h-3312",
+          "before": 1.0,
+          "after": 0.875,
+          "changes": {
+            "total_charge_usd": "'1088.60' -> '$1,088.60' (snapped)"
+          }
+        }
+      ],
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_2026-08-22.json"
+    },
+    {
+      "mean_before": 0.9708,
+      "mean_after": 0.9958,
+      "documents_grounding_touched": 2,
+      "documents_grounding_damaged": 1,
+      "damage": [
+        {
+          "id": "h-3312",
+          "before": 1.0,
+          "after": 0.875,
+          "changes": {
+            "total_charge_usd": "'1088.60' -> '$1,088.60' (snapped)"
+          }
+        }
+      ],
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_run3_2026-08-22.json"
+    },
+    {
+      "mean_before": 0.975,
+      "mean_after": 0.9958,
+      "documents_grounding_touched": 2,
+      "documents_grounding_damaged": 1,
+      "damage": [
+        {
+          "id": "h-3312",
+          "before": 1.0,
+          "after": 0.875,
+          "changes": {
+            "total_charge_usd": "'1088.60' -> '$1,088.60' (snapped)"
+          }
+        }
+      ],
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_run4_2026-08-22.json"
+    }
+  ],
+  "hosted_ungrounded_banked": {
+    "mean": 0.9865,
+    "range": [
+      0.9708,
+      1.0
+    ]
+  },
+  "hosted_grounded_range": [
+    0.9958,
+    0.9958
+  ],
+  "paired_grounded_vs_grounded": [
+    {
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_2026-08-22.json",
+      "hosted_mean_grounded": 0.9958,
+      "mean_delta_ours_minus_theirs": -0.0958,
+      "sign_test": {
+        "compared": "ours grounded - hosted grounded",
+        "wins": 0,
+        "losses": 11,
+        "ties": 19,
+        "observed_direction": "theirs > ours",
+        "p_value_ours_greater": 1.0,
+        "p_value_theirs_greater": 0.00048828125,
+        "p_value_in_observed_direction": 0.00048828125
+      }
+    },
+    {
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_run3_2026-08-22.json",
+      "hosted_mean_grounded": 0.9958,
+      "mean_delta_ours_minus_theirs": -0.0958,
+      "sign_test": {
+        "compared": "ours grounded - hosted grounded",
+        "wins": 0,
+        "losses": 11,
+        "ties": 19,
+        "observed_direction": "theirs > ours",
+        "p_value_ours_greater": 1.0,
+        "p_value_theirs_greater": 0.00048828125,
+        "p_value_in_observed_direction": 0.00048828125
+      }
+    },
+    {
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_run4_2026-08-22.json",
+      "hosted_mean_grounded": 0.9958,
+      "mean_delta_ours_minus_theirs": -0.0958,
+      "sign_test": {
+        "compared": "ours grounded - hosted grounded",
+        "wins": 0,
+        "losses": 11,
+        "ties": 19,
+        "observed_direction": "theirs > ours",
+        "p_value_ours_greater": 1.0,
+        "p_value_theirs_greater": 0.00048828125,
+        "p_value_in_observed_direction": 0.00048828125
+      }
+    }
+  ],
+  "verdict": "(b) MATERIALLY CLOSED, NOT MATCHED",
+  "why": "Grounded, our adapted 0.5B scores 0.9000 -- above the frozen 0.9 bar and below 0.95. Per the frozen reading, **the claim is stated at exactly the number reached, 0.9000, and not at the hosted tier's range.** The gap narrowed; it did not close.",
+  "fairness_note": "Grounding is an inference-time component of a serving stack, not a scoring adjustment: it reads the document and the model's own output and never reads gold. So it is available to the hosted model too, and every arm above is grounded by the same code. Citing our grounded score against their un-grounded one would repeat the fence-strip asymmetry this project already had to correct.",
+  "disclosure": "The holdout error taxonomy was inspected during diagnosis (it was published by the challenger on 2026-08-20), so this is not a blind design. The mechanisms are justified from TRAIN statistics and the published taxonomy, the recipe was frozen by commit before the holdout was scored, and the holdout was scored once -- but a reader should discount accordingly, and the blind-holdout offer remains the only thing that retires the objection."
+}

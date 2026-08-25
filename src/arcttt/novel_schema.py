@@ -146,6 +146,7 @@ def make_schema(
     n_groups: int = 2,
     n_distractors: int = 4,
     geometry: str = "fixed",
+    mapping: str = "arbitrary",
 ) -> NovelSchema:
     """Build one tenant schema with nesting and distractors.
 
@@ -197,7 +198,19 @@ def make_schema(
     fields: list[FieldSpec] = []
     for index in range(n_fields):
         doc_label = pool.pop()
-        json_key = pool.pop()  # deliberately unrelated to doc_label
+        unrelated_key = pool.pop()  # deliberately unrelated to doc_label
+        # ABLATION (2026-08-22, Addendum H). ``mapping="mnemonic"`` makes the
+        # JSON key the SAME token as the document label, which is what real
+        # tenant schemas look like ("Ship Date:" -> ship_date). The unrelated
+        # word is still drawn so the pool is consumed identically and the two
+        # corpora differ in NOTHING except the key names -- same labels, same
+        # distractors, same values, same shuffles.
+        if mapping == "mnemonic":
+            json_key = doc_label
+        elif mapping == "arbitrary":
+            json_key = unrelated_key
+        else:
+            raise ValueError(f"unknown mapping: {mapping!r}")
         if geometry in ("diverse", "diverse-compact"):
             group = group_names[assignment[index]]
             kind = kinds[index]
@@ -264,6 +277,7 @@ def make_task(
     task_id: str | None = None,
 
     geometry: str = "fixed",
+    mapping: str = "arbitrary",
 ):
     """A ``TextTask`` over one invented tenant schema.
 
@@ -276,7 +290,7 @@ def make_task(
 
     schema = make_schema(
         seed, n_fields=n_fields, n_groups=n_groups,
-        n_distractors=n_distractors, geometry=geometry
+        n_distractors=n_distractors, geometry=geometry, mapping=mapping
     )
     total = n_train + n_test
     # Offset record seeds by the schema seed so two tenants never share

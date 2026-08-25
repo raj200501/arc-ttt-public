@@ -1,0 +1,151 @@
+=== 0.5B schema 2026-08-25T15:23:46Z
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Qwen/Qwen2.5-0.5B-Instruct  mode=schema  dtype=float32  batch=1
+mean prompt tokens: 196
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:02<12:56,  2.69s/it]Loading weights:   8%|▊         | 23/290 [00:03<00:28,  9.22it/s]Loading weights:   9%|▉         | 27/290 [00:06<01:08,  3.83it/s]Loading weights:  12%|█▏        | 35/290 [00:07<00:48,  5.27it/s]Loading weights:  14%|█▍        | 40/290 [00:08<00:56,  4.43it/s]Loading weights:  18%|█▊        | 51/290 [00:11<00:51,  4.63it/s]Loading weights:  22%|██▏       | 63/290 [00:13<00:49,  4.57it/s]Loading weights:  26%|██▌       | 75/290 [00:16<00:47,  4.53it/s]Loading weights:  30%|███       | 87/290 [00:16<00:30,  6.71it/s]Loading weights:  31%|███▏      | 91/290 [00:18<00:39,  5.05it/s]Loading weights:  34%|███▍      | 100/290 [00:19<00:32,  5.79it/s]Loading weights:  39%|███▉      | 113/290 [00:22<00:30,  5.74it/s]Loading weights:  43%|████▎     | 125/290 [00:24<00:28,  5.75it/s]Loading weights:  51%|█████     | 147/290 [00:26<00:20,  6.99it/s]Loading weights:  55%|█████▍    | 159/290 [00:26<00:14,  9.23it/s]Loading weights:  56%|█████▌    | 162/290 [00:28<00:21,  6.01it/s]Loading weights:  59%|█████▉    | 171/290 [00:29<00:14,  7.97it/s]Loading weights:  60%|██████    | 175/290 [00:31<00:22,  5.08it/s]Loading weights:  63%|██████▎   | 183/290 [00:31<00:15,  7.02it/s]Loading weights:  64%|██████▍   | 187/290 [00:33<00:21,  4.78it/s]Loading weights:  68%|██████▊   | 196/290 [00:35<00:19,  4.72it/s]Loading weights:  72%|███████▏  | 208/290 [00:37<00:15,  5.26it/s]Loading weights:  76%|███████▌  | 221/290 [00:37<00:08,  8.32it/s]Loading weights:  80%|███████▉  | 231/290 [00:37<00:05, 11.39it/s]Loading weights:  82%|████████▏ | 237/290 [00:38<00:04, 11.76it/s]Loading weights:  84%|████████▍ | 245/290 [00:39<00:05,  8.48it/s]Loading weights:  86%|████████▌ | 249/290 [00:40<00:05,  8.06it/s]Loading weights:  88%|████████▊ | 256/290 [00:42<00:05,  5.98it/s]Loading weights:  92%|█████████▏| 268/290 [00:43<00:02,  7.53it/s]Loading weights:  97%|█████████▋| 280/290 [00:43<00:00, 11.53it/s]Loading weights: 100%|██████████| 290/290 [00:43<00:00,  6.66it/s]
+  1/30     9.8s
+  2/30     7.7s
+  3/30     7.5s
+  4/30     5.9s
+  5/30     6.1s
+  6/30     6.7s
+  7/30     6.8s
+  8/30     6.4s
+  9/30     6.7s
+  10/30     7.2s
+  11/30     7.2s
+  12/30     7.2s
+  13/30     7.3s
+  14/30     6.8s
+  15/30     6.4s
+  16/30     6.6s
+  17/30     6.8s
+  18/30     6.8s
+  19/30     6.7s
+  20/30     6.8s
+  21/30     8.0s
+  22/30     6.6s
+  23/30     6.4s
+  24/30     6.4s
+  25/30     7.1s
+  26/30     6.1s
+  27/30     6.8s
+  28/30     6.7s
+  29/30     6.2s
+  30/30     6.5s
+
+Qwen/Qwen2.5-0.5B-Instruct schema: 0.0000  (30 invalid JSON)  $0.553/1k
+our adapted 0.5B      : 0.8833
+paired (ours - theirs): +0.8833  {'wins_ours': 30, 'losses_ours': 0, 'ties': 0, 'observed_direction': 'ours > theirs', 'p_value_ours_greater': 0.0, 'p_value_theirs_greater': 1.0, 'p_value_in_observed_direction': 0.0}
+
+banked: experiments/waybill_scale_rung_0.5b_schema_2026-08-25.json
+Read it against the frozen readings in VERDICT.md.
+=== 0.5B schema OK
+=== 0.5B kshot 2026-08-25T15:29:28Z
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Qwen/Qwen2.5-0.5B-Instruct  mode=kshot  dtype=float32  batch=1
+mean prompt tokens: 4142
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:02<13:00,  2.70s/it]Loading weights:  76%|███████▌  | 220/290 [00:02<00:00, 110.19it/s]Loading weights: 100%|██████████| 290/290 [00:03<00:00, 84.04it/s] 
+  1/30    18.8s
+  2/30    15.9s
+  3/30    16.2s
+  4/30    16.3s
+  5/30    16.0s
+  6/30    19.0s
+  7/30    16.4s
+  8/30    15.5s
+  9/30    15.5s
+  10/30    21.3s
+  11/30    15.9s
+  12/30    16.4s
+  13/30    16.2s
+  14/30    16.2s
+  15/30    16.2s
+  16/30    17.4s
+  17/30    15.8s
+  18/30    16.5s
+  19/30    16.4s
+  20/30    16.5s
+  21/30    18.6s
+  22/30    16.3s
+  23/30    15.4s
+  24/30    16.0s
+  25/30    16.6s
+  26/30    16.5s
+  27/30    15.9s
+  28/30    15.8s
+  29/30    15.7s
+  30/30    15.4s
+
+Qwen/Qwen2.5-0.5B-Instruct kshot: 0.7836  (3 invalid JSON)  $1.3331/1k
+our adapted 0.5B      : 0.8833
+paired (ours - theirs): +0.0997  {'wins_ours': 8, 'losses_ours': 5, 'ties': 17, 'observed_direction': 'ours > theirs', 'p_value_ours_greater': 0.2905, 'p_value_theirs_greater': 0.8666, 'p_value_in_observed_direction': 0.2905}
+
+banked: experiments/waybill_scale_rung_0.5b_kshot_2026-08-25.json
+Read it against the frozen readings in VERDICT.md.
+=== 0.5B kshot OK
+=== 1.5B kshot 2026-08-25T15:37:57Z
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Qwen/Qwen2.5-1.5B-Instruct  mode=kshot  dtype=float32  batch=1
+mean prompt tokens: 4142
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   0%|          | 1/338 [00:03<20:07,  3.58s/it]Loading weights:  26%|██▌       | 87/338 [00:03<00:07, 31.73it/s]Loading weights:  33%|███▎      | 110/338 [00:04<00:06, 33.99it/s]Loading weights:  37%|███▋      | 125/338 [00:05<00:07, 29.36it/s]Loading weights:  40%|███▉      | 135/338 [00:05<00:06, 31.00it/s]Loading weights:  43%|████▎     | 147/338 [00:05<00:06, 30.42it/s]Loading weights:  45%|████▌     | 153/338 [00:05<00:05, 32.46it/s]Loading weights:  47%|████▋     | 159/338 [00:06<00:05, 31.91it/s]Loading weights:  49%|████▊     | 164/338 [00:06<00:05, 31.95it/s]Loading weights:  51%|█████     | 171/338 [00:06<00:05, 28.96it/s]Loading weights:  52%|█████▏    | 175/338 [00:06<00:05, 29.60it/s]Loading weights:  54%|█████▍    | 183/338 [00:06<00:04, 31.97it/s]Loading weights:  55%|█████▌    | 187/338 [00:07<00:04, 31.46it/s]Loading weights:  58%|█████▊    | 195/338 [00:07<00:04, 31.94it/s]Loading weights:  61%|██████    | 207/338 [00:07<00:03, 33.31it/s]Loading weights:  65%|██████▍   | 219/338 [00:08<00:04, 28.17it/s]Loading weights:  68%|██████▊   | 231/338 [00:08<00:03, 32.40it/s]Loading weights:  72%|███████▏  | 243/338 [00:08<00:02, 35.36it/s]Loading weights:  73%|███████▎  | 247/338 [00:08<00:02, 33.84it/s]Loading weights:  75%|███████▌  | 255/338 [00:09<00:02, 35.55it/s]Loading weights:  77%|███████▋  | 259/338 [00:09<00:02, 34.50it/s]Loading weights:  79%|███████▉  | 267/338 [00:09<00:01, 36.49it/s]Loading weights:  83%|████████▎ | 279/338 [00:09<00:01, 40.02it/s]Loading weights:  84%|████████▎ | 283/338 [00:09<00:01, 32.74it/s]Loading weights:  86%|████████▌ | 291/338 [00:09<00:01, 38.25it/s]Loading weights:  90%|████████▉ | 303/338 [00:10<00:00, 38.60it/s]Loading weights:  91%|█████████ | 308/338 [00:10<00:00, 34.35it/s]Loading weights:  93%|█████████▎| 315/338 [00:10<00:00, 38.84it/s]Loading weights:  95%|█████████▍| 320/338 [00:10<00:00, 32.58it/s]Loading weights:  97%|█████████▋| 327/338 [00:11<00:00, 35.92it/s]Loading weights: 100%|██████████| 338/338 [00:11<00:00, 30.59it/s]
+  1/30    46.1s
+  2/30    47.5s
+  3/30    41.3s
+  4/30    42.8s
+  5/30    41.6s
+  6/30    47.6s
+  7/30    40.9s
+  8/30    43.0s
+  9/30    43.4s
+  10/30    43.6s
+  11/30    43.8s
+  12/30    42.9s
+  13/30    38.8s
+  14/30    46.0s
+  15/30    53.9s
+  16/30    43.6s
+  17/30    45.9s
+  18/30    41.9s
+  19/30    43.6s
+  20/30    43.1s
+  21/30    44.7s
+  22/30    43.1s
+  23/30    42.9s
+  24/30    41.0s
+  25/30    42.5s
+  26/30    42.3s
+  27/30    42.2s
+  28/30    41.5s
+  29/30    42.2s
+  30/30    42.1s
+
+reproduction check vs waybill_scale_rung_1.5b_2026-08-25.json: AGREES (0.8804 vs banked 0.8804)
+
+Qwen/Qwen2.5-1.5B-Instruct kshot: 0.8804  (0 invalid JSON)  $3.5067/1k
+our adapted 0.5B      : 0.8833
+paired (ours - theirs): +0.0029  {'wins_ours': 5, 'losses_ours': 11, 'ties': 14, 'observed_direction': 'theirs > ours', 'p_value_ours_greater': 0.9616, 'p_value_theirs_greater': 0.1051, 'p_value_in_observed_direction': 0.1051}
+
+banked: experiments/waybill_scale_rung_1.5b_kshot_RAW_2026-08-25.json
+Read it against the frozen readings in VERDICT.md.
+=== 1.5B kshot OK
+=== 3B kshot 2026-08-25T16:00:03Z
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Qwen/Qwen2.5-3B-Instruct  mode=kshot  dtype=float32  batch=1
+mean prompt tokens: 4142
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:   0%|          | 1/434 [00:01<14:20,  1.99s/it]Loading weights:  12%|█▏        | 52/434 [00:02<00:12, 31.38it/s]Loading weights:  15%|█▍        | 65/434 [00:02<00:10, 33.94it/s]Loading weights:  18%|█▊        | 76/434 [00:03<00:12, 27.94it/s]Loading weights:  20%|██        | 87/434 [00:03<00:11, 30.63it/s]Loading weights:  21%|██▏       | 93/434 [00:03<00:13, 25.84it/s]Loading weights:  23%|██▎       | 99/434 [00:04<00:14, 23.88it/s]Loading weights:  26%|██▌       | 111/434 [00:04<00:15, 20.95it/s]Loading weights:  26%|██▋       | 114/434 [00:04<00:15, 21.23it/s]Loading weights:  28%|██▊       | 123/434 [00:05<00:12, 25.60it/s]Loading weights:  29%|██▉       | 127/434 [00:05<00:15, 19.92it/s]Loading weights:  31%|███▏      | 136/434 [00:05<00:14, 20.98it/s]Loading weights:  34%|███▍      | 147/434 [00:06<00:15, 18.81it/s]Loading weights:  35%|███▍      | 150/434 [00:07<00:17, 16.04it/s]Loading weights:  37%|███▋      | 159/434 [00:07<00:17, 15.83it/s]Loading weights:  37%|███▋      | 161/434 [00:07<00:18, 14.64it/s]Loading weights:  39%|███▉      | 171/434 [00:08<00:16, 16.01it/s]Loading weights:  40%|███▉      | 173/434 [00:08<00:17, 14.89it/s]Loading weights:  42%|████▏     | 183/434 [00:08<00:13, 18.39it/s]Loading weights:  43%|████▎     | 185/434 [00:09<00:13, 17.90it/s]Loading weights:  45%|████▌     | 196/434 [00:09<00:09, 26.10it/s]Loading weights:  48%|████▊     | 209/434 [00:09<00:06, 33.19it/s]Loading weights:  51%|█████     | 221/434 [00:09<00:05, 42.04it/s]Loading weights:  53%|█████▎    | 232/434 [00:09<00:03, 51.06it/s]Loading weights:  56%|█████▌    | 244/434 [00:10<00:05, 37.20it/s]Loading weights:  59%|█████▉    | 257/434 [00:10<00:03, 47.01it/s]Loading weights:  62%|██████▏   | 268/434 [00:10<00:04, 38.08it/s]Loading weights:  65%|██████▍   | 281/434 [00:11<00:03, 45.75it/s]Loading weights:  67%|██████▋   | 292/434 [00:11<00:03, 45.21it/s]Loading weights:  71%|███████   | 309/434 [00:11<00:02, 59.82it/s]Loading weights:  73%|███████▎  | 317/434 [00:11<00:02, 53.97it/s]Loading weights:  76%|███████▌  | 329/434 [00:11<00:01, 59.12it/s]Loading weights:  78%|███████▊  | 340/434 [00:12<00:01, 50.96it/s]Loading weights:  81%|████████  | 352/434 [00:12<00:01, 57.08it/s]Loading weights:  84%|████████▍ | 365/434 [00:12<00:01, 61.32it/s]Loading weights:  87%|████████▋ | 376/434 [00:12<00:01, 48.11it/s]Loading weights:  90%|████████▉ | 389/434 [00:12<00:00, 54.24it/s]Loading weights:  92%|█████████▏| 400/434 [00:13<00:00, 51.04it/s]Loading weights:  95%|█████████▍| 412/434 [00:13<00:00, 43.66it/s]Loading weights: 100%|██████████| 434/434 [00:13<00:00, 31.87it/s]
+  1/30   208.0s
+  2/30    85.8s
+  3/30    83.5s
+  4/30    81.5s
+  5/30    81.5s
+  6/30    81.3s
+  7/30    82.7s
+  8/30    82.4s
+  9/30    91.4s
+  10/30   198.4s
+  11/30    95.3s
+  12/30    87.9s
+  13/30    85.0s
+  14/30   313.4s
+  15/30   104.4s

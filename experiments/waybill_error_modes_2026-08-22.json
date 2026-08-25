@@ -1,0 +1,163 @@
+{
+  "what": "Decomposition of every wrong field on the 30 held-out waybills, by whether the model read the document wrong or filed a correct read under the wrong key.",
+  "status": "POST-HOC. Not a gate, not preregistered, and not evidence for a new claim -- a decomposition of a result already decided (Addendum K, reading (c)).",
+  "buckets": {
+    "assignment": "the value IS another field's gold on the same document: read right, filed wrong",
+    "truncation": "every word occurs in the document, but the span is wrong",
+    "invention": "contains a word the document does not have"
+  },
+  "arms": {
+    "ours_adapted": {
+      "field_errors": 28,
+      "unparseable_documents": 0,
+      "buckets": {
+        "assignment": 6,
+        "invention": 17,
+        "truncation": 5
+      },
+      "grounding_addressable": {
+        "invention": 3,
+        "truncation": 1
+      },
+      "grounding_addressable_total": 4,
+      "share": {
+        "assignment": 0.214,
+        "invention": 0.607,
+        "truncation": 0.179
+      },
+      "examples": {
+        "assignment": [
+          "[az-0110] shipper_name: 'Copper State Plumbing Wholesale' (gold 'Rio Grande Fittings Corp.')",
+          "[az-0110] consignee_name: 'Rio Grande Fittings Corp.' (gold 'Copper State Plumbing Wholesale')",
+          "[m-2211] shipper_name: 'Halverson Foods DC East' (gold 'Halverson Foods Plant 2')",
+          "[m-2211] consignee_name: 'Rockford' (gold 'Halverson Foods DC East')"
+        ],
+        "invention": [
+          "[m-2206] shipper_name: 'Pacific Coast Surgical Distribution' (gold 'PacCoast Surgical Distribution')",
+          "[m-2208] shipper_name: 'Allowce Textile Mills' (gold 'Calloway Textile Mills')",
+          "[m-2210] ship_date: '2026-03-17' (gold '2026-03-16')",
+          "[h-3301] shipper_name: 'Grand River Lumber Co.' (gold 'Grande Ronde Lumber Co.')"
+        ],
+        "truncation": [
+          "[h-3301] consignee_name: 'Va11ey Truss & Frame' (gold 'Valley Truss & Frame')",
+          "[h-3303] total_charge_usd: '1790.00' (gold '1910.00')",
+          "[h-3305] consignee_name: 'Granite' (gold 'Granite State Marine Supply')",
+          "[x-4401] origin_city: 'Spindletop' (gold 'Beaumont')"
+        ]
+      }
+    },
+    "ours_prompted": {
+      "field_errors": 27,
+      "unparseable_documents": 3,
+      "buckets": {
+        "truncation": 7,
+        "missing": 7,
+        "invention": 8,
+        "assignment": 5
+      },
+      "grounding_addressable": {
+        "invention": 2,
+        "truncation": 3
+      },
+      "grounding_addressable_total": 5,
+      "share": {
+        "truncation": 0.259,
+        "missing": 0.259,
+        "invention": 0.296,
+        "assignment": 0.185
+      },
+      "examples": {
+        "truncation": [
+          "[az-0110] shipper_name: 'Rio Grande Fittings Corp' (gold 'Rio Grande Fittings Corp.')",
+          "[m-2204] shipper_name: 'Bond-Rite Adhesives Corp' (gold 'Bond-Rite Adhesives Corp.')",
+          "[h-3301] consignee_name: 'Va11ey Truss & Frame' (gold 'Valley Truss & Frame')",
+          "[h-3303] weight_lbs: '15100' (gold '32200')"
+        ],
+        "missing": [
+          "[m-2201] shipper_name: None (gold 'Stonebridge Ceramics')",
+          "[m-2201] consignee_name: None (gold 'Gallery Row Imports')",
+          "[m-2201] origin_city: None (gold 'Louisville')",
+          "[m-2201] destination_city: None (gold 'Nashville')"
+        ],
+        "invention": [
+          "[m-2205] ship_date: '2026-01-11' (gold '2026-02-11')",
+          "[h-3301] shipper_name: 'Grande R0nde Lumber C0.' (gold 'Grande Ronde Lumber Co.')",
+          "[h-3301] ship_date: '2026-10-09' (gold '2026-10-12')",
+          "[h-3301] weight_lbs: '2640' (gold '26400')"
+        ],
+        "assignment": [
+          "[m-2210] origin_city: 'Ridgeline Canvas & Gear' (gold 'Tulsa')",
+          "[m-2211] shipper_name: 'Halverson Foods DC East' (gold 'Halverson Foods Plant 2')",
+          "[m-2211] consignee_name: 'Halverson Foods Plant 2' (gold 'Halverson Foods DC East')",
+          "[x-4401] origin_city: 'Spindletop Valve & Gauge' (gold 'Beaumont')"
+        ]
+      }
+    },
+    "hosted:rns_2026-08-22": {
+      "field_errors": 0,
+      "unparseable_documents": 0,
+      "buckets": {},
+      "grounding_addressable": {},
+      "grounding_addressable_total": 0,
+      "share": {},
+      "examples": {}
+    },
+    "hosted:un3_2026-08-22": {
+      "field_errors": 7,
+      "unparseable_documents": 0,
+      "buckets": {
+        "invention": 1,
+        "truncation": 6
+      },
+      "grounding_addressable": {
+        "invention": 1,
+        "truncation": 6
+      },
+      "grounding_addressable_total": 7,
+      "share": {
+        "invention": 0.143,
+        "truncation": 0.857
+      },
+      "examples": {
+        "invention": [
+          "[h-3307] shipper_name: 'Beacon Hi11 R0asting C0.' (gold 'Beacon Hill Roasting Co.')"
+        ],
+        "truncation": [
+          "[h-3307] consignee_name: 'Twin City Cafe Supp1y' (gold 'Twin City Cafe Supply')",
+          "[h-3307] origin_city: 'W0rcester' (gold 'Worcester')",
+          "[h-3307] destination_city: 'Hartf0rd' (gold 'Hartford')",
+          "[h-3307] weight_lbs: '264O' (gold '2640')"
+        ]
+      }
+    },
+    "hosted:un4_2026-08-22": {
+      "field_errors": 6,
+      "unparseable_documents": 0,
+      "buckets": {
+        "invention": 1,
+        "truncation": 5
+      },
+      "grounding_addressable": {
+        "invention": 1,
+        "truncation": 5
+      },
+      "grounding_addressable_total": 6,
+      "share": {
+        "invention": 0.167,
+        "truncation": 0.833
+      },
+      "examples": {
+        "invention": [
+          "[h-3307] shipper_name: 'Beacon Hi11 R0asting C0.' (gold 'Beacon Hill Roasting Co.')"
+        ],
+        "truncation": [
+          "[h-3307] consignee_name: 'Twin City Cafe Supp1y' (gold 'Twin City Cafe Supply')",
+          "[h-3307] origin_city: 'W0rcester' (gold 'Worcester')",
+          "[h-3307] destination_city: 'Hartf0rd' (gold 'Hartford')",
+          "[h-3307] freight_class: '6O' (gold '60')"
+        ]
+      }
+    }
+  },
+  "reading": "Of our adapted arm's 28 field errors, 6 are ASSIGNMENT (read right, filed wrong), 5 are TRUNCATION and 17 are INVENTION. **The number that explains Addendum K is the last column: only 4 of 28 are reachable by document grounding at all.** Assignment errors are unreachable by construction -- the value grounding would snap to is already in the document. Most inventions are unreachable too, but for a different reason: the model picked the wrong ENTITY (`Tampa` for `Tallahassee`, `Cincinnati` for `Council Bluffs`) or the wrong DIGITS (`188.60` for `1088.60`), and a document that contains several names and several numbers cannot tell a snapper which one belongs in this field. The common thread across the buckets is SELECTION, not transcription, and that is a capability gap."
+}

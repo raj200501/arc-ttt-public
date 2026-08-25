@@ -84,7 +84,19 @@ def load_cells() -> list[dict]:
 def main() -> int:
     cells = load_cells()
     if not cells:
-        sys.exit("no Addendum G artifacts found")
+        # Zero cells is the CURRENT state (spec G.10: compute-bound), and
+        # VERDICT.md tells readers this script says UNINFORMATIVE. It used
+        # to exit(1) with "no artifacts found", so the doc was describing
+        # behaviour the code did not have. Fixed here rather than in the
+        # sentence: below the cell floor the honest verdict is
+        # UNINFORMATIVE, whether the count is 9 or 0.
+        print("Addendum G — adaptation-headroom law: 0 cells banked.\n")
+        print("VERDICT: UNINFORMATIVE — fewer than "
+              f"{MIN_CELLS} scoreable cells. Per G.4 the correlation is not "
+              "interpreted,\nand per G.10 nothing in this repository may "
+              "cite the law. The design, the frozen\nbars and the measured "
+              "reason it has not run are in ENTERPRISE_EVAL_SPEC.md G.1-G.10.")
+        return 0
 
     cells.sort(key=lambda c: (c["seed"], c["j"]))
     print(f"Addendum G — adaptation-headroom law, {len(cells)} cells "

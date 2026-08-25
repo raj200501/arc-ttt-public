@@ -1,0 +1,134 @@
+{
+  "what": "Upper bound on the constrained-decoding rival explanation for the rehearsal's paired delta.",
+  "status": "POST-HOC ANALYSIS of banked data. NOT a preregistered gate: no bar was frozen for it before the numbers existed. The two-statistics rule is applied only so these readings are commensurable with the published one; a PASS here is not a gate PASS.",
+  "why_it_exists": "The published conclusion -- that on realistic documents the benefit is output-format reliability rather than extraction accuracy -- invites the reply that a JSON-grammar-constrained decoder buys format reliability for free. That reply had never been named in this repository. It is named here and bounded.",
+  "source": "experiments/blind_rehearsal_2026-08-20_raw",
+  "unparseable_prompted_documents": [
+    "h-3305",
+    "h-3307",
+    "m-2208"
+  ],
+  "off_schema_keys_removed_from_prompted_arm": 12,
+  "readings": [
+    {
+      "reading": "A_as_measured",
+      "what_it_assumes": "nothing -- reproduces the published paired result",
+      "n": 30,
+      "baseline_mean": 0.7836,
+      "adapted_mean": 0.8833,
+      "mean_delta": 0.0997,
+      "ci95": [
+        0.002,
+        0.1975
+      ],
+      "sign_test": {
+        "wins": 8,
+        "losses": 5,
+        "ties": 17,
+        "p_value": 0.290527
+      },
+      "two_statistics_verdict": "FAIL"
+    },
+    {
+      "reading": "B_schema_key_pruned",
+      "what_it_assumes": "the prompted arm never emits an off-schema key (free half of constrained decoding)",
+      "n": 30,
+      "baseline_mean": 0.7907,
+      "adapted_mean": 0.8833,
+      "mean_delta": 0.0926,
+      "ci95": [
+        -0.0017,
+        0.1868
+      ],
+      "sign_test": {
+        "wins": 8,
+        "losses": 5,
+        "ties": 17,
+        "p_value": 0.290527
+      },
+      "two_statistics_verdict": "FAIL"
+    },
+    {
+      "reading": "C_pruned_plus_imputed",
+      "what_it_assumes": "additionally: a constrained decoder turns each unparseable output into valid JSON of that arm's TYPICAL quality (imputation, not measurement)",
+      "n": 30,
+      "baseline_mean": 0.8786,
+      "adapted_mean": 0.8833,
+      "mean_delta": 0.0047,
+      "ci95": [
+        -0.0688,
+        0.0783
+      ],
+      "sign_test": {
+        "wins": 5,
+        "losses": 8,
+        "ties": 17,
+        "p_value": 0.866577
+      },
+      "two_statistics_verdict": "FAIL"
+    },
+    {
+      "reading": "D_pruned_plus_perfect",
+      "what_it_assumes": "additionally: the fixer is a perfect extractor on those documents (impossible; a hard ceiling)",
+      "n": 30,
+      "baseline_mean": 0.8907,
+      "adapted_mean": 0.8833,
+      "mean_delta": -0.0074,
+      "ci95": [
+        -0.0881,
+        0.0733
+      ],
+      "sign_test": {
+        "wins": 5,
+        "losses": 8,
+        "ties": 17,
+        "p_value": 0.866577
+      },
+      "two_statistics_verdict": "FAIL"
+    },
+    {
+      "reading": "E_format_neutral_subset_key_pruned",
+      "what_it_assumes": "restricted to the documents both arms parsed, AND the key-pruning of reading B. No imputation, but not assumption-free -- it still grants the free half of constrained decoding.",
+      "n": 27,
+      "baseline_mean": 0.8786,
+      "adapted_mean": 0.912,
+      "mean_delta": 0.0334,
+      "ci95": [
+        -0.0363,
+        0.1032
+      ],
+      "sign_test": {
+        "wins": 5,
+        "losses": 5,
+        "ties": 17,
+        "p_value": 0.623047
+      },
+      "two_statistics_verdict": "FAIL"
+    },
+    {
+      "reading": "F_format_neutral_subset_nothing_granted",
+      "what_it_assumes": "NOTHING. The arms exactly as decoded, restricted to the documents both of them parsed. Quote this one.",
+      "n": 27,
+      "baseline_mean": 0.8707,
+      "adapted_mean": 0.912,
+      "mean_delta": 0.0414,
+      "ci95": [
+        -0.0352,
+        0.1179
+      ],
+      "sign_test": {
+        "wins": 5,
+        "losses": 5,
+        "ties": 17,
+        "p_value": 0.623047
+      },
+      "two_statistics_verdict": "FAIL"
+    }
+  ],
+  "correction": "Until 2026-08-22 the format-neutral reading was labeled 'assumes NOTHING' while being computed from the key-pruned baseline of reading B. An outside auditor found it. The mislabeled reading is kept as E with an honest description, and F -- which really does grant nothing -- is now the quoted one. F agrees with the +4.14 that VERDICT.md already carried for this subset.",
+  "bottom_line": {
+    "format_neutral_delta": 0.0414,
+    "hardest_ceiling_delta": -0.0074,
+    "reading": "On the documents both arms parsed -- where format reliability cannot be the explanation because neither arm failed format, and granting nothing else -- the paired delta is +0.0414. Even granting an impossible fixer that makes the prompted arm perfect on every document it could not parse, the delta is -0.0074."
+  }
+}

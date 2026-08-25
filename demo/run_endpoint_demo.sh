@@ -32,6 +32,53 @@ K="${K:-10}"
 EVAL_N="${EVAL_N:-2}"
 SEED="${SEED:-0}"
 
+# Fail fast on the declared floor rather than deep inside transformers.
+# A cold clone on a below-floor interpreter used to get as far as loading
+# the tokenizer and then die with an opaque
+# "TypeError: __init__() got an unexpected keyword argument 'dtype'",
+# while the client half kept polling a server that was already dead. An
+# outside simulation of this repo hit exactly that and could not tell a
+# stale environment from a broken product. pyproject.toml is the single
+# source of the floors below.
+"$PYTHON" - <<'PREFLIGHT' || exit 1
+import sys
+
+problems = []
+if sys.version_info < (3, 11):
+    problems.append(
+        f"Python {sys.version_info.major}.{sys.version_info.minor} — "
+        "pyproject.toml requires >=3.11")
+try:
+    import transformers
+    major, minor = (int(part) for part in transformers.__version__.split(".")[:2])
+    if (major, minor) < (4, 54):
+        problems.append(
+            f"transformers {transformers.__version__} — pyproject.toml "
+            "requires >=4.54,<5.18")
+except ImportError:
+    problems.append("transformers is not installed")
+try:
+    import torch  # noqa: F401
+except ImportError:
+    problems.append(
+        "torch is not installed (the demo needs it; the verification "
+        "scripts in scripts/ do NOT)")
+
+if problems:
+    print("\n[demo] REFUSING TO START — this environment is below the "
+          "floors this repo declares:", file=sys.stderr)
+    for problem in problems:
+        print(f"  * {problem}", file=sys.stderr)
+    print("\n[demo] Fix with:\n"
+          "    python3.11 -m venv .venv && . .venv/bin/activate\n"
+          "    pip install -e '.[demo]'\n"
+          "    bash demo/run_endpoint_demo.sh\n\n"
+          "[demo] This is an environment problem, not a failing product — "
+          "and nothing here is needed to CHECK the evidence: "
+          "scripts/verify_verdict.py is stdlib-only.", file=sys.stderr)
+    raise SystemExit(1)
+PREFLIGHT
+
 if [ ! -f "$DATA" ]; then
     echo "missing $DATA — fetch it with:" >&2
     echo "  $PYTHON $ROOT/scripts/fetch_cord.py --split validation --limit 100 --out $DATA" >&2

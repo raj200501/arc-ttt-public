@@ -1,0 +1,64 @@
+{
+  "what": "Hosted-tier cost per 1,000 documents ON THE WAYBILL CORPUS, from measured token usage.",
+  "status": "The TOKEN COUNTS are measured. The PRICES are external list quotes of a stated date and are not a measurement. Our own side is measured too -- see waybill_cost_ours_2026-08-22.json, including the correction applied to it.",
+  "rates": {
+    "input_per_million_usd": 0.3,
+    "output_per_million_usd": 2.5,
+    "quoted": "2026-08-19",
+    "source": "external list price"
+  },
+  "runs": [
+    {
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_run3_2026-08-22.json",
+      "n_documents": 30,
+      "prompt_tokens": 129960,
+      "output_tokens": 2977,
+      "prompt_tokens_per_1k_docs": 4332000,
+      "output_tokens_per_1k_docs": 99233
+    },
+    {
+      "artifact": "waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_run4_2026-08-22.json",
+      "n_documents": 30,
+      "prompt_tokens": 129960,
+      "output_tokens": 2977,
+      "prompt_tokens_per_1k_docs": 4332000,
+      "output_tokens_per_1k_docs": 99233
+    }
+  ],
+  "tokens_per_1k_documents": {
+    "prompt": 4332000,
+    "output": 99233
+  },
+  "hosted_cost_per_1k_documents_usd_cold": 1.548,
+  "why_the_prompt_is_large": "Each request carries all 20 demonstrations, matching what our own k-shot arm receives. That is the cold-cache case; a warm shared-prefix cache would cut the input side substantially and is NOT measured here.",
+  "hosted_cost_by_demonstration_count": {
+    "k=0": {
+      "runs": 3,
+      "mean_micro_f1": 0.0,
+      "prompt_tokens_per_1k_docs": 106000,
+      "cost_per_1k_documents_usd_cold": 0.314
+    },
+    "k=0+schema": {
+      "runs": 3,
+      "mean_micro_f1": 0.893,
+      "prompt_tokens_per_1k_docs": 172000,
+      "cost_per_1k_documents_usd_cold": 0.36
+    },
+    "k=2": {
+      "runs": 3,
+      "mean_micro_f1": 0.9722,
+      "prompt_tokens_per_1k_docs": 498000,
+      "cost_per_1k_documents_usd_cold": 0.397
+    },
+    "k=5": {
+      "runs": 3,
+      "mean_micro_f1": 0.9459,
+      "prompt_tokens_per_1k_docs": 1083000,
+      "cost_per_1k_documents_usd_cold": 0.577
+    }
+  },
+  "cheapest_hosted_arm_holding_quality": "k=2 scores 0.9722 against k=20's 0.9865 -- inside Addendum J's frozen 0.02 tolerance -- on 498,000 prompt tokens per 1,000 documents against 4,332,000, an 8.7x reduction. The k=20 price is the price of a CHOICE no deployment is forced to make.",
+  "our_cost_on_this_corpus": 0.894,
+  "our_cost_note": "Measured. See waybill_cost_ours_2026-08-22.json for the rate, the correction applied to it, and the quality caveat -- being cheaper is not being better, and Addendum I is where the quality comparison lives.",
+  "reading": "**The cost argument this repository published is WITHDRAWN, and the direction reverses.** It priced the hosted arm at ~$1.55/1k by assuming it must carry all 20 demonstrations in every request -- that assumption was the whole payload-asymmetry argument, and Addendum J's sweep refutes it. At k=2 the hosted tier scores 0.9722, inside the frozen 0.02 tolerance of its own k=20 run, for **~$0.40 per 1,000 documents**. Against our measured ~$0.89 at 0.8833, a buyer who can use a hosted API pays **less than half** what we cost and gets a better score. We are not cheaper-and-worse on this corpus; we are dearer-and-worse. What survives is what survived Addendum I and nothing more: workloads where a hosted API is not an option, where the comparison is not available at any price."
+}

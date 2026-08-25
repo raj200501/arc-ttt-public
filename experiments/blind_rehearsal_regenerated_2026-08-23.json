@@ -1,0 +1,18 @@
+{
+  "what": "Is the banked blind-rehearsal adapted arm REGENERABLE, or did it depend on an adapter that no longer exists?",
+  "why_it_mattered": "The rehearsal adapter was not retained. That forced the first cost artifact to time an UNTRAINED LoRA and then correct itself for the drift, and it left the arm unreproducible: a reader could re-score the stored predictions but could not regenerate them. Storing a 35MB adapter would have hidden the question rather than answered it.",
+  "method": "A fresh adaptation from the PUBLISHED 20-document train split, on a different day and a different container, with the recipe the arm was run under: run_challenge.py --samples 1 --seed 1.",
+  "adaptation_seconds": 41.6,
+  "result": {
+    "documents_byte_identical_to_banked": 30,
+    "documents_total": 30,
+    "mean_micro_f1_regenerated": 0.8833,
+    "mean_micro_f1_banked": 0.8833,
+    "invalid_json": 0
+  },
+  "adapter_sha256": "64baf52c0000f1e41f87364245de991ca4c28973bf773e99da0bf9c50dacaa31",
+  "repo_commit": "cda30148ae7728939c1345341b9f8e3435b9fb2c",
+  "command": "scripts/run_challenge.py --train experiments/blind_rehearsal_2026-08-20_raw/train.jsonl --holdout experiments/blind_rehearsal_2026-08-20_raw/holdout.jsonl --out-dir /tmp/arunL --seed 1 --samples 1 --allow-unpinned",
+  "reading": "The arm regenerates EXACTLY -- all thirty documents byte-identical under canonical JSON, from the published split, in 42 seconds of adaptation. The lost adapter never needed storing; it needed proving unnecessary. This closes the reproducibility gap the cost artifact had to work around, and it upgrades the rehearsal arm from re-scorable to fully regenerable.",
+  "scope": "One arm, one corpus, one seed, same hardware family and same library versions. It says the recipe is deterministic given the published inputs; it does not say the result would be identical on different torch/transformers versions, which is untested."
+}

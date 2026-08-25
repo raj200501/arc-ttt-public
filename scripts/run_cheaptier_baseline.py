@@ -92,7 +92,12 @@ def main() -> int:
             score = score_text_output(text, gold)
             row = {"seed": seed, "tenant": schema.tenant_id, "index": index,
                    "prediction": text, "micro_f1": round(score.micro_f1, 4),
-                   "exact": score.micro_f1 == 1.0,
+                   "micro_f1_is_one": score.micro_f1 == 1.0,
+            # NOT exact match: micro-F1 folds letter case and
+            # canonicalises numbers. The field was named "exact"
+            # until 2026-08-22 and the evidence page reported
+            # "60/60 exact" off it.
+            "exact": bool(score.exact_match),
                    "prompt_tokens": usage.get("promptTokenCount", 0),
                    "output_tokens": usage.get("candidatesTokenCount", 0)}
             rows.append(row)

@@ -1,5 +1,37 @@
 # Challenges — the blind-holdout scoreboard
 
+## The offer, in three lines
+
+**Send 50 of your own labeled documents. Keep the gold labels — I never
+see them. I return one submission, you score it once with a scorer pinned
+to a commit named before I start, and the result publishes here whether it
+makes me look good or not.**
+
+Your side is roughly two hours of work: export the documents, run one
+command from the kit, keep the gold file. Mine is 72 hours. Full terms,
+the kit, the legal skeleton and an honest 2–4 week calendar are below —
+but you do not need to read any of it to say yes, and **row 1 is open.**
+
+If your prompted baseline is already good, this will tell you that, and
+that answer is worth having before anyone sells you anything. There is a
+script for exactly that case: `python3 scripts/try_your_documents.py
+--docs mydocs.jsonl` prints, in words, when there is nothing here for you
+to buy.
+
+**Before you spend two hours on this, read the result that says you
+probably should not.** On 2026-08-22 we put the cheapest hosted API tier
+on our own 30 held-out waybills: it scored **0.9708–1.0000 across four runs**
+(mean 0.9865) against our adapted 0.5B's 0.8833, and our arm won at most
+one of the thirty in any run. **If your documents can be sent to a hosted API, send
+them there instead of taking this slot.** The only reason to run this
+offer is that yours cannot leave your building. We would rather tell you
+that up front than take two hours of your time to arrive at it.
+`experiments/waybill_market_baseline_gemini-3.5-flash-lite_2026-08-22.json`.
+
+---
+
+## The terms, and one thing that is not byte-identical
+
 The standing offer is in
 [`docs/research/BLIND_HOLDOUT_PROTOCOL.md`](docs/research/BLIND_HOLDOUT_PROTOCOL.md):
 you split your own documents on your own machine, you keep the gold
@@ -8,8 +40,14 @@ it once with a scorer pinned to a commit named in advance, and the
 result publishes here either way. The terms were frozen and
 OpenTimestamps-anchored before any challenger existed
 (`docs/research/snapshots_BLIND_HOLDOUT_PROTOCOL_2026-08-20T2030Z.md` +
-`.ots`); the living file above is byte-identical to that snapshot, and if
-they ever differ the snapshot governs.
+`.ots`). **The living file is NOT byte-identical to that snapshot** — on
+2026-08-21 a dated note was appended to it recording that the binding
+definition of "receipt" moved to `CHALLENGE_TERMS.md` §6, which SHORTENS
+our own clock. The snapshot governs on any conflict, the appended text
+is against our interest, and this sentence used to claim byte-identity
+until an outside reader ran `sha256sum` on both files and found it
+false. Run it yourself; a repo that says "check me" cannot carry a
+checkable claim that is wrong.
 
 This page is the ledger of who has taken it. One row has run. The next
 row is open.
@@ -45,10 +83,112 @@ the verdict is **FAIL**, and it publishes as FAIL.
 The rule caught exactly what it is for. **17 of 30 documents tie** (12
 of them both-perfect), and **63% of the total delta comes from the 3
 documents where the prompted arm emitted invalid JSON and scored 0.**
-Where both arms produce valid JSON it is close to a wash, and every
-adapted loss is a single field. The honest reading: on this realistic
+Where both arms produce valid JSON it is close to a wash. Four of the five
+adapted losses are a single field (−0.125); the fifth, `h-3303`, is −0.0278. The honest reading: on this realistic
 corpus, adaptation's measured benefit is **output-format reliability,
 not extraction accuracy**.
+
+**And we then measured the rival explanation for that, which beats us
+here.** If the benefit is output format, a JSON-grammar-constrained
+decoder buys it for free — no adaptation, no per-tenant weights, no
+training. That explanation had never been named anywhere in this
+repository. `python3 scripts/format_counterfactual.py` bounds it from
+the raw arms published above, stdlib-only, in five readings:
+
+| reading | what it grants the rival explanation | delta | sign test |
+|---|---|---|---|
+| as measured | nothing (control; reproduces the published row) | **+9.97** | 8W/5L/17T |
+| schema-key pruned | the prompted arm's 12 off-schema keys deleted — a schema-constrained decoder cannot emit them | **+9.26** | 8W/5L/17T |
+| + unparseable imputed | each of the 3 unparseable prompted outputs becomes valid JSON of that arm's *typical* quality | **+0.47** | 5W/8L/17T |
+| + unparseable perfect | those 3 become PERFECT extractions (impossible; a hard ceiling) | **−0.74** | 5W/8L/17T |
+| format-neutral, key-pruned | the 27 documents both arms parsed, but still key-pruned — so still a grant | +3.34 | 5W/5L/17T |
+| **format-neutral, nothing granted** | **nothing at all** — the arms exactly as decoded, on the 27 documents both parsed | **+4.14** | **5W/5L/17T** |
+
+The last row is the one that assumes nothing, and it is the one to
+quote: on documents where format reliability *cannot* be the
+explanation, and with nothing else granted, the paired delta is **+4.14
+— under this project's own +5 bar, with a sign test that is a coin
+flip.** **The rival explanation is not refuted, and neither is ours.**
+At n=27 the interval is **[−3.5, +11.8]** and the sign test is
+**5W/5L, p=0.62** — this corpus cannot distinguish adaptation from a
+free decoder in either direction. Reading C, the one that models a
+decoder that actually exists, sits at **+0.47 with the sign test
+pointing the wrong way**. That is worse for us than a clean loss would
+be, and it is what the numbers say.
+
+*(This paragraph read "on this corpus it is the better-supported one"
+until an outside reader pointed out that a 5W/5L sign test at p=0.62
+supports nothing. It was an over-claim made against our own interest,
+which is still an over-claim — the direction it points does not make it
+true.)*
+
+*(Until 2026-08-22 the key-pruned row above was the one labeled "assumes
+nothing," at +3.34. It does grant something — the key-pruning — and an
+outside auditor caught the mislabel by noticing that `VERDICT.md`
+already carried +4.14 for the same subset. The reading that really
+grants nothing was added rather than the label quietly changed.)*
+
+Two things that does not mean. It does not touch gates 1, 4 and 5: the
+prompted baseline there is 0.4333–0.6208, the arms are not separated by
+format failures, and pruning has nothing to prune. And it is **post-hoc
+analysis of banked data, not a gate** — no bar was frozen for it before
+the numbers existed, which the artifact says in its own `status` field.
+
+What it does mean is on the record and costs us something: the honest
+v1 ships constrained decoding, and the adaptation layer has to earn its
+keep **on top of** it. That paired comparison is now a PENDING row in
+`VERDICT.md` with its bar and all three readings frozen before the arms
+exist — including reading (c), which says that if the delta is at or
+below zero then constrained decoding is the product on this corpus and
+per-tenant adaptation is not justified by it. That reading publishes
+too.
+
+### Does that objection reach the headline gates? Measured: no.
+
+The same question was pushed onto gates 1, 4 and 5 rather than left where
+it landed. `PYTHONPATH=src python3
+scripts/schema_conformance_decomposition.py` runs it in under a second,
+regenerating gold from the deterministic generator rather than reading any
+stored copy.
+
+**Part 1 — format.** Invalid JSON across BOTH arms: **0 of 158** (gate 1),
+**0 of 360** (gate 5), **1 of 158** (gate 4, on our arm) — and the denominator is post-exclusion: gate 1's 22 designed receipts that exceeded the frozen token budget produced no completion at all in either arm, which is the most complete output failure there is. The restriction is silent on those 22 and speaks only for the 158 scored. Restricting to
+documents both arms parsed is a no-op:
+
+| gate | as measured | format-neutral |
+|---|---|---|
+| 1 | +46.5 | **+46.5** |
+| 4 | +24.0 | **+24.5** |
+| 5 | +40.4 | **+40.4** |
+
+**Part 2 — schema conformance.** Valid JSON is not the same as the right
+keys. On gate 5 — the only gate whose baseline arm stores its predictions
+— that baseline was rebuilt under gold's key paths keeping its own values
+(exactly what a schema-constrained decoder guarantees), then rebuilt again
+forgiving nesting mistakes (more than any real decoder gives you):
+
+| baseline, as decoded | path-repaired | name-repaired | adapted |
+|---|---|---|---|
+| 0.5726 | 0.5726 | 0.5726 | **0.9761** |
+
+**0.0% of the gap closed.** The reason is measured, not inferred: across
+all 360 documents the baseline's key-path precision and recall are both
+**1.00**, its key set is exactly gold's on **60/60 documents per tenant**,
+and it puts the wrong content in **43% of the fields it names correctly** — a six-tenant mean over a **27%–51%** spread, and arithmetically 1 − the baseline's 0.5726 rather than an independent measurement.
+There is nothing for a decoder to repair, because the baseline already
+emits the tenant's schema perfectly — it just fills it with the wrong
+values.
+
+So the two mechanisms are opposite, and together they are the honest
+scoping of this project: **on the headline gates adaptation buys
+value-level extraction accuracy that no decoder can supply; on the
+realistic waybill corpus, where the baseline is already close on content,
+what is left is mostly format and a decoder plausibly takes it.**
+
+Both analyses are post-hoc reads of banked data, labeled so in their own
+artifacts. The repair function is pinned by a test that fails if it is
+ever a no-op — "0.0% closed" is only evidence if the repair demonstrably
+works, and you should not take our word for that either.
 
 So read 0.8792 as "a small adapted model scored this on that corpus" —
 not as evidence that adapting beat prompting on it, because the paired

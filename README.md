@@ -1,5 +1,94 @@
 # arc-ttt
 
+**Adapt a small open model (Qwen2.5-0.5B) to one tenant's document
+schema, and measure whether it beat that same model's own prompt —
+under gates frozen before the data existed, with the failures published
+beside the passes.**
+
+Five preregistered gates, two of them FAIL. Every headline number
+reconciles to a machine-readable artifact; [`VERDICT.md`](VERDICT.md) is
+the map and [`EVIDENCE.md`](EVIDENCE.md) is the whole ladder on one
+page. Two commands check the arithmetic against the raw records, with
+nothing installed:
+
+    python3 scripts/verify_verdict.py
+    python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json
+
+**What this measured, and it is the strongest thing here (gate 5, Addendum E).**
+On **six tenant schemas the base model has never seen**, per-tenant weight
+adaptation beats that same model's own 30-shot prompt by **+40.4 micro-F1**
+(0.5726 → 0.9761) across **360 paired documents** — 340W/5L/15T, cluster
+CI95 [+31.0, +49.7] — against a **+5 bar frozen before the data existed**,
+with every arm re-scored from its raw predictions and **all 6 of 6 tenants
+clearing the rule individually**. **And what the prompt gets wrong is not
+format.** Its JSON is valid **360/360**, its key-path precision and recall
+are both **1.00**, and its key set equals gold's on 60/60 documents in every
+tenant — so rebuilding its output under gold's key paths, which is what a
+schema-constrained decoder guarantees for free (plus a second oracle more
+generous than any decoder that exists), closes **0.0% of that gap**. The
+cheapest rival explanation for the headline is measured, not argued, and it
+explains none of it. The effect also **survives the strongest cheap control
+anyone proposed** — making the JSON key the document's own label, documents
+byte-identical across arms — at **+18.75** (40W/2L/18T, p=2.1e-10).
+
+**Read this next, because it is the ceiling on all of the above (2026-08-22).**
+On the only realistic corpus here — 30 held-out freight waybills, gold
+published — **the cheapest hosted API tier scores 0.9708–1.0000 across four
+runs of the same arm** (mean 0.9865, zero invalid JSON every time; hosted
+inference is not deterministic at temperature 0, so one run is a sample, not
+a measurement). Our adapted 0.5B scores 0.8833 on the same documents and wins
+**at most one of thirty in any run** (0W/14L/16T to 1W/13L/16T). That
+comparison was preregistered with its readings frozen first, and it landed on
+the one that costs the most: **on documents that can be sent to a hosted API,
+this loses on accuracy, and nothing else in this repository changes that.**
+**On cost the claim is worse for us and is withdrawn.** This page said $0.89
+ours against $1.55 theirs and called it a trade; the $1.55 assumed the hosted
+arm must carry all 20 demonstrations in every request, and Addendum J refutes
+that from our own artifacts. **With no demonstrations at all — just the
+tenant's field list declared, a 25x smaller payload — it scores 0.8930 for
+about $0.36 per 1,000 documents, above our adapted 0.8833 at our measured
+$0.89.** Give it two demonstrations and it reaches 0.9722 for ~$0.40. **Our own
+side then turned out to be 3.7x too expensive for a reason that was
+ours:** we had measured it serving one document at a time. At batch 16
+the same adapter serves the same 30 documents for **$0.1406 per 1,000 at
+an unchanged 0.8833** — every batched prediction byte-identical to the
+batch-1 run. So the standing comparison is **2.6x cheaper and 0.0097
+worse**, for batch workloads only (per-document latency gets 4x worse),
+with both sides priced cold. A real trade, not a win, and not the cost
+story this repo used to tell. **And the gap is
+not an implementation artifact** — Addendum K built document grounding to
+close it, froze the recipe on the training split, scored the holdout once,
+and got 0.8833 again; only **4 of our 28 field errors are reachable by
+document grounding at all**, while 6–7 of the hosted arm's 6–7 are. What
+survives is narrower and is now the whole claim — **workloads where a hosted
+API is not an option**, where the question is whether an on-prem small model
+is good enough for one tenant's schema, and where this comparison is not
+available at any price. Everything here should be read as being about that
+segment and no other.
+
+**2026-08-25 — THAT SEGMENT NO LONGER SUPPORTS THE CLAIM EITHER (Addendum O, preregistered, reading (a)).** The paragraph above narrowed this project to *workloads where a hosted API is not an option* and said adaptation is what makes a 0.5B viable there. **It is not.** `Qwen2.5-3B-Instruct`, an open checkpoint any on-prem buyer can run, with **no adaptation of any kind** and only the tenant's field list in a 196-token prompt, scores **0.8958 with 0 of 30 invalid** against our adapted 0.5B's 0.8833 — 8W/8L/14T, p=0.60, a dead heat. Reading (a) publishes in the words frozen before the arm ran: *a 3B needs neither our adaptation nor a large prompt, and the on-prem cost claim is dead, not narrowed.*
+
+**And the result that had been holding this up was a markdown fence.** Addendum N published "given only a field list, a 1.5B does not produce a usable object at all — 0.0000, 30 of 30 invalid" and was cited as the asymmetry that made adaptation earn its keep on-prem. A reproduction run reproduced that number exactly, stored the predictions this time, and they are correct extractions inside fenced json code blocks. Fence-stripped: **0.7375, zero invalid.** N is withdrawn. This page had already met fenced JSON on the hosted arm one paragraph below, handled it correctly, and written down why — and the scale-rung runner written three days later did not inherit that rule. The un-repaired zero was the number that flattered us.
+
+**What is left, and it is all that is left:** matching our quality with an unadapted open model takes a 3B, about 6x the parameters, which on the same CPU box costs about **$2.97 per 1,000 documents against our $0.5143 at the same batch size**. Cost at fixed quality — real, measured, much weaker than what this page claimed yesterday, and **not yet measured at matched batching**, which is the first thing a technical reader should ask and which we have not run. See `VERDICT.md` Addenda N and O and `experiments/fence_rescore.json`.
+
+`experiments/waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_2026-08-22.json` is the citable run — its demonstrations mirror our own arm's turn structure exactly and it needed no output repair. The packed-turn run beside it reaches the same numbers only after stripping a markdown fence from four outputs, a repair our own arms never got; without it that run scores 0.8667, *below* our adapted arm. Both are banked, and the difference is stated because an outside reviewer found it.
+
+**And the corpus's own difficulty is now priced (Addendum H, preregistered, decided 2026-08-22).** Making the JSON key the document's own label — what real tenant schemas look like — while changing nothing else takes the delta from **+41.1 to +18.75** (40W/2L/18T, p=2.1e-10). The effect **survives** the strongest cheap control proposed against it, and **the arbitrary mapping was worth +22.3 F1, more than half of it.** Removing the distractor lines costs another +12.3. Read with the waybills (+9.97, +4.14 granting nothing) and CORD (negative), the series says the same thing each time: the more a corpus looks like a customer's, the smaller the effect. Expect the bottom of that range, not the top.
+
+**What it buys, and where it does not.** On the six novel-schema tenants
+whose baseline predictions are stored, the 0.5B baseline emits perfect
+JSON in exactly the right keys — key-path precision and recall both
+**1.00** across all 360 documents — and fills **43% of the fields with
+the wrong content** (six-tenant mean; 27%–51% across tenants). Adaptation
+fixes the content, and a schema-constrained decoder — the obvious free rival —
+closes **0%** of that gap. On a realistic freight-waybill corpus, where
+a 20-shot prompt already scores 0.78, the paired test **FAILED** our own
+bar and what remains is mostly output format, which that same free
+decoder plausibly takes. Both mechanisms were measured against our own
+interest and both ship with the scripts that produce them. There are
+**zero customers** and every corpus here is synthetic or agent-authored.
+
 [![verify](https://github.com/raj200501/arc-ttt-public/actions/workflows/tests.yml/badge.svg)](https://github.com/raj200501/arc-ttt-public/actions/workflows/tests.yml)
 
 On every push, a GitHub-hosted runner — not this laptop — recomputes the gate-1,
@@ -13,23 +102,14 @@ the data distribution — that is what the blind-holdout offer is for.
 Mutation tests (`tests/test_verify_scripts.py`) pin that the check can
 actually fail.
 
-**Per-tenant small-model adaptation for document extraction, with
-preregistered, reproducible evals — failures published beside passes.**
-Every headline number reconciles to a machine-readable artifact
-(`VERDICT.md` is the map). Preregistration ordering: the spec's later
-gates (Addenda D/E/F onward) are chain-anchored (OpenTimestamps, Bitcoin)
-before their data existed; the original gate's 2026-08-12 freeze
-predates the first anchor and rests on git history — stated plainly,
-and the gates from D onward are chain-anchored pre-data — with one
-precision that belongs here rather than in a footnote: Addendum E's +5
-bar and decision rule are in the chain-anchored snapshot, while the
-E-r2 measurability amendment (the compacted geometry and the token
-screen) was git-committed before its data and anchored the following
-day. Verification
-is two commands (three if you want the Addendum E gate too):
-
-    python3 scripts/verify_verdict.py
-    python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json
+**Preregistration ordering, stated precisely rather than implied.** The
+spec's later gates (Addenda D/E/F onward) are chain-anchored
+(OpenTimestamps, Bitcoin) before their data existed. The original gate's
+2026-08-12 freeze predates the first anchor and rests on git history we
+control. One further precision: Addendum E's +5 bar and decision rule
+are in the chain-anchored snapshot, while its E-r2 measurability
+amendment (the compacted geometry and the token screen) was
+git-committed before its data and anchored the following day.
 
 **Latest gate (2026-08-20): Addendum E PASSED** — +40.4 F1 seed-mean
 over six fresh shape-varying tenants against a +5 bar frozen before the
@@ -61,7 +141,7 @@ a domain the base model already knows — the same adaptation recipe
 FAILED its preregistered gates at all three scales tested (Addendum A:
 −7.3 / −11.5 / −4.5 F1). Adaptation buys novelty, not general quality,
 and we publish our negatives. Replication: 7 fresh tenants at k=10, pooled with
-the 3 gate tenants: +41.5 pooled, 569W/1L (cuda/bf16 per B.8). The k=30 gate pairs ran
+the 3 gate tenants: +41.5 pooled, 569W/1L/30T over 600 (cuda/bf16 per B.8). The k=30 gate pairs ran
 CPU/fp32 on free Kaggle kernels; artifacts carry full receipt trails,
 including `resumed` stamps from the checkpoint/resume system that
 survived repeated infrastructure kill-strikes during the gate.
@@ -86,6 +166,44 @@ invalid JSON. On this realistic corpus the measured benefit is
 the headline gates support. Read 0.8792 as an adapted score, not as
 evidence that adapting beat prompting there.
 `experiments/blind_rehearsal_baseline_2026-08-21.json`.
+
+**And the rival explanation for *that* has now been measured, and this
+corpus cannot rule it out (2026-08-22).** If the benefit is output format,
+then a JSON-grammar-constrained decoder buys it for free — no
+adaptation, no per-tenant weights, no training. `python3
+scripts/format_counterfactual.py` bounds that from the published raw
+arms, stdlib-only: delete the prompted arm's 12 off-schema keys (which
+a schema-constrained decoder cannot emit) and the delta falls +9.97 →
++9.26; restrict to the **27 documents both arms parsed**, where format
+cannot be the explanation because neither arm failed format, and it is
+**+4.14 with a 5W/5L/17T sign test** granting nothing at all (+3.34 if the baseline is also key-pruned) — an interval of [−3.5, +11.8] at n=27, which supports neither explanation — under our own +5 bar and
+directionally a coin flip; grant an impossible fixer that makes the
+prompted arm perfect on the 3 it could not parse and it is **−0.74**.
+Post-hoc analysis, not a gate, and labeled as such in the artifact. It
+leaves gates 1/4/5 untouched — the prompted baseline there is
+0.4333–0.6208 and format failures are not what separate those arms —
+and it means the honest v1 ships constrained decoding with the
+adaptation layer measured **on top of** it. That comparison is now a
+PENDING row in VERDICT.md with its bar and all three readings frozen
+before the arms exist, including the one that says there is no product.
+`experiments/format_counterfactual_2026-08-22.json`.
+
+**And that objection was then pushed onto the headline gates, where it
+does not land — measured, not asserted.** Across both arms, invalid JSON
+is **0 of 158** on gate 1, **0 of 360** on gate 5, and **1 of 158** on
+gate 4 (on our arm), so restricting to documents both arms parsed changes
+nothing: +46.5 → +46.5, +40.4 → +40.4, +24.0 → +24.5. Valid JSON is not
+the same as the right keys, so gate 5's baseline was also rebuilt under
+gold's key paths keeping its own values — what a schema-constrained
+decoder guarantees — and again forgiving nesting mistakes. **Neither
+repair moves it: 0.5726 → 0.5726 → 0.5726 against an adapted 0.9761, 0%
+of the gap closed**, because the baseline's key-path precision and recall
+are already 1.00 on all 360 documents and it simply puts the wrong
+content in 43% of the fields it names correctly — a six-tenant mean over a **27%–51%** spread, and arithmetically 1 − the baseline's 0.5726 rather than an independent measurement. On the headline gates
+adaptation is buying value-level extraction accuracy, which no decoder
+supplies. `PYTHONPATH=src python3
+scripts/schema_conformance_decomposition.py`,
+`experiments/schema_conformance_decomposition_2026-08-22.json`.
 
 **Look at it rather than run it.** `demo/waybill_field_audit.html` is a
 single self-contained page — open it in a browser, nothing to install —
@@ -186,7 +304,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 190 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 305 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -247,7 +365,7 @@ sharpening. No claims beyond the artifacts in `experiments/`.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 190 offline tests (tiny in-test models; no downloads).
+- `tests/` — 305 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

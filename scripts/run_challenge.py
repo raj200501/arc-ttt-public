@@ -99,6 +99,17 @@ def main() -> int:
     parser.add_argument("--max-new-tokens", type=int, default=512)
     parser.add_argument("--max-seq", type=int, default=8192)
     parser.add_argument("--device", default=None)
+    parser.add_argument("--dtype", default=None,
+                        choices=("float32", "bfloat16"),
+                        help="override the dtype. Default keeps the banked "
+                             "behaviour exactly: bfloat16 on CUDA, float32 "
+                             "on CPU. Needed for checkpoints too large to "
+                             "train in float32 on this box.")
+    parser.add_argument("--grad-checkpointing", action="store_true",
+                        help="force gradient checkpointing on. Default is "
+                             "CUDA-only, which is what produced every banked "
+                             "arm; this flag is additive and changes nothing "
+                             "unless passed.")
     parser.add_argument("--kshot", action="store_true",
                         help="baseline arm: NO adaptation; the training pairs "
                              "ride in the prompt as demonstrations instead "
@@ -128,12 +139,13 @@ def main() -> int:
     torch.manual_seed(args.seed)
     device = torch.device(args.device or ("cuda" if torch.cuda.is_available() else "cpu"))
     tokenizer = AutoTokenizer.from_pretrained(args.model)
-    dtype = torch.bfloat16 if device.type == "cuda" else torch.float32
+    dtype = (getattr(torch, args.dtype) if args.dtype
+             else (torch.bfloat16 if device.type == "cuda" else torch.float32))
     model = AutoModelForCausalLM.from_pretrained(args.model, dtype=dtype).to(device)
     config = TTTConfig(
         lora_rank=args.rank, lora_alpha=args.alpha, epochs=args.epochs,
         max_new_tokens=args.max_new_tokens, max_sequence_tokens=args.max_seq,
-        gradient_checkpointing=device.type == "cuda",
+        gradient_checkpointing=args.grad_checkpointing or device.type == "cuda",
         chunked_loss_tokens=512,  # the banked-arm loss path (see kernels)
     )
     predictor = TextPredictor(model, tokenizer, config, device)

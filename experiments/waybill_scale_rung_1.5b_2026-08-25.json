@@ -1,0 +1,158 @@
+{
+  "addendum": "M",
+  "what": "Does the on-prem buyer need per-tenant ADAPTATION, or just a bigger model?",
+  "preregistered": "VERDICT.md Addendum M, frozen before this arm ran.",
+  "arms": {
+    "qwen2.5_1.5b_kshot": {
+      "mean_micro_f1": 0.8804,
+      "invalid_json": 0,
+      "seconds_per_document": 91.0,
+      "cost_per_1k_documents_usd": 7.327,
+      "note": "20 demonstrations in the prompt, no adaptation; batch 1"
+    },
+    "our_adapted_0.5b": {
+      "mean_micro_f1": 0.8833,
+      "cost_per_1k_documents_usd_batch1": 0.5143,
+      "cost_per_1k_documents_usd_batch16": 0.1406,
+      "note": "document-only; carries no demonstrations at serving time"
+    },
+    "our_prompted_0.5b": {
+      "mean_micro_f1": 0.7836
+    }
+  },
+  "paired_adapted_minus_1.5b": {
+    "mean_delta": 0.0029,
+    "wins": 5,
+    "losses": 11,
+    "ties": 14,
+    "p_value_in_observed_direction": 0.1051,
+    "direction": "the 1.5B wins more documents than our adapted arm"
+  },
+  "per_document": {
+    "WB-2026-0101": {
+      "ours": 1.0,
+      "theirs": 1.0
+    },
+    "WB-2026-0102": {
+      "ours": 1.0,
+      "theirs": 1.0
+    },
+    "frt_0104": {
+      "ours": 1.0,
+      "theirs": 0.125
+    },
+    "az-0109": {
+      "ours": 1.0,
+      "theirs": 1.0
+    },
+    "az-0110": {
+      "ours": 0.75,
+      "theirs": 1.0
+    },
+    "m-2201": {
+      "ours": 1.0,
+      "theirs": 0.2353
+    },
+    "m-2204": {
+      "ours": 1.0,
+      "theirs": 0.9333
+    },
+    "m-2205": {
+      "ours": 1.0,
+      "theirs": 1.0
+    },
+    "m-2206": {
+      "ours": 0.875,
+      "theirs": 1.0
+    },
+    "m-2208": {
+      "ours": 0.875,
+      "theirs": 0.9412
+    },
+    "m-2209": {
+      "ours": 1.0,
+      "theirs": 0.75
+    },
+    "m-2210": {
+      "ours": 0.875,
+      "theirs": 1.0
+    },
+    "m-2211": {
+      "ours": 0.75,
+      "theirs": 0.4286
+    },
+    "m-2212": {
+      "ours": 1.0,
+      "theirs": 1.0
+    },
+    "h-3301": {
+      "ours": 0.75,
+      "theirs": 0.875
+    },
+    "h-3303": {
+      "ours": 0.75,
+      "theirs": 0.875
+    },
+    "h-3304": {
+      "ours": 0.875,
+      "theirs": 0.875
+    },
+    "h-3305": {
+      "ours": 0.5,
+      "theirs": 1.0
+    },
+    "h-3307": {
+      "ours": 0.5,
+      "theirs": 0.875
+    },
+    "h-3311": {
+      "ours": 1.0,
+      "theirs": 1.0
+    },
+    "h-3312": {
+      "ours": 0.5,
+      "theirs": 0.75
+    },
+    "x-4401": {
+      "ours": 0.875,
+      "theirs": 0.875
+    },
+    "x-4403": {
+      "ours": 1.0,
+      "theirs": 1.0
+    },
+    "x-4404": {
+      "ours": 1.0,
+      "theirs": 1.0
+    },
+    "x-4407": {
+      "ours": 0.875,
+      "theirs": 1.0
+    },
+    "x-4413": {
+      "ours": 1.0,
+      "theirs": 1.0
+    },
+    "x-4414": {
+      "ours": 1.0,
+      "theirs": 1.0
+    },
+    "x-4415": {
+      "ours": 0.75,
+      "theirs": 0.875
+    },
+    "x-4416": {
+      "ours": 1.0,
+      "theirs": 1.0
+    },
+    "x-4419": {
+      "ours": 1.0,
+      "theirs": 1.0
+    }
+  },
+  "verdict": "(a) A BIGGER MODEL, PROMPTED, MATCHES ADAPTATION -- company-level negative",
+  "preregistration_defect": "The frozen row's numeric threshold and its own parenthetical DISAGREE, and the disagreement flips the reading. It said '(a) lands at or above 0.8823 (within 0.01 of our adapted arm)'. 0.8833 - 0.01 = 0.8733, not 0.8823; the number written was 0.8833 - 0.001. The 1.5B scored 0.8804 -- BELOW the literal 0.8823, so (a) does not fire by the digits, and WITHIN 0.0029 of our arm, so (a) fires by the description. The typo made the bar stricter in the direction that FLATTERS US. This project's own rule is that a preregistration is a commitment and not a shield, so the reading taken is the one that does not flatter us: (a) fires.",
+  "why": "Qwen2.5-1.5B-Instruct, given the same 20 demonstrations and no adaptation whatsoever, scores 0.8804 against our adapted 0.5B's 0.8833 on the same 30 documents with the same scorer -- a gap of 0.0029, well inside the frozen tolerance. And the paired test is WORSE for us than the mean: 5W/11L/14T, p=0.105 -- the larger prompted model wins more than twice as many documents as our adapted arm does. On this corpus, per-tenant adaptation of a 0.5B buys approximately nothing that a 3x larger checkpoint does not already have.",
+  "what_survives": "COST, and only cost. The 1.5B carries 20 demonstrations in every request and cannot drop them -- it has no adaptation to put the schema in the weights -- so it costs $7.33 per 1,000 documents against our $0.5143 at the same batch size, and $0.1406 batched: 14x to 52x. That is the on-prem analogue of the payload asymmetry Addendum J killed for the hosted case, and it is NOT the same argument, because on-prem the constraint is compute rather than API tokens. It is also NOT tested: the obvious counter -- give the 1.5B a schema line instead of 20 demonstrations, exactly as Addendum J did to us -- has not been run, and it is the arm most likely to kill this one too.",
+  "scope": "One rung, one corpus, thirty agent-authored documents, one seed, batch 1, CPU. It says nothing about 3B or 7B. It does not license 'bigger models beat adaptation' any more than the reverse would have."
+}

@@ -9,8 +9,10 @@ summary we wrote:
 | `train.jsonl` | the 20 labelled pairs both arms were given |
 | `holdout.jsonl` | the 30 held-out documents, **text and id only** |
 | `gold_holdout.jsonl` | the withheld gold labels |
-| `predictions_prompted_greedy.jsonl` | raw output, prompted arm |
-| `predictions_adapted_greedy.jsonl` | raw output, adapted arm |
+| `predictions_prompted_greedy.jsonl` | **parsed** prediction, prompted arm (`null` where parsing failed) |
+| `predictions_adapted_greedy.jsonl` | **parsed** prediction, adapted arm |
+
+**These are not raw model text.** `run_challenge.py` parsed each completion and stored the resulting object, so the model's actual output string was discarded at generation time. You can re-score every prediction against gold, which is what this directory is for — but you cannot determine what the three `null` documents (`m-2208`, `h-3305`, `h-3307`) actually emitted, whether that was prose, truncation, or valid JSON inside a markdown fence. That distinction turned out to matter (see the fence-strip note in `VERDICT.md`'s Addendum I row), and it is not recoverable from this record. The column said "raw output" until an outside reviewer checked the types. Runs from 2026-08-22 onward store the raw text.
 
 Both arms are the same base checkpoint (`Qwen/Qwen2.5-0.5B-Instruct`,
 CPU/fp32) at a **matched greedy decode**. The prompted arm carries the

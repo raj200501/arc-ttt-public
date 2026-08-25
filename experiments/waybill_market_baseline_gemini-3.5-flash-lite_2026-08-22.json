@@ -1,0 +1,216 @@
+{
+  "addendum": "I",
+  "what": "A hosted model on the 30 held-out freight waybills -- the comparison a BUYER would make, on the only real-shaped corpus we have. Every other comparison in this repository is our 0.5B against its own prompt.",
+  "preregistered": "VERDICT.md Addendum I row, committed before this arm ran. Readings (a)/(b)/(c) frozen there.",
+  "status": "CONTEXT ARM, not a preregistered GATE of the adaptation recipe -- it measures the market, not our bar. It is nonetheless preregistered because its readings change what this company claims.",
+  "model": "gemini-3.5-flash-lite",
+  "corpus": "experiments/blind_rehearsal_2026-08-20_raw (30 holdout documents, gold published, agent-authored)",
+  "demonstration_format": "all 20 pairs packed into one user turn with a one-line instruction",
+  "protocol": "the same 20 demonstration pairs our k-shot arm received, same order, same documents, temperature 0, one sample per document, scored with arcttt.text_ttt.score_text_output -- the pinned scorer used by every arm in this repository",
+  "n": 30,
+  "hosted_mean_micro_f1": 1.0,
+  "hosted_invalid_json": 0,
+  "our_prompted_0_5b": 0.7836,
+  "our_adapted_0_5b": 0.8833,
+  "hosted_minus_our_adapted": 0.1167,
+  "paired_our_adapted_minus_hosted": {
+    "mean_delta": -0.1167,
+    "sign_test": {
+      "wins": 0,
+      "losses": 14,
+      "ties": 16,
+      "p_value": 1.0
+    }
+  },
+  "paired_our_prompted_minus_hosted": {
+    "mean_delta": -0.2164,
+    "sign_test": {
+      "wins": 0,
+      "losses": 16,
+      "ties": 14,
+      "p_value": 1.0
+    }
+  },
+  "results": [
+    {
+      "id": "WB-2026-0101",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Bluegate Assembly LLC\", \"destination_city\": \"Fort Wayne\", \"freight_class\": \"70\", \"origin_city\": \"Toledo\", \"ship_date\": \"2026-04-14\", \"shipper_name\": \"Harlan Fastener Works\", \"total_charge_usd\": \"612.40\", \"weight_lbs\": \"8250\"}"
+    },
+    {
+      "id": "WB-2026-0102",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Northstar Cold Storage\", \"destination_city\": \"Duluth\", \"freight_class\": \"55\", \"origin_city\": \"Eau Claire\", \"ship_date\": \"2026-05-02\", \"shipper_name\": \"Mercer Valley Dairy Co-op\", \"total_charge_usd\": \"1180.00\", \"weight_lbs\": \"14200\"}"
+    },
+    {
+      "id": "frt_0104",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Lakeshore Office Interiors\", \"destination_city\": \"Milwaukee\", \"freight_class\": \"92.5\", \"origin_city\": \"Green Bay\", \"ship_date\": \"2026-06-18\", \"shipper_name\": \"Quill & Sons Paper Converters\", \"total_charge_usd\": \"488.90\", \"weight_lbs\": \"6040\"}"
+    },
+    {
+      "id": "az-0109",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Sun Valley Distributors\", \"destination_city\": \"Yuma\", \"freight_class\": \"77.5\", \"origin_city\": \"Flagstaff\", \"ship_date\": \"2026-08-03\", \"shipper_name\": \"High Desert Botanicals\", \"total_charge_usd\": \"841.00\", \"weight_lbs\": \"4880\"}"
+    },
+    {
+      "id": "az-0110",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Copper State Plumbing Wholesale\", \"destination_city\": \"Tucson\", \"freight_class\": \"65\", \"origin_city\": \"El Paso\", \"ship_date\": \"2026-01-19\", \"shipper_name\": \"Rio Grande Fittings Corp.\", \"total_charge_usd\": \"1205.50\", \"weight_lbs\": \"16700\"}"
+    },
+    {
+      "id": "m-2201",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Gallery Row Imports\", \"destination_city\": \"Nashville\", \"freight_class\": \"110\", \"origin_city\": \"Louisville\", \"ship_date\": \"2026-03-03\", \"shipper_name\": \"Stonebridge Ceramics\", \"total_charge_usd\": \"684.20\", \"weight_lbs\": \"5225\"}"
+    },
+    {
+      "id": "m-2204",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Riverworks Coatings\", \"destination_city\": \"Evansville\", \"freight_class\": \"60\", \"origin_city\": \"Dayton\", \"ship_date\": \"2026-05-07\", \"shipper_name\": \"Bond-Rite Adhesives Corp.\", \"total_charge_usd\": \"1479.30\", \"weight_lbs\": \"21300\"}"
+    },
+    {
+      "id": "m-2205",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Harbor Lights Hotel Supply\", \"destination_city\": \"Annapolis\", \"freight_class\": \"250\", \"origin_city\": \"Wheeling\", \"ship_date\": \"2026-02-11\", \"shipper_name\": \"Winfield Glassworks\", \"total_charge_usd\": \"1118.45\", \"weight_lbs\": \"2760\"}"
+    },
+    {
+      "id": "m-2206",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Sierra Vista Medical Supply\", \"destination_city\": \"Fresno\", \"freight_class\": \"85\", \"origin_city\": \"Sacramento\", \"ship_date\": \"2026-07-30\", \"shipper_name\": \"PacCoast Surgical Distribution\", \"total_charge_usd\": \"598.70\", \"weight_lbs\": \"6015\"}"
+    },
+    {
+      "id": "m-2208",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Fabric Row Wholesale\", \"destination_city\": \"Richmond\", \"freight_class\": \"77.5\", \"origin_city\": \"Greenville\", \"ship_date\": \"2026-02-28\", \"shipper_name\": \"Calloway Textile Mills\", \"total_charge_usd\": \"1044.60\", \"weight_lbs\": \"12900\"}"
+    },
+    {
+      "id": "m-2209",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"The Verandah Home Store\", \"destination_city\": \"Albany\", \"freight_class\": \"150\", \"origin_city\": \"Kingston\", \"ship_date\": \"2026-01-05\", \"shipper_name\": \"Dutch Hollow Furniture Barn\", \"total_charge_usd\": \"829.95\", \"weight_lbs\": \"10880\"}"
+    },
+    {
+      "id": "m-2210",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "```json\n{\"consignee_name\": \"Ozark Trail Outfitters\", \"destination_city\": \"Springfield\", \"freight_class\": \"100\", \"origin_city\": \"Tulsa\", \"ship_date\": \"2026-03-16\", \"shipper_name\": \"Ridgeline Canvas & Gear\", \"total_charge_usd\": \"612.00\", \"weight_lbs\": \"5540\"}\n```"
+    },
+    {
+      "id": "m-2211",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Halverson Foods DC East\", \"destination_city\": \"Rockford\", \"freight_class\": \"65\", \"origin_city\": \"Cedar Rapids\", \"ship_date\": \"2026-06-14\", \"shipper_name\": \"Halverson Foods Plant 2\", \"total_charge_usd\": \"1310.00\", \"weight_lbs\": \"24600\"}"
+    },
+    {
+      "id": "m-2212",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Summit Modular Builders\", \"destination_city\": \"Bozeman\", \"freight_class\": \"70\", \"origin_city\": \"Casper\", \"ship_date\": \"2026-06-02\", \"shipper_name\": \"Bighorn Composite Panels\", \"total_charge_usd\": \"1688.25\", \"weight_lbs\": \"15200\"}"
+    },
+    {
+      "id": "h-3301",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Valley Truss & Frame\", \"destination_city\": \"Yakima\", \"freight_class\": \"50\", \"origin_city\": \"La Grande\", \"ship_date\": \"2026-10-12\", \"shipper_name\": \"Grande Ronde Lumber Co.\", \"total_charge_usd\": \"1742.90\", \"weight_lbs\": \"26400\"}"
+    },
+    {
+      "id": "h-3303",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "```json\n{\"consignee_name\": \"Tri-County Paving\", \"destination_city\": \"Asheville\", \"freight_class\": \"50\", \"origin_city\": \"Knoxville\", \"ship_date\": \"2026-05-11\", \"shipper_name\": \"Cumberland Aggregate Sales\", \"total_charge_usd\": \"1910.00\", \"weight_lbs\": \"32200\"}\n```"
+    },
+    {
+      "id": "h-3304",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Lakeview Feed & Milling\", \"destination_city\": \"Mankato\", \"freight_class\": \"50\", \"origin_city\": \"Sioux Falls\", \"ship_date\": \"2026-09-03\", \"shipper_name\": \"Heartland Grain Partners\", \"total_charge_usd\": \"1265.30\", \"weight_lbs\": \"23000\"}"
+    },
+    {
+      "id": "h-3305",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Granite State Marine Supply\", \"destination_city\": \"Portland\", \"freight_class\": \"70\", \"origin_city\": \"Keene\", \"ship_date\": \"2026-12-01\", \"shipper_name\": \"Monadnock Wire Rope Corp\", \"total_charge_usd\": \"712.40\", \"weight_lbs\": \"8050\"}"
+    },
+    {
+      "id": "h-3307",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Twin City Cafe Supply\", \"destination_city\": \"Hartford\", \"freight_class\": \"60\", \"origin_city\": \"Worcester\", \"ship_date\": \"2026-11-03\", \"shipper_name\": \"Beacon Hill Roasting Co.\", \"total_charge_usd\": \"301.75\", \"weight_lbs\": \"2640\"}"
+    },
+    {
+      "id": "h-3311",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Bitterroot Print Works\", \"destination_city\": \"Missoula\", \"freight_class\": \"55\", \"origin_city\": \"Spokane\", \"ship_date\": \"2026-06-24\", \"shipper_name\": \"Inland Empire Paper Traders\", \"total_charge_usd\": \"1233.20\", \"weight_lbs\": \"17600\"}"
+    },
+    {
+      "id": "h-3312",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Emerald Coast Pool Supply\", \"destination_city\": \"Tallahassee\", \"freight_class\": \"77.5\", \"origin_city\": \"Pensacola\", \"ship_date\": \"2026-09-30\", \"shipper_name\": \"Gulfstream Plastics Extrusion\", \"total_charge_usd\": \"1088.60\", \"weight_lbs\": \"13425\"}"
+    },
+    {
+      "id": "x-4401",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Acadiana Process Controls\", \"destination_city\": \"Lake Charles\", \"freight_class\": \"70\", \"origin_city\": \"Beaumont\", \"ship_date\": \"2026-03-25\", \"shipper_name\": \"Spindletop Valve & Gauge\", \"total_charge_usd\": \"529.85\", \"weight_lbs\": \"4415\"}"
+    },
+    {
+      "id": "x-4403",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "```json\n{\"consignee_name\": \"Vertex Outdoor Mfg.\", \"destination_city\": \"Ogden\", \"freight_class\": \"125\", \"origin_city\": \"Denver\", \"ship_date\": \"2026-07-07\", \"shipper_name\": \"Canyon Gear Retail Returns\", \"total_charge_usd\": \"415.60\", \"weight_lbs\": \"3340\"}\n```"
+    },
+    {
+      "id": "x-4404",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Commonwealth Rx Depot\", \"destination_city\": \"PROVIDENCE\", \"freight_class\": \"92.5\", \"origin_city\": \"NEW HAVEN\", \"ship_date\": \"2026-01-08\", \"shipper_name\": \"Bayline Pharma Packaging\", \"total_charge_usd\": \"611.90\", \"weight_lbs\": \"1180\"}"
+    },
+    {
+      "id": "x-4407",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Cornbelt Snack Distributors\", \"destination_city\": \"Des Moines\", \"freight_class\": \"60\", \"origin_city\": \"Council Bluffs\", \"ship_date\": \"2026-09-09\", \"shipper_name\": \"Loess Hills Popcorn Co\", \"total_charge_usd\": \"644.75\", \"weight_lbs\": \"8655\"}"
+    },
+    {
+      "id": "x-4413",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "```json\n{\"consignee_name\": \"Orchard Mesa Water District\", \"destination_city\": \"Montrose\", \"freight_class\": \"70\", \"origin_city\": \"Grand Junction\", \"ship_date\": \"2026-03-31\", \"shipper_name\": \"Cataract Pump & Irrigation\", \"total_charge_usd\": \"451.15\", \"weight_lbs\": \"3825\"}\n```"
+    },
+    {
+      "id": "x-4414",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Badger State Machine\", \"destination_city\": \"Madison\", \"freight_class\": \"60\", \"origin_city\": \"Sheboygan\", \"ship_date\": \"2026-05-19\", \"shipper_name\": \"Kettle Moraine Castings\", \"total_charge_usd\": \"1077.90\", \"weight_lbs\": \"14150\"}"
+    },
+    {
+      "id": "x-4415",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Llano Estacado Textiles\", \"destination_city\": \"Abilene\", \"freight_class\": \"55\", \"origin_city\": \"Lubbock\", \"ship_date\": \"2026-10-28\", \"shipper_name\": \"Caprock Cotton Compress LLC\", \"total_charge_usd\": \"1201.35\", \"weight_lbs\": \"19350\"}"
+    },
+    {
+      "id": "x-4416",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Harborview Specialty Foods\", \"destination_city\": \"Portsmouth\", \"freight_class\": \"77.5\", \"origin_city\": \"Montpelier\", \"ship_date\": \"2026-03-02\", \"shipper_name\": \"Green Mountain Maple Exchange\", \"total_charge_usd\": \"377.25\", \"weight_lbs\": \"4060\"}"
+    },
+    {
+      "id": "x-4419",
+      "micro_f1": 1.0,
+      "valid_json": true,
+      "prediction": "{\"consignee_name\": \"Superior Dockyards\", \"destination_city\": \"Duluth\", \"freight_class\": \"60\", \"origin_city\": \"Hibbing\", \"ship_date\": \"2026-09-17\", \"shipper_name\": \"Iron Range Fabrication\", \"total_charge_usd\": \"1344.00\", \"weight_lbs\": \"20150\"}"
+    }
+  ]
+}

@@ -1,0 +1,214 @@
+{
+  "what": "Document-only serving throughput of the 0.5B configuration on the 30 held-out freight waybills. The half of the cost comparison that waybill_cost.py left blank.",
+  "status": "TIMING ONLY. Quality is not measured here and must not be read off this artifact: the banked rehearsal adapter was not retained, so a LoRA of the same rank and shape was injected and timed. Decode time depends on the architecture and the token counts, not on what the weights contain, so the timing transfers; the 0.8833 quality figure comes from the banked run.",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "device": "cpu",
+  "dtype": "torch.float32",
+  "configuration": "document-only (include_demos=False) \u2014 no demonstrations in the prompt, which is what putting the schema in the weights buys",
+  "decode": "greedy, samples=1",
+  "n_documents": 30,
+  "seconds_per_document": {
+    "mean": 23.359,
+    "median": 19.933,
+    "min": 1.926,
+    "max": 59.798
+  },
+  "tokens_per_1k_documents": {
+    "prompt": 136000,
+    "output": 196667
+  },
+  "instance_rate": {
+    "usd_per_hour": 0.29,
+    "quoted": "2026-08-19",
+    "source": "external cloud list price, 8-vCPU on-demand \u2014 the same quote VERDICT.md already uses; not a measurement, and deliberately cost-OVERSTATING against this 4-thread box"
+  },
+  "cost_per_1k_documents_usd": 1.882,
+  "excludes": "the one-time per-tenant adaptation cost, which is amortised over a tenant's whole document volume and is a different number from serving; it is reported separately in the F artifacts (~272 s/tenant there).",
+  "host": {
+    "platform": "Linux-6.18.44-fc-v21-x86_64-with-glibc2.39",
+    "python": "3.11.15",
+    "torch_threads": 4
+  },
+  "per_document": [
+    {
+      "id": "WB-2026-0101",
+      "seconds": 14.261,
+      "prompt_tokens": 121,
+      "output_tokens": 123
+    },
+    {
+      "id": "WB-2026-0102",
+      "seconds": 45.256,
+      "prompt_tokens": 140,
+      "output_tokens": 375
+    },
+    {
+      "id": "frt_0104",
+      "seconds": 5.905,
+      "prompt_tokens": 121,
+      "output_tokens": 52
+    },
+    {
+      "id": "az-0109",
+      "seconds": 25.947,
+      "prompt_tokens": 127,
+      "output_tokens": 221
+    },
+    {
+      "id": "az-0110",
+      "seconds": 20.446,
+      "prompt_tokens": 104,
+      "output_tokens": 178
+    },
+    {
+      "id": "m-2201",
+      "seconds": 30.332,
+      "prompt_tokens": 190,
+      "output_tokens": 263
+    },
+    {
+      "id": "m-2204",
+      "seconds": 19.42,
+      "prompt_tokens": 163,
+      "output_tokens": 149
+    },
+    {
+      "id": "m-2205",
+      "seconds": 30.51,
+      "prompt_tokens": 150,
+      "output_tokens": 255
+    },
+    {
+      "id": "m-2206",
+      "seconds": 13.951,
+      "prompt_tokens": 111,
+      "output_tokens": 123
+    },
+    {
+      "id": "m-2208",
+      "seconds": 19.207,
+      "prompt_tokens": 119,
+      "output_tokens": 173
+    },
+    {
+      "id": "m-2209",
+      "seconds": 17.448,
+      "prompt_tokens": 126,
+      "output_tokens": 154
+    },
+    {
+      "id": "m-2210",
+      "seconds": 43.576,
+      "prompt_tokens": 153,
+      "output_tokens": 399
+    },
+    {
+      "id": "m-2211",
+      "seconds": 23.322,
+      "prompt_tokens": 139,
+      "output_tokens": 210
+    },
+    {
+      "id": "m-2212",
+      "seconds": 25.029,
+      "prompt_tokens": 149,
+      "output_tokens": 218
+    },
+    {
+      "id": "h-3301",
+      "seconds": 1.926,
+      "prompt_tokens": 158,
+      "output_tokens": 14
+    },
+    {
+      "id": "h-3303",
+      "seconds": 26.683,
+      "prompt_tokens": 152,
+      "output_tokens": 244
+    },
+    {
+      "id": "h-3304",
+      "seconds": 26.716,
+      "prompt_tokens": 127,
+      "output_tokens": 229
+    },
+    {
+      "id": "h-3305",
+      "seconds": 16.486,
+      "prompt_tokens": 138,
+      "output_tokens": 148
+    },
+    {
+      "id": "h-3307",
+      "seconds": 16.87,
+      "prompt_tokens": 132,
+      "output_tokens": 138
+    },
+    {
+      "id": "h-3311",
+      "seconds": 47.15,
+      "prompt_tokens": 154,
+      "output_tokens": 389
+    },
+    {
+      "id": "h-3312",
+      "seconds": 21.456,
+      "prompt_tokens": 164,
+      "output_tokens": 190
+    },
+    {
+      "id": "x-4401",
+      "seconds": 16.744,
+      "prompt_tokens": 99,
+      "output_tokens": 143
+    },
+    {
+      "id": "x-4403",
+      "seconds": 59.798,
+      "prompt_tokens": 126,
+      "output_tokens": 372
+    },
+    {
+      "id": "x-4404",
+      "seconds": 25.458,
+      "prompt_tokens": 110,
+      "output_tokens": 215
+    },
+    {
+      "id": "x-4407",
+      "seconds": 29.472,
+      "prompt_tokens": 131,
+      "output_tokens": 260
+    },
+    {
+      "id": "x-4413",
+      "seconds": 18.616,
+      "prompt_tokens": 167,
+      "output_tokens": 158
+    },
+    {
+      "id": "x-4414",
+      "seconds": 16.9,
+      "prompt_tokens": 149,
+      "output_tokens": 143
+    },
+    {
+      "id": "x-4415",
+      "seconds": 9.814,
+      "prompt_tokens": 105,
+      "output_tokens": 85
+    },
+    {
+      "id": "x-4416",
+      "seconds": 18.127,
+      "prompt_tokens": 119,
+      "output_tokens": 157
+    },
+    {
+      "id": "x-4419",
+      "seconds": 13.951,
+      "prompt_tokens": 136,
+      "output_tokens": 122
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "what": "Our document-only serving cost per 1,000 waybills, corrected for the untrained-adapter drift in the timing run.",
+  "status": "The RATE (tokens/second) is measured on this hardware and is weight-independent. The OUTPUT LENGTHS are the banked adapted arm's actual predictions, tokenized. The instance price is an external quote, not a measurement.",
+  "why_a_correction_was_needed": "The timing run had to inject an untrained LoRA (the banked rehearsal adapter was not retained). An untrained adapter does not stop: it generated 197 tokens per document on average, against 93 for the answers the trained arm actually produced. Unadjusted wall-clock therefore overstates our cost -- the safe direction, and still wrong.",
+  "measured_tokens_per_second": 8.419,
+  "mean_prompt_tokens": 136.0,
+  "mean_output_tokens_untrained_adapter": 196.7,
+  "mean_output_tokens_banked_adapted_arm": 93.4,
+  "seconds_per_document_unadjusted": 23.359,
+  "seconds_per_document_corrected": 11.098,
+  "instance_rate": {
+    "usd_per_hour": 0.29,
+    "quoted": "2026-08-19",
+    "source": "external 8-vCPU on-demand list price; deliberately cost-overstating against this 4-thread box"
+  },
+  "cost_per_1k_documents_usd_unadjusted": 1.882,
+  "cost_per_1k_documents_usd": 0.894,
+  "excludes": "the one-time per-tenant adaptation cost, amortised over that tenant's volume and reported separately.",
+  "quality_note": "This artifact contains no quality claim. Our adapted arm scores 0.8833 on these documents and the hosted tier scores 0.9708-1.0000; that comparison lives in Addendum I and is not improved by being cheaper."
+}

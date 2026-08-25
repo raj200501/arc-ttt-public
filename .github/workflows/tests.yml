@@ -37,6 +37,12 @@ jobs:
         run: python3 scripts/verify_verdict.py
       - name: Recompute the Addendum E verdict under its frozen rule
         run: python3 scripts/addendum_e_summary.py
+      - name: Re-derive the constrained-decoding counterfactual
+        # The analysis that runs AGAINST our own claim. If it ever stops
+        # reproducing, the badge should go red for that too.
+        run: python3 scripts/format_counterfactual.py --out /tmp/cf.json
+      - name: Re-derive the per-tenant verdicts (one tenant FAILS the rule)
+        run: python3 scripts/per_tenant_verdicts.py --out /tmp/ptv.json
       - name: Recompute the Addendum D failure
         run: python3 scripts/read_addendum_d.py
       - name: Re-score stored predictions against regenerated gold

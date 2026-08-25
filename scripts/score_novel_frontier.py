@@ -93,9 +93,16 @@ def main(argv: list[str] | None = None) -> int:
             "delta. The corpus is verbatim-extraction by design (novelty of "
             "schema, not difficulty of reasoning, is the manipulated "
             "variable), so a frontier model is expected to do well; the "
-            "product claim next to this number is cost and data-exposure "
-            "(payload asymmetry artifacts), never frontier quality parity "
-            "on customers' real documents, which this corpus cannot speak to."
+            "product claim next to this number is DATA EXPOSURE ALONE -- "
+            "workloads where a hosted API is not an option. The COST half of "
+            "that pair was withdrawn on 2026-08-22: Addendum J measured the "
+            "assumption it rested on and refuted it. The hosted tier does "
+            "not need the demonstrations that make its payload large -- with "
+            "only a schema line declared it scores 0.8930 on the realistic "
+            "waybill corpus for ~$0.36 per 1,000 documents against our "
+            "adapted 0.8833 at ~$0.89, beating us at 40% of our cost. Never "
+            "frontier quality parity on customers' real documents, which "
+            "this corpus cannot speak to."
         ),
         "comparison_same_corpus": {
             "qwen0.5b_kshot_k10_per_seed": {"1": 0.5708, "2": 0.4854, "3": 0.5021},

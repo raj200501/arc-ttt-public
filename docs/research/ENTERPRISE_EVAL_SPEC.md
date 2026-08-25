@@ -65,7 +65,7 @@ enough to put in a public artifact attached to a commercial pitch.
   dataset's original stated purpose, so we are not abusing it.
 - **Frontier-API baseline cost (rough token math, labeled estimate):**
   OCR text per receipt ≈ 300–800 tokens (call it ~500); output JSON ≈ 200–400
-  tokens (~300). A k=10 few-shot prompt ≈ 10×800 + 500 instructions + 500 test
+  tokens (~300). A k=10 few-shot prompt ≈ 10×800 + 500 instructions + 305 test
   input ≈ **~9k input / ~0.3k output tokens per call**; at k=5 ≈ ~5.5k input.
   At Claude Sonnet 5 pricing ($3/M in, $15/M out —
   https://platform.claude.com/docs/en/pricing) that is **≈ $0.02–0.03 per
@@ -542,7 +542,7 @@ Results, whatever they are, are reported against the text as frozen on
 ## Addendum B — Novel-schema gate (frozen 2026-08-12T19:40Z, before any run)
 
 Written before a single record was generated or a single arm executed. The
-generator (`src/arcttt/novel_schema.py`, 10 tests) exists; no corpus, no
+generator (`src/arcttt/novel_schema.py`, 305 tests) exists; no corpus, no
 scores, and no arms exist at the time of writing. Everything below is a
 pre-commitment, and B.6 records what may be claimed at each outcome so no
 branch can be re-argued after the numbers land.
@@ -826,7 +826,7 @@ All six k=30 arms banked, verdict GO, board complete.
 ## Addendum C — Scale-rung gate (frozen 2026-08-17T20:35Z, before any run)
 
 Frozen the evening the Addendum B verdict landed (GO, mean +46.5,
-156W/0L), before any rung above 0.5B has produced a single k=30
+156W/0L/2T over 158), before any rung above 0.5B has produced a single k=30
 novel-schema record and before any GPU beyond Kaggle's free tier has
 been rented. The company-shape decision of the same date (lab + quiet
 data partners) makes this the next public artifact: the scale curve.
@@ -1355,7 +1355,7 @@ was df=39, with a fallback returning the invented constant `2.09` for
 anything below it. Consequences, in order of severity:
 
 (a) **Addendum E's cluster interval (E.5) is corrected from
-[+32.75, +47.95] to [+31.0, +49.7].** E clusters over six seeds, df=5,
+[+32.75, +47.95] to [+31.01, +49.70].** E clusters over six seeds, df=5,
 where t(0.975, 5) = 2.5706; the published interval was computed at 2.09,
 roughly t at df≈19, making it **~19% too narrow and too narrow in the
 direction that flatters the result**. The Addendum E verdict is
@@ -1720,3 +1720,252 @@ it was superseded.
 law.** The post-hoc table in G.1 remains what it was on the day it was
 written: a pattern across four corpora, generated after the fact, never
 tested. It is a reason to run G, not a result.
+
+## G.11 The two coupled cells point AGAINST the law, and G.10 cited one of them for its runtime only (2026-08-22)
+
+**This section exists because an outside reader found that the previous
+section used one attribute of a file while withholding another, and the
+withheld one cuts against us.** That is the exact failure
+`CORRECTIONS.md` had already named — *"a disclosure whose honest half was
+added while the misleading half stayed"* — committed by the person who
+wrote that sentence, four sections later.
+
+### The numbers that were not stated
+
+Both superseded coupled-design cells, in full:
+
+| cell | prompted baseline | adapted | paired delta | captured headroom |
+|---|---|---|---|---|
+| k=1, seed 401 | 0.3572 | 0.3667 | **+0.0095** | 0.0148 |
+| k=4, seed 401 | 0.5663 | 0.9187 | **+0.3524** | 0.8126 |
+
+The adaptation-headroom law predicts the paired delta **falls** as the
+prompted baseline **rises**. Observed: the baseline rises (0.357 →
+0.566) and the delta rises with it, by a factor of **37**. On the
+captured-headroom fraction — the statistic G.2 introduced specifically
+to survive the ceiling-effect objection — it rises from 0.015 to 0.813.
+
+**Both cells that exist point the opposite way to the hypothesis, on
+both statistics.**
+
+### What G.8 and G.10 did with that
+
+G.8 justified discarding the coupled design by arguing the confound
+*"suppresses the effect G is testing for… The first cell showed that
+plainly."* That reading survives only while k=1 is the only cell. The
+k=4 cell completed at 02:08 the following morning and inverts it.
+
+G.10 then cited that same k=4 cell — **for its adaptation runtime
+(1112.4 s), in a table used to argue that G is compute-bound.** Its
+result appears in no narrative document in this repository. Using a
+file's timing while omitting its finding is disclosure operating as a
+controlled instrument, and it is not defensible by pointing at the
+sentence that says the cells are "not evidence for or against."
+
+### What this does and does not establish
+
+It does **not** refute the law. Two cells, one seed, and the coupled
+design is genuinely confounded — adaptation strength moved with baseline
+strength, so k=4's adapter saw four times the training signal of k=1's,
+which is a sufficient explanation for the rise on its own. That is
+exactly why the design was superseded, and the reasoning in G.8 stands
+on its own terms.
+
+It does establish two things that are now on the record:
+
+1. **The only G-family data that exists runs against the hypothesis.**
+   Anyone citing the G.1 post-hoc table must also carry this table. The
+   prohibition in G.10 — nothing in this repository may cite the law —
+   is reinforced, not weakened.
+2. **The G.8 rationale was written from a one-cell view and reads
+   differently with both cells in hand.** It is not withdrawn, because
+   the confound is real regardless of direction; it is annotated, and
+   this annotation is the correction.
+
+### The rule that should have prevented it
+
+Stated as a binding constraint rather than an intention: **any artifact
+cited in this spec for any attribute must have its primary result stated
+in the same section.** A runtime, a hash or a file size may not be
+quoted from a cell whose outcome is left unmentioned. `CORRECTIONS.md`
+carries this as a defect found in our own disclosure path, and it was
+found by a reader, not by us — which is the fourth consecutive
+consequential finding to arrive from outside.
+
+---
+
+# Addendum H — the corpus-DIFFICULTY ablation (preregistered 2026-08-22, before any arm exists)
+
+## H.1 Why this exists, stated as the objection rather than as our answer
+
+An outside technical reader, asked to find the objection that would end a
+partner meeting, found this one, and it is better than anything we had
+raised against ourselves:
+
+> Addendum E answers whether the effect is an artifact of one fixed
+> corpus **shape**. Nobody has asked whether it is an artifact of one
+> fixed corpus **difficulty** — and the difficulty is set by two
+> hard-coded constants that have never been ablated anywhere in this
+> repository.
+
+The constants are in `src/arcttt/novel_schema.py`:
+
+1. **The arbitrary label→key mapping.** The document says `vokrin:` and
+   the target JSON calls it `zelbat`, with no surface similarity. The
+   module's own docstring calls this *"the single most important
+   property: it is the part that in-context examples convey poorly and
+   weight updates should convey well."* **Real tenant schemas are not
+   like this.** A freight waybill says `Ship Date:` and the schema key
+   is `ship_date`.
+2. **Distractor lines** (`n_distractors=4`), whose labels are outside
+   the schema and must be dropped.
+
+`grep -rn n_distractors` returns only defaults and one unit test. Neither
+constant is swept anywhere. And the evidence we already have is monotone
+in difficulty, in the direction that hurts:
+
+| corpus | label→key mapping | measured paired delta |
+|---|---|---|
+| novel-schema synthetic (gates 1/4/5) | arbitrary pseudowords | **+46.5 / +24.0 / +40.4** |
+| freight waybills (rehearsal) | ordinary English | **+4.14**, sign test 5W/5L/17T — FAIL |
+| CORD receipts (real, public) | ordinary English | **−7.3 / −11.5 / −4.5** — FAIL |
+
+Read as a series, that table says the effect size may be a function of
+how much of the corpus we wrote. **H is the experiment that tells us
+which.**
+
+## H.2 Design, fixed now
+
+`mapping="mnemonic"` makes the JSON key the SAME token as the document
+label. The unrelated pseudoword is still drawn from the pool, so the two
+corpora differ in **nothing else**: identical documents byte-for-byte,
+identical values, identical distractors, identical shuffles. Only the key
+names change. (`tests/test_addendum_h_ablation.py` pins that the
+documents are byte-identical across the two mappings, and that the
+default path is unchanged — if the ablation altered the corpus, it would
+not be an ablation.)
+
+- **H-A (mapping):** seeds {1, 2, 3}, k=10, n_test=20, fixed geometry,
+  `include_demos=True`, greedy matched decode, `n_distractors=4`.
+  Arms: arbitrary-mapping control **and** mnemonic-mapping, both run
+  fresh on this host, so the comparison is like-for-like rather than
+  against a banked arm from different hardware.
+- **H-B (distractors):** the same, with `n_distractors=0` at the
+  arbitrary mapping.
+
+The control is re-run rather than taken from the banked k=10 replication
+because those arms ran cuda/bf16 (B.8) and these run cpu/fp32; pairing
+across that difference would credit the ablation with a hardware change.
+
+## H.3 The bar and the readings, frozen before the data
+
+Same rule as every gate above: **paired seed-mean delta ≥ +5.0 micro-F1
+AND the sign test agreeing.** Readings, written now:
+
+- **(a)** The mnemonic-mapping delta clears +5.0 with the sign test
+  agreeing → the effect is **not** an artifact of the arbitrary mapping.
+  This is the strongest cheap control anyone has proposed against this
+  result, and surviving it is the single most valuable thing H can
+  produce.
+- **(b)** Positive but under +5.0 → the effect is **substantially** an
+  artifact of the mapping. The headline is then restated everywhere as
+  bounded by mapping arbitrariness, with the mnemonic number carried
+  beside it at the same size.
+- **(c)** At or below zero → **the headline is an artifact of the
+  generator**, and this project's pages will say that in those words.
+  Gates 1/4/5 stay published with the ablation attached to each.
+- **(u)** UNINFORMATIVE guard, and it binds in both directions: if the
+  **mnemonic prompted baseline saturates (mean ≥ 0.95)**, the cell says
+  nothing about adaptation — a task with no headroom cannot show a
+  delta — and it must be reported as UNINFORMATIVE, **not** as reading
+  (c). Ceiling effects are the way this ablation could look like a
+  refutation while measuring nothing, and (u) exists so that outcome
+  cannot be quietly banked as one. The captured-headroom fraction is
+  recorded on every cell for the same reason.
+
+H-B is read on the same ladder.
+
+## H.4 What H cannot do
+
+It cannot make the corpus real. Every H arm is still synthetic and still
+ours; a mnemonic mapping is closer to a tenant's documents but it is not
+a tenant's documents. H narrows the generator objection; only the
+blind-holdout offer retires it.
+
+## H.5 Status
+
+**PENDING at the time of this commit.** No H arm exists. This section and
+the `VERDICT.md` row are committed before the first arm is launched, and
+the git timestamp of this commit is the freeze.
+
+### H.5.1 DECIDED 2026-08-22: reading (a), and the magnitude that qualifies it
+
+All nine cells ran. Three seeds per arm, k=10, n_test=20, cpu/fp32, every
+arm re-run on this host.
+
+| arm | prompted baseline | adapted | paired delta | pooled sign test |
+|---|---|---|---|---|
+| arbitrary mapping (control) | 0.5289 | 0.9396 | **+0.4107** | 56W/0L/4T, p=1.4e-17 |
+| mnemonic mapping (the ablation) | 0.7875 | 0.9750 | **+0.1875** | 40W/2L/18T, p=2.1e-10 |
+| arbitrary, no distractors (H-B) | 0.6892 | 0.9771 | **+0.2879** | 46W/2L/12T, p=4.2e-12 |
+
+Per-seed mnemonic deltas: +0.1187 / +0.1625 / +0.2812.
+
+**Reading (a) applies.** The mnemonic prompted baseline is 0.7875, below
+the 0.95 saturation guard, so (u) does not fire and the cell is
+informative. The delta clears the +5.0 bar with the sign test agreeing.
+**The effect is not an artifact of the arbitrary label→key mapping.**
+
+**The magnitude is the part that must travel with the verdict.** The
+arbitrary mapping is worth **+22.3 F1** of the measured delta — more than
+the effect that survives it. Removing the distractors costs a further
+**+12.3**. The two constants that set this corpus's difficulty account
+between them for most of the headline, and any citation of the control
+delta must carry the mnemonic delta beside it.
+`tests/test_addendum_h_verdict.py` fails if that number is ever dropped.
+
+**H.4 still binds:** a mnemonic mapping is closer to a tenant's documents
+but it is not a tenant's documents. H narrows the generator objection. It
+does not retire it, and the blind-holdout offer is still the only thing
+that would.
+
+## H.6 The contingency, frozen now because (u) is the likely outcome
+
+Written **2026-08-22 while the first mnemonic cell was still running**, and
+committed before it landed, because a follow-up designed after seeing a
+null is a rescue and a follow-up designed before it is an experiment.
+
+An outside reader predicted the modal H outcome is **(u)**: with the key
+equal to the document label, a 0.5B model may solve the task from ten
+in-context examples, the mnemonic prompted baseline saturates at ≥0.95,
+and the cell says nothing about adaptation because there is no headroom
+to show a delta in. That prediction is plausible and it is why (u) exists.
+
+**Two things are frozen here.**
+
+**First, what saturation would itself mean, stated before we know.** If
+the mnemonic baseline saturates, that is not a neutral outcome we route
+around — **it is a finding, and it is against us.** It would say that on
+a corpus whose labels resemble a real tenant's, plain prompting of a
+0.5B model already reaches ceiling from ten examples, and there is
+nothing for per-tenant adaptation to add. That belongs on the evidence
+pages in those words, at the same size as the passes, **whether or not
+the follow-up below recovers a measurable delta.** A ceiling that
+appears the moment the corpus is made realistic is a product fact, not
+just a measurement problem.
+
+**Second, the follow-up, with its bar unchanged.** If and only if (u)
+fires, run the mnemonic mapping at **k=4 and k=2** — the same corpus,
+the same documents, the same scorer, the same +5.0 bar and
+two-statistics rule, the demonstration count reduced so the baseline has
+headroom again. Readings (a)/(b)/(c)/(u) apply unchanged at each k. No
+other amendment is authorised: not a different geometry, not a different
+model, not a different metric, and not a different bar. If the follow-up
+also returns (u) at every k, H is recorded **UNRUN with the reason
+measured**, in the same form Addendum G was, and it may not be cited in
+either direction.
+
+This is the second time this project has preregistered a contingency
+rather than amending after a null. The first was Addendum G, and the
+discipline held there — it was recorded UNRUN rather than quietly
+reshaped. It should hold here.

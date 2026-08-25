@@ -1,0 +1,290 @@
+{
+  "what": "Does the constrained-decoding objection reach the HEADLINE gates? Two parts: format-neutral restriction, and an oracle schema repair of the baseline arm.",
+  "status": "POST-HOC ANALYSIS of banked artifacts. NOT a preregistered gate. Gold is regenerated from the deterministic generator; no stored gold is trusted.",
+  "repairs": {
+    "R1_path_repaired": "baseline rebuilt under gold's leaf paths, keeping its own values; invented keys dropped. What a schema-constrained decoder guarantees by construction.",
+    "R2_name_repaired": "R1, plus values under the wrong parent counted when the leaf NAME matches. Strictly more generous than any real decoder."
+  },
+  "gates": [
+    {
+      "gate": "gate1_addendum_B_k30",
+      "seed_mean_delta_as_measured": 0.4647,
+      "seed_mean_delta_format_neutral": 0.4647,
+      "total_invalid_json_baseline": 0,
+      "total_invalid_json_adapted": 0,
+      "arms": [
+        {
+          "arm": "1",
+          "n_pairs": 60,
+          "invalid_json_baseline": 0,
+          "invalid_json_adapted": 0,
+          "delta_as_measured": 0.3604,
+          "n_format_neutral": 60,
+          "delta_format_neutral": 0.3604,
+          "schema_repair": null,
+          "schema_repair_note": "baseline arm stores no predictions (pre-Addendum-E artifact); part 2 not computable for this arm"
+        },
+        {
+          "arm": "2",
+          "n_pairs": 38,
+          "invalid_json_baseline": 0,
+          "invalid_json_adapted": 0,
+          "delta_as_measured": 0.4901,
+          "n_format_neutral": 38,
+          "delta_format_neutral": 0.4901,
+          "schema_repair": null,
+          "schema_repair_note": "baseline arm stores no predictions (pre-Addendum-E artifact); part 2 not computable for this arm"
+        },
+        {
+          "arm": "3",
+          "n_pairs": 60,
+          "invalid_json_baseline": 0,
+          "invalid_json_adapted": 0,
+          "delta_as_measured": 0.5437,
+          "n_format_neutral": 60,
+          "delta_format_neutral": 0.5437,
+          "schema_repair": null,
+          "schema_repair_note": "baseline arm stores no predictions (pre-Addendum-E artifact); part 2 not computable for this arm"
+        }
+      ]
+    },
+    {
+      "gate": "gate4_addendum_F_document_mode",
+      "seed_mean_delta_as_measured": 0.2404,
+      "seed_mean_delta_format_neutral": 0.2454,
+      "total_invalid_json_baseline": 0,
+      "total_invalid_json_adapted": 1,
+      "arms": [
+        {
+          "arm": "1",
+          "n_pairs": 60,
+          "invalid_json_baseline": 0,
+          "invalid_json_adapted": 0,
+          "delta_as_measured": 0.3198,
+          "n_format_neutral": 60,
+          "delta_format_neutral": 0.3198,
+          "schema_repair": null,
+          "schema_repair_note": "baseline arm stores no predictions (pre-Addendum-E artifact); part 2 not computable for this arm"
+        },
+        {
+          "arm": "2",
+          "n_pairs": 38,
+          "invalid_json_baseline": 0,
+          "invalid_json_adapted": 1,
+          "delta_as_measured": 0.0548,
+          "n_format_neutral": 37,
+          "delta_format_neutral": 0.0698,
+          "schema_repair": null,
+          "schema_repair_note": "baseline arm stores no predictions (pre-Addendum-E artifact); part 2 not computable for this arm"
+        },
+        {
+          "arm": "3",
+          "n_pairs": 60,
+          "invalid_json_baseline": 0,
+          "invalid_json_adapted": 0,
+          "delta_as_measured": 0.3465,
+          "n_format_neutral": 60,
+          "delta_format_neutral": 0.3465,
+          "schema_repair": null,
+          "schema_repair_note": "baseline arm stores no predictions (pre-Addendum-E artifact); part 2 not computable for this arm"
+        }
+      ]
+    },
+    {
+      "gate": "gate5_addendum_E_r2_diverse",
+      "seed_mean_delta_as_measured": 0.4035,
+      "seed_mean_delta_format_neutral": 0.4035,
+      "total_invalid_json_baseline": 0,
+      "total_invalid_json_adapted": 0,
+      "arms": [
+        {
+          "arm": "203",
+          "n_pairs": 60,
+          "invalid_json_baseline": 0,
+          "invalid_json_adapted": 0,
+          "delta_as_measured": 0.2639,
+          "n_format_neutral": 60,
+          "delta_format_neutral": 0.2639,
+          "schema_repair": {
+            "baseline_raw": 0.7278,
+            "baseline_path_repaired_R1": 0.7278,
+            "baseline_name_repaired_R2": 0.7278,
+            "adapted": 0.9917,
+            "delta_vs_R1": 0.2639,
+            "delta_vs_R2": 0.2639,
+            "sign_vs_R2": {
+              "wins": 53,
+              "losses": 1,
+              "ties": 6
+            },
+            "share_of_gap_closed_by_R2": 0.0
+          },
+          "baseline_schema_conformance": {
+            "key_path_recall": 1.0,
+            "key_path_precision": 1.0,
+            "documents_with_exactly_the_gold_key_set": "60/60",
+            "wrong_value_share_of_shared_leaves": 0.2722,
+            "reading": "what the baseline gets wrong: KEYS if recall/precision are below 1, VALUES if they are at 1 and the wrong-value share is high. Only the first is reachable by a schema-constrained decoder."
+          }
+        },
+        {
+          "arm": "204",
+          "n_pairs": 60,
+          "invalid_json_baseline": 0,
+          "invalid_json_adapted": 0,
+          "delta_as_measured": 0.4639,
+          "n_format_neutral": 60,
+          "delta_format_neutral": 0.4639,
+          "schema_repair": {
+            "baseline_raw": 0.5194,
+            "baseline_path_repaired_R1": 0.5194,
+            "baseline_name_repaired_R2": 0.5194,
+            "adapted": 0.9833,
+            "delta_vs_R1": 0.4639,
+            "delta_vs_R2": 0.4639,
+            "sign_vs_R2": {
+              "wins": 59,
+              "losses": 1,
+              "ties": 0
+            },
+            "share_of_gap_closed_by_R2": -0.0
+          },
+          "baseline_schema_conformance": {
+            "key_path_recall": 1.0,
+            "key_path_precision": 1.0,
+            "documents_with_exactly_the_gold_key_set": "60/60",
+            "wrong_value_share_of_shared_leaves": 0.4806,
+            "reading": "what the baseline gets wrong: KEYS if recall/precision are below 1, VALUES if they are at 1 and the wrong-value share is high. Only the first is reachable by a schema-constrained decoder."
+          }
+        },
+        {
+          "arm": "206",
+          "n_pairs": 60,
+          "invalid_json_baseline": 0,
+          "invalid_json_adapted": 0,
+          "delta_as_measured": 0.3528,
+          "n_format_neutral": 60,
+          "delta_format_neutral": 0.3528,
+          "schema_repair": {
+            "baseline_raw": 0.5833,
+            "baseline_path_repaired_R1": 0.5833,
+            "baseline_name_repaired_R2": 0.5833,
+            "adapted": 0.9361,
+            "delta_vs_R1": 0.3528,
+            "delta_vs_R2": 0.3528,
+            "sign_vs_R2": {
+              "wins": 56,
+              "losses": 4,
+              "ties": 0
+            },
+            "share_of_gap_closed_by_R2": -0.0
+          },
+          "baseline_schema_conformance": {
+            "key_path_recall": 1.0,
+            "key_path_precision": 1.0,
+            "documents_with_exactly_the_gold_key_set": "60/60",
+            "wrong_value_share_of_shared_leaves": 0.4167,
+            "reading": "what the baseline gets wrong: KEYS if recall/precision are below 1, VALUES if they are at 1 and the wrong-value share is high. Only the first is reachable by a schema-constrained decoder."
+          }
+        },
+        {
+          "arm": "207",
+          "n_pairs": 60,
+          "invalid_json_baseline": 0,
+          "invalid_json_adapted": 0,
+          "delta_as_measured": 0.3762,
+          "n_format_neutral": 60,
+          "delta_format_neutral": 0.3762,
+          "schema_repair": {
+            "baseline_raw": 0.5881,
+            "baseline_path_repaired_R1": 0.5881,
+            "baseline_name_repaired_R2": 0.5881,
+            "adapted": 0.9643,
+            "delta_vs_R1": 0.3762,
+            "delta_vs_R2": 0.3762,
+            "sign_vs_R2": {
+              "wins": 55,
+              "losses": 3,
+              "ties": 2
+            },
+            "share_of_gap_closed_by_R2": 0.0
+          },
+          "baseline_schema_conformance": {
+            "key_path_recall": 1.0,
+            "key_path_precision": 1.0,
+            "documents_with_exactly_the_gold_key_set": "60/60",
+            "wrong_value_share_of_shared_leaves": 0.4119,
+            "reading": "what the baseline gets wrong: KEYS if recall/precision are below 1, VALUES if they are at 1 and the wrong-value share is high. Only the first is reachable by a schema-constrained decoder."
+          }
+        },
+        {
+          "arm": "208",
+          "n_pairs": 60,
+          "invalid_json_baseline": 0,
+          "invalid_json_adapted": 0,
+          "delta_as_measured": 0.4619,
+          "n_format_neutral": 60,
+          "delta_format_neutral": 0.4619,
+          "schema_repair": {
+            "baseline_raw": 0.5262,
+            "baseline_path_repaired_R1": 0.5262,
+            "baseline_name_repaired_R2": 0.5262,
+            "adapted": 0.9881,
+            "delta_vs_R1": 0.4619,
+            "delta_vs_R2": 0.4619,
+            "sign_vs_R2": {
+              "wins": 58,
+              "losses": 1,
+              "ties": 1
+            },
+            "share_of_gap_closed_by_R2": 0.0
+          },
+          "baseline_schema_conformance": {
+            "key_path_recall": 1.0,
+            "key_path_precision": 1.0,
+            "documents_with_exactly_the_gold_key_set": "60/60",
+            "wrong_value_share_of_shared_leaves": 0.4738,
+            "reading": "what the baseline gets wrong: KEYS if recall/precision are below 1, VALUES if they are at 1 and the wrong-value share is high. Only the first is reachable by a schema-constrained decoder."
+          }
+        },
+        {
+          "arm": "209",
+          "n_pairs": 60,
+          "invalid_json_baseline": 0,
+          "invalid_json_adapted": 0,
+          "delta_as_measured": 0.5024,
+          "n_format_neutral": 60,
+          "delta_format_neutral": 0.5024,
+          "schema_repair": {
+            "baseline_raw": 0.4905,
+            "baseline_path_repaired_R1": 0.4905,
+            "baseline_name_repaired_R2": 0.4905,
+            "adapted": 0.9929,
+            "delta_vs_R1": 0.5024,
+            "delta_vs_R2": 0.5024,
+            "sign_vs_R2": {
+              "wins": 59,
+              "losses": 0,
+              "ties": 1
+            },
+            "share_of_gap_closed_by_R2": -0.0
+          },
+          "baseline_schema_conformance": {
+            "key_path_recall": 1.0,
+            "key_path_precision": 1.0,
+            "documents_with_exactly_the_gold_key_set": "60/60",
+            "wrong_value_share_of_shared_leaves": 0.5095,
+            "reading": "what the baseline gets wrong: KEYS if recall/precision are below 1, VALUES if they are at 1 and the wrong-value share is high. Only the first is reachable by a schema-constrained decoder."
+          }
+        }
+      ],
+      "seed_mean_baseline_raw": 0.5726,
+      "seed_mean_baseline_path_repaired_R1": 0.5726,
+      "seed_mean_baseline_name_repaired_R2": 0.5726,
+      "seed_mean_adapted": 0.9761,
+      "seed_mean_delta_vs_R1": 0.4035,
+      "seed_mean_delta_vs_R2": 0.4035,
+      "share_of_gap_closed_by_R2": 0.0
+    }
+  ]
+}
