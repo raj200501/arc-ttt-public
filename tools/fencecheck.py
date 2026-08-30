@@ -6,9 +6,13 @@ fence, code that calls ``json.loads`` on it gets a parse failure. If that
 failure becomes a score, a correct answer becomes a zero.
 
 That is not a small effect. On a 30-document extraction task, a
-Qwen2.5-3B produced a correct object for every document and scored
-**0.0000 with 30 of 30 unparseable**. Removing the fence and changing
-nothing else: **0.8958, zero invalid**.
+Qwen2.5-3B produced a well-formed JSON object for every document and
+scored **0.0000 with 30 of 30 unparseable**. Removing the fence and
+changing nothing else: **0.8958 mean micro-F1, zero invalid**. Note the
+precise claim: every output was well-formed, not every output was
+exactly right — a 0.8958 mean is not thirty perfect extractions, and
+saying "correct object" for both is the kind of slide this tool exists
+to catch in other people's numbers.
 
 Two commands, no installation, Python 3.9+, standard library only:
 
@@ -47,8 +51,16 @@ PARSE_CALLS = {"loads", "decode", "literal_eval", "safe_load", "load"}
 PARSE_MODULES = {"json", "ast", "yaml", "json5", "demjson3", "dirtyjson",
                  "simplejson", "ujson", "orjson"}
 
+# `model_text`, `sampled`, `raw_output` joined after a reviewer wrote a
+# synthetic fail-open grader using `model_text` and the scan came back
+# clean — a conservative miss, consistent with the precision-first
+# design, and still a miss worth closing when the fix is three tokens.
+# `sampled` is how openai/evals names the completion in its basic
+# elsuites, so its absence here meant the tool found json_match.py only
+# through the enclosing function's vocabulary, not the variable's.
 MODEL_WORDS = re.compile(
     r"\b(completion|response|generation|generated|model_output|output_text"
+    r"|model_text|raw_output|sampled"
     r"|llm|predict|prediction|answer|assistant|choices)\b", re.I)
 
 FENCE_MARKERS = re.compile(
@@ -215,10 +227,17 @@ def scan_path(root: pathlib.Path) -> tuple[list[dict], int]:
         except OSError:
             continue
         files += 1
-        try:
-            shown = path.relative_to(root)
-        except ValueError:
-            shown = path
+        # When `root` IS the file, `relative_to` returns `.` and every
+        # finding is reported against a path that names nothing. Scanning
+        # a single file is the first thing anyone tries on a tool they
+        # just downloaded, so this was the first output a reviewer saw.
+        if path == root:
+            shown = path.name
+        else:
+            try:
+                shown = path.relative_to(root)
+            except ValueError:
+                shown = path
         findings.extend(scan_source(source, str(shown)))
     return findings, files
 

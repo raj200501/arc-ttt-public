@@ -1,0 +1,163 @@
+=== R1 k=1 2026-08-25T17:38:28Z
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Qwen/Qwen2.5-0.5B-Instruct  mode=kshot  dtype=float32  batch=1
+mean prompt tokens: 326
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:03<14:49,  3.08s/it]Loading weights:  71%|███████▏  | 207/290 [00:03<00:00, 88.69it/s]Loading weights:  95%|█████████▌| 276/290 [00:03<00:00, 96.23it/s]Loading weights: 100%|██████████| 290/290 [00:03<00:00, 73.83it/s]
+  1/30     6.8s
+  2/30     6.1s
+  3/30     7.6s
+  4/30     6.4s
+  5/30     4.9s
+  6/30     8.3s
+  7/30    10.7s
+  8/30     7.3s
+  9/30     8.5s
+  10/30    10.3s
+  11/30     9.4s
+  12/30     9.4s
+  13/30     5.9s
+  14/30     7.4s
+  15/30     7.0s
+  16/30    14.4s
+  17/30    11.4s
+  18/30     7.1s
+  19/30    10.6s
+  20/30    59.9s
+  21/30    39.4s
+  22/30     8.4s
+  23/30     6.5s
+  24/30     9.7s
+  25/30    17.7s
+  26/30     7.2s
+  27/30     6.3s
+  28/30     6.9s
+  29/30     5.9s
+  30/30    11.6s
+
+Qwen/Qwen2.5-0.5B-Instruct kshot: 0.1614  (15 invalid JSON)  $0.9109/1k
+our adapted 0.5B      : 0.8833
+paired (ours - theirs): +0.7219  {'wins_ours': 29, 'losses_ours': 1, 'ties': 0, 'observed_direction': 'ours > theirs', 'p_value_ours_greater': 0.0, 'p_value_theirs_greater': 1.0, 'p_value_in_observed_direction': 0.0}
+
+banked: experiments/waybill_fence_dose_k1_2026-08-25.json
+Read it against the frozen readings in VERDICT.md.
+=== R1 k=1 OK 2026-08-25T17:44:23Z
+=== R2 k=3 2026-08-25T17:44:23Z
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Qwen/Qwen2.5-0.5B-Instruct  mode=kshot  dtype=float32  batch=1
+mean prompt tokens: 678
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:01<04:51,  1.01s/it]Loading weights:  56%|█████▌    | 162/290 [00:01<00:00, 198.18it/s]Loading weights:  86%|████████▌ | 248/290 [00:01<00:00, 211.70it/s]Loading weights: 100%|██████████| 290/290 [00:01<00:00, 167.25it/s]
+  1/30     7.2s
+  2/30    11.5s
+  3/30     6.4s
+  4/30     6.5s
+  5/30     6.1s
+  6/30     8.2s
+  7/30     8.9s
+  8/30     8.2s
+  9/30     6.8s
+  10/30     9.4s
+  11/30     8.1s
+  12/30     8.6s
+  13/30     6.7s
+  14/30     6.6s
+  15/30    11.2s
+  16/30     9.2s
+  17/30     6.8s
+  18/30    17.2s
+  19/30     6.8s
+  20/30     6.5s
+  21/30     9.0s
+  22/30     6.3s
+  23/30     6.4s
+  24/30     6.6s
+  25/30     8.8s
+  26/30     6.6s
+  27/30     9.1s
+  28/30     9.6s
+  29/30     6.9s
+  30/30     8.7s
+
+Qwen/Qwen2.5-0.5B-Instruct kshot: 0.7136  (4 invalid JSON)  $0.6577/1k
+our adapted 0.5B      : 0.8833
+paired (ours - theirs): +0.1697  {'wins_ours': 13, 'losses_ours': 5, 'ties': 12, 'observed_direction': 'ours > theirs', 'p_value_ours_greater': 0.0481, 'p_value_theirs_greater': 0.9846, 'p_value_in_observed_direction': 0.0481}
+
+banked: experiments/waybill_fence_dose_k3_2026-08-25.json
+Read it against the frozen readings in VERDICT.md.
+=== R2 k=3 OK 2026-08-25T17:48:36Z
+=== R3 k=1+schema 2026-08-25T17:48:36Z
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Qwen/Qwen2.5-0.5B-Instruct  mode=schema_kshot  dtype=float32  batch=1
+mean prompt tokens: 401
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:00<00:35,  8.07it/s]Loading weights:  47%|████▋     | 136/290 [00:00<00:00, 583.01it/s]Loading weights:  66%|██████▌   | 191/290 [00:00<00:00, 373.26it/s]Loading weights:  80%|████████  | 232/290 [00:00<00:00, 262.05it/s]Loading weights:  91%|█████████ | 263/290 [00:00<00:00, 235.52it/s]Loading weights: 100%|█████████▉| 289/290 [00:01<00:00, 222.16it/s]Loading weights: 100%|██████████| 290/290 [00:01<00:00, 263.31it/s]
+  1/30     8.2s
+  2/30     7.6s
+  3/30     7.4s
+  4/30     7.0s
+  5/30     6.8s
+  6/30     7.0s
+  7/30     7.1s
+  8/30     7.5s
+  9/30     7.1s
+  10/30    28.4s
+  11/30   216.0s
+  12/30    22.7s
+  13/30     7.5s
+  14/30     7.3s
+  15/30     7.6s
+  16/30     7.3s
+  17/30     7.4s
+  18/30     7.4s
+  19/30     8.1s
+  20/30     8.0s
+  21/30     7.4s
+  22/30     7.4s
+  23/30    11.4s
+  24/30     7.3s
+  25/30     7.6s
+  26/30     6.8s
+  27/30     7.3s
+  28/30     7.4s
+  29/30     6.8s
+  30/30    11.6s
+
+Qwen/Qwen2.5-0.5B-Instruct schema_kshot: 0.0000  (30 invalid JSON)  $1.2735/1k
+our adapted 0.5B      : 0.8833
+paired (ours - theirs): +0.8833  {'wins_ours': 30, 'losses_ours': 0, 'ties': 0, 'observed_direction': 'ours > theirs', 'p_value_ours_greater': 0.0, 'p_value_theirs_greater': 1.0, 'p_value_in_observed_direction': 0.0}
+
+banked: experiments/waybill_fence_dose_k1schema_2026-08-25.json
+Read it against the frozen readings in VERDICT.md.
+=== R3 k=1+schema OK 2026-08-25T17:56:37Z
+=== CTRL 1.5B kshot bf16 2026-08-25T17:56:37Z
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Qwen/Qwen2.5-1.5B-Instruct  mode=kshot  dtype=bfloat16  batch=1
+mean prompt tokens: 4142
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  12%|█▏        | 39/338 [00:00<00:00, 376.31it/s]Loading weights:  23%|██▎       | 77/338 [00:00<00:01, 246.94it/s]Loading weights:  31%|███       | 105/338 [00:00<00:01, 232.70it/s]Loading weights:  38%|███▊      | 130/338 [00:00<00:00, 214.81it/s]Loading weights:  47%|████▋     | 159/338 [00:00<00:00, 234.35it/s]Loading weights:  54%|█████▍    | 184/338 [00:00<00:00, 217.59it/s]Loading weights:  63%|██████▎   | 213/338 [00:00<00:00, 226.68it/s]Loading weights:  71%|███████   | 240/338 [00:01<00:00, 233.18it/s]Loading weights:  79%|███████▉  | 267/338 [00:01<00:00, 240.10it/s]Loading weights: 100%|██████████| 338/338 [00:01<00:00, 288.45it/s]
+  1/30    25.0s
+  2/30    20.4s
+  3/30    25.4s
+  4/30    18.8s
+  5/30    19.3s
+  6/30    24.3s
+  7/30    17.7s
+  8/30    21.8s
+  9/30    19.2s
+  10/30    21.9s
+  11/30    21.7s
+  12/30   295.2s
+  13/30   171.9s
+  14/30    22.3s
+  15/30    24.3s
+  16/30   184.3s
+  17/30    61.8s
+  18/30    31.9s
+  19/30    21.4s
+  20/30    23.1s
+  21/30    23.0s
+  22/30    22.7s
+  23/30    21.1s
+  24/30    20.1s
+  25/30    20.4s
+  26/30    22.0s
+  27/30    21.8s
+  28/30   170.3s
+  29/30    91.6s

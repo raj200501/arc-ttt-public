@@ -344,7 +344,19 @@ def main() -> int:
                 "this project claims.",
         "model": args.model,
         "mode": args.mode,
-        "n_demonstrations": args.k if args.mode == "kshot" else 0,
+        # `schema_kshot` DOES consume --k: it builds the prompt from
+        # `train[:args.k]` exactly as `kshot` does, and only the schema
+        # block differs. Recording 0 for it made the artifact under-report
+        # its own configuration, and it did so in the one place that
+        # inverts the reading -- Addendum R's whole question is what
+        # ONE demonstration does to a schema prompt, and the artifact
+        # answering it said there had been no demonstrations.
+        #
+        # A run whose banked metadata contradicts the prompt it actually
+        # sent is not a weaker result, it is a wrong one, and nobody
+        # reading the file could have caught it without the token count
+        # sitting next to it (196 for pure schema against 401 here).
+        "n_demonstrations": 0 if args.mode == "schema" else args.k,
         "prompt_construction": prompt_note,
         "dtype": args.dtype,
         "batch_size": args.batch,

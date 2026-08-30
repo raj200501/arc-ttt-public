@@ -15,8 +15,8 @@ fence, does the code that scores it read the object, or read a parse
 failure?
 
 This is not hypothetical. On 30 held-out documents, `Qwen2.5-3B-Instruct`
-given a bare field list produced a correct extraction for every single
-document and scored **0.0000, 30 of 30 unparseable**, because the scorer
+given a bare field list produced a well-formed JSON object for every
+single document and scored **0.0000, 30 of 30 unparseable**, because the scorer
 called `json.loads` on text beginning with ` ```json `. Removing the
 fence and changing nothing else: **0.8958, zero invalid**
 (`experiments/fence_rescore.json`). A 0.90 F1 swing from output packaging.

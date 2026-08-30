@@ -1,19 +1,19 @@
 {
   "what": "Every dated row in CORRECTIONS.md, counted. The page says self-correction is only evidence if it is countable; this is the count.",
-  "total_dated_corrections": 71,
-  "outward_facing": 50,
+  "total_dated_corrections": 81,
+  "outward_facing": 56,
   "outward_facing_note": "Rows whose text refers to an email, deck, one-pager, README, public page, headline or VERDICT row -- corrections that reached, or would have reached, someone outside this repository. A typo fixed in a private note is housekeeping; withdrawing a number already sent to a stranger is the part that costs something, and it is the only part worth citing.",
   "by_section": {
     "Claims withdrawn": 32,
     "Numbers corrected": 9,
-    "Overstatements corrected": 9,
+    "Overstatements corrected": 19,
     "Defects found in our own verification path": 21
   },
   "by_month": {
-    "2026-08": 71
+    "2026-08": 81
   },
   "first": "2026-08-19",
-  "latest": "2026-08-25",
+  "latest": "2026-08-30",
   "how_counted": "A row counts only if its first cell opens with an ISO date. Header rows, alignment rows and prose tables are excluded by construction, so adding a section cannot inflate the count.",
   "what_this_does_not_show": "A high count is not self-evidently good and must not be sold as though it were. It is consistent with a careful instrument and equally consistent with a project that published too fast the first time. The defensible reading is narrower: these are errors that were found HERE, by this process, and published with dates, rather than found by a reader later. It says nothing about the errors still standing.",
   "source": "CORRECTIONS.md"

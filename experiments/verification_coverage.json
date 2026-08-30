@@ -7,15 +7,26 @@
     "EXTERNAL": "third-party quote, labelled as such, not ours to verify."
   },
   "counts": {
-    "AGGREGATE": 64,
+    "AGGREGATE": 69,
     "ARITHMETIC": 80,
     "EXTERNAL": 7,
-    "PRIMARY": 36
+    "PRIMARY": 42
   },
-  "total_artifacts": 187,
-  "primary_verifiable_fraction": 0.1925,
+  "total_artifacts": 198,
+  "excluded_as_gate_exhaust": [
+    "verification_coverage.json",
+    "outbound_reconciliation.json"
+  ],
+  "primary_verifiable": 42,
+  "primary_verifiable_fraction": 0.2121,
   "why_the_total_is_banked": "Outbound copy cites this total ('179 banked artifacts') and the reconciliation gate had been matching it against an unrelated 179 in an unrelated artifact -- a figure that traced to nothing, passing because some number of that value happened to exist somewhere. A cited figure has to be a figure this map deliberately publishes.",
   "artifacts": [
+    {
+      "artifact": "addendum_r_fence_dose.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 4000
+    },
     {
       "artifact": "blind_rehearsal_2026-08-20.json",
       "level": "AGGREGATE",
@@ -341,10 +352,16 @@
       "bytes": 646403
     },
     {
+      "artifact": "fence_census_amendment_2026-08-25.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 5004
+    },
+    {
       "artifact": "fence_census_hand.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 16226
+      "bytes": 16447
     },
     {
       "artifact": "fence_census_run2.json",
@@ -353,10 +370,16 @@
       "bytes": 553891
     },
     {
+      "artifact": "fence_impact_table.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 4119
+    },
+    {
       "artifact": "fence_rescore.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 1933
+      "bytes": 1368
     },
     {
       "artifact": "format_counterfactual_2026-08-22.json",
@@ -893,6 +916,18 @@
       "bytes": 1216
     },
     {
+      "artifact": "public_export_counts.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 3360
+    },
+    {
+      "artifact": "review_simulation.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 7372
+    },
+    {
       "artifact": "schema_conformance_decomposition_2026-08-22.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
@@ -902,7 +937,7 @@
       "artifact": "self_correction_ledger.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 1507
+      "bytes": 1508
     },
     {
       "artifact": "summary.json",
@@ -969,6 +1004,24 @@
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
       "bytes": 6863
+    },
+    {
+      "artifact": "waybill_fence_dose_k1_2026-08-25.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 16323
+    },
+    {
+      "artifact": "waybill_fence_dose_k1schema_2026-08-25.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 15004
+    },
+    {
+      "artifact": "waybill_fence_dose_k3_2026-08-25.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 13237
     },
     {
       "artifact": "waybill_grounded_2026-08-22.json",
@@ -1097,10 +1150,28 @@
       "bytes": 50686
     },
     {
+      "artifact": "waybill_scale_rung_0.5b_kshot_2026-08-25.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 13039
+    },
+    {
+      "artifact": "waybill_scale_rung_0.5b_schema_2026-08-25.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 13757
+    },
+    {
       "artifact": "waybill_scale_rung_1.5b_2026-08-25.json",
       "level": "ARITHMETIC",
       "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
       "bytes": 5108
+    },
+    {
+      "artifact": "waybill_scale_rung_1.5b_kshot_RAW_2026-08-25.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 12831
     },
     {
       "artifact": "waybill_scale_rung_1.5b_schema_2026-08-25.json",

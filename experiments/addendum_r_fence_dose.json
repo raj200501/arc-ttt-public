@@ -1,0 +1,90 @@
+{
+  "what": "Addendum R. Every arm's stored outputs classified by tools/fencecheck.py, to separate prompt LENGTH from prompt FORMAT as the cause of fencing.",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct throughout \u2014 one model, so the only thing varying across rows is the prompt.",
+  "classified_by": "tools/fencecheck.py strip_fence(), the shipped tool, not a private reimplementation.",
+  "rows": [
+    {
+      "arm": "schema only",
+      "prompt_contains": "the tenant's field list, nothing else",
+      "artifact": "waybill_scale_rung_0.5b_schema_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "n_demonstrations": 0,
+      "mean_prompt_tokens": 196,
+      "n": 30,
+      "fenced": 30,
+      "fence_rate": 1.0,
+      "parses_as_written": 0,
+      "parses_after_stripping": 30,
+      "mean_micro_f1_as_scored": 0.0
+    },
+    {
+      "arm": "schema + 1 demo",
+      "prompt_contains": "the field list AND worked examples",
+      "artifact": "waybill_fence_dose_k1schema_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "n_demonstrations": 1,
+      "mean_prompt_tokens": 401,
+      "n": 30,
+      "fenced": 30,
+      "fence_rate": 1.0,
+      "parses_as_written": 0,
+      "parses_after_stripping": 30,
+      "mean_micro_f1_as_scored": 0.0
+    },
+    {
+      "arm": "k-shot k=1",
+      "prompt_contains": "demonstrations as chat turns, no field list",
+      "artifact": "waybill_fence_dose_k1_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "n_demonstrations": 1,
+      "mean_prompt_tokens": 326,
+      "n": 30,
+      "fenced": 8,
+      "fence_rate": 0.2667,
+      "parses_as_written": 15,
+      "parses_after_stripping": 22,
+      "mean_micro_f1_as_scored": 0.1614
+    },
+    {
+      "arm": "k-shot k=3",
+      "prompt_contains": "demonstrations as chat turns, no field list",
+      "artifact": "waybill_fence_dose_k3_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "n_demonstrations": 3,
+      "mean_prompt_tokens": 678,
+      "n": 30,
+      "fenced": 2,
+      "fence_rate": 0.0667,
+      "parses_as_written": 26,
+      "parses_after_stripping": 28,
+      "mean_micro_f1_as_scored": 0.7136
+    },
+    {
+      "arm": "k-shot k=20",
+      "prompt_contains": "demonstrations as chat turns, no field list",
+      "artifact": "waybill_scale_rung_0.5b_kshot_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "n_demonstrations": 20,
+      "mean_prompt_tokens": 4142,
+      "n": 30,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "parses_as_written": 27,
+      "parses_after_stripping": 27,
+      "mean_micro_f1_as_scored": 0.7836
+    }
+  ],
+  "missing_arms": [],
+  "hypothesis_a_length": {
+    "claim": "a longer prompt fences less",
+    "refuted": true,
+    "evidence": "schema + 1 demo is 401 tokens and fences 30/30; k-shot k=1 is 326 tokens \u2014 SHORTER \u2014 and fences 8/30. Length runs the wrong way."
+  },
+  "hypothesis_b_demonstrations_as_such": {
+    "claim": "seeing any worked example suppresses the fence",
+    "refuted": true,
+    "evidence": "adding one demonstration to the schema prompt moves the fence rate from 30/30 to 30/30 \u2014 no change."
+  },
+  "the_finding": "It is the FORMAT, not the length and not the presence of an example. A schema prompt fences everything whether or not a demonstration is attached, and it fences everything while being LONGER than a k-shot prompt that fences a quarter as often. Within the k-shot family the rate then falls with more demonstrations. Both boring explanations are refuted by cells chosen before any of them ran.",
+  "what_this_does_not_show": "One model, one corpus, one seed, greedy decoding. It says nothing about other model families, and it does not explain WHY the chat-turn format suppresses the fence \u2014 only that length and example-presence are not the mechanism. The k-shot arms are also worse at the task at low k, so this is not a recommendation to drop the schema; it is a finding about what causes the fence."
+}
