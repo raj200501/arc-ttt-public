@@ -1,0 +1,97 @@
+{
+  "what": "Census extension over ACTIVELY MAINTAINED eval packages, answering a reviewer's objection that the original census's flagship instance lives in a package frozen since May 2024. Frame, recency rule, instrument and adjudication rule frozen in docs/research/CENSUS_EXTENSION_LIVE_PREREG.md before any package was scanned.",
+  "date": "2026-08-31",
+  "frame": {
+    "rule": "Python LLM-evaluation packages on PyPI with a release within 6 months of 2026-08-31, named before scanning",
+    "in_frame": {
+      "lm_eval": {
+        "version": "0.4.12",
+        "released": "2026-05-11"
+      },
+      "deepeval": {
+        "version": "4.2.0",
+        "released": "2026-08-24"
+      },
+      "inspect_ai": {
+        "version": "0.3.261",
+        "released": "2026-08-30"
+      },
+      "autoevals": {
+        "version": "0.3.0",
+        "released": "2026-06-09"
+      },
+      "openevals": {
+        "version": "0.2.0",
+        "released": "2026-04-07"
+      },
+      "mlflow": {
+        "version": "3.15.2",
+        "released": "2026-08-26"
+      },
+      "arize-phoenix-evals": {
+        "version": "3.5.1",
+        "released": "2026-08-25"
+      }
+    },
+    "out_of_frame": {
+      "evaluate": {
+        "version": "0.4.6",
+        "released": "2025-09-18",
+        "why": "last release 11.4 months before the scan date; fails the frozen 6-month recency rule. Recorded rather than silently dropped, and NOT scanned."
+      }
+    }
+  },
+  "instrument": "tools/fencecheck.py at the commit carrying the preregistration; every raw finding hand-adjudicated under the census's original rule (CONFIRMED only if model output demonstrably reaches the parse AND the swallowed failure becomes a score, a dropped item, or a silent skip in an evaluation path; an unproven path is a rejection).",
+  "raw_findings": {
+    "arize_phoenix_evals": 0,
+    "autoevals": 1,
+    "deepeval": 24,
+    "inspect_ai": 8,
+    "lm_eval": 0,
+    "mlflow": 31,
+    "openevals": 0,
+    "total": 64
+  },
+  "confirmed": [
+    {
+      "site": "autoevals/json.py \u2014 class JSONDiff, via valid_json() at line 258",
+      "package": "autoevals 0.3.0 (Braintrust), released 2026-06-09",
+      "verdict": "CONFIRMED",
+      "mechanism": "JSONDiff is a scorer comparing model output to expected JSON. json_diff() only parses a string operand if ValidJSON.valid_json() returns 1; a fenced-but-correct answer fails that check, stays a raw string, falls through every structural branch, and lands in the final else: Levenshtein distance between the JSON-encoded fenced string and the canonicalized expected object.",
+      "executed_not_inferred": {
+        "setup": "JSONDiff().json_diff(output, {'name': 'John Smith', 'age': 30, 'city': 'Portland'})",
+        "bare_output": 1.0,
+        "fenced_output": 0.2152,
+        "reading": "the identical correct answer loses 78% of its score to three backticks"
+      },
+      "why_it_is_sharp": "Unlike the fail-open-to-zero instances, this one degrades SILENTLY AND PARTIALLY: no error, no zero anyone would notice \u2014 a numerically plausible 0.2152 that reads as a bad model rather than a scoring artifact. It is in a current, maintained scorer library, which is precisely the class of instance the original census could not exhibit."
+    }
+  ],
+  "rejected_count": 63,
+  "rejected_by_category": {
+    "declared-purpose format checks (the zero IS the measurement)": [
+      "deepeval/benchmarks/ifeval/ifeval.py:119 \u2014 the instruction under test is 'output JSON only'; a fence is a genuine violation of what IFEval measures. Same precedent as the census's json_validator rejection and autoevals' own ValidJSON used standalone."
+    ],
+    "telemetry / tracing / instrumentation (not evaluation paths)": [
+      "deepeval integrations/{agentcore,openinference,strands} instrumentators (4 sites)",
+      "deepeval/tracing/otel/{exporter,utils} (12 sites)",
+      "mlflow tracing/otel translation + tracing/client + tracing/utils/truncation + entities/span + crewai/autolog + llama_index/tracer + langchain/chat_agent_langgraph (13 sites)"
+    ],
+    "file / config / cache reads (not model output)": [
+      "deepeval/config/settings.py:139, deepeval/prompt/prompt.py:318+398, deepeval/test_run/test_run.py:1190+1202",
+      "mlflow tracking/context/jupyter_notebook_context (2), utils/providers.py:319, store/tracking (3)"
+    ],
+    "provider / protocol transport (frames, chunks, RPC \u2014 not scoring)": [
+      "deepeval/voice/connectors/providers/elevenlabs.py:78",
+      "inspect_ai: _cli/detach, _control/events, agent/_acp/stdio, _json_rpc_transport, sandbox/service, sagemaker streaming, openai_responses tool-args plumbing (8 sites)",
+      "mlflow: assistant/providers (2), cli/traces (3), gateway (3), server (2), utils/rest_utils (1)"
+    ],
+    "read and individually rejected with a written reason": [
+      "mlflow/genai/judges/adapters/litellm_adapter.py:458 \u2014 the parse is of an EXCEPTION MESSAGE inside _extract_litellm_error, extracting a gateway error detail with a str(e) fallback; no model output reaches it and no score depends on it",
+      "deepeval/metrics/agent_loop_detection/agent_loop_detection.py:305 \u2014 a metric hashes tool-call args; on parse failure the raw string still hashes, so the failure degrades hash granularity rather than dropping an item, and no fenced path into it was demonstrated. Unproven means rejected, per the frozen rule"
+    ]
+  },
+  "the_finding": "In seven actively-maintained eval packages (releases 2026-04-07 to 2026-08-30), the shipped tool surfaced 64 candidate sites; hand adjudication under the frozen rule confirms exactly ONE \u2014 and it is a scoring path in a maintained scorer library, verified by execution: Braintrust's autoevals JSONDiff scores the identical correct answer 1.0000 bare and 0.2152 fenced. Five of seven packages, including EleutherAI's lm-evaluation-harness at 733 files, came back clean.",
+  "what_this_does_not_show": "One instance is a base rate, not a category. The honest reading cuts both ways: the defect class is real in live, maintained scoring code \u2014 and it is RARE there, which bounds the wedge. Both halves go outward together. It also says nothing about non-Python harnesses, hosted eval products, or private scoring code, which this frame cannot see.",
+  "verification_level": "PRIMARY for the confirm (executed with recorded inputs and outputs); the full scan is reproducible from the frozen frame, pinned versions and the shipped tool."
+}

@@ -71,10 +71,18 @@ def _context_of(text: str, index: int) -> str:
     it, so the wrong-referent rewrite is structurally unavailable rather
     than merely guarded against.
     """
-    if describes_the_export(text, index):
-        return "export"
+    # Subset is checked FIRST. A sentence can be about the public export
+    # AND contain a component's count -- "fencecheck.py hardened with 25
+    # tests, staged at PR #1" -- and with export checked first, the
+    # component count was rewritten to the export suite's 312. Fourth
+    # wrong-referent rewrite of the week, caught in the gate's own --fix
+    # output. The narrower referent wins because a component phrase
+    # inside an export sentence still names the component; the reverse
+    # is never true.
     if is_subset_claim(text, index):
         return "subset"
+    if describes_the_export(text, index):
+        return "export"
     return "source"
 
 COVERAGE = REPO / "experiments" / "verification_coverage.json"

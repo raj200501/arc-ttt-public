@@ -1,163 +1,8 @@
-=== R1 k=1 2026-08-25T17:38:28Z
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Qwen/Qwen2.5-0.5B-Instruct  mode=kshot  dtype=float32  batch=1
-mean prompt tokens: 326
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:03<14:49,  3.08s/it]Loading weights:  71%|███████▏  | 207/290 [00:03<00:00, 88.69it/s]Loading weights:  95%|█████████▌| 276/290 [00:03<00:00, 96.23it/s]Loading weights: 100%|██████████| 290/290 [00:03<00:00, 73.83it/s]
-  1/30     6.8s
-  2/30     6.1s
-  3/30     7.6s
-  4/30     6.4s
-  5/30     4.9s
-  6/30     8.3s
-  7/30    10.7s
-  8/30     7.3s
-  9/30     8.5s
-  10/30    10.3s
-  11/30     9.4s
-  12/30     9.4s
-  13/30     5.9s
-  14/30     7.4s
-  15/30     7.0s
-  16/30    14.4s
-  17/30    11.4s
-  18/30     7.1s
-  19/30    10.6s
-  20/30    59.9s
-  21/30    39.4s
-  22/30     8.4s
-  23/30     6.5s
-  24/30     9.7s
-  25/30    17.7s
-  26/30     7.2s
-  27/30     6.3s
-  28/30     6.9s
-  29/30     5.9s
-  30/30    11.6s
-
-Qwen/Qwen2.5-0.5B-Instruct kshot: 0.1614  (15 invalid JSON)  $0.9109/1k
-our adapted 0.5B      : 0.8833
-paired (ours - theirs): +0.7219  {'wins_ours': 29, 'losses_ours': 1, 'ties': 0, 'observed_direction': 'ours > theirs', 'p_value_ours_greater': 0.0, 'p_value_theirs_greater': 1.0, 'p_value_in_observed_direction': 0.0}
-
-banked: experiments/waybill_fence_dose_k1_2026-08-25.json
-Read it against the frozen readings in VERDICT.md.
-=== R1 k=1 OK 2026-08-25T17:44:23Z
-=== R2 k=3 2026-08-25T17:44:23Z
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Qwen/Qwen2.5-0.5B-Instruct  mode=kshot  dtype=float32  batch=1
-mean prompt tokens: 678
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:01<04:51,  1.01s/it]Loading weights:  56%|█████▌    | 162/290 [00:01<00:00, 198.18it/s]Loading weights:  86%|████████▌ | 248/290 [00:01<00:00, 211.70it/s]Loading weights: 100%|██████████| 290/290 [00:01<00:00, 167.25it/s]
-  1/30     7.2s
-  2/30    11.5s
-  3/30     6.4s
-  4/30     6.5s
-  5/30     6.1s
-  6/30     8.2s
-  7/30     8.9s
-  8/30     8.2s
-  9/30     6.8s
-  10/30     9.4s
-  11/30     8.1s
-  12/30     8.6s
-  13/30     6.7s
-  14/30     6.6s
-  15/30    11.2s
-  16/30     9.2s
-  17/30     6.8s
-  18/30    17.2s
-  19/30     6.8s
-  20/30     6.5s
-  21/30     9.0s
-  22/30     6.3s
-  23/30     6.4s
-  24/30     6.6s
-  25/30     8.8s
-  26/30     6.6s
-  27/30     9.1s
-  28/30     9.6s
-  29/30     6.9s
-  30/30     8.7s
-
-Qwen/Qwen2.5-0.5B-Instruct kshot: 0.7136  (4 invalid JSON)  $0.6577/1k
-our adapted 0.5B      : 0.8833
-paired (ours - theirs): +0.1697  {'wins_ours': 13, 'losses_ours': 5, 'ties': 12, 'observed_direction': 'ours > theirs', 'p_value_ours_greater': 0.0481, 'p_value_theirs_greater': 0.9846, 'p_value_in_observed_direction': 0.0481}
-
-banked: experiments/waybill_fence_dose_k3_2026-08-25.json
-Read it against the frozen readings in VERDICT.md.
-=== R2 k=3 OK 2026-08-25T17:48:36Z
-=== R3 k=1+schema 2026-08-25T17:48:36Z
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Qwen/Qwen2.5-0.5B-Instruct  mode=schema_kshot  dtype=float32  batch=1
-mean prompt tokens: 401
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:00<00:35,  8.07it/s]Loading weights:  47%|████▋     | 136/290 [00:00<00:00, 583.01it/s]Loading weights:  66%|██████▌   | 191/290 [00:00<00:00, 373.26it/s]Loading weights:  80%|████████  | 232/290 [00:00<00:00, 262.05it/s]Loading weights:  91%|█████████ | 263/290 [00:00<00:00, 235.52it/s]Loading weights: 100%|█████████▉| 289/290 [00:01<00:00, 222.16it/s]Loading weights: 100%|██████████| 290/290 [00:01<00:00, 263.31it/s]
-  1/30     8.2s
-  2/30     7.6s
-  3/30     7.4s
-  4/30     7.0s
-  5/30     6.8s
-  6/30     7.0s
-  7/30     7.1s
-  8/30     7.5s
-  9/30     7.1s
-  10/30    28.4s
-  11/30   216.0s
-  12/30    22.7s
-  13/30     7.5s
-  14/30     7.3s
-  15/30     7.6s
-  16/30     7.3s
-  17/30     7.4s
-  18/30     7.4s
-  19/30     8.1s
-  20/30     8.0s
-  21/30     7.4s
-  22/30     7.4s
-  23/30    11.4s
-  24/30     7.3s
-  25/30     7.6s
-  26/30     6.8s
-  27/30     7.3s
-  28/30     7.4s
-  29/30     6.8s
-  30/30    11.6s
-
-Qwen/Qwen2.5-0.5B-Instruct schema_kshot: 0.0000  (30 invalid JSON)  $1.2735/1k
-our adapted 0.5B      : 0.8833
-paired (ours - theirs): +0.8833  {'wins_ours': 30, 'losses_ours': 0, 'ties': 0, 'observed_direction': 'ours > theirs', 'p_value_ours_greater': 0.0, 'p_value_theirs_greater': 1.0, 'p_value_in_observed_direction': 0.0}
-
-banked: experiments/waybill_fence_dose_k1schema_2026-08-25.json
-Read it against the frozen readings in VERDICT.md.
-=== R3 k=1+schema OK 2026-08-25T17:56:37Z
-=== CTRL 1.5B kshot bf16 2026-08-25T17:56:37Z
+=== R1 k=1 SKIP (banked) 2026-08-31T00:30:57Z
+=== R2 k=3 SKIP (banked) 2026-08-31T00:30:57Z
+=== R3 k=1+schema SKIP (banked) 2026-08-31T00:30:57Z
+=== CTRL 1.5B kshot bf16 2026-08-31T00:30:57Z
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
 Qwen/Qwen2.5-1.5B-Instruct  mode=kshot  dtype=bfloat16  batch=1
 mean prompt tokens: 4142
-Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  12%|█▏        | 39/338 [00:00<00:00, 376.31it/s]Loading weights:  23%|██▎       | 77/338 [00:00<00:01, 246.94it/s]Loading weights:  31%|███       | 105/338 [00:00<00:01, 232.70it/s]Loading weights:  38%|███▊      | 130/338 [00:00<00:00, 214.81it/s]Loading weights:  47%|████▋     | 159/338 [00:00<00:00, 234.35it/s]Loading weights:  54%|█████▍    | 184/338 [00:00<00:00, 217.59it/s]Loading weights:  63%|██████▎   | 213/338 [00:00<00:00, 226.68it/s]Loading weights:  71%|███████   | 240/338 [00:01<00:00, 233.18it/s]Loading weights:  79%|███████▉  | 267/338 [00:01<00:00, 240.10it/s]Loading weights: 100%|██████████| 338/338 [00:01<00:00, 288.45it/s]
-  1/30    25.0s
-  2/30    20.4s
-  3/30    25.4s
-  4/30    18.8s
-  5/30    19.3s
-  6/30    24.3s
-  7/30    17.7s
-  8/30    21.8s
-  9/30    19.2s
-  10/30    21.9s
-  11/30    21.7s
-  12/30   295.2s
-  13/30   171.9s
-  14/30    22.3s
-  15/30    24.3s
-  16/30   184.3s
-  17/30    61.8s
-  18/30    31.9s
-  19/30    21.4s
-  20/30    23.1s
-  21/30    23.0s
-  22/30    22.7s
-  23/30    21.1s
-  24/30    20.1s
-  25/30    20.4s
-  26/30    22.0s
-  27/30    21.8s
-  28/30   170.3s
-  29/30    91.6s
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   3%|▎         | 11/338 [00:00<00:23, 14.20it/s]Loading weights:   4%|▍         | 15/338 [00:06<02:54,  1.85it/s]Loading weights:   7%|▋         | 24/338 [00:07<01:34,  3.31it/s]Loading weights:   8%|▊         | 27/338 [00:09<01:52,  2.77it/s]Loading weights:   8%|▊         | 28/338 [00:10<02:28,  2.09it/s]Loading weights:   9%|▉         | 31/338 [00:13<03:09,  1.62it/s]Loading weights:  11%|█         | 37/338 [00:14<02:00,  2.50it/s]Loading weights:  11%|█         | 38/338 [00:18<03:54,  1.28it/s]Loading weights:  13%|█▎        | 43/338 [00:19<02:36,  1.88it/s]Loading weights:  13%|█▎        | 45/338 [00:21<02:53,  1.69it/s]Loading weights:  15%|█▍        | 50/338 [00:24<02:42,  1.77it/s]Loading weights:  15%|█▌        | 52/338 [00:24<02:32,  1.87it/s]Loading weights:  16%|█▋        | 55/338 [00:29<03:48,  1.24it/s]Loading weights:  17%|█▋        | 58/338 [00:30<02:58,  1.56it/s]Loading weights:  19%|█▉        | 64/338 [00:31<02:09,  2.12it/s]Loading weights:  20%|█▉        | 66/338 [00:33<02:17,  1.97it/s]Loading weights:  20%|█▉        | 67/338 [00:34<02:44,  1.65it/s]Loading weights:  22%|██▏       | 75/338 [00:35<01:28,  2.96it/s]Loading weights:  22%|██▏       | 76/338 [00:36<01:51,  2.35it/s]Loading weights:  24%|██▍       | 81/338 [00:39<02:04,  2.06it/s]Loading weights:  25%|██▍       | 84/338 [00:40<01:50,  2.29it/s]Loading weights:  25%|██▌       | 86/338 [00:43<02:40,  1.57it/s]Loading weights:  26%|██▌       | 87/338 [00:44<03:07,  1.34it/s]Loading weights:  27%|██▋       | 90/338 [00:45<02:06,  1.96it/s]Loading weights:  27%|██▋       | 92/338 [00:49<03:42,  1.11it/s]Loading weights:  29%|██▉       | 98/338 [00:50<02:01,  1.97it/s]Loading weights:  30%|██▉       | 100/338 [00:52<02:38,  1.50it/s]Loading weights:  30%|██▉       | 101/338 [00:54<03:03,  1.29it/s]Loading weights:  32%|███▏      | 109/338 [00:55<01:28,  2.58it/s]Loading weights:  33%|███▎      | 113/338 [00:58<01:52,  2.01it/s]Loading weights:  34%|███▍      | 116/338 [00:59<01:49,  2.02it/s]Loading weights:  36%|███▌      | 121/338 [01:00<01:22,  2.61it/s]Loading weights:  37%|███▋      | 124/338 [01:03<01:56,  1.83it/s]Loading weights:  38%|███▊      | 129/338 [01:05<01:34,  2.22it/s]Loading weights:  40%|███▉      | 135/338 [01:06<01:06,  3.04it/s]Loading weights:  41%|████▏     | 140/338 [01:08<01:20,  2.46it/s]Loading weights:  42%|████▏     | 142/338 [01:10<01:35,  2.05it/s]Loading weights:  43%|████▎     | 146/338 [01:11<01:13,  2.62it/s]Loading weights:  43%|████▎     | 147/338 [01:14<02:09,  1.48it/s]Loading weights:  44%|████▍     | 148/338 [01:16<02:33,  1.24it/s]Loading weights:  45%|████▌     | 153/338 [01:16<01:22,  2.25it/s]Loading weights:  47%|████▋     | 159/338 [01:19<01:14,  2.39it/s]Loading weights:  47%|████▋     | 160/338 [01:21<01:55,  1.54it/s]Loading weights:  49%|████▉     | 166/338 [01:22<01:12,  2.37it/s]Loading weights:  51%|█████     | 171/338 [01:25<01:21,  2.06it/s]Loading weights:  51%|█████▏    | 174/338 [01:27<01:20,  2.04it/s]Loading weights:  53%|█████▎    | 179/338 [01:28<00:59,  2.66it/s]Loading weights:  54%|█████▍    | 184/338 [01:29<00:54,  2.83it/s]Loading weights:  55%|█████▍    | 185/338 [01:31<01:08,  2.23it/s]Loading weights:  56%|█████▌    | 189/338 [01:32<01:02,  2.38it/s]Loading weights:  57%|█████▋    | 192/338 [01:33<00:54,  2.70it/s]Loading weights:  58%|█████▊    | 196/338 [01:34<00:55,  2.56it/s]Loading weights:  58%|█████▊    | 197/338 [01:36<01:10,  1.99it/s]Loading weights:  59%|█████▉    | 199/338 [01:37<01:09,  2.00it/s]Loading weights:  61%|██████    | 207/338 [01:40<01:00,  2.17it/s]Loading weights:  62%|██████▏   | 210/338 [01:42<00:59,  2.15it/s]Loading weights:  63%|██████▎   | 213/338 [01:43<00:51,  2.42it/s]Loading weights:  64%|██████▎   | 215/338 [01:46<01:19,  1.55it/s]Loading weights:  64%|██████▍   | 218/338 [01:47<01:10,  1.69it/s]Loading weights:  66%|██████▋   | 224/338 [01:48<00:43,  2.62it/s]Loading weights:  67%|██████▋   | 226/338 [01:49<00:50,  2.22it/s]Loading weights:  67%|██████▋   | 228/338 [01:51<00:53,  2.04it/s]Loading weights:  68%|██████▊   | 229/338 [01:52<01:08,  1.59it/s]Loading weights:  69%|██████▉   | 234/338 [01:53<00:43,  2.40it/s]Loading weights:  70%|███████   | 238/338 [01:56<00:51,  1.94it/s]Loading weights:  71%|███████   | 239/338 [01:57<00:59,  1.66it/s]Loading weights:  74%|███████▎  | 249/338 [01:58<00:25,  3.53it/s]Loading weights:  74%|███████▍  | 251/338 [02:00<00:30,  2.87it/s]Loading weights:  75%|███████▍  | 253/338 [02:03<00:46,  1.82it/s]Loading weights:  77%|███████▋  | 260/338 [02:03<00:27,  2.86it/s]Loading weights:  78%|███████▊  | 264/338 [02:05<00:26,  2.83it/s]Loading weights:  79%|███████▊  | 266/338 [02:08<00:39,  1.80it/s]Loading weights:  81%|████████▏ | 275/338 [02:09<00:19,  3.23it/s]Loading weights:  83%|████████▎ | 280/338 [02:10<00:17,  3.27it/s]Loading weights:  83%|████████▎ | 281/338 [02:13<00:27,  2.04it/s]Loading weights:  85%|████████▍ | 287/338 [02:14<00:17,  2.91it/s]Loading weights:  86%|████████▌ | 291/338 [02:15<00:16,  2.87it/s]Loading weights:  87%|████████▋ | 293/338 [02:17<00:21,  2.09it/s]Loading weights: 100%|██████████| 338/338 [02:17<00:00,  2.45it/s]

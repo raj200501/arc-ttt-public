@@ -130,46 +130,59 @@ def main() -> int:
             key=lambda r: r["n_demonstrations"])
         schema_demo = next(r for r in rows
                            if r["arm"].startswith("schema +"))
-        kshot1 = kshot_arms[0]
-        length_refuted = (schema_demo["mean_prompt_tokens"]
-                          > kshot1["mean_prompt_tokens"]
-                          and schema_demo["fence_rate"] > kshot1["fence_rate"])
-        demos_refuted = schema_demo["fence_rate"] >= schema["fence_rate"]
-        record["hypothesis_a_length"] = {
-            "claim": "a longer prompt fences less",
-            "refuted": bool(length_refuted),
-            "evidence": (
-                f"schema + 1 demo is {schema_demo['mean_prompt_tokens']} "
-                f"tokens and fences {schema_demo['fenced']}/"
-                f"{schema_demo['n']}; k-shot k=1 is "
-                f"{kshot1['mean_prompt_tokens']} tokens — SHORTER — and "
-                f"fences {kshot1['fenced']}/{kshot1['n']}. Length runs the "
-                "wrong way."),
+        f1 = kshot_arms[0]["fence_rate"]
+        f3 = kshot_arms[1]["fence_rate"] if len(kshot_arms) > 1 else None
+        fs1 = schema_demo["fence_rate"]
+        # The FROZEN readings from the Addendum R preregistration row are
+        # applied by their own arithmetic, not re-derived from the shape
+        # of the data. The first version of this script announced "it is
+        # the FORMAT" -- a conclusion not on the preregistered menu, whose
+        # nearest licensed reading (d) did not fire by its own condition.
+        # A preregistration binds its author first.
+        if f1 <= 0.10 and fs1 > 0.50:
+            reading = ("(d) THE SCHEMA LINE ITSELF PROVOKES IT: one "
+                       "demonstration suffices in the k-shot regime but "
+                       "not beside the field list.")
+        elif f1 <= 0.10:
+            reading = ("(a) IT IS THE DEMONSTRATIONS, AND ONE IS ENOUGH.")
+        elif f3 is not None and f3 <= 0.10:
+            reading = ("(b) IT IS THE DEMONSTRATIONS, AND IT IS A DOSE: "
+                       "the published sentence stands with its "
+                       "dose-response curve attached, reported as "
+                       "measured.")
+        elif all(r["fence_rate"] > 0.50 for r in
+                 [kshot_arms[0]] + ([kshot_arms[1]] if f3 is not None
+                                    else []) + [schema_demo]):
+            reading = ("(c) IT IS NOT THE DEMONSTRATIONS: the published "
+                       "sentence is withdrawn and rewritten to say only "
+                       "that the regimes differ.")
+        else:
+            reading = ("NO FROZEN READING FIRES: the rates fall between "
+                       "the preregistered conditions and this table "
+                       "claims nothing beyond the rates themselves.")
+        record["frozen_reading_applied"] = {
+            "reading": reading,
+            "rates": {"f_k1": f1, "f_k3": f3, "f_schema_plus_demo": fs1},
         }
-        record["hypothesis_b_demonstrations_as_such"] = {
-            "claim": "seeing any worked example suppresses the fence",
-            "refuted": bool(demos_refuted),
-            "evidence": (
-                f"adding one demonstration to the schema prompt moves the "
-                f"fence rate from {schema['fenced']}/{schema['n']} to "
-                f"{schema_demo['fenced']}/{schema_demo['n']} — no change."),
-        }
+        record["observation_outside_the_preregistered_menu"] = (
+            f"schema + demo fences at {fs1} while being LONGER than the "
+            f"k=1 prompt that fences at {f1} -- the suppression measured "
+            "in the k-shot family does not transfer into the schema "
+            "regime, and length runs the wrong way for a length "
+            "explanation. HYPOTHESIS-GENERATING, NOT CLAIM-BEARING: the "
+            "reading that would license a format sentence did not fire.")
         record["the_finding"] = (
-            "It is the FORMAT, not the length and not the presence of an "
-            "example. A schema prompt fences everything whether or not a "
-            "demonstration is attached, and it fences everything while "
-            "being LONGER than a k-shot prompt that fences a quarter as "
-            "often. Within the k-shot family the rate then falls with more "
-            "demonstrations. Both boring explanations are refuted by cells "
-            "chosen before any of them ran.")
+            reading + " Beside it, one observation outside the frozen "
+            "menu, held at hypothesis status -- see "
+            "observation_outside_the_preregistered_menu.")
         record["what_this_does_not_show"] = (
             "One model, one corpus, one seed, greedy decoding. It says "
-            "nothing about other model families, and it does not explain "
-            "WHY the chat-turn format suppresses the fence — only that "
-            "length and example-presence are not the mechanism. The "
-            "k-shot arms are also worse at the task at low k, so this is "
-            "not a recommendation to drop the schema; it is a finding "
-            "about what causes the fence.")
+            "nothing about other model families. It does not license any "
+            "sentence about WHY the regimes differ beyond the frozen "
+            "reading above — the format hypothesis stays a hypothesis "
+            "until a follow-up with its own frozen readings runs. The "
+            "k-shot arms are also worse at the task at low k, so nothing "
+            "here is a recommendation to drop the schema.")
 
     pathlib.Path(args.out).write_text(
         json.dumps(record, indent=2) + "\n", encoding="utf-8")
