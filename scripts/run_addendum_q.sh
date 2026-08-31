@@ -25,20 +25,41 @@ while pgrep -f scale_rung_arm >/dev/null 2>&1; do sleep 30; done
 say "cores free"
 
 RAW=experiments/blind_rehearsal_2026-08-20_raw
-ADAPT_DIR=/tmp/arunQ
+# work/, not /tmp: the environment reclaims processes AND /tmp between
+# agent turns, and one completed 20-minute bf16 adaptation was lost that
+# way -- the log said "Q1 bfloat16 adaptation OK" while its output
+# directory no longer existed. A completed adaptation now leaves a
+# sentinel recording its dtype and is reused instead of redone; the
+# float32-first contingency order was exercised and its OOM recorded
+# (twice, in this log's history), so a relaunch that finds a completed
+# bf16 adaptation does not re-attempt float32 -- the contingency is a
+# rule about method, not a ritual to re-perform per process.
+ADAPT_DIR=work/arunQ
 
 adapt () {  # adapt <dtype> <outdir>
   local dtype="$1" out="$2"
+  if [ -f "$out/.complete" ] && [ "$(cat "$out/.complete")" = "$dtype" ]; then
+    say "adaptation already complete in $dtype; reusing $out"
+    return 0
+  fi
   rm -rf "$out"
   python3 scripts/run_challenge.py \
       --train "$RAW/train.jsonl" --holdout "$RAW/holdout.jsonl" \
       --out-dir "$out" --model Qwen/Qwen2.5-3B-Instruct \
       --dtype "$dtype" --grad-checkpointing \
-      --samples 1 --max-new-tokens 512 --allow-unpinned >>"$LOG" 2>&1
+      --samples 1 --max-new-tokens 512 --allow-unpinned >>"$LOG" 2>&1 \
+    && echo "$dtype" > "$out/.complete"
 }
 
-say "Q1 adapting the 3B in float32"
-if adapt float32 "$ADAPT_DIR"; then
+if [ -f "$ADAPT_DIR/.complete" ] && [ "$(cat "$ADAPT_DIR/.complete")" = "bfloat16" ]; then
+  say "Q1 found a completed bfloat16 adaptation; skipping float32 re-attempt"
+  DTYPE=bfloat16
+  say "CONTROL prompted 3B schema in bfloat16"
+  python3 scripts/scale_rung_arm.py \
+      --model Qwen/Qwen2.5-3B-Instruct --mode schema --dtype bfloat16 \
+      --out experiments/waybill_scale_rung_3b_schema_bf16_control_2026-08-25.json \
+      >>"$LOG" 2>&1 && say "CONTROL OK" || say "CONTROL FAILED"
+elif say "Q1 adapting the 3B in float32" && adapt float32 "$ADAPT_DIR"; then
   say "Q1 float32 adaptation OK"
   DTYPE=float32
 else

@@ -115,6 +115,30 @@ def main() -> int:
                          "tool, not a private reimplementation.",
         "rows": rows,
         "missing_arms": missing,
+        "erratum_2026-08-31_fence_rate_margin": {
+            "what": (
+                "Prediction h-3305 in the k=3 arm is a correct-shaped "
+                "JSON object inside a ``` fence BEHIND a prose preamble. "
+                "strip_fence recognizes only a LEADING fence, so this "
+                "table counts it un-fenced: f(3) = 2/30 by the tool, "
+                "3/30 = 0.10 by eye."),
+            "effect_on_the_reading": (
+                "None in letter, everything in margin: reading (b) "
+                "requires f(3) <= 0.10, which 0.10 satisfies EXACTLY -- "
+                "the published reading survives by zero margin, stated "
+                "here rather than discovered by a reader. The banked "
+                "classification remains the shipped tool's, with this "
+                "dated recount beside it, because changing the "
+                "instrument after a preregistered reading is the move "
+                "this repository does not make."),
+            "tool_scope_note": (
+                "Leading-fence-only is a deliberate scope for the "
+                "tool's recovery question (a prose-prefixed fence is "
+                "NOT rescued by stripping); for the bare 'did the model "
+                "wrap its answer' question it undercounts, and this arm "
+                "is the measured example."),
+            "found_by": "an adversarial audit agent reading the raw predictions",
+        },
     }
 
     if missing:
@@ -150,9 +174,17 @@ def main() -> int:
                        "the published sentence stands with its "
                        "dose-response curve attached, reported as "
                        "measured.")
-        elif all(r["fence_rate"] > 0.50 for r in
-                 [kshot_arms[0]] + ([kshot_arms[1]] if f3 is not None
-                                    else []) + [schema_demo]):
+        elif (all(r["fence_rate"] > 0.50 for r in
+                  [kshot_arms[0]] + ([kshot_arms[1]] if f3 is not None
+                                     else []) + [schema_demo])
+              and kshot_arms[-1]["n_demonstrations"] >= 20
+              and kshot_arms[-1]["fence_rate"] == 0.0):
+            # The frozen (c) has FOUR conjuncts: f(1), f(3) and
+            # f(1+schema) all above 0.50 "while the banked k=20 arm is
+            # 0.00". The first version here dropped the fourth; in a
+            # world where every arm fenced, it would have announced a
+            # reading the preregistration does not license. Found by an
+            # auditor diffing this arithmetic against the frozen row.
             reading = ("(c) IT IS NOT THE DEMONSTRATIONS: the published "
                        "sentence is withdrawn and rewritten to say only "
                        "that the regimes differ.")
@@ -191,7 +223,7 @@ def main() -> int:
           f"{'as-written':>11s} {'stripped':>9s}")
     for row in rows:
         print(f"{row['arm']:18s} {row['n_demonstrations']:5d} "
-              f"{row['mean_prompt_tokens']:7d} "
+              f"{row['mean_prompt_tokens']:7.0f} "
               f"{row['fenced']:4d}/{row['n']:<3d} "
               f"{row['parses_as_written']:11d} "
               f"{row['parses_after_stripping']:9d}")

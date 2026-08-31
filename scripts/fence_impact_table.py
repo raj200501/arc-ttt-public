@@ -44,8 +44,14 @@ ARMS = (
      "waybill_scale_rung_1.5b_kshot_RAW_2026-08-25.json"),
     ("Qwen2.5-3B-Instruct", "schema",
      "waybill_scale_rung_3b_schema_2026-08-25.json"),
+    # The 3B k-shot arm is bfloat16: float32 OOM-killed at 21/30 (12.4 GB
+    # of weights plus 4,142-token prompts on a 15 GB box). The dtype is
+    # MEASURED, not assumed: a same-family control ran the 1.5B k-shot
+    # arm in both dtypes and bf16 costs 0.0031 mean F1 (0.8804 float32 ->
+    # 0.8773 bf16, 0 invalid in both). The fence classification this
+    # table exists for is unaffected either way.
     ("Qwen2.5-3B-Instruct", "k-shot (20)",
-     "waybill_scale_rung_3b_kshot_2026-08-25.json"),
+     "waybill_scale_rung_3b_kshot_bf16_2026-08-25.json"),
 )
 
 

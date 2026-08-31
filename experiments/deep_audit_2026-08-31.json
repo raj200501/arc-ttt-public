@@ -1,0 +1,32 @@
+{
+  "what": "Deep audit of the project's claims and this session's changes, requested by the founder after observing that 'Addendum G was really positive and issues arose after the model switch.' Three independent audit agents, none permitted to trust the project's own scoring code.",
+  "date": "2026-08-31",
+  "the_question_as_asked": "Did the work go wrong when the driving model changed?",
+  "lane_A_thesis_kill_numbers": {
+    "method": "From-scratch scorer written from the published spec only; gold hash-verified; raw stored model text re-parsed and re-scored.",
+    "result": "ZERO disagreements. Every claimed number reproduces to 4 decimals: 3B schema 0.0000-as-emitted/0.8958-stripped, 1.5B REPRO 0.7375, 3B k-shot bf16 0.9747 (12W/1L/17T vs adapted, p=0.0017), the full six-cell fence grid, and the adapted arm's own 0.8833 \u2014 180 per-document scores, all exact.",
+    "found_against_us": [
+      "Our adapted arm is LESS verifiable than the rivals that beat it: it stores parsed objects, not raw text, so its parsing step cannot be re-checked by anyone \u2014 and the prompted baseline's three null docs are unrecoverable, meaning the adapted-vs-prompted delta could only be INFLATED by the same fence mechanism.",
+      "The narrow '3B schema edges adapted by 0.0125' is normalization-sensitive (drops below adapted under a stricter scorer); the two big negatives are not."
+    ],
+    "verdict": "The thesis-killing results are real measurements, not scoring-code artifacts."
+  },
+  "lane_B_positive_era": {
+    "method": "Checked out the Addendum-G-era tree (f87e5db), inventoried every load-bearing positive claim, traced each one's fate, and re-verified the largest withdrawal from raw predictions by eye and by independent re-scoring.",
+    "result": "Every claim doing company-level work in the G era was defective in a specific, now-documented way: the +46.5 headline carried +22.3 of arbitrary key-mapping and lacked the one comparison a buyer would make (against which the product goes 0W/14L); the F PASS quoted only the CI level that cleared the bar while the cluster CI includes zero; Addendum N's 0.0000 \u2014 the number carrying the company \u2014 was thirty correct extractions inside markdown fences, re-verified by eye and re-scored to 0.7375 exactly.",
+    "verdict": "'Issues arose afterwards' is backwards: the issues were present in the G-era claims, and afterwards is when they were found. The corrections were correct and mostly forced by preregistered readings or outside readers."
+  },
+  "lane_C_this_sessions_changes": {
+    "method": "Adversarial audit of every commit since the container restore, tasked with finding what the session did NOT self-report.",
+    "result_17_findings": {
+      "count_changing": "The live census under-counted itself: the deepeval IFEval rejection was wrong (instruction explicitly permits markdown ticks; reference checker strips them). Confirmed count 1 -> 2. The adjudicator had paraphrased the instruction from memory.",
+      "margin_changing": "Addendum R's f(3) is 3/30 by eye (a prose-prefixed fence the tool's leading-only rule cannot see) \u2014 reading (b) survives at EXACTLY its <= 0.10 boundary; dated erratum now generated with the table.",
+      "gates": "Five live wrong-referent paths demonstrated by exploit and closed same-day; bare-possessive counts are now unowned (refused, never rewritten); the prior regression tests pinned classifiers rather than rewrite paths and could not have failed.",
+      "checkpointing": "Resumed runs were banked indistinguishable from unbroken ones; a latent batch>1 unit-mixing bug corrupted the median cost; sidecars were committed, never invalidated, and config-blind. All fixed; both banked artifacts carry retroactive disclosure blocks.",
+      "minor": "Preregistration conjunct dropped in reading (c) arithmetic; a print format that crashes on non-integer means; three tests that could not fail their subjects \u2014 all fixed."
+    },
+    "verdict": "The session's self-caught defect list was real but incomplete; the audit found five more classes, none of which reached a published number except the census under-count \u2014 which ran AGAINST the project and is now corrected upward with the reason on the record."
+  },
+  "answer_to_the_founder": "No evidence supports 'the model switch broke it.' The negative turn precedes tonight's switch, every negative number reproduces exactly under independent reimplementation, and the era remembered as 'really positive' contained the one number that was actually wrong \u2014 in the project's favour. What the switch-era session DID produce was tooling defects around count-syncing and checkpointing: five classes caught by the session itself, five more by this audit, zero of which touched a published result except one census under-count against ourselves. The instrument is working; the thing it keeps finding is us.",
+  "auditor_artifacts": "audit scorer at scratchpad/audit_scorer.py (lane A); all three full reports preserved in the session record"
+}

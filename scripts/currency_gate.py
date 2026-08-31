@@ -193,9 +193,16 @@ SYNCED = {
     },
     "primary_verifiable": {
         "patterns": (
+            # The bare "(?<=says )(\\d+)(\\s+of)" pattern that used to sit
+            # here owned ANY "says N of" in source context: an auditor fed
+            # it "the ledger says 2 of 4 arms were accepted" and --fix
+            # produced "says 44 of 4 arms" -- a fabricated count from a
+            # sentence about something else entirely. The pattern now
+            # requires the primary-verifiable noun phrase it was written
+            # for.
             re.compile(r"(\d+)(\s+of\s+\d+\s+banked artifacts as\s*\n?>?\s*"
                        r"primary-verifiable)"),
-            re.compile(r"(?<=says )(\d+)(\s+of)"),
+            re.compile(r"(?<=says )(\d+)(\s+of\s+\d+\s+banked)"),
         ),
         "suspect": None,   # covered by the artifacts scan and the ratio check
         "fixer": "scripts/verification_coverage.py, then --fix here",
@@ -221,7 +228,7 @@ SYNCED = {
     "tool_tests": {
         "patterns": (
             re.compile(r"(?<=its own )(\d+)(\s+tests)"),
-            re.compile(r"(?<=its )(\d+)(\s+tests)"),
+            re.compile(r"(?<=fencecheck's )(\d+)(\s+tests)"),
             re.compile(r"(\d+)(\s+tests of its own)"),
         ),
         "suspect": None,
@@ -255,7 +262,7 @@ SCOPED = re.compile(
 
 BANNED = {
     "commits": {
-        "suspect": re.compile(r"(?<![\d.])(\d{2,4})\s+commits\b"),
+        "suspect": re.compile(rf"(?<![\d.])(\d{{2,4}}){SOFT}commits\b"),
         "why": ("a running commit count rots on every commit, including "
                 "the one that syncs it. Either scope it to a closed "
                 "window (\"76 commits in the first 33 hours\") or quote "
@@ -271,6 +278,10 @@ BANNED = {
 # end" would drift apart on the first fix to either one -- which is the
 # same class of defect as two copies of a count.
 _sentence_around = _shared_sentence_around
+
+
+def _normalized(window: str) -> str:
+    return " ".join(w for w in window.split() if w != ">")
 
 # A dated row in a corrections ledger is a RECORD of a past value and is
 # supposed to disagree with today's. Excluding by document rather than by
@@ -312,7 +323,12 @@ def scan(text: str) -> dict:
 
     for name, spec in BANNED.items():
         for match in spec["suspect"].finditer(text):
-            if SCOPED.search(_sentence_around(text, match.start())):
+            # Normalized window, for the same reason as every context
+            # test: "as\n> of 2026-08-25" is scoped and "512\n> commits"
+            # is a running total, and the raw-window search got both
+            # wrong -- flagging the first, missing the second.
+            if SCOPED.search(_normalized(_sentence_around(text,
+                                                          match.start()))):
                 continue
             banned.append((name, " ".join(match.group(0).split()),
                            text[:match.start()].count("\n") + 1))

@@ -336,3 +336,82 @@ def grade(model_text):
     assert len(fc.scan_source(bait, "grade.py")) == 1, "model_text missed"
     evals_shaped = bait.replace("model_text", "sampled")
     assert len(fc.scan_source(evals_shaped, "g.py")) == 1, "sampled missed"
+
+
+def test_context_vocabulary_survives_hard_wrapping() -> None:
+    """REGRESSION. "in the clone" wrapped as "in\\n   the clone" defeated
+    the export-context vocabulary, so a clone sentence was classified as
+    source-tree and its artifact count was silently rewritten to the
+    wrong tree's number — three more times, after the vocabulary was
+    added to prevent exactly that. Context tests now run over a
+    whitespace-collapsed window."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "_stc2", REPO / "scripts" / "sync_test_counts.py")
+    stc = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(stc)
+    text = ("state. The suite runs green in\n"
+            "   the clone — 312 collected, both\n"
+            "   measurements — and the tree holds 192 banked artifacts.\n")
+    assert stc.describes_the_export(text, text.index("192"))
+
+
+def test_the_auditors_five_gate_exploits_stay_dead() -> None:
+    """REGRESSION, end-to-end through fix() and scan() — not classifiers.
+
+    An audit demonstrated five live wrong-referent paths in one pass:
+    a greedy "says N of" pattern fabricating counts; window-vocabulary
+    subset context stealing an export count and a suite total; a scoped
+    commit count flagged because its "as of" wrapped across a
+    blockquote; and a wrapped bare running total invisible to the ban.
+    Each is pinned against the REWRITE/SCAN path itself, because the
+    previous regression tests pinned only the classifiers and would
+    have passed while fix() ignored them.
+    """
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "_cg", REPO / "scripts" / "currency_gate.py")
+    cg = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cg)
+
+    fabricate = "By round 2 the ledger says 2 of 4 arms were accepted."
+    assert cg.fix(fabricate)[0] == fabricate
+
+    steal_export = ("Checked from a cold clone, the harness keeps its "
+                    "312 tests green.")
+    assert "312" in cg.fix(steal_export)[0]
+
+    steal_suite = ("Before shipping fencecheck we reran the whole tree "
+                   "and its 360 tests.")
+    assert "360" in cg.fix(steal_suite)[0]
+
+    scoped_wrapped = "The log shows 437 commits as\n> of 2026-08-25."
+    assert not cg.scan(scoped_wrapped)["banned"]
+
+    bare_wrapped = "The tree carries 512\n> commits and keeps growing."
+    assert cg.scan(bare_wrapped)["banned"]
+
+
+def test_stripping_returns_the_exact_unrepaired_body() -> None:
+    """Strengthens the never-invent-a-parse pin: the earlier version
+    passed under any behavior, identity included, because its fixture
+    parsed under none. This pins the exact output."""
+    text, fenced = fc.strip_fence('```json\n{"a": 1,\n```')
+    assert fenced and text == '{"a": 1,'
+
+
+def test_a_prose_prefixed_fence_is_out_of_scope_and_that_is_deliberate():
+    """The leading-fence-only rule, pinned as a DOCUMENTED scope.
+
+    A real banked prediction (k=3 arm, h-3305) wraps correct JSON in a
+    fence behind a prose preamble; strip_fence does not count it,
+    because the tool's question is 'would stripping one enclosing fence
+    rescue this output' — and it would not, the prose remains. The
+    fence-rate undercount this produces is disclosed as a dated erratum
+    on Addendum R. If this behavior ever changes, that erratum and the
+    frozen reading's zero margin must be revisited in the same commit.
+    """
+    prosey = 'Here is the corrected version:\n\n```\n{"a": 1}\n```'
+    text, fenced = fc.strip_fence(prosey)
+    assert not fenced
+    assert text == prosey.strip()

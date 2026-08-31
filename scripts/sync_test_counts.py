@@ -119,17 +119,38 @@ def _sentence_around(text: str, index: int) -> str:
     rests on this window being right.
     """
     starts = [text.rfind(s, 0, index)
-              for s in (". ", ".\n", "\n\n", "\n- ", "\n* ", "\n> ")]
+              for s in (". ", ".\n", "? ", "?\n", "! ", "!\n",
+                        "\n\n", "\n- ", "\n* ", "\n> ")]
     start = max(starts + [0])
     ends = [e for e in (text.find(s, index)
-                        for s in (". ", ".\n", "\n\n", "\n- ", "\n* "))
+                        for s in (". ", ".\n", "? ", "?\n", "! ", "!\n",
+                                  "\n\n", "\n- ", "\n* "))
             if e != -1]
     end = min(ends) if ends else len(text)
     return text[start:end]
 
 
+def _normalized_window(text: str, index: int) -> str:
+    """The claim's sentence with whitespace collapsed, for context tests.
+
+    The vocabulary said "in the clone"; the document wrapped it as
+    "in\n   the clone", the phrase did not match, a clone sentence was
+    classified as source-tree, and its artifact count was silently
+    rewritten to the wrong tree's number THREE MORE TIMES after the
+    vocabulary was added to prevent exactly that. Hard wrapping has now
+    defeated the count patterns, the export vocabulary, and nothing says
+    it will stop there -- so every context test runs over a
+    whitespace-collapsed copy of the window, once, here.
+    """
+    # Bare ">" tokens are markdown blockquote markers, not words: left
+    # in, a wrapped "as\n> of 2026-08-25" normalizes to "as > of" and
+    # every phrase pattern still misses. Dropped here, once.
+    return " ".join(w for w in _sentence_around(text, index).split()
+                    if w != ">")
+
+
 def describes_the_export(text: str, index: int) -> bool:
-    return bool(EXPORT_CONTEXT.search(_sentence_around(text, index)))
+    return bool(EXPORT_CONTEXT.search(_normalized_window(text, index)))
 
 
 # A count of a COMPONENT's tests — "the tool carries its own 24 tests" —
@@ -144,13 +165,38 @@ def describes_the_export(text: str, index: int) -> bool:
 # are excluded here and owned by scripts/currency_gate.py, which
 # MEASURES the component (pytest --collect-only on the one file) instead
 # of assuming.
-SUBSET_CONTEXT = re.compile(
-    r"its own|of its own|its \d+ tests|fencecheck|the tool carries",
+# ADJACENCY, not window vocabulary. The window version matched the bare
+# word "fencecheck" or "its N tests" ANYWHERE in the sentence, so
+# "checked from a cold clone, the harness keeps its 312 tests green"
+# classified as component and the export's 312 was rewritten to the
+# component file's 25 -- and a suite total went the same way. An
+# auditor demonstrated both live. A count is a component's count only
+# when the possessive is ATTACHED to it: "its 24 tests", "its own 24
+# tests", "24 tests of its own", or the count directly preceded or
+# followed by the component's name.
+# Bare "its N tests" is NOT owned: the antecedent of "its" can be the
+# tree, the export, or the tool, and an auditor demonstrated both wrong
+# bindings live ("the harness keeps its 312 tests green" -> component;
+# "the whole tree and its 359 tests" -> component). Only the
+# unambiguous forms bind: "its OWN N tests", "fencecheck's N tests",
+# "N tests of its own". Bare possessives fall through to the suspect
+# scans and get refused loudly instead of rewritten wrongly.
+_SUBSET_BEFORE = re.compile(
+    r"(?:\bits\s+own\s+|\bfencecheck(?:\.py)?(?:'s)?\s+(?:own\s+)?)$",
     re.IGNORECASE)
+_SUBSET_AFTER = re.compile(
+    r"^\s*tests?\s+of\s+its\s+own\b", re.IGNORECASE)
 
 
 def is_subset_claim(text: str, index: int) -> bool:
-    return bool(SUBSET_CONTEXT.search(_sentence_around(text, index)))
+    lead = " ".join(text[max(0, index - 48):index].split())
+    if _SUBSET_BEFORE.search(lead + (" " if lead and text[index - 1].isspace() else "")):
+        return True
+    tail_start = index
+    while tail_start < len(text) and (text[tail_start].isdigit()):
+        tail_start += 1
+    tail = " ".join(text[tail_start:tail_start + 48].split())
+    return bool(_SUBSET_AFTER.search(" " + tail))
 
 ROOT_DOCS = ("README.md", "EVIDENCE.md", "ROADMAP.md", "paper/DRAFT.md")
 # Scratch notes and dated postmortems describe a past state.
