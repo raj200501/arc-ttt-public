@@ -272,6 +272,13 @@ def _candidate_strings(record: object):
                 yield value
 
 
+def _whole_json(text: str):
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        return None
+
+
 def score_file(path: pathlib.Path) -> dict:
     raw = path.read_text(encoding="utf-8", errors="replace")
     records: list[object] = []
@@ -279,14 +286,47 @@ def score_file(path: pathlib.Path) -> dict:
     if stripped.startswith("["):
         loaded = json.loads(stripped)
         records = loaded if isinstance(loaded, list) else [loaded]
+    elif stripped.startswith("{") and (whole := _whole_json(stripped)) is not None:
+        # The file is ONE JSON document. That is a legitimate input only
+        # if it is itself an output record (it carries one of the keys
+        # this tool reads model text from). Anything else -- an
+        # experiment artifact, a config, a summary -- used to fall
+        # through to the line scorer, score its own pretty-printed
+        # LINES, find no fences in them, and print a clean bill with
+        # exit 0. A reviewer fed this tool a banked artifact and got
+        # "Nothing is being lost to a fence in this file" for a file
+        # containing fenced outputs three levels deep. A fail-open in
+        # the fail-open detector; it now refuses loudly instead.
+        preferred = ("prediction", "output", "completion", "response",
+                     "generation", "text", "raw", "answer", "content")
+        if isinstance(whole, dict) and any(
+                isinstance(whole.get(k), str) for k in preferred):
+            records = [whole]
+        else:
+            return {"refused": (
+                "this file is a single JSON document, not a file of model "
+                "outputs. score reads JSONL (one output record per line), "
+                "a JSON list of records, or a single record carrying one "
+                "of: " + ", ".join(preferred) + ". Point it at the "
+                "predictions file, not the experiment artifact.")}
     else:
+        parsed_lines = unparsed_lines = 0
         for line in stripped.split("\n"):
             if not line.strip():
                 continue
             try:
                 records.append(json.loads(line))
+                parsed_lines += 1
             except json.JSONDecodeError:
                 records.append(line)
+                unparsed_lines += 1
+        if parsed_lines and unparsed_lines:
+            return {"refused": (
+                f"{parsed_lines} line(s) parse as JSON and "
+                f"{unparsed_lines} do not -- that is neither JSONL nor "
+                "plain-text completions, and scoring the readable subset "
+                "would report a rate about a file it did not read. Fix "
+                "or split the file.")}
 
     total = fenced = valid_asis = valid_stripped = recovered = 0
     examples: list[str] = []
@@ -371,6 +411,13 @@ def main(argv: list[str] | None = None) -> int:
         return 1 if findings else 0
 
     report = score_file(target)
+    if report.get("refused"):
+        if args.json:
+            print(json.dumps(report, indent=2))
+        else:
+            print("fencecheck: REFUSING to score -- " + report["refused"])
+        return 2
+
     if args.json:
         print(json.dumps(report, indent=2))
         return 1 if report["recovered_by_stripping"] else 0

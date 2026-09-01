@@ -62,15 +62,27 @@ Exit status 1 on a finding, so it drops into CI. See
 
 ## How common is it?
 
-**6 confirmed instances of 35 candidate sites, read by hand, across 34
-published packages** — in `evals`, `instructor` and `ragas`. All 29
-rejections are published with reasons in
+**7 confirmed instances across 34 published packages** — in `evals`,
+`instructor` and `ragas`: 6 of 35 candidate sites read by hand, plus a
+7th the shipped tool found in a scoring path the census classifier had
+dropped (`evals/elsuite/basic/json_match.py:80`), published as a dated
+amendment
+([`experiments/fence_census_amendment_2026-08-25.json`](experiments/fence_census_amendment_2026-08-25.json)).
+All 29 rejections are published with reasons in
 [`experiments/fence_census_hand.json`](experiments/fence_census_hand.json):
 most candidates turned out to be protocol frames, telemetry, HTTP
 bodies, credentials, ground-truth strings, or places where the fence is
 handled a level up.
 
-**Quote 6 of 35, not a rate over the ecosystem.** This is a lower bound
+**And the least flattering frame, stated first where it counts:** a
+preregistered census over **7 actively-maintained packages** (releases
+2026-04 to 2026-08) found **2 confirmed instances and 5 packages
+clean** — Braintrust `autoevals` `JSONDiff` (the identical correct
+answer scores 1.0000 bare vs 0.2152 fenced, executed) and deepeval's
+IFEval verifier — with lm-evaluation-harness clean at 733 files
+([`experiments/census_extension_live_2026-08-31.json`](experiments/census_extension_live_2026-08-31.json)).
+
+**Quote 7 of 34 and 2 of 7, never a rate over the ecosystem.** This is a lower bound
 among the packages searched, and it is not a claim that any package is
 buggy. Two mechanical classifiers failed their own preregistered accuracy
 gates before this one was done by hand (60%, then 70%, against an 80%
@@ -172,7 +184,7 @@ segment and no other.
 
 **And the result that had been holding this up was a markdown fence.** Addendum N published "given only a field list, a 1.5B does not produce a usable object at all — 0.0000, 30 of 30 invalid" and was cited as the asymmetry that made adaptation earn its keep on-prem. A reproduction run reproduced that number exactly, stored the predictions this time, and they are correct extractions inside fenced json code blocks. Fence-stripped: **0.7375, zero invalid.** N is withdrawn. This page had already met fenced JSON on the hosted arm one paragraph below, handled it correctly, and written down why — and the scale-rung runner written three days later did not inherit that rule. The un-repaired zero was the number that flattered us.
 
-**What is left, and it is all that is left:** matching our quality with an unadapted open model takes a 3B, about 6x the parameters, which on the same CPU box costs about **$2.97 per 1,000 documents against our $0.5143 at the same batch size**. Cost at fixed quality — real, measured, much weaker than what this page claimed yesterday, and **not yet measured at matched batching**, which is the first thing a technical reader should ask and which we have not run. See `VERDICT.md` Addenda N and O and `experiments/fence_rescore.json`.
+**What is left, and it is all that is left:** matching our quality with an unadapted open model takes a 3B, about 6x the parameters, which on the same CPU box costs about **$2.97 per 1,000 documents against our $0.5143 at the same batch size (batch 1)**. Matched batching — the first thing a technical reader should ask — **was then measured, and it took the claim away rather than strengthening it**: at batch 16 the preregistered quality tolerance breaks (|Q| = 0.0125 against 0.01, Addendum P reading (d)), so the arms are not quality-matched there and **no cost ratio is citable at matched batch**. The batch-1 figure above is the entire surviving cost statement. See `VERDICT.md` Addenda N, O and P, `experiments/fence_rescore.json`, and `experiments/waybill_matched_batch_2026-08-25.json`.
 
 `experiments/waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_2026-08-22.json` is the citable run — its demonstrations mirror our own arm's turn structure exactly and it needed no output repair. The packed-turn run beside it reaches the same numbers only after stripping a markdown fence from four outputs, a repair our own arms never got; without it that run scores 0.8667, *below* our adapted arm. Both are banked, and the difference is stated because an outside reviewer found it.
 
@@ -406,7 +418,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 341 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 344 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -463,11 +475,33 @@ sharpening. No claims beyond the artifacts in `experiments/`.
   and company-level claims are made only where an artifact backs them —
   the status line above says exactly where things stand.
 
+## Authorship
+
+Roughly **four in five commits in the source tree are authored by
+`Claude <noreply@anthropic.com>`** — an autonomous agent organisation
+Raj Kashikar built and operates — rather than by Raj himself
+(**411 against 82 as of 2026-09-01**, `git shortlog -sne` in the source
+tree; the exact figures move with every commit, the ratio is the
+claim). Every file in the fence lane — the tool, all three census runs,
+the hand-adjudication, the impact table, the CORD replication — is
+agent-authored.
+
+**The public repository's own `git shortlog` does not return this
+ratio, and before 2026-09-01 it returned the inverse.** This repo is
+published as fresh-history exports (`scripts/export_public.sh`, shipped
+in this tree), and every export event before that date was committed
+under Raj's name — so the metadata a reader checks attributed the agent
+org's work to the human. Three independent reviewers ran the command
+and caught it. Export commits are now authored as the agent work they
+are, with the squash's limitation disclosed in the commit message, and
+this section is the measured ledger. Dated correction:
+`CORRECTIONS.md` 2026-09-01.
+
 ## Repository layout
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 341 offline tests (tiny in-test models; no downloads).
+- `tests/` — 344 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

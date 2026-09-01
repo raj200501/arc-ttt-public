@@ -65,7 +65,7 @@ enough to put in a public artifact attached to a commercial pitch.
   dataset's original stated purpose, so we are not abusing it.
 - **Frontier-API baseline cost (rough token math, labeled estimate):**
   OCR text per receipt ≈ 300–800 tokens (call it ~500); output JSON ≈ 200–400
-  tokens (~300). A k=10 few-shot prompt ≈ 10×800 + 500 instructions + 341 test
+  tokens (~300). A k=10 few-shot prompt ≈ 10×800 + 500 instructions + 344 test
   input ≈ **~9k input / ~0.3k output tokens per call**; at k=5 ≈ ~5.5k input.
   At Claude Sonnet 5 pricing ($3/M in, $15/M out —
   https://platform.claude.com/docs/en/pricing) that is **≈ $0.02–0.03 per
@@ -542,7 +542,7 @@ Results, whatever they are, are reported against the text as frozen on
 ## Addendum B — Novel-schema gate (frozen 2026-08-12T19:40Z, before any run)
 
 Written before a single record was generated or a single arm executed. The
-generator (`src/arcttt/novel_schema.py`, 341 tests) exists; no corpus, no
+generator (`src/arcttt/novel_schema.py`, 344 tests) exists; no corpus, no
 scores, and no arms exist at the time of writing. Everything below is a
 pre-commitment, and B.6 records what may be claimed at each outcome so no
 branch can be re-argued after the numbers land.

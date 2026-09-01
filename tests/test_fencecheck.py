@@ -415,3 +415,38 @@ def test_a_prose_prefixed_fence_is_out_of_scope_and_that_is_deliberate():
     text, fenced = fc.strip_fence(prosey)
     assert not fenced
     assert text == prosey.strip()
+
+
+def test_score_refuses_a_single_json_document(tmp_path) -> None:
+    """R2's round-3 find, pinned: fed a banked EXPERIMENT ARTIFACT (one
+    pretty-printed JSON object whose lines parse as nothing), score used
+    to fall through to the line scorer, score the artifact's own lines,
+    and print 'Nothing is being lost to a fence in this file' with exit
+    0 — a clean bill for a file whose nested predictions were fenced.
+    A fail-open in the fail-open detector. It now refuses loudly."""
+    artifact = tmp_path / "artifact.json"
+    artifact.write_text(json.dumps({
+        "what": "an experiment artifact, not an outputs file",
+        "predictions": {"d1": '```json\n{"a": 1}\n```'}}, indent=2),
+        encoding="utf-8")
+    report = fc.score_file(artifact)
+    assert "refused" in report and "single JSON document" in report["refused"]
+
+
+def test_score_refuses_mixed_parseable_and_unparseable_lines(tmp_path) -> None:
+    """Half-JSONL is neither JSONL nor plain text: scoring only the
+    readable subset would publish a rate about a file it did not read."""
+    mixed = tmp_path / "mixed.jsonl"
+    mixed.write_text('{"raw": "{}"}\nnot json at all\n', encoding="utf-8")
+    report = fc.score_file(mixed)
+    assert "refused" in report
+
+
+def test_score_accepts_a_single_output_record(tmp_path) -> None:
+    """A whole-file dict that IS an output record (carries a raw-text
+    key) stays scoreable — the refusal is scoped to non-record files."""
+    record = tmp_path / "one_record.json"
+    record.write_text(json.dumps({"raw": '```json\n{"a": 1}\n```'}),
+                      encoding="utf-8")
+    report = fc.score_file(record)
+    assert report["outputs"] == 1 and report["recovered_by_stripping"] == 1

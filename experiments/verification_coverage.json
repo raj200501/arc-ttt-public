@@ -967,7 +967,7 @@
       "artifact": "review_simulation.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 18958
+      "bytes": 26915
     },
     {
       "artifact": "schema_conformance_decomposition_2026-08-22.json",
