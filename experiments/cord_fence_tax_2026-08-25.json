@@ -1,0 +1,50 @@
+{
+  "what": "Addendum S: fence rates on CORD, the shipped tool as classifier, readings applied by arithmetic from the frozen row and the dated protocol note.",
+  "preregistration": "VERDICT.md Addendum S row (2026-08-25); protocol gaps fixed in docs/research/ADDENDUM_S_PROTOCOL.md (2026-09-01) before any cell ran",
+  "run_date": "2026-09-01",
+  "classified_by": "tools/fencecheck.py strip_fence(), leading-fence scope (undercount property documented in Addendum R's erratum)",
+  "rows": [
+    {
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "regime": "kshot",
+      "n": 80,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "invalid": 3,
+      "mean_micro_f1_context_only": 0.6282
+    },
+    {
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "regime": "schema",
+      "n": 100,
+      "fenced": 100,
+      "fence_rate": 1.0,
+      "invalid": 11,
+      "mean_micro_f1_context_only": 0.2343
+    },
+    {
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "regime": "kshot",
+      "n": 80,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "invalid": 4,
+      "mean_micro_f1_context_only": 0.7095
+    },
+    {
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "regime": "schema",
+      "n": 100,
+      "fenced": 100,
+      "fence_rate": 1.0,
+      "invalid": 14,
+      "mean_micro_f1_context_only": 0.3279
+    }
+  ],
+  "reading_per_model": {
+    "0.5b": "(a) REPLICATES",
+    "1.5b": "(a) REPLICATES"
+  },
+  "the_finding": "(a) IT REPLICATES AT BOTH SIZES: schema-only prompts get wrapped and k-shot prompts do not, on public receipts nobody here authored. The headline moves onto public data.",
+  "note_on_n": "schema cells n=100 (the row's letter); k-shot cells n=80 \u2014 demonstrations are the E6 train-20 and a receipt cannot demonstrate itself; deviation declared in the protocol note before data"
+}

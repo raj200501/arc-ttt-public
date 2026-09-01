@@ -144,5 +144,5 @@
   },
   "verdict": "PASS",
   "rationale": "Addendum E PASSES at k=30 on shape-varying geometry: seed-mean +0.4035 >= +0.05 over six fresh tenants, receipt CI excludes zero, sign test agrees (340W/5L, p<1e-15). Per E.2 this NARROWS the shared-geometry objection with n doubled: the effect is not carried by one fixed corpus shape at 6-7 fields. It does not retire it \u2014 these shapes are SMALLER than the 8-field gate corpus, shapes at or above it are not measurable at k=30 under the frozen token budget, and every tenant here still comes from the same generator family.",
-  "computed_at": "2026-08-31T17:50:00.548792+00:00"
+  "computed_at": "2026-09-01T12:21:25.730419+00:00"
 }

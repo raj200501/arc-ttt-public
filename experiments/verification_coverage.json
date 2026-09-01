@@ -7,18 +7,18 @@
     "EXTERNAL": "third-party quote, labelled as such, not ours to verify."
   },
   "counts": {
-    "AGGREGATE": 71,
-    "ARITHMETIC": 80,
+    "AGGREGATE": 72,
+    "ARITHMETIC": 81,
     "EXTERNAL": 7,
-    "PRIMARY": 44
+    "PRIMARY": 49
   },
-  "total_artifacts": 202,
+  "total_artifacts": 209,
   "excluded_as_gate_exhaust": [
     "verification_coverage.json",
     "outbound_reconciliation.json"
   ],
-  "primary_verifiable": 44,
-  "primary_verifiable_fraction": 0.2178,
+  "primary_verifiable": 49,
+  "primary_verifiable_fraction": 0.2344,
   "why_the_total_is_banked": "Outbound copy cites this total ('179 banked artifacts') and the reconciliation gate had been matching it against an unrelated 179 in an unrelated artifact -- a figure that traced to nothing, passing because some number of that value happened to exist somewhere. A cited figure has to be a figure this map deliberately publishes.",
   "artifacts": [
     {
@@ -50,6 +50,12 @@
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
       "bytes": 8269
+    },
+    {
+      "artifact": "cord_fence_tax_2026-08-25.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1815
     },
     {
       "artifact": "cord_frontier_baseline_2026-08-09.json",
@@ -476,6 +482,30 @@
       "level": "EXTERNAL",
       "why": "figures are third-party quotes, labelled as such and not ours to verify",
       "bytes": 2557
+    },
+    {
+      "artifact": "ladder_e5_3b_adapted_kshot_2026-08-31.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 11912
+    },
+    {
+      "artifact": "ladder_e6_cord_adapted_2026-08-31.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 30573
+    },
+    {
+      "artifact": "ladder_e6_cord_prompted_2026-08-31.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 31794
+    },
+    {
+      "artifact": "ladder_results_2026-08-31.json",
+      "level": "ARITHMETIC",
+      "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
+      "bytes": 8720
     },
     {
       "artifact": "memprobe_1.5b_cpu_2026-08-11.json",
@@ -1000,6 +1030,12 @@
       "bytes": 388
     },
     {
+      "artifact": "waybill_adapted_3b_2026-08-25.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 13780
+    },
+    {
       "artifact": "waybill_cost_2026-08-22.json",
       "level": "EXTERNAL",
       "why": "figures are third-party quotes, labelled as such and not ours to verify",
@@ -1214,6 +1250,12 @@
       "level": "PRIMARY",
       "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
       "bytes": 13115
+    },
+    {
+      "artifact": "waybill_scale_rung_3b_schema_bf16_control_2026-08-25.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 14445
     },
     {
       "artifact": "waybill_serving_arch_2026-08-22.json",
