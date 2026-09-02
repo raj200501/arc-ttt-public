@@ -254,25 +254,51 @@ def strip_fence(text: str) -> tuple[str, bool]:
     return body.strip(), True
 
 
+_OUTPUT_KEYS = ("prediction", "output", "completion", "response",
+                "generation", "text", "raw", "answer", "content")
+# Strings that are never the model's output, so the any-string fallback
+# must not score them. A reviewer fed `score` a predictions file whose
+# `prediction` field held the PARSED object (a dict) and got a clean
+# bill: the tool skipped the dict, fell through to "any string", and
+# scored the document ids. A fail-open in the fail-open detector, again.
+_METADATA_KEYS = frozenset({"id", "doc_id", "document_id", "task_id",
+                            "name", "model", "date", "seed", "split",
+                            "arm", "mode", "config", "run", "sha256"})
+
+
+def _already_parsed(record: object) -> bool:
+    """True when the record carries an OUTPUT key whose value is not
+    text -- a dict, list or null: an already-parsed object, not model
+    text. There is nothing to classify in such a record, and nothing
+    beside it is the model's output either."""
+    if not isinstance(record, dict):
+        return False
+    present = [k for k in _OUTPUT_KEYS if k in record]
+    return bool(present) and not any(
+        isinstance(record[k], str) for k in present)
+
+
 def _candidate_strings(record: object):
     """Any string in the record that might be the model's raw output."""
     if isinstance(record, str):
         yield record
         return
     if isinstance(record, dict):
-        preferred = ("prediction", "output", "completion", "response",
-                     "generation", "text", "raw", "answer", "content")
-        for key in preferred:
-            value = record.get(key)
-            if isinstance(value, str):
-                yield value
-                return
-        for value in record.values():
-            if isinstance(value, str):
+        present = [k for k in _OUTPUT_KEYS if k in record]
+        if present:
+            for key in present:
+                if isinstance(record[key], str):
+                    yield record[key]
+                    return
+            return  # output keys present, none of them text: parsed
+        for key, value in record.items():
+            if isinstance(value, str) and key not in _METADATA_KEYS:
                 yield value
 
 
 def _whole_json(text: str):
+    # fencecheck: ignore -- asking whether a whole FILE is one JSON
+    # document, to refuse it; not classifying model output.
     try:
         return json.loads(text)
     except json.JSONDecodeError:
@@ -297,8 +323,7 @@ def score_file(path: pathlib.Path) -> dict:
         # "Nothing is being lost to a fence in this file" for a file
         # containing fenced outputs three levels deep. A fail-open in
         # the fail-open detector; it now refuses loudly instead.
-        preferred = ("prediction", "output", "completion", "response",
-                     "generation", "text", "raw", "answer", "content")
+        preferred = _OUTPUT_KEYS
         if isinstance(whole, dict) and any(
                 isinstance(whole.get(k), str) for k in preferred):
             records = [whole]
@@ -329,8 +354,12 @@ def score_file(path: pathlib.Path) -> dict:
                 "or split the file.")}
 
     total = fenced = valid_asis = valid_stripped = recovered = 0
+    already_parsed = 0
     examples: list[str] = []
     for record in records:
+        if _already_parsed(record):
+            already_parsed += 1
+            continue
         for text in _candidate_strings(record):
             total += 1
             cleaned, was_fenced = strip_fence(text)
@@ -350,6 +379,7 @@ def score_file(path: pathlib.Path) -> dict:
         "parse_as_written": valid_asis,
         "parse_after_stripping": valid_stripped,
         "recovered_by_stripping": recovered,
+        "already_parsed_records": already_parsed,
         "examples": examples,
     }
 
@@ -423,6 +453,13 @@ def main(argv: list[str] | None = None) -> int:
         return 1 if report["recovered_by_stripping"] else 0
 
     total = report["outputs"]
+    if not total and report.get("already_parsed_records"):
+        print(f"fencecheck: REFUSING to score -- all "
+              f"{report['already_parsed_records']} record(s) carry an "
+              "output field that is already a parsed object (or null), "
+              "not model text. There is no fence to find in a parse "
+              "tree; point score at the file that stores the RAW text.")
+        return 2
     if not total:
         print("fencecheck: no model outputs found in that file.")
         print("Expected JSONL or a JSON list, with the raw model text under "

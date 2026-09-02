@@ -281,6 +281,8 @@ def main() -> int:
             if not line.strip():
                 continue
             try:
+                # fencecheck: ignore -- a checkpoint line this script
+                # wrote itself, not model text; a torn tail is counted.
                 row = json.loads(line)
             except json.JSONDecodeError:
                 torn += 1

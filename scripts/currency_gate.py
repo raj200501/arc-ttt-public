@@ -203,6 +203,13 @@ SYNCED = {
             re.compile(r"(\d+)(\s+of\s+\d+\s+banked artifacts as\s*\n?>?\s*"
                        r"primary-verifiable)"),
             re.compile(r"(?<=says )(\d+)(\s+of\s+\d+\s+banked)"),
+            # 2026-09-01: "the map says 44 of\n> them are primary-verifiable"
+            # rotted for a week beside a sibling sentence the gate DID own,
+            # and a reviewer read the two figures (44 vs 49) in one form.
+            # The noun phrase is required here too; "them" is bound to
+            # "banked artifacts" by the preceding bullet.
+            re.compile(r"(?<=says )(\d+)(\s+of\s*\n?>?\s*them are\s*\n?>?\s*"
+                       r"primary-verifiable)"),
         ),
         "suspect": None,   # covered by the artifacts scan and the ratio check
         "fixer": "scripts/verification_coverage.py, then --fix here",

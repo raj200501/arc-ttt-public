@@ -54,7 +54,7 @@
   },
   "confirmed": [
     {
-      "site": "autoevals/json.py \u2014 class JSONDiff, via valid_json() at line 258",
+      "site": "autoevals/json.py — class JSONDiff, via valid_json() at line 258",
       "package": "autoevals 0.3.0 (Braintrust), released 2026-06-09",
       "verdict": "CONFIRMED",
       "mechanism": "JSONDiff is a scorer comparing model output to expected JSON. json_diff() only parses a string operand if ValidJSON.valid_json() returns 1; a fenced-but-correct answer fails that check, stays a raw string, falls through every structural branch, and lands in the final else: Levenshtein distance between the JSON-encoded fenced string and the canonicalized expected object.",
@@ -64,18 +64,10 @@
         "fenced_output": 0.2152,
         "reading": "the identical correct answer loses 78% of its score to three backticks"
       },
-      "why_it_is_sharp": "Unlike the fail-open-to-zero instances, this one degrades SILENTLY AND PARTIALLY: no error, no zero anyone would notice \u2014 a numerically plausible 0.2152 that reads as a bad model rather than a scoring artifact. It is in a current, maintained scorer library, which is precisely the class of instance the original census could not exhibit."
-    },
-    {
-      "site": "deepeval/benchmarks/ifeval/ifeval.py:119 \u2014 verify_format_constraints, instruction detectable_format:json",
-      "package": "deepeval 4.2.0, released 2026-08-24",
-      "verdict": "CONFIRMED \u2014 re-adjudicated 2026-08-31 after an auditor overturned the original rejection",
-      "the_original_rejection_and_why_it_was_wrong": "First adjudicated REJECTED with the reason 'the instruction under test is output-JSON-only; a fence is a genuine violation of what IFEval measures.' That reason asserted the instruction's text without reading it. The canonical IFEval instruction says: 'Entire output should be wrapped in JSON format. You can use markdown ticks such as ```.' \u2014 and the reference checker (JsonFormat.check_following, vendored at lm_eval/tasks/ifeval/instructions.py) strips ```json/``` prefixes and suffixes before json.loads. Both read at source on 2026-08-31.",
-      "the_defect": "deepeval loads the IFEval prompts verbatim \u2014 so the model is TOLD markdown ticks are permitted \u2014 but its verifier does a bare json.loads(response) with the failure returned as False, a scored constraint violation. A fenced answer the benchmark explicitly permits is scored as failing the benchmark. Model output demonstrably reaches the parse; the swallowed failure becomes a benchmark score; the frozen rule confirms.",
-      "found_by": "an adversarial audit agent spot-checking the census's own rejections, i.e. from outside the adjudication that made the error"
+      "why_it_is_sharp": "Unlike the fail-open-to-zero instances, this one degrades SILENTLY AND PARTIALLY: no error, no zero anyone would notice — a numerically plausible 0.2152 that reads as a bad model rather than a scoring artifact. It is in a current, maintained scorer library, which is precisely the class of instance the original census could not exhibit."
     }
   ],
-  "rejected_count": 62,
+  "rejected_count": 63,
   "rejected_by_category": {
     "telemetry / tracing / instrumentation (not evaluation paths)": [
       "deepeval integrations/{agentcore,openinference,strands} instrumentators (4 sites)",
@@ -86,18 +78,39 @@
       "deepeval/config/settings.py:139, deepeval/prompt/prompt.py:318+398, deepeval/test_run/test_run.py:1190+1202",
       "mlflow tracking/context/jupyter_notebook_context (2), utils/providers.py:319, store/tracking (3)"
     ],
-    "provider / protocol transport (frames, chunks, RPC \u2014 not scoring)": [
+    "provider / protocol transport (frames, chunks, RPC — not scoring)": [
       "deepeval/voice/connectors/providers/elevenlabs.py:78",
       "inspect_ai: _cli/detach, _control/events, agent/_acp/stdio, _json_rpc_transport, sandbox/service, sagemaker streaming, openai_responses tool-args plumbing (8 sites)",
       "mlflow: assistant/providers (2), cli/traces (3), gateway (3), server (2), utils/rest_utils (1)"
     ],
     "read and individually rejected with a written reason": [
-      "mlflow/genai/judges/adapters/litellm_adapter.py:458 \u2014 the parse is of an EXCEPTION MESSAGE inside _extract_litellm_error, extracting a gateway error detail with a str(e) fallback; no model output reaches it and no score depends on it",
-      "deepeval/metrics/agent_loop_detection/agent_loop_detection.py:305 \u2014 a metric hashes tool-call args; on parse failure the raw string still hashes, so the failure degrades hash granularity rather than dropping an item, and no fenced path into it was demonstrated. Unproven means rejected, per the frozen rule"
+      "mlflow/genai/judges/adapters/litellm_adapter.py:458 — the parse is of an EXCEPTION MESSAGE inside _extract_litellm_error, extracting a gateway error detail with a str(e) fallback; no model output reaches it and no score depends on it",
+      "deepeval/metrics/agent_loop_detection/agent_loop_detection.py:305 — a metric hashes tool-call args; on parse failure the raw string still hashes, so the failure degrades hash granularity rather than dropping an item, and no fenced path into it was demonstrated. Unproven means rejected, per the frozen rule"
     ]
   },
-  "the_finding": "In seven actively-maintained eval packages (releases 2026-04-07 to 2026-08-30), the shipped tool surfaced 64 candidate sites; hand adjudication confirms TWO. (1) Braintrust autoevals JSONDiff, executed: the identical correct answer scores 1.0000 bare and 0.2152 fenced. (2) deepeval's IFEval verifier scores a fenced answer as a constraint violation on an instruction that EXPLICITLY PERMITS markdown ticks \u2014 the reference checker strips the fence; deepeval's does not. Five of seven packages remain clean, including lm-evaluation-harness at 733 files. The count was first published as one; the second was a rejection this census got wrong, overturned by an auditor reading the instruction text the adjudicator had only assumed \u2014 recorded at full size because an instrument that under-counts against itself and says so is the product.",
-  "what_this_does_not_show": "One instance is a base rate, not a category. The honest reading cuts both ways: the defect class is real in live, maintained scoring code \u2014 and it is RARE there, which bounds the wedge. Both halves go outward together. It also says nothing about non-Python harnesses, hosted eval products, or private scoring code, which this frame cannot see.",
+  "the_finding": "In seven actively-maintained eval packages (releases 2026-04-07 to 2026-08-30), the shipped tool surfaced 64 candidate sites; hand adjudication confirms ONE. Braintrust autoevals JSONDiff, executed: the identical correct answer scores 1.0000 bare and 0.2152 fenced. No confirmed instance in the other six packages, including lm-evaluation-harness at 733 files. The count was published as one, then two (a rejection of deepeval's IFEval verifier overturned on its instruction text), then one again on 2026-09-01 when the deepeval branch was found unreachable on the shipped dataset — see correction_2026-09-01.",
+  "what_this_does_not_show": "One instance is a base rate, not a category. The honest reading cuts both ways: the defect class is real in live, maintained scoring code — and it is RARE there, which bounds the wedge. Both halves go outward together. It also says nothing about non-Python harnesses, hosted eval products, or private scoring code, which this frame cannot see.",
   "verification_level": "PRIMARY for the confirm (executed with recorded inputs and outputs); the full scan is reproducible from the frozen frame, pinned versions and the shipped tool.",
-  "correction_2026-08-31": "First published as 1 confirmed / 63 rejected. The IFEval rejection was wrong: the adjudicator paraphrased the instruction from memory instead of reading it. 2 confirmed / 62 rejected. CORRECTIONS.md row 2026-08-31."
+  "correction_2026-08-31": "First published as 1 confirmed / 63 rejected. The IFEval rejection was wrong: the adjudicator paraphrased the instruction from memory instead of reading it. 2 confirmed / 62 rejected. CORRECTIONS.md row 2026-08-31.",
+  "rejected_on_reachability_2026-09-01": [
+    {
+      "site": "deepeval/benchmarks/ifeval/ifeval.py:119 — verify_format_constraints, instruction detectable_format:json",
+      "package": "deepeval 4.2.0, released 2026-08-24",
+      "verdict": "REJECTED — third adjudication, 2026-09-01: the branch is unreachable on the dataset the package ships against",
+      "the_original_rejection_and_why_it_was_wrong": "First adjudicated REJECTED with the reason 'the instruction under test is output-JSON-only; a fence is a genuine violation of what IFEval measures.' That reason asserted the instruction's text without reading it. The canonical IFEval instruction says: 'Entire output should be wrapped in JSON format. You can use markdown ticks such as ```.' — and the reference checker (JsonFormat.check_following, vendored at lm_eval/tasks/ifeval/instructions.py) strips ```json/``` prefixes and suffixes before json.loads. Both read at source on 2026-08-31.",
+      "the_defect": "deepeval loads the IFEval prompts verbatim — so the model is TOLD markdown ticks are permitted — but its verifier does a bare json.loads(response) with the failure returned as False, a scored constraint violation. A fenced answer the benchmark explicitly permits is scored as failing the benchmark. Model output demonstrably reaches the parse; the swallowed failure becomes a benchmark score; the frozen rule confirms.",
+      "found_by": "an adversarial audit agent spot-checking the census's own rejections, i.e. from outside the adjudication that made the error",
+      "reachability_2026-09-01": {
+        "loader": "load_benchmark_dataset(): load_dataset('google/IFEval'); instruction_id_list passed through verbatim",
+        "canonical_id": "detectable_format:json_format (17 of 541 prompts); 'detectable_format:json' occurs 0 times",
+        "branch": "verify_format_constraints(): `if instruction_id == \"detectable_format:json\"` (lines 117-122); function ends `return True` (line 163)",
+        "consequence": "json.loads at :119 never executes on the shipped benchmark; the 17 JSON-format prompts auto-pass",
+        "rule_applied": "CONFIRMED requires model output to demonstrably reach the parse in a shipped evaluation path; it does not; REJECTED",
+        "prior_art_reported_by_reviewer": "confident-ai/deepeval issue #3063 (2026-08-14) and fix PR #3066 (2026-08-15) reportedly list json_format among always-pass ids — reported by a simulated reviewer with network access, NOT verified from this session",
+        "artifact": "experiments/deepeval_ifeval_reachability_2026-09-01.json"
+      }
+    }
+  ],
+  "the_finding_2026-08-31_superseded": "In seven actively-maintained eval packages (releases 2026-04-07 to 2026-08-30), the shipped tool surfaced 64 candidate sites; hand adjudication confirms TWO. (1) Braintrust autoevals JSONDiff, executed: the identical correct answer scores 1.0000 bare and 0.2152 fenced. (2) deepeval's IFEval verifier scores a fenced answer as a constraint violation on an instruction that EXPLICITLY PERMITS markdown ticks — the reference checker strips the fence; deepeval's does not. Five of seven packages remain clean, including lm-evaluation-harness at 733 files. The count was first published as one; the second was a rejection this census got wrong, overturned by an auditor reading the instruction text the adjudicator had only assumed — recorded at full size because an instrument that under-counts against itself and says so is the product.",
+  "correction_2026-09-01": "The 08-31 overturn of the deepeval rejection was itself wrong, in the flattering direction: it established what the instruction SAYS and never that the branch RUNS. google/IFEval emits 'detectable_format:json_format'; deepeval's branch tests 'detectable_format:json' and the function falls through to return True. The site is REJECTED under the census's first conjunct (reachability). What deepeval has instead — an unverified JSON constraint that auto-passes — is a different defect, not a fence instance, and is not counted. Found by a simulated reviewer (round 4) checking the claim against the shipped dataset; verified from the sdist and the canonical data file. Confirmed count: 1."
 }

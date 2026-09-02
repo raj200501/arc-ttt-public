@@ -35,8 +35,13 @@ def _arm(directory: Path, seed: int, arm: str, per_receipt: list[float]) -> None
     (directory / name).write_text(json.dumps(record))
 
 
-def _run(directory: Path) -> dict:
-    out = directory / "summary.json"
+def _run(directory: Path, out_dir: Path | None = None) -> dict:
+    # The output goes to out_dir when given: the live test below reads
+    # the REAL experiments/ directory and used to write its summary.json
+    # back into it, leaving the tracked artifact rewritten after every
+    # pytest run (a simulated reviewer found the tree dirty after the
+    # suite). Tests mutate copies, never the evidence.
+    out = (out_dir or directory) / "summary.json"
     subprocess.run(
         [sys.executable, str(SCRIPT), "--dir", str(directory),
          "--date", DATE, "--out", str(out)],
@@ -128,7 +133,7 @@ def test_published_verdict_matches_the_banked_arms(tmp_path: Path) -> None:
     published headline. If the banked arms and VERDICT.md ever disagree,
     this fails first."""
 
-    report = _run(REPO / "experiments")
+    report = _run(REPO / "experiments", out_dir=tmp_path)
     assert report["verdict"] == "PASS"
     assert report["pairs_complete"] == 6
     assert round(report["mean_delta"], 4) == 0.4035

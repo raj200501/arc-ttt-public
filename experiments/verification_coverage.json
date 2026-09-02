@@ -7,18 +7,18 @@
     "EXTERNAL": "third-party quote, labelled as such, not ours to verify."
   },
   "counts": {
-    "AGGREGATE": 72,
+    "AGGREGATE": 74,
     "ARITHMETIC": 81,
     "EXTERNAL": 7,
     "PRIMARY": 49
   },
-  "total_artifacts": 209,
+  "total_artifacts": 211,
   "excluded_as_gate_exhaust": [
     "verification_coverage.json",
     "outbound_reconciliation.json"
   ],
   "primary_verifiable": 49,
-  "primary_verifiable_fraction": 0.2344,
+  "primary_verifiable_fraction": 0.2322,
   "why_the_total_is_banked": "Outbound copy cites this total ('179 banked artifacts') and the reconciliation gate had been matching it against an unrelated 179 in an unrelated artifact -- a figure that traced to nothing, passing because some number of that value happened to exist somewhere. A cited figure has to be a figure this map deliberately publishes.",
   "artifacts": [
     {
@@ -26,6 +26,12 @@
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
       "bytes": 5123
+    },
+    {
+      "artifact": "authorship_ledger_2026-09-01.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 641
     },
     {
       "artifact": "blind_rehearsal_2026-08-20.json",
@@ -49,7 +55,7 @@
       "artifact": "census_extension_live_2026-08-31.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 8269
+      "bytes": 10720
     },
     {
       "artifact": "cord_fence_tax_2026-08-25.json",
@@ -362,6 +368,12 @@
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
       "bytes": 5040
+    },
+    {
+      "artifact": "deepeval_ifeval_reachability_2026-09-01.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 2095
     },
     {
       "artifact": "fence_census.json",
@@ -967,7 +979,7 @@
       "artifact": "review_simulation.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 26915
+      "bytes": 35731
     },
     {
       "artifact": "schema_conformance_decomposition_2026-08-22.json",

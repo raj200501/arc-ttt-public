@@ -67,12 +67,22 @@ def build_task(train_rows: list[dict], holdout_rows: list[dict]):
 
 def write_outputs(out_dir: pathlib.Path, holdout_rows: list[dict],
                   raw_texts: list[str | None]) -> list[dict]:
+    # The fence policy of this repository is symmetric-or-absent, and
+    # until 2026-09-01 this writer was the one place it was ABSENT: a
+    # bare json.loads that recorded a fenced-but-correct answer as null
+    # -- the exact defect tools/fencecheck.py flags in other people's
+    # code, in the runner that produced this project's own arms (a
+    # simulated reviewer ran the tool on the repo and named the line).
+    # One leading fence is now stripped before the parse, the same
+    # strip every reader applies, and whether it fired is banked.
+    from fence_rescore import strip_fence  # scripts/ is this file's dir
     predictions = []
     for row, text in zip(holdout_rows, raw_texts):
-        parsed = None
+        parsed, fenced = None, False
         if text:
+            cleaned, fenced = strip_fence(text)
             try:
-                candidate = json.loads(text)
+                candidate = json.loads(cleaned)
                 if isinstance(candidate, dict):
                     parsed = candidate
             except json.JSONDecodeError:
@@ -84,7 +94,7 @@ def write_outputs(out_dir: pathlib.Path, holdout_rows: list[dict],
         # null documents in the prompted baseline are unrecoverable
         # forever. No new arm inherits that.
         predictions.append({"id": row["id"], "prediction": parsed,
-                            "raw": text})
+                            "raw": text, "fenced": fenced})
     with open(out_dir / "predictions.jsonl", "w", encoding="utf-8") as f:
         for row in predictions:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")

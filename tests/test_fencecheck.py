@@ -450,3 +450,43 @@ def test_score_accepts_a_single_output_record(tmp_path) -> None:
                       encoding="utf-8")
     report = fc.score_file(record)
     assert report["outputs"] == 1 and report["recovered_by_stripping"] == 1
+
+
+def test_score_refuses_records_whose_output_is_already_parsed(tmp_path) -> None:
+    """R4's round-4 find, pinned: a predictions file whose `prediction`
+    field is the PARSED object (or null) has no model text to classify.
+    The tool used to skip the dict, fall through to 'any string in the
+    record', score the document ids, and print a clean bill with exit
+    0 — the exact shape of this repository's own older predictions
+    files. Now: counted as already-parsed, refused when that is all
+    there is."""
+    preds = tmp_path / "predictions.jsonl"
+    preds.write_text(
+        '{"id": "WB-0101", "prediction": {"a": 1}}\n'
+        '{"id": "WB-0102", "prediction": null}\n', encoding="utf-8")
+    report = fc.score_file(preds)
+    assert report["outputs"] == 0
+    assert report["already_parsed_records"] == 2
+
+
+def test_score_never_scores_metadata_strings(tmp_path) -> None:
+    """The any-string fallback skips ids, model names and the like, so a
+    record with no output text contributes nothing rather than its id."""
+    preds = tmp_path / "odd.jsonl"
+    preds.write_text('{"id": "doc-7", "model": "Qwen", "meta": {"k": 1}}\n'
+                     '{"id": "doc-8", "model": "Qwen", "meta": {"k": 2}}\n',
+                     encoding="utf-8")
+    report = fc.score_file(preds)
+    assert report["outputs"] == 0
+
+
+def test_score_uses_raw_text_when_parsed_object_sits_beside_it(tmp_path) -> None:
+    """A record carrying BOTH a parsed `prediction` and raw text is a
+    normal scoreable record — the refusal is scoped to text-less ones."""
+    preds = tmp_path / "both.jsonl"
+    preds.write_text(json.dumps({"id": "d1", "prediction": {"a": 1},
+                                 "raw": '```json\n{"a": 1}\n```'}) + "\n",
+                     encoding="utf-8")
+    report = fc.score_file(preds)
+    assert report["outputs"] == 1 and report["recovered_by_stripping"] == 1
+    assert report["already_parsed_records"] == 0

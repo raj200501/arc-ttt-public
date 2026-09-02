@@ -43,10 +43,10 @@ OUTWARD_MARKERS = ("email", "deck", "one-pager", "outbound", "sent",
                    "public", "readme", "headline", "verdict", "press")
 
 
-def rows() -> list[dict]:
+def rows(ledger: pathlib.Path = LEDGER) -> list[dict]:
     out: list[dict] = []
     section = "(before any heading)"
-    for line in LEDGER.read_text(encoding="utf-8").split("\n"):
+    for line in ledger.read_text(encoding="utf-8").split("\n"):
         if line.startswith("## "):
             section = line[3:].strip()
             continue
@@ -148,9 +148,15 @@ def main() -> int:
                         help="rewrite counts quoted in outbound copy to "
                              "match this run, the way sync_test_counts.py "
                              "does for the test count")
+    parser.add_argument("--ledger", default=str(LEDGER),
+                        help="the corrections page to count (default: the "
+                             "tree's CORRECTIONS.md). Exists so the "
+                             "mutation test can feed a stripped COPY; two "
+                             "concurrent suite runs once left the real "
+                             "page with 193 lines deleted, 2026-09-01.")
     args = parser.parse_args()
 
-    entries = rows()
+    entries = rows(pathlib.Path(args.ledger))
     if not entries:
         raise SystemExit(
             "CORRECTIONS.md parsed to zero dated rows. Either the page has "

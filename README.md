@@ -76,13 +76,19 @@ handled a level up.
 
 **And the least flattering frame, stated first where it counts:** a
 preregistered census over **7 actively-maintained packages** (releases
-2026-04 to 2026-08) found **2 confirmed instances and 5 packages
-clean** — Braintrust `autoevals` `JSONDiff` (the identical correct
-answer scores 1.0000 bare vs 0.2152 fenced, executed) and deepeval's
-IFEval verifier — with lm-evaluation-harness clean at 733 files
+2026-04 to 2026-08) found **1 confirmed instance** — Braintrust
+`autoevals` `JSONDiff`, where the identical correct answer scores
+1.0000 bare vs 0.2152 fenced, executed — **and no confirmed instance
+in the other 6**, lm-evaluation-harness clean at 733 files
 ([`experiments/census_extension_live_2026-08-31.json`](experiments/census_extension_live_2026-08-31.json)).
+This count was published as 2 for one day: deepeval's IFEval verifier
+was confirmed on its instruction text and then found unreachable on
+the dataset it ships against (its JSON branch tests an id the data
+never carries and falls through to pass) —
+[`CORRECTIONS.md`](CORRECTIONS.md) 2026-09-01, with the reachability
+check banked.
 
-**Quote 7 of 34 and 2 of 7, never a rate over the ecosystem.** This is a lower bound
+**Quote 7 of 34 and 1 of 7, never a rate over the ecosystem.** This is a lower bound
 among the packages searched, and it is not a claim that any package is
 buggy. Two mechanical classifiers failed their own preregistered accuracy
 gates before this one was done by hand (60%, then 70%, against an 80%
@@ -418,7 +424,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 344 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 347 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -480,28 +486,44 @@ sharpening. No claims beyond the artifacts in `experiments/`.
 Roughly **four in five commits in the source tree are authored by
 `Claude <noreply@anthropic.com>`** — an autonomous agent organisation
 Raj Kashikar built and operates — rather than by Raj himself
-(**411 against 82 as of 2026-09-01**, `git shortlog -sne` in the source
-tree; the exact figures move with every commit, the ratio is the
-claim). Every file in the fence lane — the tool, all three census runs,
+(**414 against 82**, banked at source HEAD `72a939a` on 2026-09-01 in
+`experiments/authorship_ledger_2026-09-01.json`; the exact figures move
+with every commit, the ratio is the claim). Every file in the fence lane — the tool, all three census runs,
 the hand-adjudication, the impact table, the CORD replication — is
 agent-authored.
 
 **The public repository's own `git shortlog` does not return this
 ratio, and before 2026-09-01 it returned the inverse.** This repo is
-published as fresh-history exports (`scripts/export_public.sh`, shipped
-in this tree), and every export event before that date was committed
-under Raj's name — so the metadata a reader checks attributed the agent
-org's work to the human. Three independent reviewers ran the command
-and caught it. Export commits are now authored as the agent work they
-are, with the squash's limitation disclosed in the commit message, and
-this section is the measured ledger. Dated correction:
-`CORRECTIONS.md` 2026-09-01.
+published as fresh-history exports, and every export event before that
+date was committed under Raj's name — so the metadata a reader checks
+attributed the agent org's work to the human. Three simulated
+reviewers — adversarial reviewer agents run against this repository by
+its own operator, independently of each other, not humans from outside
+the project — ran the command and caught it. Export commits are now
+authored as the agent work they are, with the squash's limitation
+disclosed in the commit message. Dated correction: `CORRECTIONS.md`
+2026-09-01.
+
+**What this tree can and cannot verify about that.** The export script
+is *not* in this tree — it carries the leak-gate vocabulary and is
+private — and the first version of this section said it was shipped
+here, which a reviewer caught within the day (second dated correction,
+same page). What is here: `scripts/authorship_ledger.py`, which banks
+the per-author commit split of whatever tree it runs in *together with
+that tree's HEAD and remote*, and
+`experiments/authorship_ledger_2026-09-01.json`, the source tree's
+ledger banked at a named SHA. Run the script here and it reports this
+export's own numbers and says so. **The source-tree ratio cannot be
+re-derived from this repository**; it is a disclosure backed by a banked
+artifact, not a command you can run here, and this section no longer
+pretends otherwise. Every commit on this branch since 2026-08-30 is
+authored as the work it is.
 
 ## Repository layout
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 344 offline tests (tiny in-test models; no downloads).
+- `tests/` — 347 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured
