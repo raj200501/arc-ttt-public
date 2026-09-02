@@ -6,9 +6,13 @@ fence, code that calls ``json.loads`` on it gets a parse failure. If that
 failure becomes a score, a correct answer becomes a zero.
 
 That is not a small effect. On a 30-document extraction task, a
-Qwen2.5-3B produced a correct object for every document and scored
-**0.0000 with 30 of 30 unparseable**. Removing the fence and changing
-nothing else: **0.8958, zero invalid**.
+Qwen2.5-3B produced a well-formed JSON object for every document and
+scored **0.0000 with 30 of 30 unparseable**. Removing the fence and
+changing nothing else: **0.8958 mean micro-F1, zero invalid**. Note the
+precise claim: every output was well-formed, not every output was
+exactly right — a 0.8958 mean is not thirty perfect extractions, and
+saying "correct object" for both is the kind of slide this tool exists
+to catch in other people's numbers.
 
 Two commands, no installation, Python 3.9+, standard library only:
 
@@ -47,8 +51,16 @@ PARSE_CALLS = {"loads", "decode", "literal_eval", "safe_load", "load"}
 PARSE_MODULES = {"json", "ast", "yaml", "json5", "demjson3", "dirtyjson",
                  "simplejson", "ujson", "orjson"}
 
+# `model_text`, `sampled`, `raw_output` joined after a reviewer wrote a
+# synthetic fail-open grader using `model_text` and the scan came back
+# clean — a conservative miss, consistent with the precision-first
+# design, and still a miss worth closing when the fix is three tokens.
+# `sampled` is how openai/evals names the completion in its basic
+# elsuites, so its absence here meant the tool found json_match.py only
+# through the enclosing function's vocabulary, not the variable's.
 MODEL_WORDS = re.compile(
     r"\b(completion|response|generation|generated|model_output|output_text"
+    r"|model_text|raw_output|sampled"
     r"|llm|predict|prediction|answer|assistant|choices)\b", re.I)
 
 FENCE_MARKERS = re.compile(
@@ -215,10 +227,17 @@ def scan_path(root: pathlib.Path) -> tuple[list[dict], int]:
         except OSError:
             continue
         files += 1
-        try:
-            shown = path.relative_to(root)
-        except ValueError:
-            shown = path
+        # When `root` IS the file, `relative_to` returns `.` and every
+        # finding is reported against a path that names nothing. Scanning
+        # a single file is the first thing anyone tries on a tool they
+        # just downloaded, so this was the first output a reviewer saw.
+        if path == root:
+            shown = path.name
+        else:
+            try:
+                shown = path.relative_to(root)
+            except ValueError:
+                shown = path
         findings.extend(scan_source(source, str(shown)))
     return findings, files
 
@@ -235,22 +254,55 @@ def strip_fence(text: str) -> tuple[str, bool]:
     return body.strip(), True
 
 
+_OUTPUT_KEYS = ("prediction", "output", "completion", "response",
+                "generation", "text", "raw", "answer", "content")
+# Strings that are never the model's output, so the any-string fallback
+# must not score them. A reviewer fed `score` a predictions file whose
+# `prediction` field held the PARSED object (a dict) and got a clean
+# bill: the tool skipped the dict, fell through to "any string", and
+# scored the document ids. A fail-open in the fail-open detector, again.
+_METADATA_KEYS = frozenset({"id", "doc_id", "document_id", "task_id",
+                            "name", "model", "date", "seed", "split",
+                            "arm", "mode", "config", "run", "sha256"})
+
+
+def _already_parsed(record: object) -> bool:
+    """True when the record carries an OUTPUT key whose value is not
+    text -- a dict, list or null: an already-parsed object, not model
+    text. There is nothing to classify in such a record, and nothing
+    beside it is the model's output either."""
+    if not isinstance(record, dict):
+        return False
+    present = [k for k in _OUTPUT_KEYS if k in record]
+    return bool(present) and not any(
+        isinstance(record[k], str) for k in present)
+
+
 def _candidate_strings(record: object):
     """Any string in the record that might be the model's raw output."""
     if isinstance(record, str):
         yield record
         return
     if isinstance(record, dict):
-        preferred = ("prediction", "output", "completion", "response",
-                     "generation", "text", "raw", "answer", "content")
-        for key in preferred:
-            value = record.get(key)
-            if isinstance(value, str):
+        present = [k for k in _OUTPUT_KEYS if k in record]
+        if present:
+            for key in present:
+                if isinstance(record[key], str):
+                    yield record[key]
+                    return
+            return  # output keys present, none of them text: parsed
+        for key, value in record.items():
+            if isinstance(value, str) and key not in _METADATA_KEYS:
                 yield value
-                return
-        for value in record.values():
-            if isinstance(value, str):
-                yield value
+
+
+def _whole_json(text: str):
+    # fencecheck: ignore -- asking whether a whole FILE is one JSON
+    # document, to refuse it; not classifying model output.
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        return None
 
 
 def score_file(path: pathlib.Path) -> dict:
@@ -260,18 +312,54 @@ def score_file(path: pathlib.Path) -> dict:
     if stripped.startswith("["):
         loaded = json.loads(stripped)
         records = loaded if isinstance(loaded, list) else [loaded]
+    elif stripped.startswith("{") and (whole := _whole_json(stripped)) is not None:
+        # The file is ONE JSON document. That is a legitimate input only
+        # if it is itself an output record (it carries one of the keys
+        # this tool reads model text from). Anything else -- an
+        # experiment artifact, a config, a summary -- used to fall
+        # through to the line scorer, score its own pretty-printed
+        # LINES, find no fences in them, and print a clean bill with
+        # exit 0. A reviewer fed this tool a banked artifact and got
+        # "Nothing is being lost to a fence in this file" for a file
+        # containing fenced outputs three levels deep. A fail-open in
+        # the fail-open detector; it now refuses loudly instead.
+        preferred = _OUTPUT_KEYS
+        if isinstance(whole, dict) and any(
+                isinstance(whole.get(k), str) for k in preferred):
+            records = [whole]
+        else:
+            return {"refused": (
+                "this file is a single JSON document, not a file of model "
+                "outputs. score reads JSONL (one output record per line), "
+                "a JSON list of records, or a single record carrying one "
+                "of: " + ", ".join(preferred) + ". Point it at the "
+                "predictions file, not the experiment artifact.")}
     else:
+        parsed_lines = unparsed_lines = 0
         for line in stripped.split("\n"):
             if not line.strip():
                 continue
             try:
                 records.append(json.loads(line))
+                parsed_lines += 1
             except json.JSONDecodeError:
                 records.append(line)
+                unparsed_lines += 1
+        if parsed_lines and unparsed_lines:
+            return {"refused": (
+                f"{parsed_lines} line(s) parse as JSON and "
+                f"{unparsed_lines} do not -- that is neither JSONL nor "
+                "plain-text completions, and scoring the readable subset "
+                "would report a rate about a file it did not read. Fix "
+                "or split the file.")}
 
     total = fenced = valid_asis = valid_stripped = recovered = 0
+    already_parsed = 0
     examples: list[str] = []
     for record in records:
+        if _already_parsed(record):
+            already_parsed += 1
+            continue
         for text in _candidate_strings(record):
             total += 1
             cleaned, was_fenced = strip_fence(text)
@@ -291,6 +379,7 @@ def score_file(path: pathlib.Path) -> dict:
         "parse_as_written": valid_asis,
         "parse_after_stripping": valid_stripped,
         "recovered_by_stripping": recovered,
+        "already_parsed_records": already_parsed,
         "examples": examples,
     }
 
@@ -352,11 +441,25 @@ def main(argv: list[str] | None = None) -> int:
         return 1 if findings else 0
 
     report = score_file(target)
+    if report.get("refused"):
+        if args.json:
+            print(json.dumps(report, indent=2))
+        else:
+            print("fencecheck: REFUSING to score -- " + report["refused"])
+        return 2
+
     if args.json:
         print(json.dumps(report, indent=2))
         return 1 if report["recovered_by_stripping"] else 0
 
     total = report["outputs"]
+    if not total and report.get("already_parsed_records"):
+        print(f"fencecheck: REFUSING to score -- all "
+              f"{report['already_parsed_records']} record(s) carry an "
+              "output field that is already a parsed object (or null), "
+              "not model text. There is no fence to find in a parse "
+              "tree; point score at the file that stores the RAW text.")
+        return 2
     if not total:
         print("fencecheck: no model outputs found in that file.")
         print("Expected JSONL or a JSON list, with the raw model text under "

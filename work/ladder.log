@@ -1,0 +1,164 @@
+=== E2 samples=2 2026-08-31T20:11:47Z
+[challenge] 20 training pairs, 30 holdout documents
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:00<04:17,  1.12it/s]Loading weights:  51%|█████     | 147/290 [00:01<00:00, 196.52it/s]Loading weights:  75%|███████▍  | 217/290 [00:01<00:00, 180.02it/s]Loading weights:  91%|█████████ | 263/290 [00:01<00:00, 171.95it/s]Loading weights: 100%|██████████| 290/290 [00:01<00:00, 152.45it/s]
+trunk gradient_checkpointing=False
+[challenge] adapted (doc-only recipe) in 39.5s
+[challenge] doc 1/30 (14.2s)
+[challenge] doc 2/30 (15.1s)
+[challenge] doc 3/30 (14.1s)
+[challenge] doc 4/30 (13.4s)
+[challenge] doc 5/30 (14.4s)
+[challenge] doc 6/30 (13.3s)
+[challenge] doc 7/30 (14.8s)
+[challenge] doc 8/30 (14.3s)
+[challenge] doc 9/30 (13.6s)
+[challenge] doc 10/30 (13.2s)
+[challenge] doc 11/30 (14.2s)
+[challenge] doc 12/30 (15.0s)
+[challenge] doc 13/30 (14.0s)
+[challenge] doc 14/30 (13.7s)
+[challenge] doc 15/30 (15.4s)
+[challenge] doc 16/30 (14.6s)
+[challenge] doc 17/30 (13.7s)
+[challenge] doc 18/30 (12.9s)
+[challenge] doc 19/30 (13.8s)
+[challenge] doc 20/30 (14.1s)
+[challenge] doc 21/30 (15.5s)
+[challenge] doc 22/30 (13.9s)
+[challenge] doc 23/30 (13.5s)
+[challenge] doc 24/30 (14.6s)
+[challenge] doc 25/30 (14.1s)
+[challenge] doc 26/30 (14.4s)
+[challenge] doc 27/30 (14.2s)
+[challenge] doc 28/30 (14.8s)
+[challenge] doc 29/30 (14.2s)
+[challenge] doc 30/30 (14.2s)
+[challenge] deliverables in work/e2_s2/ — 30/30 predictions parsed as JSON objects; adapter sha256 49ae6b6d21540c41…
+=== E2 samples=2 OK 2026-08-31T20:20:28Z
+=== E2 samples=4 2026-08-31T20:20:28Z
+[challenge] 20 training pairs, 30 holdout documents
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:00<01:23,  3.47it/s]Loading weights:  51%|█████     | 148/290 [00:00<00:00, 477.45it/s]Loading weights:  79%|███████▉  | 229/290 [00:00<00:00, 391.79it/s]Loading weights:  99%|█████████▉| 288/290 [00:01<00:00, 263.93it/s]Loading weights: 100%|██████████| 290/290 [00:01<00:00, 280.62it/s]
+trunk gradient_checkpointing=False
+[challenge] adapted (doc-only recipe) in 37.6s
+[challenge] doc 1/30 (26.7s)
+[challenge] doc 2/30 (28.8s)
+[challenge] doc 3/30 (29.3s)
+[challenge] doc 4/30 (27.8s)
+[challenge] doc 5/30 (27.5s)
+[challenge] doc 6/30 (27.8s)
+[challenge] doc 7/30 (30.5s)
+[challenge] doc 8/30 (27.5s)
+[challenge] doc 9/30 (26.2s)
+[challenge] doc 10/30 (27.7s)
+[challenge] doc 11/30 (29.2s)
+[challenge] doc 12/30 (30.3s)
+[challenge] doc 13/30 (27.7s)
+[challenge] doc 14/30 (28.0s)
+[challenge] doc 15/30 (31.6s)
+[challenge] doc 16/30 (30.7s)
+[challenge] doc 17/30 (28.0s)
+[challenge] doc 18/30 (26.9s)
+[challenge] doc 19/30 (26.9s)
+[challenge] doc 20/30 (29.4s)
+[challenge] doc 21/30 (30.8s)
+[challenge] doc 22/30 (28.9s)
+[challenge] doc 23/30 (27.4s)
+[challenge] doc 24/30 (29.0s)
+[challenge] doc 25/30 (28.8s)
+[challenge] doc 26/30 (28.4s)
+[challenge] doc 27/30 (27.6s)
+[challenge] doc 28/30 (30.8s)
+[challenge] doc 29/30 (27.2s)
+[challenge] doc 30/30 (27.4s)
+[challenge] deliverables in work/e2_s4/ — 30/30 predictions parsed as JSON objects; adapter sha256 64baf52c0000f1e4…
+=== E2 samples=4 OK 2026-08-31T20:35:31Z
+=== E3 0.5B adapted+k20 2026-08-31T20:35:31Z
+[challenge] 20 training pairs, 30 holdout documents
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:   0%|          | 1/290 [00:00<00:30,  9.52it/s]Loading weights:  63%|██████▎   | 183/290 [00:00<00:00, 1002.28it/s]Loading weights:  97%|█████████▋| 282/290 [00:00<00:00, 936.14it/s] Loading weights: 100%|██████████| 290/290 [00:00<00:00, 878.45it/s]
+trunk gradient_checkpointing=False
+[challenge] adapted (doc-only recipe) in 36.1s
+[challenge] doc 1/30 (44.2s)
+[challenge] doc 2/30 (43.9s)
+[challenge] doc 3/30 (44.1s)
+[challenge] doc 4/30 (42.6s)
+[challenge] doc 5/30 (43.2s)
+[challenge] doc 6/30 (43.6s)
+[challenge] doc 7/30 (44.3s)
+[challenge] doc 8/30 (43.7s)
+[challenge] doc 9/30 (43.4s)
+[challenge] doc 10/30 (43.3s)
+[challenge] doc 11/30 (43.2s)
+[challenge] doc 12/30 (44.4s)
+[challenge] doc 13/30 (44.3s)
+[challenge] doc 14/30 (43.5s)
+[challenge] doc 15/30 (45.2s)
+[challenge] doc 16/30 (44.8s)
+[challenge] doc 17/30 (43.4s)
+[challenge] doc 18/30 (44.2s)
+[challenge] doc 19/30 (44.5s)
+[challenge] doc 20/30 (44.0s)
+[challenge] doc 21/30 (45.8s)
+[challenge] doc 22/30 (43.7s)
+[challenge] doc 23/30 (42.8s)
+[challenge] doc 24/30 (44.8s)
+[challenge] doc 25/30 (44.5s)
+[challenge] doc 26/30 (44.2s)
+[challenge] doc 27/30 (45.2s)
+[challenge] doc 28/30 (43.5s)
+[challenge] doc 29/30 (44.0s)
+[challenge] doc 30/30 (43.2s)
+[challenge] deliverables in work/e3_05b/ — 30/30 predictions parsed as JSON objects; adapter sha256 64baf52c0000f1e4…
+=== E3 0.5B adapted+k20 OK 2026-08-31T20:58:15Z
+=== E5 3B adapted+k20 (Q's adapter, bfloat16) 2026-08-31T20:58:15Z
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/434 [00:00<?, ?it/s]Loading weights:   1%|▏         | 6/434 [00:03<03:52,  1.84it/s]Loading weights:   2%|▏         | 10/434 [00:04<03:24,  2.07it/s]Loading weights:   4%|▎         | 16/434 [00:06<02:29,  2.80it/s]Loading weights:   4%|▍         | 17/434 [00:07<03:17,  2.11it/s]Loading weights:   4%|▍         | 19/434 [00:09<03:42,  1.87it/s]Loading weights:   5%|▍         | 21/434 [00:10<04:07,  1.67it/s]Loading weights:   6%|▌         | 25/434 [00:14<04:58,  1.37it/s]Loading weights:   7%|▋         | 29/434 [00:18<05:27,  1.24it/s]Loading weights:   7%|▋         | 32/434 [00:18<04:05,  1.63it/s]Loading weights:   8%|▊         | 34/434 [00:19<03:46,  1.76it/s]Loading weights:   9%|▊         | 37/434 [00:19<02:38,  2.50it/s]Loading weights:   9%|▉         | 39/434 [00:21<03:12,  2.05it/s]Loading weights:   9%|▉         | 40/434 [00:22<04:07,  1.59it/s]Loading weights:   9%|▉         | 41/434 [00:23<04:24,  1.49it/s]Loading weights:  10%|▉         | 42/434 [00:24<04:51,  1.34it/s]Loading weights:  11%|█         | 48/434 [00:26<02:55,  2.20it/s]Loading weights:  12%|█▏        | 51/434 [00:28<03:48,  1.68it/s]Loading weights:  12%|█▏        | 52/434 [00:29<03:51,  1.65it/s]Loading weights:  12%|█▏        | 54/434 [00:30<03:18,  1.91it/s]Loading weights:  13%|█▎        | 58/434 [00:32<03:32,  1.77it/s]Loading weights:  14%|█▎        | 59/434 [00:33<03:44,  1.67it/s]Loading weights:  15%|█▍        | 64/434 [00:34<02:32,  2.43it/s]Loading weights:  17%|█▋        | 72/434 [00:36<01:51,  3.25it/s]Loading weights:  17%|█▋        | 73/434 [00:37<02:31,  2.39it/s]Loading weights:  17%|█▋        | 74/434 [00:39<03:19,  1.81it/s]Loading weights:  18%|█▊        | 80/434 [00:40<01:59,  2.95it/s]Loading weights:  20%|█▉        | 85/434 [00:40<01:29,  3.88it/s]Loading weights:  22%|██▏       | 94/434 [00:44<01:58,  2.86it/s]Loading weights:  23%|██▎       | 98/434 [00:45<01:50,  3.05it/s]Loading weights:  23%|██▎       | 100/434 [00:49<03:00,  1.85it/s]Loading weights:  23%|██▎       | 101/434 [00:50<03:28,  1.60it/s]Loading weights:  25%|██▍       | 108/434 [00:51<01:57,  2.76it/s]Loading weights:  26%|██▌       | 112/434 [00:52<01:58,  2.73it/s]Loading weights:  26%|██▋       | 114/434 [00:55<02:35,  2.06it/s]Loading weights:  26%|██▋       | 115/434 [00:57<03:30,  1.51it/s]Loading weights:  28%|██▊       | 120/434 [00:57<02:14,  2.34it/s]Loading weights:  29%|██▉       | 126/434 [00:58<01:27,  3.53it/s]Loading weights:  29%|██▉       | 127/434 [00:59<01:59,  2.56it/s]Loading weights:  29%|██▉       | 128/434 [01:03<03:39,  1.40it/s]Loading weights:  30%|███       | 132/434 [01:03<02:35,  1.94it/s]Loading weights:  31%|███       | 133/434 [01:04<02:37,  1.91it/s]Loading weights:  31%|███▏      | 136/434 [01:09<04:25,  1.12it/s]Loading weights:  32%|███▏      | 141/434 [01:10<02:46,  1.76it/s]Loading weights:  34%|███▍      | 148/434 [01:13<02:40,  1.79it/s]Loading weights:  35%|███▍      | 151/434 [01:17<03:17,  1.43it/s]Loading weights:  37%|███▋      | 160/434 [01:18<01:50,  2.48it/s]Loading weights:  37%|███▋      | 161/434 [01:19<02:03,  2.22it/s]Loading weights:  38%|███▊      | 166/434 [01:23<02:29,  1.80it/s]Loading weights:  38%|███▊      | 167/434 [01:24<02:55,  1.52it/s]Loading weights:  39%|███▉      | 170/434 [01:26<02:33,  1.72it/s]Loading weights:  40%|███▉      | 172/434 [01:26<02:19,  1.88it/s]Loading weights:  41%|████      | 177/434 [01:29<02:21,  1.82it/s]Loading weights:  41%|████      | 178/434 [01:31<02:53,  1.48it/s]Loading weights:  42%|████▏     | 182/434 [01:32<02:02,  2.06it/s]Loading weights:  43%|████▎     | 187/434 [01:32<01:25,  2.88it/s]Loading weights:  43%|████▎     | 188/434 [01:37<03:20,  1.23it/s]Loading weights:  45%|████▍     | 194/434 [01:38<01:55,  2.08it/s]Loading weights:  45%|████▌     | 196/434 [01:38<01:44,  2.28it/s]Loading weights:  46%|████▋     | 201/434 [01:40<01:30,  2.57it/s]Loading weights:  47%|████▋     | 203/434 [01:41<01:40,  2.29it/s]Loading weights:  47%|████▋     | 204/434 [01:43<02:11,  1.75it/s]Loading weights:  48%|████▊     | 207/434 [01:43<01:42,  2.21it/s]Loading weights:  48%|████▊     | 209/434 [01:44<01:34,  2.38it/s]Loading weights:  49%|████▉     | 214/434 [01:48<02:12,  1.66it/s]Loading weights:  50%|█████     | 217/434 [01:49<02:02,  1.77it/s]Loading weights:  51%|█████     | 222/434 [01:53<02:10,  1.62it/s]Loading weights:  52%|█████▏    | 227/434 [01:54<01:41,  2.05it/s]Loading weights:  54%|█████▎    | 233/434 [01:58<01:45,  1.90it/s]Loading weights:  54%|█████▍    | 235/434 [01:59<01:53,  1.75it/s]Loading weights:  55%|█████▌    | 240/434 [02:00<01:20,  2.40it/s]Loading weights:  56%|█████▋    | 245/434 [02:01<01:03,  2.96it/s]Loading weights:  57%|█████▋    | 249/434 [02:02<01:03,  2.93it/s]Loading weights:  58%|█████▊    | 251/434 [02:04<01:13,  2.50it/s]Loading weights:  59%|█████▊    | 254/434 [02:13<03:13,  1.07s/it]Loading weights:  59%|█████▉    | 256/434 [02:14<02:52,  1.03it/s]Loading weights:  59%|█████▉    | 257/434 [02:15<02:51,  1.03it/s]Loading weights:  59%|█████▉    | 258/434 [02:17<03:18,  1.13s/it]Loading weights:  60%|██████    | 261/434 [02:19<02:42,  1.07it/s]Loading weights:  61%|██████    | 263/434 [02:21<02:39,  1.07it/s]Loading weights:  62%|██████▏   | 270/434 [02:22<01:18,  2.09it/s]Loading weights:  62%|██████▏   | 271/434 [02:22<01:20,  2.02it/s]Loading weights:  64%|██████▍   | 278/434 [02:27<01:29,  1.74it/s]Loading weights:  65%|██████▌   | 283/434 [02:28<01:05,  2.30it/s]Loading weights:  66%|██████▌   | 287/434 [02:28<00:52,  2.83it/s]Loading weights:  67%|██████▋   | 290/434 [02:29<00:53,  2.68it/s]Loading weights:  67%|██████▋   | 291/434 [02:32<01:24,  1.70it/s]Loading weights:  68%|██████▊   | 297/434 [02:34<01:00,  2.27it/s]Loading weights:  69%|██████▉   | 300/434 [02:34<00:52,  2.55it/s]Loading weights:  70%|██████▉   | 303/434 [02:36<00:55,  2.37it/s]Loading weights:  70%|███████   | 304/434 [02:39<01:35,  1.37it/s]Loading weights:  70%|███████   | 305/434 [02:40<01:36,  1.34it/s]Loading weights:  71%|███████   | 306/434 [02:41<01:35,  1.34it/s]Loading weights:  72%|███████▏  | 311/434 [02:46<01:51,  1.10it/s]Loading weights:  73%|███████▎  | 315/434 [02:47<01:15,  1.57it/s]Loading weights:  73%|███████▎  | 316/434 [02:47<01:15,  1.56it/s]Loading weights:  74%|███████▎  | 319/434 [02:50<01:29,  1.29it/s]Loading weights:  74%|███████▎  | 320/434 [02:52<01:43,  1.10it/s]Loading weights:  76%|███████▌  | 328/434 [02:54<00:50,  2.09it/s]Loading weights:  77%|███████▋  | 334/434 [02:57<00:51,  1.95it/s]Loading weights:  77%|███████▋  | 335/434 [02:59<00:59,  1.67it/s]Loading weights:  78%|███████▊  | 339/434 [02:59<00:42,  2.22it/s]Loading weights:  78%|███████▊  | 340/434 [03:00<00:44,  2.13it/s]Loading weights:  79%|███████▊  | 341/434 [03:02<00:59,  1.56it/s]Loading weights:  79%|███████▉  | 343/434 [03:05<01:20,  1.13it/s]Loading weights:  81%|████████  | 352/434 [03:06<00:31,  2.59it/s]Loading weights:  82%|████████▏ | 355/434 [03:06<00:27,  2.90it/s]Loading weights:  82%|████████▏ | 356/434 [03:08<00:35,  2.21it/s]Loading weights:  82%|████████▏ | 357/434 [03:10<00:47,  1.62it/s]Loading weights:  83%|████████▎ | 360/434 [03:12<00:49,  1.49it/s]Loading weights:  83%|████████▎ | 361/434 [03:14<01:02,  1.17it/s]Loading weights:  85%|████████▍ | 368/434 [03:16<00:34,  1.91it/s]Loading weights:  85%|████████▌ | 369/434 [03:19<00:51,  1.26it/s]Loading weights:  86%|████████▌ | 374/434 [03:20<00:31,  1.91it/s]Loading weights:  86%|████████▋ | 375/434 [03:23<00:50,  1.18it/s]Loading weights:  87%|████████▋ | 379/434 [03:25<00:40,  1.37it/s]Loading weights:  88%|████████▊ | 382/434 [03:26<00:30,  1.71it/s]Loading weights:  88%|████████▊ | 383/434 [03:27<00:30,  1.68it/s]Loading weights:  88%|████████▊ | 384/434 [03:30<00:47,  1.05it/s]Loading weights:  89%|████████▊ | 385/434 [03:32<00:52,  1.08s/it]Loading weights:  90%|█████████ | 391/434 [03:32<00:22,  1.90it/s]Loading weights:  90%|█████████ | 392/434 [03:33<00:23,  1.79it/s]Loading weights:  92%|█████████▏| 398/434 [03:35<00:14,  2.45it/s]Loading weights:  92%|█████████▏| 399/434 [03:38<00:23,  1.51it/s]Loading weights:  93%|█████████▎| 403/434 [03:38<00:14,  2.12it/s]Loading weights: 100%|██████████| 434/434 [03:38<00:00,  1.98it/s]
+  WB-2026-0101 1.000   355.5s
+  WB-2026-0102 1.000    54.7s
+  frt_0104 1.000    54.2s
+  az-0109 1.000    51.3s
+  az-0110 1.000    52.4s
+  m-2201 1.000    54.1s
+  m-2204 1.000    56.3s
+  m-2205 1.000    53.7s
+  m-2206 1.000    52.0s
+  m-2208 1.000    52.3s
+  m-2209 1.000    52.6s
+  m-2210 1.000    51.5s
+  m-2211 1.000    51.5s
+  m-2212 1.000    52.3s
+  h-3301 0.875    52.2s
+  h-3303 0.875    52.7s
+  h-3304 1.000    50.9s
+  h-3305 1.000    49.6s
+  h-3307 1.000    51.4s
+  h-3311 1.000    49.6s
+  h-3312 1.000    52.7s
+  x-4401 1.000    47.8s
+  x-4403 1.000    50.0s
+  x-4404 1.000    48.9s
+  x-4407 1.000    50.1s
+  x-4413 1.000    49.7s
+  x-4414 1.000    50.4s
+  x-4415 1.000    50.7s
+  x-4416 1.000    49.1s
+  x-4419 1.000    49.4s
+
+adapted 3B        0.9917  (0 invalid)
+best prompted 3B  0.9747  (kshot)
+our adapted 0.5B  0.8833
+D = +0.0170   sign 4W/0L/26T
+LADDER RUNG — no Addendum Q reading fires; see the engineering ladder reader
+Served with the k=20 demonstrations through the adapter. The ladder's frozen bar (the best prompted arm at the same size, two-statistics rule) is applied by scripts/ladder_reader.py, not here.
+
+banked: experiments/ladder_e5_3b_adapted_kshot_2026-08-31.json
+=== E5 OK 2026-08-31T21:33:07Z
+=== LADDER RUNS DONE — reader next 2026-08-31T21:33:07Z
+E2 samples=2: 0.8792 vs prompted 0.5B k-shot 0.7836 -> D=+0.0956 8W/5L/17T  FAILS — does not clear the two-statistics bar; both numbers 
+E2 samples=4: 0.8844 vs prompted 0.5B k-shot 0.7836 -> D=+0.1008 8W/5L/17T  FAILS — does not clear the two-statistics bar; both numbers 
+E3 0.5B adapted+k20: 0.8917 vs prompted 0.5B k-shot 0.7836 -> D=+0.1081 8W/4L/18T  FAILS — does not clear the two-statistics bar; both numbers 
+E5 3B adapted+k20: 0.9917 vs prompted 3B k-shot bf16 0.9747 -> D=+0.0170 4W/0L/26T  FAILS — does not clear the two-statistics bar; both numbers 
+banked: experiments/ladder_results_2026-08-31.json
+=== READER OK 2026-08-31T21:33:08Z
+=== ALL DONE 2026-08-31T21:33:08Z

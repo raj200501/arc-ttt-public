@@ -1,0 +1,14 @@
+{
+  "what": "E6 CORD split, deterministic, made before either arm ran.",
+  "source": "demo/cord_validation.jsonl",
+  "source_sha256": "5d920e3a35b161214aedcad0520b7275c06accf427cf924371964f0d304c8da4",
+  "rule": "ids cord-000..cord-099 in file order; random.Random(1).shuffle(indices); first 20 train (adaptation set and the k=20 demonstrations), next 80 evaluation \u2014 the cord_scale_run.py convention",
+  "date": "2026-08-31",
+  "n_train": 20,
+  "n_eval": 80,
+  "files": {
+    "train.jsonl": "431208ddfe21c80717c0e9dafc03cdd4b713db5352dca7e26a762ab490c862f1",
+    "holdout.jsonl": "4dc17f4e75cf065345255814efc9f3cc91ecb235cd29b00fa00edeecc7b6f2c1",
+    "gold.jsonl": "7073e77dcd315936ab94da603f75fff11953e2751adef49b08d2278c490fdc70"
+  }
+}

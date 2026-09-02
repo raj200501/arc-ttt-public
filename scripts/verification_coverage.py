@@ -42,6 +42,15 @@ import pathlib
 REPO = pathlib.Path(__file__).resolve().parent.parent
 EXPERIMENTS = REPO / "experiments"
 
+# Gate exhaust, not evidence. These two files are what verifiers WRITE,
+# so counting them as banked artifacts would let a gate inflate the
+# coverage total by running -- the same laundering defect the
+# reconciliation gate was already caught committing against its own
+# output. Named here and banked in the record so anything that needs to
+# reproduce this total reads the rule instead of re-deriving it; a
+# downstream copy of this tuple is a copy that goes stale on its own.
+EXHAUST = ("verification_coverage.json", "outbound_reconciliation.json")
+
 # Artifacts whose figures are third-party quotes rather than our runs.
 EXTERNAL_MARKERS = ("external list price", "external quote",
                     "not a measurement", "leaderboard")
@@ -75,8 +84,7 @@ def main() -> int:
 
     rows = []
     for path in sorted(EXPERIMENTS.glob("*.json")):
-        if path.name in ("verification_coverage.json",
-                         "outbound_reconciliation.json"):
+        if path.name in EXHAUST:
             continue
         try:
             record = json.loads(path.read_text(encoding="utf-8"))
@@ -108,6 +116,14 @@ def main() -> int:
         },
         "counts": counts,
         "total_artifacts": len(rows),
+        "excluded_as_gate_exhaust": list(EXHAUST),
+        # Banked as a COUNT as well as a fraction, because the count is
+        # the form outbound copy actually quotes -- "33 of 181 banked
+        # artifacts are primary-verifiable". Reconstructing it downstream
+        # as fraction x total is a rounding bug waiting for its first
+        # off-by-one, and it would be an off-by-one in the one number on
+        # the page that describes how checkable the rest of the page is.
+        "primary_verifiable": counts.get("PRIMARY", 0),
         "primary_verifiable_fraction": round(
             counts.get("PRIMARY", 0) / len(rows), 4) if rows else 0.0,
         "why_the_total_is_banked": (

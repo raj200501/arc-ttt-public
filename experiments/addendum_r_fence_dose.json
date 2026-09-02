@@ -1,0 +1,95 @@
+{
+  "what": "Addendum R. Every arm's stored outputs classified by tools/fencecheck.py, to separate prompt LENGTH from prompt FORMAT as the cause of fencing.",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct throughout \u2014 one model, so the only thing varying across rows is the prompt.",
+  "classified_by": "tools/fencecheck.py strip_fence(), the shipped tool, not a private reimplementation.",
+  "rows": [
+    {
+      "arm": "schema only",
+      "prompt_contains": "the tenant's field list, nothing else",
+      "artifact": "waybill_scale_rung_0.5b_schema_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "n_demonstrations": 0,
+      "mean_prompt_tokens": 196,
+      "n": 30,
+      "fenced": 30,
+      "fence_rate": 1.0,
+      "parses_as_written": 0,
+      "parses_after_stripping": 30,
+      "mean_micro_f1_as_scored": 0.0
+    },
+    {
+      "arm": "schema + 1 demo",
+      "prompt_contains": "the field list AND worked examples",
+      "artifact": "waybill_fence_dose_k1schema_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "n_demonstrations": 1,
+      "mean_prompt_tokens": 401,
+      "n": 30,
+      "fenced": 30,
+      "fence_rate": 1.0,
+      "parses_as_written": 0,
+      "parses_after_stripping": 30,
+      "mean_micro_f1_as_scored": 0.0
+    },
+    {
+      "arm": "k-shot k=1",
+      "prompt_contains": "demonstrations as chat turns, no field list",
+      "artifact": "waybill_fence_dose_k1_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "n_demonstrations": 1,
+      "mean_prompt_tokens": 326,
+      "n": 30,
+      "fenced": 8,
+      "fence_rate": 0.2667,
+      "parses_as_written": 15,
+      "parses_after_stripping": 22,
+      "mean_micro_f1_as_scored": 0.1614
+    },
+    {
+      "arm": "k-shot k=3",
+      "prompt_contains": "demonstrations as chat turns, no field list",
+      "artifact": "waybill_fence_dose_k3_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "n_demonstrations": 3,
+      "mean_prompt_tokens": 678,
+      "n": 30,
+      "fenced": 2,
+      "fence_rate": 0.0667,
+      "parses_as_written": 26,
+      "parses_after_stripping": 28,
+      "mean_micro_f1_as_scored": 0.7136
+    },
+    {
+      "arm": "k-shot k=20",
+      "prompt_contains": "demonstrations as chat turns, no field list",
+      "artifact": "waybill_scale_rung_0.5b_kshot_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "n_demonstrations": 20,
+      "mean_prompt_tokens": 4142,
+      "n": 30,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "parses_as_written": 27,
+      "parses_after_stripping": 27,
+      "mean_micro_f1_as_scored": 0.7836
+    }
+  ],
+  "missing_arms": [],
+  "erratum_2026-08-31_fence_rate_margin": {
+    "what": "Prediction h-3305 in the k=3 arm is a correct-shaped JSON object inside a ``` fence BEHIND a prose preamble. strip_fence recognizes only a LEADING fence, so this table counts it un-fenced: f(3) = 2/30 by the tool, 3/30 = 0.10 by eye.",
+    "effect_on_the_reading": "None in letter, everything in margin: reading (b) requires f(3) <= 0.10, which 0.10 satisfies EXACTLY -- the published reading survives by zero margin, stated here rather than discovered by a reader. The banked classification remains the shipped tool's, with this dated recount beside it, because changing the instrument after a preregistered reading is the move this repository does not make.",
+    "tool_scope_note": "Leading-fence-only is a deliberate scope for the tool's recovery question (a prose-prefixed fence is NOT rescued by stripping); for the bare 'did the model wrap its answer' question it undercounts, and this arm is the measured example.",
+    "found_by": "an adversarial audit agent reading the raw predictions"
+  },
+  "frozen_reading_applied": {
+    "reading": "(b) IT IS THE DEMONSTRATIONS, AND IT IS A DOSE: the published sentence stands with its dose-response curve attached, reported as measured.",
+    "rates": {
+      "f_k1": 0.2667,
+      "f_k3": 0.0667,
+      "f_schema_plus_demo": 1.0
+    }
+  },
+  "observation_outside_the_preregistered_menu": "schema + demo fences at 1.0 while being LONGER than the k=1 prompt that fences at 0.2667 -- the suppression measured in the k-shot family does not transfer into the schema regime, and length runs the wrong way for a length explanation. HYPOTHESIS-GENERATING, NOT CLAIM-BEARING: the reading that would license a format sentence did not fire.",
+  "the_finding": "(b) IT IS THE DEMONSTRATIONS, AND IT IS A DOSE: the published sentence stands with its dose-response curve attached, reported as measured. Beside it, one observation outside the frozen menu, held at hypothesis status -- see observation_outside_the_preregistered_menu.",
+  "what_this_does_not_show": "One model, one corpus, one seed, greedy decoding. It says nothing about other model families. It does not license any sentence about WHY the regimes differ beyond the frozen reading above \u2014 the format hypothesis stays a hypothesis until a follow-up with its own frozen readings runs. The k-shot arms are also worse at the task at low k, so nothing here is a recommendation to drop the schema."
+}

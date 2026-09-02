@@ -1,0 +1,47 @@
+{
+  "what": "A dated amendment to the fence census, produced by running the SHIPPED tool over a package the census had already adjudicated by hand. It found a site the census's narrowing classifier dropped before any human read it.",
+  "date": "2026-08-25",
+  "why_this_exists": "An outside reviewer checking the census noticed that tools/fencecheck.py reports a site which fence_census_run2.json had classified `argument_is_model_output: false` and therefore never sent to hand adjudication. He was right. The census was counted with an older classifier than the one shipped, so the shipped tool is strictly better than the instrument that produced the published number.",
+  "how_it_was_found": "python3 tools/fencecheck.py scan <extracted evals-3.0.1.post1 sdist>",
+  "tool_output_summary": "4 site(s) in 354 file(s)",
+  "sites": [
+    {
+      "site": "evals/elsuite/basic/json_match.py:80",
+      "call": "json.loads",
+      "verdict": "CONFIRMED",
+      "in_original_census": false,
+      "why_the_census_missed_it": "fence_census_run2.json carries this site with argument_is_model_output: false. The argument is `sampled`, assigned two lines earlier from `result.get_completions()[0]`, which is model output by definition. The narrowing classifier did not follow the assignment, so the site was never hand-read.",
+      "the_defect": "`sampled_json = json.loads(sampled)` sits in a try whose `except ValueError` sets `sampled_json = None`, with the comment 'If the sampled string is not valid JSON, it will never match'. That is exactly right and exactly the problem: a correct answer inside a markdown fence becomes None, matches nothing, and is recorded via `record_match(True in matches, ...)` as a non-match. The eval reports a wrong answer where the model gave a right one.",
+      "why_it_is_the_sharpest_one_yet": "This is a SCORING path in library code, not example code and not batch plumbing. It is the second such path in OpenAI's evals, alongside the steganography monitor \u2014 so the claim 'one scoring path in evals' understates the package by half.",
+      "verified_by": "read at source in the extracted sdist; the assignment chain from get_completions() to json.loads is three lines and unambiguous"
+    },
+    {
+      "site": "evals/elsuite/basic/json_validator.py:12",
+      "call": "json.loads",
+      "verdict": "REJECTED",
+      "why": "This eval's entire declared purpose is to measure whether the model emits valid JSON. A fenced answer is genuinely not valid JSON as emitted, so the zero is the measurement the eval exists to take, not a failure to take it. Counting it would inflate the census with a case where the tool and the eval simply disagree about a definition \u2014 and the census's value rests on refusing exactly that."
+    },
+    {
+      "site": "evals/elsuite/bugged_tools/utils.py:80",
+      "call": "ast.literal_eval",
+      "verdict": "REJECTED",
+      "why": "A generic type-cast helper returning None on failure. Confirming it would require showing that a model-authored fenced list literal reaches this cast and that the None changes a score. Neither is demonstrated, and the house rule is that an unproven path is rejected and published as rejected."
+    },
+    {
+      "site": "evals/elsuite/steganography/monitor.py:72",
+      "call": "json.loads",
+      "verdict": "CONFIRMED",
+      "in_original_census": true,
+      "note": "Already in the census as candidate #16. Listed here only to show the shipped tool re-finds it, so this run is not a different instrument pointed at a different place."
+    }
+  ],
+  "effect_on_the_published_count": {
+    "hand_adjudicated_census": "6 confirmed of 35 candidates across 34 packages \u2014 UNCHANGED. That number was produced by a frozen, preregistered procedure and is not retroactively edited.",
+    "with_this_amendment": "7 confirmed, the 7th found by the shipped tool over the same frame and adjudicated by the same rules on the same day it was found.",
+    "openai_evals_scoring_paths": "2, not 1",
+    "how_to_state_it": "Six confirmed by hand adjudication of 35 candidates; a seventh found afterwards by running the shipped tool over the same frame, because the census's narrowing classifier had dropped it. The tool is better than the instrument that produced the census, which is the direction you want that to run.",
+    "what_this_does_not_license": "It does not license quietly reporting '7 confirmed' as though the census had found seven. The census found six. The tool found the seventh, later, and the difference is the whole point of publishing this file."
+  },
+  "the_honest_reading": "The census UNDER-counted, and it under-counted in the direction that costs us \u2014 a missed instance is a weaker claim, not a stronger one. It was found from outside, by a reviewer reading our own tool's output against our own published classification. That is the second time in one day that an outside check moved a number here, and both times the number moved toward being more defensible rather than less.",
+  "public_export_note": "Verbatim third-party source snippets are stripped from this public copy. Every file, line, classification, verdict and reason is intact, and the package version is pinned, so every entry remains checkable against the upstream source."
+}

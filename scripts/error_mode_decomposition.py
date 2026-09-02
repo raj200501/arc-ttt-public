@@ -49,6 +49,7 @@ from arcttt.grounding import (
     snap_to_document,
 )
 from arcttt.scoring import normalize_value
+from fence_rescore import strip_fence  # scripts/ is this file's dir
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 RAW = REPO / "experiments" / "blind_rehearsal_2026-08-20_raw"
@@ -145,7 +146,10 @@ def main() -> int:
         predictions = {}
         for result in record["results"]:
             try:
-                parsed = json.loads(result["prediction"])
+                # Symmetric with every scorer: one leading fence stripped
+                # (the matched-turn runs read here emitted none, so this
+                # changes no banked number; the policy is the point).
+                parsed = json.loads(strip_fence(result["prediction"])[0])
             except (json.JSONDecodeError, TypeError):
                 continue
             if isinstance(parsed, dict):

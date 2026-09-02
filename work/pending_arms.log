@@ -1,0 +1,16 @@
+=== R1 k=1 SKIP (banked) 2026-08-31T18:44:21Z
+=== R2 k=3 SKIP (banked) 2026-08-31T18:44:21Z
+=== R3 k=1+schema SKIP (banked) 2026-08-31T18:44:21Z
+=== CTRL 1.5B kshot bf16 SKIP (banked) 2026-08-31T18:44:21Z
+=== 3B kshot bf16 SKIP (banked) 2026-08-31T18:44:21Z
+=== handing off to Addendum Q 2026-08-31T18:44:21Z
+=== waiting for the impact-table chain 2026-08-31T18:44:21Z
+=== cores free 2026-08-31T18:44:21Z
+=== Q1 found a completed bfloat16 adaptation; skipping float32 re-attempt 2026-08-31T18:44:21Z
+=== CONTROL prompted 3B schema in bfloat16 2026-08-31T18:44:21Z
+=== CONTROL OK 2026-08-31T19:01:03Z
+=== Q1 scoring the adapted 3B on the 30 held-out documents (dtype=bfloat16) 2026-08-31T19:01:03Z
+=== Q1 SCORED OK 2026-08-31T19:14:17Z
+=== ALL DONE 2026-08-31T19:14:17Z
+=== Q OK 2026-08-31T19:14:17Z
+=== ALL DONE 2026-08-31T19:14:17Z

@@ -42,9 +42,9 @@ _LEDGER = _load() if SCRIPT.exists() else None
 _HAS_COPY = bool(_LEDGER and _LEDGER.APPLICATION.exists())
 
 
-def _run(out: pathlib.Path) -> subprocess.CompletedProcess:
+def _run(out: pathlib.Path, *extra: str) -> subprocess.CompletedProcess:
     return subprocess.run(
-        [sys.executable, str(SCRIPT), "--out", str(out)],
+        [sys.executable, str(SCRIPT), "--out", str(out), *extra],
         capture_output=True, text=True, cwd=REPO, timeout=120)
 
 
@@ -78,11 +78,12 @@ def test_it_refuses_rather_than_reporting_zero(tmp_path: pathlib.Path) -> None:
     stripped = "\n".join(line for line in original.split("\n")
                          if not line.startswith("|"))
     out = tmp_path / "ledger.json"
-    try:
-        LEDGER.write_text(stripped, encoding="utf-8")
-        result = _run(out)
-    finally:
-        LEDGER.write_text(original, encoding="utf-8")
+    # A COPY, never the tracked page: this test used to rewrite the real
+    # CORRECTIONS.md and restore it in a finally, and two suite runs in
+    # one tree raced -- a killed run left the page with every row gone.
+    copy = tmp_path / "CORRECTIONS.md"
+    copy.write_text(stripped, encoding="utf-8")
+    result = _run(out, "--ledger", str(copy))
     assert result.returncode != 0, (
         "the counter reported success on a page with no correction rows — "
         "a silent zero here reads as 'nothing to correct'")

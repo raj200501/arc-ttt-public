@@ -17,10 +17,22 @@ import sys
 from pathlib import Path
 
 
+def _strip_fence(text: str) -> str:
+    """One leading ```json / ``` fence, the same strip every scorer in
+    this tree applies (tools/fencecheck.py strip_fence); the demo used
+    to render a fenced-but-correct answer as a parse failure."""
+    s = text.strip()
+    if s.startswith("```"):
+        first_nl = s.find("\n")
+        if first_nl != -1 and s.rstrip().endswith("```"):
+            return s[first_nl + 1:].rstrip()[:-3].strip()
+    return s
+
+
 def parse_fields(text: str) -> dict[str, str] | None:
     try:
-        data = json.loads(text)
-    except (json.JSONDecodeError, TypeError):
+        data = json.loads(_strip_fence(text))
+    except (json.JSONDecodeError, TypeError, AttributeError):
         return None
     if not isinstance(data, dict):
         return None

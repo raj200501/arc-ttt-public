@@ -87,7 +87,7 @@ PATTERNS = {
     "counted": r"\b\d[\d,]*(?:\s+[a-z]+){0,2}\s+"
                r"(?:tests?|artifacts?|corrections?|documents?|entries"
                r"|receipts?|tenants?|demonstrations?|design partners?"
-               r"|packages?|sites?|instances?|candidates?|rejections?)\b",
+               r"|packages?|sites?|instances?|candidates?|rejections?|commits?)\b",
 }
 # Everything after the number is stripped from a "counted" token before it
 # is matched numerically.

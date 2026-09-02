@@ -1,0 +1,14 @@
+{
+  "what": "Reachability check of deepeval 4.2.0's IFEval JSON verifier branch against the benchmark data it ships against.",
+  "date": "2026-09-01",
+  "package": "deepeval 4.2.0 (sdist from PyPI), deepeval/benchmarks/ifeval/ifeval.py",
+  "loader": "load_benchmark_dataset(): load_dataset('google/IFEval'), instruction_id_list passed through verbatim (lines 537-566)",
+  "dispatcher": "verify_instruction_compliance(): any id starting 'detectable_format:' -> verify_format_constraints() (line 347)",
+  "branch_under_test": "verify_format_constraints(): `if instruction_id == \"detectable_format:json\": json.loads(response)` (lines 117-122); the function ends `return True` (line 163)",
+  "canonical_ids": "google-research instruction_following_eval input_data.jsonl, 541 prompts: the JSON instruction id is 'detectable_format:json_format' (17 prompts; 5 of them literally say 'markdown ticks'); 'detectable_format:json' occurs 0 times",
+  "consequence": "On the shipped dataset the json.loads at :119 is never executed; the 17 json_format prompts fall through to `return True` and are scored as PASSING regardless of the response. The bare parse is reachable only for a caller-supplied dataset using the non-canonical id.",
+  "adjudication_under_the_frozen_rule": "REJECTED as a fence instance \u2014 model output does not reach the parse in the evaluation path the package ships. (Third adjudication of this site: rejected 08-31 for a wrong reason, confirmed 08-31 on the instruction text without checking reachability, rejected 09-01 on reachability.)",
+  "what_deepeval_actually_has": "A different defect, not a fence instance and not counted in this census: the JSON-format constraint is never verified, so every json_format prompt auto-passes.",
+  "found_by": "a simulated reviewer (R4, round 4) checking the site against the shipped dataset; verified here from the sdist and the canonical data file",
+  "verification_level": "PRIMARY \u2014 file, lines and dataset ids all quoted; re-run: pip download deepeval==4.2.0 --no-deps --no-binary :all:; curl the input_data.jsonl; count ids"
+}

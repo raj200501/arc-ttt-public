@@ -41,10 +41,24 @@ INSTANCE_USD_PER_HOUR = 0.290
 TOLERANCE = 0.01          # frozen in VERDICT.md Addendum Q
 ALPHA = 0.05              # frozen: the sign test must agree at p <= 0.05
 
-# The two prompted 3B arms. The comparator is whichever scores higher --
-# the RULE was frozen before the k-shot number existed.
+# Every prompted 3B arm on disk. The comparator is whichever scores
+# higher -- the RULE was frozen before the k-shot number existed.
+#
+# The first version of this tuple hardcoded the float32 k-shot FILENAME,
+# and that arm OOM-killed and banked under a bf16 name instead -- so the
+# resolver silently skipped the missing file, picked the schema arm at
+# 0.8958, and this script PRINTED READING (a) against a comparator the
+# frozen rule did not select. The k-shot bf16 arm was on disk at 0.9747,
+# in the SAME dtype as the adapted arm -- the exact comparison the
+# frozen dtype contingency asks for. The verdict flipped to (b) within
+# the hour, by the standing rule that where letter and substance
+# disagree, the reading that does not flatter us governs. A resolver
+# that can quietly lose a comparator to a filename now refuses instead:
+# if fewer than two prompted arms resolve, it exits rather than reads.
 PROMPTED_3B = ("waybill_scale_rung_3b_schema_2026-08-25.json",
-               "waybill_scale_rung_3b_kshot_2026-08-25.json")
+               "waybill_scale_rung_3b_kshot_2026-08-25.json",
+               "waybill_scale_rung_3b_kshot_bf16_2026-08-25.json",
+               "waybill_scale_rung_3b_schema_bf16_control_2026-08-25.json")
 
 
 def _rows(name: str) -> list[dict]:
@@ -75,6 +89,14 @@ def main() -> int:
     parser.add_argument("--dtype", default="float32",
                         choices=("float32", "bfloat16"))
     parser.add_argument("--max-new-tokens", type=int, default=512)
+    parser.add_argument("--serve-demos", action="store_true",
+                        help="ladder rung E5: serve the ADAPTED model with "
+                             "the k=20 demonstrations in the prompt")
+    parser.add_argument("--ladder", action="store_true",
+                        help="bank scores and predictions only; do NOT "
+                             "apply Addendum Q's comparator rule or fire "
+                             "its readings -- the engineering ladder has "
+                             "its own frozen bars and its own reader")
     parser.add_argument("--out", required=True)
     args = parser.parse_args()
 
@@ -115,6 +137,12 @@ def main() -> int:
                          "mean_fence_stripped": round(
                              statistics.mean(scores.values()), 4),
                          "per_document": scores})
+    if len(prompted) < 2:
+        raise SystemExit(
+            f"only {len(prompted)} prompted 3B arm(s) resolved; the frozen "
+            "rule compares against the better of the schema and k-shot "
+            "arms, and reading it against a lone arm is how this script "
+            "printed a wrong verdict once. Bank the missing arm first.")
     if not prompted:
         raise SystemExit("no prompted 3B arm is banked; the comparator rule "
                          "cannot be resolved and no reading may fire")
@@ -145,7 +173,8 @@ def main() -> int:
     per_doc, predictions, invalid, batch_seconds = {}, {}, 0, []
     for i, row in enumerate(holdout):
         ids = predictor._prompt_ids(
-            text_task_to_messages(task, i, include_demos=False))
+            text_task_to_messages(task, i,
+                                  include_demos=args.serve_demos))
         if ids is None:
             raise SystemExit(f"prompt {i} exceeded the sequence budget")
         began = time.monotonic()
@@ -179,7 +208,18 @@ def main() -> int:
     sign_favours_adapted = sign["p_adapted_better"] <= ALPHA
     sign_favours_prompted = sign["p_prompted_better"] <= ALPHA
 
-    if mean_beats and sign_favours_adapted:
+    if args.ladder:
+        # Ladder rung: Addendum Q's readings must not fire for an arm Q
+        # never preregistered. The comparator block above still banks
+        # every prompted arm's mean for context; the LADDER reader
+        # applies the ladder's own frozen bars.
+        verdict = "LADDER RUNG — no Addendum Q reading fires; see the "                   "engineering ladder reader"
+        why = ("Served " + ("with the k=20 demonstrations"
+               if args.serve_demos else "document-only") +
+               " through the adapter. The ladder's frozen bar (the best "
+               "prompted arm at the same size, two-statistics rule) is "
+               "applied by scripts/ladder_reader.py, not here.")
+    elif mean_beats and sign_favours_adapted:
         verdict = "(a) ADAPTATION ADDS AT SCALE"
         why = (f"D = {delta:+.4f} clears the {TOLERANCE} tolerance and the "
                f"sign test agrees ({sign['wins_adapted']}W/"
@@ -207,7 +247,7 @@ def main() -> int:
                "moves on one or two outliers.")
 
     record = {
-        "addendum": "Q",
+        "addendum": "engineering-ladder" if args.ladder else "Q",
         "what": "Does adaptation still add anything once the base model is "
                 "a 3B? The cell Addendum O never tested.",
         "preregistered": "VERDICT.md Addendum Q, frozen before this ran, "
@@ -215,9 +255,12 @@ def main() -> int:
                          "better of the two prompted 3B arms.",
         "model": args.model,
         "dtype": args.dtype,
-        "serving": "document-only: no field list and no demonstrations in "
-                   "the prompt. The schema is in the adapter weights, "
-                   "exactly as our 0.5B arm is served.",
+        "serving": ("adapted PLUS k=20 demonstrations in the prompt -- "
+                    "the two mechanisms stacked, which no prior arm "
+                    "measured" if args.serve_demos else
+                    "document-only: no field list and no demonstrations "
+                    "in the prompt. The schema is in the adapter weights, "
+                    "exactly as our 0.5B arm is served."),
         "fence_policy": "Fence-stripping applied here as to every other "
                         "arm. No flag disables it.",
         "adapted_mean_micro_f1": round(mean, 4),

@@ -76,16 +76,24 @@
       "fence_tax": 0.8958,
       "mean_prompt_tokens": 196,
       "cost_per_1k_documents_usd": 3.6992
-    }
-  ],
-  "not_measurable": [
+    },
     {
       "model": "Qwen2.5-3B-Instruct",
       "regime": "k-shot (20)",
-      "artifact": "waybill_scale_rung_3b_kshot_2026-08-25.json",
-      "why": "not banked"
+      "artifact": "waybill_scale_rung_3b_kshot_bf16_2026-08-25.json",
+      "n": 30,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "mean_as_emitted": 0.9747,
+      "invalid_as_emitted": 0,
+      "mean_fence_stripped": 0.9747,
+      "invalid_fence_stripped": 0,
+      "fence_tax": 0.0,
+      "mean_prompt_tokens": 4142,
+      "cost_per_1k_documents_usd": 2.8548
     }
   ],
+  "not_measurable": [],
   "fence_rate_by_regime": {
     "schema (field list only)": [
       1.0

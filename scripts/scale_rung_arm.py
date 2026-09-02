@@ -254,6 +254,52 @@ def main() -> int:
     # ---- generate ------------------------------------------------------
     texts: list[str] = []
     seconds = 0.0
+    # ---- per-document checkpointing ------------------------------------
+    # The execution environment suspends between agent turns and resumes
+    # with a fresh process tree, so a run that banks only at completion
+    # loses everything at every suspend: the 1.5B bf16 control reached
+    # 2/30 twice and died twice, paying for the same documents both
+    # times. Generation is greedy and per-document independent, so
+    # completed documents checkpoint to a sidecar and are skipped on
+    # relaunch -- idempotent per DOCUMENT, not just per arm. Sidecar
+    # times were taken live and replay as measurements; wall clock
+    # across suspends is meaningless and is not banked.
+    ckpt_path = pathlib.Path(str(args.out) + ".ckpt.jsonl")
+    ckpt: dict[str, dict] = {}
+    # Every row carries the arm's configuration; a checkpoint written
+    # under a different model/mode/dtype/k/decode budget is REFUSED, not
+    # silently replayed -- resuming after a config change would bank old-
+    # config outputs under new-config metadata, which is exactly the
+    # dtype mixing the Q contingency forbids. A torn final line (the
+    # write was cut mid-row, the one failure the sidecar exists for) is
+    # dropped with a notice instead of killing every future resume.
+    config_key = (f"{args.model}|{args.mode}|{args.dtype}|k={args.k}|"
+                  f"mnt={args.max_new_tokens}")
+    if ckpt_path.exists():
+        torn = 0
+        for line in ckpt_path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            try:
+                # fencecheck: ignore -- a checkpoint line this script
+                # wrote itself, not model text; a torn tail is counted.
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                torn += 1
+                continue
+            if row.get("config", config_key) != config_key:
+                raise SystemExit(
+                    f"checkpoint {ckpt_path} was written under a different "
+                    f"configuration ({row['config']!r} vs {config_key!r}). "
+                    "Delete it deliberately; it will not be replayed under "
+                    "this arm's metadata.")
+            ckpt[row["id"]] = row
+        if torn:
+            print(f"  checkpoint: dropped {torn} torn line(s)", flush=True)
+        print(f"  checkpoint: {len(ckpt)}/{len(encoded)} documents "
+              "already generated; skipping them", flush=True)
+    replayed_documents = len(ckpt)
+    ckpt_handle = ckpt_path.open("a", encoding="utf-8")
     # Per-batch wall clock, kept so a contaminated cost figure can be
     # detected instead of averaged in. The 3B schema arm's mean was
     # inflated 20% by two batches that overlapped an unrelated test suite
@@ -263,6 +309,13 @@ def main() -> int:
     batch_seconds: list[float] = []
     for start in range(0, len(encoded), args.batch):
         chunk = encoded[start:start + args.batch]
+        chunk_rows = holdout[start:start + args.batch]
+        if all(r["id"] in ckpt for r in chunk_rows):
+            for r in chunk_rows:
+                texts.append(ckpt[r["id"]]["text"])
+                batch_seconds.append(ckpt[r["id"]]["seconds"])
+                seconds += ckpt[r["id"]]["seconds"]
+            continue
         width = max(int(t.shape[0]) for t in chunk)
         input_ids = torch.full((len(chunk), width), pad_id, dtype=torch.long)
         attention = torch.zeros((len(chunk), width), dtype=torch.long)
@@ -277,11 +330,24 @@ def main() -> int:
                                  do_sample=False, pad_token_id=pad_id)
         elapsed = time.monotonic() - began
         seconds += elapsed
-        batch_seconds.append(elapsed)
+        # PER-DOCUMENT, always: replayed checkpoint rows contribute
+        # per-document times, so live batches must too, or the two
+        # populations sit in batch_seconds in different units and the
+        # median (and the cost derived from it) is corrupted at any
+        # batch size above 1.
+        batch_seconds.extend([elapsed / len(chunk)] * len(chunk))
         texts.extend(
             tokenizer.decode(out[r][width:], skip_special_tokens=True).strip()
             for r in range(len(chunk)))
         done = min(start + args.batch, len(encoded))
+        for offset, row_meta in enumerate(chunk_rows):
+            ckpt_handle.write(json.dumps({
+                "id": row_meta["id"],
+                "text": texts[start + offset],
+                "seconds": elapsed / len(chunk_rows),
+                "config": config_key,
+            }) + "\n")
+        ckpt_handle.flush()
         print(f"  {done}/{len(encoded)}  {elapsed:6.1f}s", flush=True)
 
     # ---- score ---------------------------------------------------------
@@ -344,7 +410,19 @@ def main() -> int:
                 "this project claims.",
         "model": args.model,
         "mode": args.mode,
-        "n_demonstrations": args.k if args.mode == "kshot" else 0,
+        # `schema_kshot` DOES consume --k: it builds the prompt from
+        # `train[:args.k]` exactly as `kshot` does, and only the schema
+        # block differs. Recording 0 for it made the artifact under-report
+        # its own configuration, and it did so in the one place that
+        # inverts the reading -- Addendum R's whole question is what
+        # ONE demonstration does to a schema prompt, and the artifact
+        # answering it said there had been no demonstrations.
+        #
+        # A run whose banked metadata contradicts the prompt it actually
+        # sent is not a weaker result, it is a wrong one, and nobody
+        # reading the file could have caught it without the token count
+        # sitting next to it (196 for pure schema against 401 here).
+        "n_demonstrations": 0 if args.mode == "schema" else args.k,
         "prompt_construction": prompt_note,
         "dtype": args.dtype,
         "batch_size": args.batch,
@@ -359,10 +437,14 @@ def main() -> int:
         "cost_per_1k_documents_usd": round(
             per_doc_seconds * 1000 / 3600 * INSTANCE_USD_PER_HOUR, 4),
         "seconds_per_batch": [round(s, 2) for s in batch_seconds],
+        # batch_seconds holds PER-DOCUMENT times (live batches are
+        # divided by their size at append; replayed rows already are),
+        # so the median is per-document as-is. The old /args.batch here
+        # divided replayed entries twice at any batch above 1.
         "seconds_per_document_median": round(
-            statistics.median(batch_seconds) / args.batch, 2),
+            statistics.median(batch_seconds), 2),
         "cost_per_1k_documents_usd_median": round(
-            statistics.median(batch_seconds) / args.batch
+            statistics.median(batch_seconds)
             * 1000 / 3600 * INSTANCE_USD_PER_HOUR, 4),
         "timing_integrity": (
             "Per-batch wall clock is banked so a contaminated cost figure "
@@ -389,6 +471,19 @@ def main() -> int:
         },
         "per_document_micro_f1": per_document,
         "predictions": predictions,
+        "resumed_from_checkpoint": replayed_documents > 0,
+        "replayed_documents": replayed_documents,
+        "resume_note": (
+            "This arm resumed from a per-document checkpoint after the "
+            "environment reclaimed its process: the replayed documents' "
+            "outputs and per-document timings were taken live in an "
+            "earlier process and reloaded from the sidecar. Quality is "
+            "unaffected (greedy decode, per-document independent). "
+            "wall_clock_seconds_total sums timings across processes and "
+            "is NOT one machine-session's wall clock."
+            if replayed_documents else
+            "Single uninterrupted process; the checkpoint sidecar was "
+            "written but never replayed."),
         "scope": f"One rung ({args.model}), one corpus, thirty "
                  "agent-authored documents, one seed, "
                  f"batch {args.batch}, CPU, greedy. It says nothing about "
@@ -402,7 +497,14 @@ def main() -> int:
                               "every document, so a reader can re-score "
                               "every one against the published gold.",
     }
+    ckpt_handle.close()
     out = pathlib.Path(args.out)
+    # The sidecar dies with the successful bank. Left in place, the
+    # documented reproduction command would replay all 30 documents
+    # without ever loading the model and bank a fresh-looking artifact
+    # from old outputs -- a vacuous reproduction, which is worse than
+    # none because it reads as one.
+    ckpt_path.unlink(missing_ok=True)
     out.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
 
     print(f"\n{args.model} {args.mode}: {mean:.4f}  "

@@ -67,17 +67,34 @@ def build_task(train_rows: list[dict], holdout_rows: list[dict]):
 
 def write_outputs(out_dir: pathlib.Path, holdout_rows: list[dict],
                   raw_texts: list[str | None]) -> list[dict]:
+    # The fence policy of this repository is symmetric-or-absent, and
+    # until 2026-09-01 this writer was the one place it was ABSENT: a
+    # bare json.loads that recorded a fenced-but-correct answer as null
+    # -- the exact defect tools/fencecheck.py flags in other people's
+    # code, in the runner that produced this project's own arms (a
+    # simulated reviewer ran the tool on the repo and named the line).
+    # One leading fence is now stripped before the parse, the same
+    # strip every reader applies, and whether it fired is banked.
+    from fence_rescore import strip_fence  # scripts/ is this file's dir
     predictions = []
     for row, text in zip(holdout_rows, raw_texts):
-        parsed = None
+        parsed, fenced = None, False
         if text:
+            cleaned, fenced = strip_fence(text)
             try:
-                candidate = json.loads(text)
+                candidate = json.loads(cleaned)
                 if isinstance(candidate, dict):
                     parsed = candidate
             except json.JSONDecodeError:
                 parsed = None
-        predictions.append({"id": row["id"], "prediction": parsed})
+        # Raw model text banked beside the parse. An independent audit
+        # classified every arm produced WITHOUT raw text as one level
+        # less verifiable than the rival arms that beat them -- the
+        # parsing step could not be re-checked by anyone, and three
+        # null documents in the prompted baseline are unrecoverable
+        # forever. No new arm inherits that.
+        predictions.append({"id": row["id"], "prediction": parsed,
+                            "raw": text, "fenced": fenced})
     with open(out_dir / "predictions.jsonl", "w", encoding="utf-8") as f:
         for row in predictions:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
@@ -110,6 +127,12 @@ def main() -> int:
                              "CUDA-only, which is what produced every banked "
                              "arm; this flag is additive and changes nothing "
                              "unless passed.")
+    parser.add_argument("--serve-demos", action="store_true",
+                        help="ladder rung E3: ADAPT as normal, then serve "
+                             "with the demonstrations in the prompt too -- "
+                             "the arms so far treat adapters and "
+                             "demonstrations as substitutes; this measures "
+                             "them stacked")
     parser.add_argument("--kshot", action="store_true",
                         help="baseline arm: NO adaptation; the training pairs "
                              "ride in the prompt as demonstrations instead "
@@ -168,7 +191,8 @@ def main() -> int:
     for i in range(len(holdout_rows)):
         t0 = time.monotonic()
         text = predict_text_voted(predictor, task, i, samples=args.samples,
-                                  include_demos=args.kshot)
+                                  include_demos=args.kshot
+                                  or args.serve_demos)
         raw_texts.append(text)
         print(f"[challenge] doc {i + 1}/{len(holdout_rows)} "
               f"({round(time.monotonic() - t0, 1)}s)", flush=True)
@@ -209,7 +233,9 @@ def main() -> int:
         "config": {"rank": args.rank, "alpha": args.alpha, "epochs": args.epochs,
                    "samples": args.samples, "max_new_tokens": args.max_new_tokens,
                    "max_seq": args.max_seq, "device": str(device)},
-        "arm": "kshot" if args.kshot else "docadapted",
+        "arm": ("kshot" if args.kshot
+                else "adapted_plus_kshot" if args.serve_demos
+                else "docadapted"),
         "adapt_seconds": adapt_seconds,
         "raw_outputs": [{"id": r["id"], "text": t}
                         for r, t in zip(holdout_rows, raw_texts)],
