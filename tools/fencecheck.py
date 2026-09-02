@@ -466,6 +466,17 @@ def main(argv: list[str] | None = None) -> int:
               "one of: prediction, output, completion, response, generation, "
               "text, raw, answer, content.")
         return 2
+    if not report["parse_after_stripping"]:
+        # Nothing parses even after stripping: a clean bill would be a
+        # statement about a file that holds no JSON output at all (a
+        # reviewer fed plain prose and got "nothing is being lost",
+        # 2026-09-02). Say what was seen and refuse the verdict.
+        print(f"fencecheck: REFUSING a verdict -- none of the {total} "
+              "output(s) parse as JSON, fenced or not. Either this file "
+              "is not model JSON output, or the outputs are broken in a "
+              "way no fence explains; a fence-loss number about it would "
+              "be meaningless.")
+        return 2
     print(f"fencecheck: {total} output(s)")
     print(f"  fenced                  {report['fenced']}")
     print(f"  parse as written        {report['parse_as_written']}")

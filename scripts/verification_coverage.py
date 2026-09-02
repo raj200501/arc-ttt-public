@@ -49,7 +49,12 @@ EXPERIMENTS = REPO / "experiments"
 # output. Named here and banked in the record so anything that needs to
 # reproduce this total reads the rule instead of re-deriving it; a
 # downstream copy of this tuple is a copy that goes stale on its own.
-EXHAUST = ("verification_coverage.json", "outbound_reconciliation.json")
+# review_simulation.json is the founder-side review instrument and is
+# excluded from the public export, so counting it here made the public
+# tree one artifact short of the map (a reviewer counted 210 vs 211,
+# 2026-09-02). Not exhaust, but not an artifact either tree can cite.
+EXHAUST = ("verification_coverage.json", "outbound_reconciliation.json",
+           "review_simulation.json")
 
 # Artifacts whose figures are third-party quotes rather than our runs.
 EXTERNAL_MARKERS = ("external list price", "external quote",

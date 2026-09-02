@@ -39,8 +39,13 @@ def _git(*args: str) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--out", default=str(
-        REPO / "experiments" / "project_timeline.json"))
+    # 2026-09-02: this used to default to the banked artifact, so a reader
+    # running the script "to look" rewrote experiments/project_timeline.json
+    # in place with THEIR tree's numbers (a reviewer's clone: 16 days /
+    # 64 commits over the source tree's 19 / 467). Print by default;
+    # bank only when asked, and the artifact names the tree it measured.
+    parser.add_argument("--out", default=None,
+                        help="bank the record here (default: print only)")
     args = parser.parse_args()
 
     first = _git("log", "--reverse", "--format=%ad", "--date=short"
@@ -88,6 +93,9 @@ def main() -> int:
             "a stranger can actually re-derive."),
         "how_to_recompute": "PYTHONPATH=src python3 scripts/project_timeline.py",
     }
+    if not args.out:
+        print(json.dumps(record, indent=2))
+        return 0
     pathlib.Path(args.out).write_text(json.dumps(record, indent=2) + "\n",
                                       encoding="utf-8")
     print(f"{first} -> {last}  ({days} days)")

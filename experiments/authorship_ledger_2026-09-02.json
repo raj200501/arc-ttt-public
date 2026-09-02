@@ -1,16 +1,16 @@
 {
   "what": "Per-author commit counts of THIS tree, with the tree's identity, so the figure cannot be restated about a different repository.",
   "referent": "source tree (full history)",
-  "head": "72a939ae5dc247c2ccfce86cdaba1dee28291f8a",
+  "head": "173740d46013661aa54445132ce61d4ea431478e",
   "remote": "/home/user/safer-1/arc-ttt/arc-ttt.git.bundle",
   "date": "2026-09-02",
-  "total_commits": 496,
+  "total_commits": 498,
   "by_author": {
-    "Claude <noreply@anthropic.com>": 414,
+    "Claude <noreply@anthropic.com>": 416,
     "Raj Kashikar": 82
   },
-  "agent_commits": 414,
+  "agent_commits": 416,
   "human_commits": 82,
-  "agent_share": 0.8347,
+  "agent_share": 0.8353,
   "how_to_reproduce": "git shortlog -sne HEAD in the tree named by `head` and `remote`; any other tree is a different referent."
 }

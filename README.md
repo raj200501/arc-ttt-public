@@ -424,7 +424,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 347 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 381 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -486,8 +486,8 @@ sharpening. No claims beyond the artifacts in `experiments/`.
 Roughly **four in five commits in the source tree are authored by
 `Claude <noreply@anthropic.com>`** — an autonomous agent organisation
 Raj Kashikar built and operates — rather than by Raj himself
-(**414 against 82**, banked at source HEAD `72a939a` on 2026-09-01 in
-`experiments/authorship_ledger_2026-09-01.json`; the exact figures move
+(**416 against 82**, banked at source HEAD `173740d` on 2026-09-02 in
+`experiments/authorship_ledger_2026-09-02.json`; the exact figures move
 with every commit, the ratio is the claim). Every file in the fence lane — the tool, all three census runs,
 the hand-adjudication, the impact table, the CORD replication — is
 agent-authored.
@@ -511,7 +511,7 @@ here, which a reviewer caught within the day (second dated correction,
 same page). What is here: `scripts/authorship_ledger.py`, which banks
 the per-author commit split of whatever tree it runs in *together with
 that tree's HEAD and remote*, and
-`experiments/authorship_ledger_2026-09-01.json`, the source tree's
+`experiments/authorship_ledger_2026-09-02.json`, the source tree's
 ledger banked at a named SHA. Run the script here and it reports this
 export's own numbers and says so. **The source-tree ratio cannot be
 re-derived from this repository**; it is a disclosure backed by a banked
@@ -523,7 +523,7 @@ authored as the work it is.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 347 offline tests (tiny in-test models; no downloads).
+- `tests/` — 381 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

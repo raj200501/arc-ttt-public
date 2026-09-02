@@ -15,6 +15,105 @@
       "documents_fenced": 0,
       "delta_from_fence_alone": 0.0,
       "reading": "The fence is not what decided this arm."
+    },
+    {
+      "artifact": "waybill_scale_rung_0.5b_schema_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "mode": "schema",
+      "banked_mean_micro_f1": 0.0,
+      "mean_as_is": 0.0,
+      "invalid_as_is": 30,
+      "mean_fence_stripped": 0.635,
+      "invalid_fence_stripped": 0,
+      "documents_fenced": 30,
+      "delta_from_fence_alone": 0.635,
+      "reading": "THE ZERO WAS A FENCE, NOT A FAILURE. The un-repaired number must not be cited as a capability result."
+    },
+    {
+      "artifact": "waybill_scale_rung_1.5b_2026-08-25.json",
+      "status": "NO STORED PREDICTIONS -- cannot be re-scored at all, by anyone, including us. This is the ARITHMETIC level on the coverage map and it is why that map exists."
+    },
+    {
+      "artifact": "waybill_scale_rung_1.5b_kshot_RAW_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "mode": "kshot",
+      "banked_mean_micro_f1": 0.8804,
+      "mean_as_is": 0.8804,
+      "invalid_as_is": 0,
+      "mean_fence_stripped": 0.8804,
+      "invalid_fence_stripped": 0,
+      "documents_fenced": 0,
+      "delta_from_fence_alone": 0.0,
+      "reading": "The fence is not what decided this arm."
+    },
+    {
+      "artifact": "waybill_scale_rung_1.5b_kshot_bf16_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "mode": "kshot",
+      "banked_mean_micro_f1": 0.8773,
+      "mean_as_is": 0.8773,
+      "invalid_as_is": 0,
+      "mean_fence_stripped": 0.8773,
+      "invalid_fence_stripped": 0,
+      "documents_fenced": 0,
+      "delta_from_fence_alone": 0.0,
+      "reading": "The fence is not what decided this arm."
+    },
+    {
+      "artifact": "waybill_scale_rung_1.5b_schema_2026-08-25.json",
+      "status": "NO STORED PREDICTIONS -- cannot be re-scored at all, by anyone, including us. This is the ARITHMETIC level on the coverage map and it is why that map exists."
+    },
+    {
+      "artifact": "waybill_scale_rung_1.5b_schema_REPRO_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "mode": "schema",
+      "banked_mean_micro_f1": 0.0,
+      "mean_as_is": 0.0,
+      "invalid_as_is": 30,
+      "mean_fence_stripped": 0.7375,
+      "invalid_fence_stripped": 0,
+      "documents_fenced": 30,
+      "delta_from_fence_alone": 0.7375,
+      "reading": "THE ZERO WAS A FENCE, NOT A FAILURE. The un-repaired number must not be cited as a capability result."
+    },
+    {
+      "artifact": "waybill_scale_rung_3b_kshot_bf16_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "mode": "kshot",
+      "banked_mean_micro_f1": 0.9747,
+      "mean_as_is": 0.9747,
+      "invalid_as_is": 0,
+      "mean_fence_stripped": 0.9747,
+      "invalid_fence_stripped": 0,
+      "documents_fenced": 0,
+      "delta_from_fence_alone": 0.0,
+      "reading": "The fence is not what decided this arm."
+    },
+    {
+      "artifact": "waybill_scale_rung_3b_schema_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "mode": "schema",
+      "banked_mean_micro_f1": 0.0,
+      "mean_as_is": 0.0,
+      "invalid_as_is": 30,
+      "mean_fence_stripped": 0.8958,
+      "invalid_fence_stripped": 0,
+      "documents_fenced": 30,
+      "delta_from_fence_alone": 0.8958,
+      "reading": "THE ZERO WAS A FENCE, NOT A FAILURE. The un-repaired number must not be cited as a capability result."
+    },
+    {
+      "artifact": "waybill_scale_rung_3b_schema_bf16_control_2026-08-25.json",
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "mode": "schema",
+      "banked_mean_micro_f1": 0.0,
+      "mean_as_is": 0.0,
+      "invalid_as_is": 30,
+      "mean_fence_stripped": 0.9,
+      "invalid_fence_stripped": 0,
+      "documents_fenced": 30,
+      "delta_from_fence_alone": 0.9,
+      "reading": "THE ZERO WAS A FENCE, NOT A FAILURE. The un-repaired number must not be cited as a capability result."
     }
   ]
 }

@@ -7,18 +7,19 @@
     "EXTERNAL": "third-party quote, labelled as such, not ours to verify."
   },
   "counts": {
-    "AGGREGATE": 74,
+    "AGGREGATE": 73,
     "ARITHMETIC": 81,
     "EXTERNAL": 7,
     "PRIMARY": 49
   },
-  "total_artifacts": 211,
+  "total_artifacts": 210,
   "excluded_as_gate_exhaust": [
     "verification_coverage.json",
-    "outbound_reconciliation.json"
+    "outbound_reconciliation.json",
+    "review_simulation.json"
   ],
   "primary_verifiable": 49,
-  "primary_verifiable_fraction": 0.2322,
+  "primary_verifiable_fraction": 0.2333,
   "why_the_total_is_banked": "Outbound copy cites this total ('179 banked artifacts') and the reconciliation gate had been matching it against an unrelated 179 in an unrelated artifact -- a figure that traced to nothing, passing because some number of that value happened to exist somewhere. A cited figure has to be a figure this map deliberately publishes.",
   "artifacts": [
     {
@@ -28,7 +29,7 @@
       "bytes": 5123
     },
     {
-      "artifact": "authorship_ledger_2026-09-01.json",
+      "artifact": "authorship_ledger_2026-09-02.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
       "bytes": 641
@@ -409,7 +410,7 @@
       "artifact": "fence_rescore.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 1368
+      "bytes": 5199
     },
     {
       "artifact": "format_counterfactual_2026-08-22.json",
@@ -973,13 +974,7 @@
       "artifact": "public_export_counts.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 3518
-    },
-    {
-      "artifact": "review_simulation.json",
-      "level": "AGGREGATE",
-      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 35731
+      "bytes": 1350
     },
     {
       "artifact": "schema_conformance_decomposition_2026-08-22.json",
@@ -991,7 +986,7 @@
       "artifact": "self_correction_ledger.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 1508
+      "bytes": 1526
     },
     {
       "artifact": "summary.json",

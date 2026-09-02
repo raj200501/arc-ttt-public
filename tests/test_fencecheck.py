@@ -379,7 +379,9 @@ def test_the_auditors_five_gate_exploits_stay_dead() -> None:
 
     steal_export = ("Checked from a cold clone, the harness keeps its "
                     "312 tests green.")
-    assert "312" in cg.fix(steal_export)[0]
+    # The live export count, never a literal: this line said "312" and
+    # went red the day PR #1 merged and the public tree collected 347.
+    assert str(cg.export_counts()[0]) in cg.fix(steal_export)[0]
 
     steal_suite = ("Before shipping fencecheck we reran the whole tree "
                    "and its 360 tests.")
@@ -490,3 +492,15 @@ def test_score_uses_raw_text_when_parsed_object_sits_beside_it(tmp_path) -> None
     report = fc.score_file(preds)
     assert report["outputs"] == 1 and report["recovered_by_stripping"] == 1
     assert report["already_parsed_records"] == 0
+
+
+def test_score_refuses_a_verdict_when_nothing_parses(tmp_path, capsys) -> None:
+    """R2's round-5 aside, pinned: plain prose lines used to be scored as
+    N outputs with zero fence loss and a clean bill, exit 0. A fence-loss
+    verdict about a file with no JSON in it is meaningless; refuse."""
+    prose = tmp_path / "prose.jsonl"
+    prose.write_text("the quick brown fox\njumps over the lazy dog\n",
+                     encoding="utf-8")
+    rc = fc.main(["score", str(prose)])
+    assert rc == 2
+    assert "REFUSING a verdict" in capsys.readouterr().out

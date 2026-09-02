@@ -191,6 +191,50 @@ def main() -> int:
                    "corpus": "CORD validation, 80 held-out receipts, "
                              "split banked in ladder_e6_cord_split/"})
 
+    # E7 (Ladder II) — the same arms re-decoded with the JSON-constrained
+    # greedy decoder. Two frozen readings: ADAPT (E7 adapted vs E7
+    # prompted, same decoder) and SYSTEM (E7 adapted vs E6's greedy
+    # prompted bar). Reads only when BOTH E7 arms are banked.
+    e7_prompted = REPO / "experiments" / "ladder_e7_cord_prompted_2026-09-02.json"
+    e7_adapted = REPO / "experiments" / "ladder_e7_cord_adapted_2026-09-02.json"
+    if e7_prompted.exists() and e7_adapted.exists() and e6_prompted.exists():
+        gold_e6 = {json.loads(l)["id"]: json.loads(l)["gold"] for l in
+                   (e6_dir / "gold.jsonl").read_text().splitlines() if l.strip()}
+
+        def score_e7(path):
+            rec = json.loads(path.read_text())
+            per, invalid, fenced = {}, 0, 0
+            for doc_id, raw in rec["predictions"].items():
+                fenced += fc.strip_fence(raw)[1]
+                obj = score_raw(raw)
+                if obj is None:
+                    invalid += 1
+                    per[doc_id] = 0.0
+                else:
+                    per[doc_id] = round(field_micro_f1(obj, gold_e6[doc_id]), 4)
+            acct = rec.get("decode_accounting", {})
+            return per, invalid, fenced, {
+                "fallbacks_total": sum(a["fallbacks"] for a in acct.values()),
+                "constrained_steps_total": sum(a["constrained_steps"] for a in acct.values()),
+                "stopped_on": {k: sum(1 for a in acct.values() if a["stopped_on"] == k)
+                               for k in ("eos", "complete", "max_new_tokens")}}
+
+        bar7, bar7_inv, bar7_fen, bar7_acct = score_e7(e7_prompted)
+        per7, inv7, fen7, acct7 = score_e7(e7_adapted)
+        read_rung("E7 ADAPT: 3B adapted+k20 constrained vs prompted constrained",
+                  per7, inv7, fen7, bar7, round(statistics.mean(bar7.values()), 4),
+                  "prompted 3B k-shot bf16 constrained (CORD)", 4,
+                  {"bar_invalid": bar7_inv, "bar_fenced_outputs": bar7_fen,
+                   "decoder_accounting": {"adapted": acct7, "prompted": bar7_acct},
+                   "reading_kind": "ADAPT — same decoder both arms; credits the adapter only"})
+        bar6, bar6_inv, bar6_fen = score_e6(e6_prompted)
+        read_rung("E7 SYSTEM: 3B adapted+k20 constrained vs E6 greedy prompted",
+                  per7, inv7, fen7, bar6, round(statistics.mean(bar6.values()), 4),
+                  "prompted 3B k-shot bf16 greedy (E6 bar)", 4,
+                  {"reading_kind": "SYSTEM — credits adapter AND decoder; never substitutes for ADAPT",
+                   "prompted_constrained_vs_greedy_mean_delta": round(
+                       statistics.mean(bar7.values()) - statistics.mean(bar6.values()), 4)})
+
     out = {
         "what": "Engineering-ladder results, read against the bars frozen "
                 "in docs/research/ADAPTATION_ENGINEERING_LADDER.md before "

@@ -4,7 +4,7 @@ tree's own identity, so the number can never be quoted about the wrong
 repository again.
 
     python3 scripts/authorship_ledger.py
-    python3 scripts/authorship_ledger.py --out experiments/authorship_ledger_2026-09-01.json
+    python3 scripts/authorship_ledger.py --out experiments/authorship_ledger_2026-09-02.json
 
 Why this exists (2026-09-01). The outbound copy said "run git shortlog
 on the public repository: four in five commits by Claude". The public
