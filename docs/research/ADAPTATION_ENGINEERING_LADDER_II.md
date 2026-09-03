@@ -129,3 +129,23 @@ cannot compare a decoded arm against an undecoded one and call that
 adaptation. It cannot read a result before both arms of a cell exist.
 Where its letter and its substance disagree, the reading that does
 not flatter us governs.
+
+## E9 protocol note — fixed 2026-09-03 after E8 read, before any E9 data
+
+E8 cleared its ADAPT letter because BM25 ORDERING damaged the prompted
+arm (−0.029, p=0.0016) while the adapted arm was unmoved; against the
+strongest prompted arm the stack was +0.029 and unseparated (p=0.60).
+So for E9 the demonstration ORDER is fixed to the split order for both
+arms; BM25 is used only to SELECT the 20 nearest of the 40 training
+receipts per test receipt. The E9 bar is therefore the strongest
+prompted configuration available to it, not a degraded one. Split:
+seed-2 shuffle of the 100 receipts, 40 train / 60 eval, SHA-banked
+before the arms run (`experiments/ladder_e9_cord_split/`). Adapter:
+trained on the 40 (same recipe as E6: r16/α32, one pass, bfloat16,
+gradient checkpointing), durable sentinel. Decoder: E7's. Readings:
+ADAPT (vs prompted, same selection, same order, same decoder) and
+SYSTEM (vs a fresh greedy prompted arm on the SAME 60 receipts with
+the same selected demonstrations — E6's bar is a different eval set
+and cannot serve). Attempt counter resets to 1 for this new bar, as
+frozen above. Cost: one 3B adaptation on 40 receipts (~25 min) plus
+three 3B arms of 60 receipts.

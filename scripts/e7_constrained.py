@@ -52,11 +52,50 @@ def _read_jsonl(path: pathlib.Path) -> list[dict]:
             path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
+_TOK = None
+
+
+def _tokens(text: str) -> list[str]:
+    import re
+    return re.findall(r"[a-z0-9]+", text.lower())
+
+
+def _bm25(doc: str, query: str, corpus: list[dict], k1: float = 1.5,
+          b: float = 0.75) -> float:
+    """Okapi BM25 score of `doc` for `query` over the demonstration
+    corpus. Stdlib only; recomputed per call (20 documents)."""
+    import math
+    docs = [_tokens(r["text"]) for r in corpus]
+    n = len(docs)
+    avgdl = sum(len(d) for d in docs) / n
+    dtoks = _tokens(doc)
+    dl = len(dtoks)
+    tf: dict[str, int] = {}
+    for t in dtoks:
+        tf[t] = tf.get(t, 0) + 1
+    score = 0.0
+    for q in set(_tokens(query)):
+        if q not in tf:
+            continue
+        df = sum(1 for d in docs if q in d)
+        idf = math.log((n - df + 0.5) / (df + 0.5) + 1.0)
+        f = tf[q]
+        score += idf * f * (k1 + 1) / (f + k1 * (1 - b + b * dl / avgdl))
+    return score
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--arm", required=True, choices=("prompted", "adapted"))
+    parser.add_argument("--rung", default="e7", choices=("e7", "e8"),
+                        help="e8 = E7's decoder PLUS similarity-ordered "
+                             "demonstrations (BM25 over the OCR text, most "
+                             "similar demonstration last); frozen in "
+                             "ADAPTATION_ENGINEERING_LADDER_II.md before it ran")
     args = parser.parse_args()
     arm = args.arm
+    rung = args.rung
+    rung_date = DATE if rung == "e7" else "2026-09-03"
 
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -75,14 +114,15 @@ def main() -> int:
     holdout = _read_jsonl(SPLIT_DIR / "holdout.jsonl")
     task = build_task(train, holdout)
 
-    out_path = REPO / "experiments" / f"ladder_e7_cord_{arm}_{DATE}.json"
+    out_path = REPO / "experiments" / f"ladder_{rung}_cord_{arm}_{rung_date}.json"
     if out_path.exists():
         print(f"already banked: {out_path.name}")
         return 0
     WORK.mkdir(parents=True, exist_ok=True)
     config_key = (f"{MODEL}|{arm}|{DTYPE}|k={K}|mnt={MAX_NEW_TOKENS}|seq={MAX_SEQ}"
-                  f"|constrained_topk={TOP_K}|split={split_sha}")
-    ckpt_path = WORK / f"{arm}.ckpt.jsonl"
+                  f"|constrained_topk={TOP_K}|split={split_sha}"
+                  + ("|order=bm25" if rung == "e8" else ""))
+    ckpt_path = WORK / (f"{arm}.ckpt.jsonl" if rung == "e7" else f"{rung}_{arm}.ckpt.jsonl")
     done: dict[str, dict] = {}
     if ckpt_path.exists():
         for line in ckpt_path.read_text(encoding="utf-8").splitlines():
@@ -132,7 +172,15 @@ def main() -> int:
                 predictions[row["id"]] = done[row["id"]]["raw"]
                 decode[row["id"]] = done[row["id"]]["decode"]
                 continue
-            ids = predictor._prompt_ids(text_task_to_messages(task, i, include_demos=True))
+            if rung == "e8":
+                # E8: the same 20 demonstrations, ORDERED by BM25 similarity
+                # to this receipt, most similar last (nearest the query).
+                ordered = sorted(train, key=lambda r: _bm25(r["text"], row["text"], train))
+                task_i = build_task(ordered, [row])
+                turns = text_task_to_messages(task_i, 0, include_demos=True)
+            else:
+                turns = text_task_to_messages(task, i, include_demos=True)
+            ids = predictor._prompt_ids(turns)
             if ids is None:
                 raise SystemExit(f"prompt {row['id']} exceeded the {MAX_SEQ} budget")
             began = time.monotonic()
@@ -157,7 +205,10 @@ def main() -> int:
         "what": f"Ladder II rung E7, {arm} arm: E6's prompts and adapter, "
                 "re-decoded with the JSON-constrained greedy decoder. Scoring "
                 "and both frozen readings live in scripts/ladder_reader.py.",
-        "prereg": "docs/research/ADAPTATION_ENGINEERING_LADDER_II.md rung E7",
+        "prereg": f"docs/research/ADAPTATION_ENGINEERING_LADDER_II.md rung {rung.upper()}",
+        "rung": rung,
+        "demonstration_order": ("bm25 similarity, most similar last" if rung == "e8"
+                                else "split order (fixed)"),
         "date": DATE, "model": MODEL, "dtype": DTYPE, "k": K,
         "arm": "adapted_plus_kshot_constrained" if arm == "adapted" else "kshot_constrained",
         "decoder": {"kind": "constrained greedy", "top_k": TOP_K,

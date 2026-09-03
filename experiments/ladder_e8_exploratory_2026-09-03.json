@@ -1,0 +1,39 @@
+{
+  "what": "Exploratory, NOT preregistered comparisons stated beside E8's frozen readings so the clearance is read at its size. The frozen ADAPT bar is the prompted arm under the SAME ordering; that ordering damaged the prompted arm, so the strongest prompted arm on this corpus is E7's, and the comparison against it is the non-flattering context.",
+  "date": "2026-09-03",
+  "rows": [
+    {
+      "a": "e8_cord_adapted",
+      "b": "e7_cord_prompted",
+      "mean_a": 0.7943,
+      "mean_b": 0.765,
+      "D": 0.0293,
+      "wins": 30,
+      "losses": 31,
+      "ties": 19,
+      "p_a_better": 0.6009
+    },
+    {
+      "a": "e8_cord_adapted",
+      "b": "e7_cord_adapted",
+      "mean_a": 0.7943,
+      "mean_b": 0.7995,
+      "D": -0.0052,
+      "wins": 16,
+      "losses": 23,
+      "ties": 41,
+      "p_a_better": 0.9002
+    },
+    {
+      "a": "e8_cord_prompted",
+      "b": "e7_cord_prompted",
+      "mean_a": 0.7361,
+      "mean_b": 0.765,
+      "D": -0.0289,
+      "wins": 15,
+      "losses": 37,
+      "ties": 28,
+      "p_a_better": 0.9994
+    }
+  ]
+}
