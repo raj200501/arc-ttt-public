@@ -1,3 +1,44 @@
+# Roadmap (updated 2026-09-03)
+
+The company is the eval-integrity work: the fence tax, the shipped
+check, and the discipline that found them. The adaptation program that
+produced this repository is closed by its own measurements (see
+`VERDICT.md`; the nine results against it are enumerated in
+`experiments/results_against_thesis_2026-09-03.json`).
+
+## Now
+
+- **Upstream filings — owner's action.** Final issue text exists for
+  `openai/evals` (two sites) and Braintrust `autoevals` (`JSONDiff`,
+  executed repro); nothing is filed as of this date. This is the single
+  item every simulated review round ranked first.
+- **Addendum T (in flight):** the fence tax on four other model
+  families — SmolLM2, Granite, Phi-3, Falcon3 — same cells as
+  Addendum S, thresholds frozen in
+  `docs/research/ADDENDUM_T_PROTOCOL.md` before any arm ran.
+- **`tools/fencecheck.py`:** stdlib, one file; `scan` for fail-open
+  parse sites, `score` for what a fence costs your saved outputs. Next:
+  a `--baseline` mode that diffs two scored files, and the
+  prose-prefixed-fence scope documented in Addendum R's erratum.
+
+## Next
+
+- One external team running `fencecheck scan` in CI, with a published
+  before/after — the falsifiable test the application names.
+- The JSON-constrained decoder (`src/arcttt/constrained_json.py`) as a
+  drop-in for any HF causal LM: it removed every invalid output on both
+  arms in Ladder II and is schema-blind by design.
+- Other corpora for the fence tax beyond waybills and CORD.
+
+## What is explicitly not on the roadmap
+
+- Reopening the adaptation product claim without a preregistered rung
+  that its own decompositions license.
+- Any number in outbound copy that does not trace to an artifact.
+
+<details>
+<summary><b>History — the ARC Prize and adaptation roadmap as it stood on 2026-08-19</b> (click to expand)</summary>
+
 # Iteration roadmap (updated 2026-08-19, post-v10)
 
 ## Where things stand

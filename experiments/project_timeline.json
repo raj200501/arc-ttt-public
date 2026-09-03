@@ -1,12 +1,12 @@
 {
   "what": "The shape of the work, derived from the tree rather than remembered. Every figure here is recomputed on each run.",
   "first_commit": "2026-08-07",
-  "latest_commit": "2026-08-25",
-  "elapsed_days_inclusive": 19,
-  "commits": 467,
-  "commits_per_day": 24.6,
-  "banked_artifacts": 194,
-  "dated_corrections": 72,
+  "latest_commit": "2026-09-03",
+  "elapsed_days_inclusive": 28,
+  "commits": 512,
+  "commits_per_day": 18.3,
+  "banked_artifacts": 221,
+  "dated_corrections": 92,
   "solo": true,
   "what_these_numbers_are_not": "A commit count measures typing. An artifact count measures runs. Neither measures whether any of it was right, and both are trivially inflatable by anyone who wants to inflate them -- which is the reason to state that here rather than to hope a reader supplies the caveat. They are derived and banked because outbound copy quotes them and a quoted figure has to reconcile to something recomputable. The question of whether the work was any good is answered by VERDICT.md, where six of the results go against this project, and by verification_coverage.json, which reports what fraction of it a stranger can actually re-derive.",
   "how_to_recompute": "PYTHONPATH=src python3 scripts/project_timeline.py"

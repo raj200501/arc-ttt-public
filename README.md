@@ -113,6 +113,29 @@ came from.
 
 ---
 
+# The adaptation program — what it established, then closed
+
+This repository began as a per-tenant adaptation harness (adapt a small
+open model to one tenant's document schema, beat that model's own
+prompt). Under gates frozen before each arm ran it established one real
+effect — **+40.4 micro-F1 over the model's own 30-shot prompt across
+six unseen tenant schemas, 340W/5L/15T** — and then closed its own
+product thesis: a hosted API beats the adapted model outright, an
+unadapted 3B on a 196-token prompt matches it, matched-batch cost
+diverges, and two engineering ladders (nine rungs, a JSON-constrained
+decoder, retrieved demonstrations, a doubled adaptation set) never
+separated adaptation from the best prompting available to it by sign
+test. What survived, sign-test-backed: an adapted model is robust to
+demonstration order where a prompted one is not. Every result is in
+[`VERDICT.md`](VERDICT.md); the nine results against the thesis are
+enumerated in
+[`experiments/results_against_thesis_2026-09-03.json`](experiments/results_against_thesis_2026-09-03.json).
+The full program follows, collapsed, because the withdrawals are part
+of the record and the harness described there is what found the fence.
+
+<details>
+<summary><b>The adaptation work, in full</b> — five preregistered gates, the market and scale addenda, the verification commands, the ARC Prize origin (click to expand)</summary>
+
 # The adaptation work, in full
 
 Everything below is the original project, unedited except where a later
@@ -480,6 +503,9 @@ sharpening. No claims beyond the artifacts in `experiments/`.
   program and the ARC Prize competition entry it grew out of; product-
   and company-level claims are made only where an artifact backs them —
   the status line above says exactly where things stand.
+
+
+</details>
 
 ## Authorship
 

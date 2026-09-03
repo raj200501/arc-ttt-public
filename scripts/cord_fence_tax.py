@@ -36,6 +36,17 @@ SPLIT_DIR = REPO / "experiments" / "ladder_e6_cord_split"
 CELLS_DIR = REPO / "experiments" / "cord_fence_tax_cells"
 WORK = REPO / "work" / "s"
 OUT = REPO / "experiments" / "cord_fence_tax_2026-08-25.json"
+
+# Addendum T (docs/research/ADDENDUM_T_PROTOCOL.md, frozen 2026-09-03):
+# the same cells on four other families. --addendum T swaps the model
+# table, the cell directory, the artifact, and the combination rule.
+FAMILIES = {"smollm2-1.7b": ("HuggingFaceTB/SmolLM2-1.7B-Instruct", "float32"),
+            "granite-2b": ("ibm-granite/granite-3.1-2b-instruct", "float32"),
+            "phi3-mini": ("microsoft/Phi-3-mini-4k-instruct", "bfloat16"),
+            "falcon3-1b": ("tiiuae/Falcon3-1B-Instruct", "float32")}
+FAMILIES_CELLS_DIR = REPO / "experiments" / "cord_fence_tax_families_cells"
+FAMILIES_OUT = REPO / "experiments" / "cord_fence_tax_families_2026-09-03.json"
+ADDENDUM = "S"  # set from the CLI; "T" selects the family table
 RUN_DATE = "2026-09-01"
 
 RUNGS = {"0.5b": "Qwen/Qwen2.5-0.5B-Instruct",
@@ -97,6 +108,16 @@ def _assert_vocab() -> None:
                          "runner must agree before any arm runs")
 
 
+def _model_of(rung: str) -> tuple[str, str]:
+    if ADDENDUM == "T":
+        return FAMILIES[rung]
+    return RUNGS[rung], "float32"
+
+
+def _cells_dir() -> pathlib.Path:
+    return FAMILIES_CELLS_DIR if ADDENDUM == "T" else CELLS_DIR
+
+
 def run_cell(rung: str, regime: str) -> int:
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -105,11 +126,11 @@ def run_cell(rung: str, regime: str) -> int:
     from run_challenge import build_task
 
     _assert_vocab()
-    cell_path = CELLS_DIR / f"{rung}_{regime}.json"
+    cell_path = _cells_dir() / f"{rung}_{regime}.json"
     if cell_path.exists():
         print(f"cell banked already: {cell_path.name}")
         return 0
-    CELLS_DIR.mkdir(parents=True, exist_ok=True)
+    _cells_dir().mkdir(parents=True, exist_ok=True)
     WORK.mkdir(parents=True, exist_ok=True)
 
     manifest = json.loads((SPLIT_DIR / "manifest.json").read_text())
@@ -128,7 +149,8 @@ def run_cell(rung: str, regime: str) -> int:
                    for i in range(len(rows))]
     task = build_task(train, holdout)
 
-    config_key = (f"{RUNGS[rung]}|{regime}|float32|k={K if regime=='kshot' else 0}"
+    model_id, dtype_name = _model_of(rung)
+    config_key = (f"{model_id}|{regime}|{dtype_name}|k={K if regime=='kshot' else 0}"
                   f"|mnt={MAX_NEW_TOKENS}|seq={MAX_SEQ}|S")
     ckpt_path = WORK / f"{rung}_{regime}.ckpt.jsonl"
     done: dict[str, dict] = {}
@@ -150,11 +172,11 @@ def run_cell(rung: str, regime: str) -> int:
 
     torch.set_num_threads(4)
     torch.manual_seed(1)
-    tokenizer = AutoTokenizer.from_pretrained(RUNGS[rung])
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
-    model = AutoModelForCausalLM.from_pretrained(RUNGS[rung],
-                                                 dtype=torch.float32)
+    model = AutoModelForCausalLM.from_pretrained(model_id,
+                                                 dtype=getattr(torch, dtype_name))
     model.eval()
     config = TTTConfig(max_new_tokens=MAX_NEW_TOKENS,
                        max_sequence_tokens=MAX_SEQ)
@@ -201,12 +223,13 @@ def run_cell(rung: str, regime: str) -> int:
                   f"{took}s", flush=True)
 
     record = {
-        "what": f"Addendum S cell: {RUNGS[rung]}, {regime} regime, raw "
+        "what": f"Addendum {ADDENDUM} cell: {model_id}, {regime} regime, raw "
                 "CORD outputs. Rates and readings live in the assembled "
                 "artifact (--read), applied to all cells symmetrically.",
         "protocol": "docs/research/ADDENDUM_S_PROTOCOL.md",
         "run_date": RUN_DATE,
-        "model": RUNGS[rung],
+        "model": model_id,
+        "dtype": dtype_name,
         "regime": regime,
         "n": len(holdout),
         "k": K if regime == "kshot" else 0,
@@ -235,9 +258,10 @@ def read() -> int:
     fc = _fc()
     cells = {}
     missing = []
-    for rung in RUNGS:
+    table = FAMILIES if ADDENDUM == "T" else RUNGS
+    for rung in table:
         for regime in ("schema", "kshot"):
-            path = CELLS_DIR / f"{rung}_{regime}.json"
+            path = _cells_dir() / f"{rung}_{regime}.json"
             if path.exists():
                 cells[(rung, regime)] = json.loads(path.read_text())
             else:
@@ -285,7 +309,7 @@ def read() -> int:
     # The FROZEN readings, per model, combined per the protocol note's
     # non-flattering rule — arithmetic only.
     per_model = {}
-    for rung in RUNGS:
+    for rung in table:
         fs, fk = rates[(rung, "schema")], rates[(rung, "kshot")]
         if fs < 0.50:
             per_model[rung] = "(c) DOES NOT REPLICATE"
@@ -293,7 +317,22 @@ def read() -> int:
             per_model[rung] = "(a) REPLICATES"
         else:
             per_model[rung] = "(b) PARTIAL"
-    if any(v.startswith("(c)") for v in per_model.values()):
+    if ADDENDUM == "T":
+        n_a = sum(v.startswith("(a)") for v in per_model.values())
+        c_fams = [r for r, v in per_model.items() if v.startswith("(c)")]
+        if c_fams:
+            finding = ("(c) IN " + ", ".join(c_fams) + ": named exception(s) at full "
+                       "size; the outbound sentence becomes 'on N of the families "
+                       "tested' with the exception named — never 'across model "
+                       "families'. Per-family: " + json.dumps(per_model))
+        elif n_a >= 3:
+            finding = (f"HOLDS ACROSS FAMILIES: (a) in {n_a} of {len(per_model)} families "
+                       "and no (c) — schema-only prompts get wrapped and k-shot prompts "
+                       "do not, on public receipts, across organisations' checkpoints. "
+                       "Per-family: " + json.dumps(per_model))
+        else:
+            finding = "MIXED: fewer than 3 families at (a), none at (c) — all rates publish, no headline. " + json.dumps(per_model)
+    elif any(v.startswith("(c)") for v in per_model.values()):
         finding = ("(c) AT " + " AND ".join(
             r for r, v in per_model.items() if v.startswith("(c)")) +
             ": the fence pattern is corpus-specific at that size and the "
@@ -329,22 +368,31 @@ def read() -> int:
                      "and a receipt cannot demonstrate itself; deviation "
                      "declared in the protocol note before data",
     }
-    OUT.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
-    print(f"\n{finding}\nbanked: {OUT}")
+    out = FAMILIES_OUT if ADDENDUM == "T" else OUT
+    record["addendum"] = ADDENDUM
+    if ADDENDUM == "T":
+        record["preregistration"] = "docs/research/ADDENDUM_T_PROTOCOL.md (frozen 2026-09-03 before any arm)"
+    out.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
+    print(f"\n{finding}\nbanked: {out}")
     return 0
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--cell", help="rung:regime, e.g. 0.5b:schema")
+    parser.add_argument("--cell", help="rung:regime, e.g. 0.5b:schema (S) or smollm2-1.7b:schema (T)")
     parser.add_argument("--read", action="store_true")
+    parser.add_argument("--addendum", default="S", choices=("S", "T"),
+                        help="T = the family replication (ADDENDUM_T_PROTOCOL.md)")
     args = parser.parse_args()
+    global ADDENDUM
+    ADDENDUM = args.addendum
     if args.read:
         return read()
     if not args.cell:
         raise SystemExit("pass --cell rung:regime or --read")
     rung, regime = args.cell.split(":")
-    if rung not in RUNGS or regime not in ("schema", "kshot"):
+    table = FAMILIES if ADDENDUM == "T" else RUNGS
+    if rung not in table or regime not in ("schema", "kshot"):
         raise SystemExit(f"unknown cell {args.cell}")
     return run_cell(rung, regime)
 

@@ -1,0 +1,62 @@
+{
+  "what": "Every preregistered result in this repository that went AGAINST its own thesis, enumerated so a reviewer can count them. Each entry names the VERDICT.md row and the artifact.",
+  "date": "2026-09-03",
+  "thesis": "per-tenant adaptation of a small open model beats prompting for private document extraction",
+  "results": [
+    {
+      "n": 1,
+      "row": "Addendum I",
+      "finding": "the cheapest hosted API tier beats the adapted 0.5B on every run (0W/14L/16T to 1W/13L/16T)",
+      "artifact": "experiments/waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_2026-08-22.json"
+    },
+    {
+      "n": 2,
+      "row": "Addendum J",
+      "finding": "a bare field list takes the hosted tier to 0.8930 \u2014 the cost argument's premise fails",
+      "artifact": "experiments/waybill_market_baseline_*_declare-schema*"
+    },
+    {
+      "n": 3,
+      "row": "Addendum K",
+      "finding": "document grounding moved 0.8833 to 0.8833",
+      "artifact": "experiments/addendum_k_grounding*.json"
+    },
+    {
+      "n": 4,
+      "row": "Addendum N (withdrawn)",
+      "finding": "the 1.5B 'cannot produce a usable object' result was a markdown fence; withdrawn in place",
+      "artifact": "experiments/fence_rescore.json"
+    },
+    {
+      "n": 5,
+      "row": "Addendum O",
+      "finding": "an unadapted 3B on a 196-token prompt matches the adapted 0.5B (0.8958 vs 0.8833)",
+      "artifact": "experiments/waybill_scale_rung_3b_schema_2026-08-25.json"
+    },
+    {
+      "n": 6,
+      "row": "Addendum P",
+      "finding": "at matched batching the quality tolerance breaks; no cost ratio is citable",
+      "artifact": "experiments/waybill_matched_batch_2026-08-25.json"
+    },
+    {
+      "n": 7,
+      "row": "Addendum Q",
+      "finding": "adaptation at 3B loses to twenty demonstrations (D=-0.0390)",
+      "artifact": "experiments/waybill_adapted_3b_2026-08-25.json"
+    },
+    {
+      "n": 8,
+      "row": "Engineering ladder E2/E3/E5/E6",
+      "finding": "four rungs fail the frozen two-statistics bar; E5 by one win; E6 dead flat on CORD",
+      "artifact": "experiments/ladder_results_2026-08-31.json"
+    },
+    {
+      "n": 9,
+      "row": "Ladder II E7/E8/E9",
+      "finding": "three architectures clear the mean tolerance and never separate by sign test against the best prompting available; order-robustness is what survives",
+      "artifact": "experiments/ladder_results_2026-08-31.json"
+    }
+  ],
+  "count": 9
+}

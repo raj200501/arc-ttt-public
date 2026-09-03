@@ -46,5 +46,6 @@
     "1.5b": "(a) REPLICATES"
   },
   "the_finding": "(a) IT REPLICATES AT BOTH SIZES: schema-only prompts get wrapped and k-shot prompts do not, on public receipts nobody here authored. The headline moves onto public data.",
-  "note_on_n": "schema cells n=100 (the row's letter); k-shot cells n=80 \u2014 demonstrations are the E6 train-20 and a receipt cannot demonstrate itself; deviation declared in the protocol note before data"
+  "note_on_n": "schema cells n=100 (the row's letter); k-shot cells n=80 \u2014 demonstrations are the E6 train-20 and a receipt cannot demonstrate itself; deviation declared in the protocol note before data",
+  "addendum": "S"
 }

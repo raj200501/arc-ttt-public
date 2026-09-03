@@ -64,6 +64,8 @@ def _valid_scalar_prefix(tok: str) -> bool:
         if tok in ("-", "+"):
             return tok == "-"
         try:
+            # fencecheck: ignore -- asking whether a bare token is a number
+            # PREFIX while decoding; not scoring model output.
             float(tok.rstrip("eE+-."))
             return tok[0] != "+"
         except ValueError:
@@ -75,6 +77,8 @@ def _scalar_complete(tok: str) -> bool:
     if tok in _LITERALS:
         return True
     try:
+        # fencecheck: ignore -- asking whether a scalar token is complete
+        # while decoding; not scoring model output.
         json.loads(tok)
         return isinstance(json.loads(tok), (int, float))
     except (ValueError, TypeError):
@@ -190,6 +194,9 @@ def is_json_prefix(text: str) -> bool:
 
 def is_complete_json(text: str) -> bool:
     try:
+        # fencecheck: ignore -- the decoder's own stop condition ("is the
+        # root closed and parseable"); the failure means KEEP DECODING,
+        # it never becomes a score.
         obj = json.loads(text)
     except ValueError:
         return False
