@@ -235,6 +235,33 @@ def main() -> int:
                    "prompted_constrained_vs_greedy_mean_delta": round(
                        statistics.mean(bar7.values()) - statistics.mean(bar6.values()), 4)})
 
+    # E8 (Ladder II) — E7's decoder plus similarity-ORDERED demonstrations
+    # (BM25 over OCR text, most similar last). ADAPT vs the E8 prompted
+    # arm; SYSTEM vs E6's greedy bar; and the ordering effect on its own
+    # (E8 prompted vs E7 prompted) so a SYSTEM gain cannot be misread.
+    e8_prompted = REPO / "experiments" / "ladder_e8_cord_prompted_2026-09-03.json"
+    e8_adapted = REPO / "experiments" / "ladder_e8_cord_adapted_2026-09-03.json"
+    if (e8_prompted.exists() and e8_adapted.exists() and e6_prompted.exists()
+            and e7_prompted.exists()):
+        bar8, bar8_inv, bar8_fen, bar8_acct = score_e7(e8_prompted)
+        per8, inv8, fen8, acct8 = score_e7(e8_adapted)
+        bar7b, _, _, _ = score_e7(e7_prompted)
+        read_rung("E8 ADAPT: 3B adapted+k20 bm25-ordered constrained vs prompted same",
+                  per8, inv8, fen8, bar8, round(statistics.mean(bar8.values()), 4),
+                  "prompted 3B k-shot bf16 bm25-ordered constrained (CORD)", 5,
+                  {"bar_invalid": bar8_inv, "bar_fenced_outputs": bar8_fen,
+                   "decoder_accounting": {"adapted": acct8, "prompted": bar8_acct},
+                   "reading_kind": "ADAPT — same decoder and ordering both arms"})
+        bar6b, _, _ = score_e6(e6_prompted)
+        read_rung("E8 SYSTEM: 3B adapted+k20 bm25-ordered constrained vs E6 greedy prompted",
+                  per8, inv8, fen8, bar6b, round(statistics.mean(bar6b.values()), 4),
+                  "prompted 3B k-shot bf16 greedy (E6 bar)", 5,
+                  {"reading_kind": "SYSTEM — credits adapter, decoder and ordering",
+                   "ordering_effect_prompted_bm25_minus_prompted_e7_mean_delta": round(
+                       statistics.mean(bar8.values()) - statistics.mean(bar7b.values()), 4),
+                   "ordering_effect_sign_test": _sign(
+                       [bar8[d] - bar7b[d] for d in sorted(set(bar8) & set(bar7b))])})
+
     out = {
         "what": "Engineering-ladder results, read against the bars frozen "
                 "in docs/research/ADAPTATION_ENGINEERING_LADDER.md before "
