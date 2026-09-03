@@ -7,19 +7,19 @@
     "EXTERNAL": "third-party quote, labelled as such, not ours to verify."
   },
   "counts": {
-    "AGGREGATE": 73,
+    "AGGREGATE": 74,
     "ARITHMETIC": 81,
     "EXTERNAL": 7,
-    "PRIMARY": 49
+    "PRIMARY": 56
   },
-  "total_artifacts": 210,
+  "total_artifacts": 218,
   "excluded_as_gate_exhaust": [
     "verification_coverage.json",
     "outbound_reconciliation.json",
     "review_simulation.json"
   ],
-  "primary_verifiable": 49,
-  "primary_verifiable_fraction": 0.2333,
+  "primary_verifiable": 56,
+  "primary_verifiable_fraction": 0.2569,
   "why_the_total_is_banked": "Outbound copy cites this total ('179 banked artifacts') and the reconciliation gate had been matching it against an unrelated 179 in an unrelated artifact -- a figure that traced to nothing, passing because some number of that value happened to exist somewhere. A cited figure has to be a figure this map deliberately publishes.",
   "artifacts": [
     {
@@ -515,10 +515,58 @@
       "bytes": 31794
     },
     {
+      "artifact": "ladder_e7_cord_adapted_2026-09-02.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 41260
+    },
+    {
+      "artifact": "ladder_e7_cord_prompted_2026-09-02.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 41237
+    },
+    {
+      "artifact": "ladder_e8_cord_adapted_2026-09-03.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 40947
+    },
+    {
+      "artifact": "ladder_e8_cord_prompted_2026-09-03.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 42210
+    },
+    {
+      "artifact": "ladder_e8_exploratory_2026-09-03.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 1064
+    },
+    {
+      "artifact": "ladder_e9_cord_adapted_2026-09-03.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 52735
+    },
+    {
+      "artifact": "ladder_e9_cord_prompted_2026-09-03.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 53382
+    },
+    {
+      "artifact": "ladder_e9_cord_prompted_greedy_2026-09-03.json",
+      "level": "PRIMARY",
+      "why": "stores raw predictions: gold can be regenerated and every prediction re-scored",
+      "bytes": 48932
+    },
+    {
       "artifact": "ladder_results_2026-08-31.json",
       "level": "ARITHMETIC",
       "why": "stores per-item scores but not the predictions that produced them: a reader can re-add the numbers, not re-derive them from model output",
-      "bytes": 8720
+      "bytes": 27059
     },
     {
       "artifact": "memprobe_1.5b_cpu_2026-08-11.json",

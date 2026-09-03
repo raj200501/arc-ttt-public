@@ -1,0 +1,13 @@
+{
+  "what": "E9 CORD split, deterministic, made before any E9 arm ran.",
+  "source_sha256": "5d920e3a35b161214aedcad0520b7275c06accf427cf924371964f0d304c8da4",
+  "rule": "random.Random(2).shuffle; first 40 train, next 60 eval",
+  "date": "2026-09-03",
+  "n_train": 40,
+  "n_eval": 60,
+  "files": {
+    "train.jsonl": "a8a2b3ee0bce7bb7832fff6e1b260747b9a899635f9c3c501d8336e97bab197f",
+    "holdout.jsonl": "058c7cc4719b59364a9ac87feb98b278d405eaa6b43c8cc9cd61c8fb70704410",
+    "gold.jsonl": "b7a0f387a73d0db5a6ae0c60d0d0c7bea4adfedc7f95d01bd58ec6da4ea2610e"
+  }
+}

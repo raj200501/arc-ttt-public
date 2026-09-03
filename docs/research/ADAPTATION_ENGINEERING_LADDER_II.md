@@ -149,3 +149,23 @@ the same selected demonstrations — E6's bar is a different eval set
 and cannot serve). Attempt counter resets to 1 for this new bar, as
 frozen above. Cost: one 3B adaptation on 40 receipts (~25 min) plus
 three 3B arms of 60 receipts.
+
+## Ladder II closed — 2026-09-03
+
+| rung | stack | ADAPT bar | D | W/L/T | p | reading |
+|---|---|---|---|---|---|---|
+| E7 decoder | 0.7995 | 0.7650 | +0.0345 | 32/27/21 | 0.30 | (b) |
+| E8 + ordered demos | 0.7943 | 0.7361 (ordering-damaged) | +0.0582 | 42/18/20 | 0.0013 | letter (a); substance: order-robustness, not adaptation-beats-prompting (vs strongest prompted arm +0.0293, p=0.60, exploratory) |
+| E9 40-receipt adapter + retrieved demos, new split | 0.8450 | 0.8007 | +0.0444 | 26/18/16 | 0.146 | (b) |
+
+SYSTEM readings: E7 +0.0830 (p=0.096), E8 +0.0777 (p=0.40), E9 +0.0521
+(p=0.087) — none clears. What the ladder established, at its size: the
+constrained decoder removes every invalid output on both arms and lifts
+every configuration; retrieval selection lifts prompting; the adapted
+model is robust to demonstration order where the prompted model is not;
+and the stack's advantage over the best prompting available to it is a
+mean of +0.03 to +0.06 that never separates by sign test across three
+architectures and a doubled adaptation set. The ladder stops here by
+its own rule: no rung is left that the decompositions license, and the
+readings that would let a worse bar clear have been named rather than
+used.

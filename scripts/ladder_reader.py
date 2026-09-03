@@ -262,6 +262,51 @@ def main() -> int:
                    "ordering_effect_sign_test": _sign(
                        [bar8[d] - bar7b[d] for d in sorted(set(bar8) & set(bar7b))])})
 
+    # E9 (Ladder II) — 40-receipt adapter, BM25-SELECTED demonstrations in
+    # split ORDER, E7's decoder, on a fresh seed-2 split (60 eval). ADAPT
+    # vs the prompted+constrained arm; SYSTEM vs a greedy prompted arm on
+    # the SAME 60 receipts. New bar: attempt 1. Reads only when the arms
+    # each reading needs exist.
+    e9_dir = REPO / "experiments" / "ladder_e9_cord_split"
+    e9 = {a: REPO / "experiments" / f"ladder_e9_cord_{a}_2026-09-03.json"
+          for a in ("prompted", "adapted", "prompted_greedy")}
+    if e9["prompted"].exists() and e9["adapted"].exists():
+        gold_e9 = {json.loads(l)["id"]: json.loads(l)["gold"] for l in
+                   (e9_dir / "gold.jsonl").read_text().splitlines() if l.strip()}
+
+        def score_e9(path):
+            rec = json.loads(path.read_text())
+            per, invalid, fenced = {}, 0, 0
+            for doc_id, raw in rec["predictions"].items():
+                fenced += fc.strip_fence(raw)[1]
+                obj = score_raw(raw)
+                if obj is None:
+                    invalid += 1
+                    per[doc_id] = 0.0
+                else:
+                    per[doc_id] = round(field_micro_f1(obj, gold_e9[doc_id]), 4)
+            acct = rec.get("decode_accounting", {})
+            summary = {"fallbacks_total": sum(a.get("fallbacks", 0) for a in acct.values()),
+                       "constrained_steps_total": sum(a.get("constrained_steps", 0) for a in acct.values())}
+            return per, invalid, fenced, summary
+
+        bar9, bar9_inv, bar9_fen, bar9_acct = score_e9(e9["prompted"])
+        per9, inv9, fen9, acct9 = score_e9(e9["adapted"])
+        read_rung("E9 ADAPT: 3B adapted(40)+k20-of-40 selected, constrained vs prompted same",
+                  per9, inv9, fen9, bar9, round(statistics.mean(bar9.values()), 4),
+                  "prompted 3B k=20-of-40 bm25-selected split-ordered constrained (E9 split)", 1,
+                  {"bar_invalid": bar9_inv, "bar_fenced_outputs": bar9_fen,
+                   "decoder_accounting": {"adapted": acct9, "prompted": bar9_acct},
+                   "reading_kind": "ADAPT — same selection, order and decoder both arms; new bar, attempt 1",
+                   "corpus": "CORD validation, seed-2 split, 60 held-out receipts"})
+        if e9["prompted_greedy"].exists():
+            barg, barg_inv, barg_fen, _ = score_e9(e9["prompted_greedy"])
+            read_rung("E9 SYSTEM: the stack vs greedy prompted on the same 60 receipts",
+                      per9, inv9, fen9, barg, round(statistics.mean(barg.values()), 4),
+                      "prompted 3B k=20-of-40 bm25-selected split-ordered GREEDY (E9 split)", 1,
+                      {"bar_invalid": barg_inv, "bar_fenced_outputs": barg_fen,
+                       "reading_kind": "SYSTEM — credits adapter and decoder; never substitutes for ADAPT"})
+
     out = {
         "what": "Engineering-ladder results, read against the bars frozen "
                 "in docs/research/ADAPTATION_ENGINEERING_LADDER.md before "
