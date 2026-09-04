@@ -7,19 +7,19 @@
     "EXTERNAL": "third-party quote, labelled as such, not ours to verify."
   },
   "counts": {
-    "AGGREGATE": 77,
+    "AGGREGATE": 78,
     "ARITHMETIC": 81,
     "EXTERNAL": 7,
     "PRIMARY": 56
   },
-  "total_artifacts": 221,
+  "total_artifacts": 222,
   "excluded_as_gate_exhaust": [
     "verification_coverage.json",
     "outbound_reconciliation.json",
     "review_simulation.json"
   ],
   "primary_verifiable": 56,
-  "primary_verifiable_fraction": 0.2534,
+  "primary_verifiable_fraction": 0.2523,
   "why_the_total_is_banked": "Outbound copy cites this total ('179 banked artifacts') and the reconciliation gate had been matching it against an unrelated 179 in an unrelated artifact -- a figure that traced to nothing, passing because some number of that value happened to exist somewhere. A cited figure has to be a figure this map deliberately publishes.",
   "artifacts": [
     {
@@ -1010,7 +1010,13 @@
       "artifact": "parser_robustness_2026-09-04.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 531523
+      "bytes": 534356
+    },
+    {
+      "artifact": "parser_robustness_ext_2026-09-04.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 554297
     },
     {
       "artifact": "per_tenant_verdicts_2026-08-22.json",
@@ -1034,7 +1040,7 @@
       "artifact": "public_export_counts.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 1352
+      "bytes": 1353
     },
     {
       "artifact": "results_against_thesis_2026-09-03.json",

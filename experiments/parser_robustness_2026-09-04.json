@@ -1,6 +1,7 @@
 {
  "what": "Addendum U: what shipped parsers do to every raw model output this project has banked. Reference = the shipped fencecheck strip_fence + fail-closed parse_json_object. Readings applied by arithmetic from docs/research/ADDENDUM_U_PROTOCOL.md.",
- "preregistration": "docs/research/ADDENDUM_U_PROTOCOL.md (frozen 2026-09-04 before the runner existed)",
+ "panel": "base",
+ "preregistration": "docs/research/ADDENDUM_U_PROTOCOL.md (committed 7e0cf36 before the runner was written)",
  "corpus": {
   "path": "fence_corpus_2026-09-04.jsonl",
   "sha256": "ae6e9315abd83310f8691a808f699c938ae2f599b4cf9f224ad14e1373f07ffc",

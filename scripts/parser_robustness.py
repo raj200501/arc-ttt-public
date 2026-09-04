@@ -34,8 +34,14 @@ sys.path.insert(0, str(REPO / "tools"))
 CORPUS = REPO / "experiments" / "fence_corpus_2026-09-04.jsonl"
 MANIFEST = REPO / "experiments" / "fence_corpus_2026-09-04.manifest.json"
 OUT = REPO / "experiments" / "parser_robustness_2026-09-04.json"
+OUT_EXT = REPO / "experiments" / "parser_robustness_ext_2026-09-04.json"
 
 LENIENT = ("langchain_parse_json_markdown", "json_repair")
+# Addendum U-ext (docs/research/ADDENDUM_U_EXT_PROTOCOL.md, frozen after U
+# was banked and corrected): three more shipped helpers, same corpus, same
+# quantities, U2 verbatim; no U1/U3 because `strict` is not in this panel.
+LENIENT_EXT = ("instructor_extract_json_from_codeblock", "smolagents_parse_json_blob",
+               "llama_index_parse_json_markdown")
 
 
 # --------------------------------------------------------------------------
@@ -120,6 +126,45 @@ def make_parsers() -> dict:
     return parsers, versions
 
 
+def make_parsers_ext() -> tuple[dict, dict, dict]:
+    """The U-ext panel: (parsers, versions, raw callables) -- raw callables
+    return the shipped value untouched so non-object returns can be banked."""
+    from instructor.utils import extract_json_from_codeblock
+    from smolagents.utils import parse_json_blob
+    from llama_index.core.output_parsers.utils import parse_json_markdown as li_parse
+
+    def raw_instructor(text: str):
+        # instructor/utils.py: the LAST balanced {...}/[...] span, then strict json
+        # fencecheck: ignore -- the shipped helper's own parse step, under test
+        return json.loads(extract_json_from_codeblock(text))
+
+    def raw_smolagents(text: str):
+        # smolagents/utils.py: first "{" to last "}", json.loads(strict=False)
+        return parse_json_blob(text)[0]
+
+    def raw_llama_index(text: str):
+        # llama_index/core/output_parsers/utils.py: ```json opener stripped,
+        # json.loads, then yaml.safe_load as the fallback
+        return li_parse(text)
+
+    raw = {"instructor_extract_json_from_codeblock": raw_instructor,
+           "smolagents_parse_json_blob": raw_smolagents,
+           "llama_index_parse_json_markdown": raw_llama_index}
+
+    def wrap(fn):
+        def parser(text: str):
+            try:
+                return _as_object(fn(text))
+            except Exception:
+                return None
+        return parser
+
+    parsers = {name: wrap(fn) for name, fn in raw.items()}
+    versions = {"instructor": _dist_version("instructor"), "smolagents": _dist_version("smolagents"),
+                "llama_index_core": _dist_version("llama-index-core")}
+    return parsers, versions, raw
+
+
 def _dist_version(name: str) -> str:
     try:
         from importlib.metadata import version
@@ -161,7 +206,12 @@ def decompose_fabricated(text: str, obj, fenced: bool) -> str:
                 # fencecheck: ignore -- substring probe for the substance
                 # check, not a scoring path
                 if json.loads(text[start:end]) == obj:
-                    return "exact_object_present"
+                    # Split added 2026-09-04 after the U-ext run: a helper that
+                    # returns a SUBSTRING trivially satisfies this probe, so say
+                    # whether the object sits at the top level of the text or is
+                    # a fragment nested inside a larger, unparseable object.
+                    return ("exact_object_present" if _brace_depth(text, start) == 0
+                            else "nested_fragment_returned")
             except ValueError:
                 pass
     if fenced:
@@ -169,6 +219,29 @@ def decompose_fabricated(text: str, obj, fenced: bool) -> str:
     if "```" in text:
         return "fence_after_prose"
     return "unfenced_malformed"
+
+
+def _brace_depth(text: str, index: int) -> int:
+    """Number of unclosed { or [ before `index`, ignoring braces inside
+    double-quoted strings. 0 means the span at `index` is top-level."""
+    depth = 0
+    in_str = esc = False
+    for ch in text[:index]:
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch in "{[":
+            depth += 1
+        elif ch in "}]":
+            depth = max(0, depth - 1)
+    return depth
 
 
 def jsondiff_scorer():
@@ -274,8 +347,10 @@ def read_u3(kshot_lost_rate, n_ref: int, residual: dict) -> str:
 # main
 # --------------------------------------------------------------------------
 
-def run(dry: bool) -> int:
+def run(dry: bool, panel: str = "base") -> int:
     import fence_corpus
+    lenient = LENIENT if panel == "base" else LENIENT_EXT
+    out_path = OUT if panel == "base" else OUT_EXT
     records_fresh, manifest_fresh = fence_corpus.build()
     fresh_sha = hashlib.sha256(fence_corpus.serialize(records_fresh).encode("utf-8")).hexdigest()
     if not CORPUS.exists() or hashlib.sha256(CORPUS.read_bytes()).hexdigest() != fresh_sha:
@@ -288,7 +363,10 @@ def run(dry: bool) -> int:
     fc = _fencecheck()
     from arcttt.scoring import parse_json_object
     from arcttt.text_task import TextTaskFormatError
-    parsers, versions = make_parsers()
+    if panel == "base":
+        parsers, versions = make_parsers()
+    else:
+        parsers, versions, raw_ext = make_parsers_ext()
     jd_score = jsondiff_scorer()
 
     per_record = []
@@ -300,10 +378,13 @@ def run(dry: bool) -> int:
     non_dict: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     non_dict_status: dict[str, dict[str, list[str]]] = defaultdict(lambda: defaultdict(list))
     n_fenced = 0
-    import json_repair as _jr
-    from langchain_core.output_parsers.json import parse_json_markdown as _lc
-    _raw_lenient = {"json_repair": lambda t: _jr.loads(t),
-                    "langchain_parse_json_markdown": lambda t: _lc(t)}
+    if panel == "base":
+        import json_repair as _jr
+        from langchain_core.output_parsers.json import parse_json_markdown as _lc
+        _raw_lenient = {"json_repair": lambda t: _jr.loads(t),
+                        "langchain_parse_json_markdown": lambda t: _lc(t)}
+    else:
+        _raw_lenient = raw_ext
     for r in records:
         ref, fenced = reference(r["text"], fc, parse_json_object, TextTaskFormatError)
         n_fenced += fenced
@@ -313,7 +394,7 @@ def run(dry: bool) -> int:
             got = fn(r["text"])
             st = status(ref, got)
             row["status"][name] = st
-            if st == "fabricated" and name in LENIENT:
+            if st == "fabricated" and name in lenient:
                 cat = decompose_fabricated(r["text"], got, fenced)
                 row.setdefault("fabricated_kind", {})[name] = cat
                 fab_kinds[name][cat] += 1
@@ -341,7 +422,7 @@ def run(dry: bool) -> int:
             if st_counted == "agree_none" and kind == "list":
                 st_counted = "fabricated"  # a list of objects reaches the consumer
             non_dict_status[name][sk].append(st_counted)
-        if ref is not None:
+        if ref is not None and panel == "base":
             (jd_fenced if fenced else jd_unfenced).append(jd_score(r["text"], ref))
         per_record.append(row)
 
@@ -350,39 +431,48 @@ def run(dry: bool) -> int:
     regimes = {name: {rg: rates(sts) for rg, sts in sorted(d.items())} for name, d in by_parser_regime.items()}
     overall = {name: rates([s for d in by_parser_slice[name].values() for s in d]) for name in parsers}
 
-    # U1: strict, schema-only, per family
-    fam_schema: dict[str, list[str]] = defaultdict(list)
-    for r, row in zip(records, per_record):
-        if r["regime"] == "schema":
-            fam_schema[r["family"]].append(row["status"]["strict"])
-    u1_per_family_rates = {f: rates(s) for f, s in sorted(fam_schema.items())}
-    u1_per_family = {f: family_strict_reading(v["lost_rate"]) for f, v in u1_per_family_rates.items()
-                     if v["lost_rate"] is not None}
-    u1 = read_u1(u1_per_family)
+    # U1: strict, schema-only, per family (base panel only)
+    u1_per_family_rates, u1, u3 = {}, None, None
+    if panel == "base":
+        fam_schema: dict[str, list[str]] = defaultdict(list)
+        for r, row in zip(records, per_record):
+            if r["regime"] == "schema":
+                fam_schema[r["family"]].append(row["status"]["strict"])
+        u1_per_family_rates = {f: rates(s) for f, s in sorted(fam_schema.items())}
+        u1_per_family = {f: family_strict_reading(v["lost_rate"]) for f, v in u1_per_family_rates.items()
+                         if v["lost_rate"] is not None}
+        u1 = read_u1(u1_per_family)
 
-    # U2: each lenient parser
+    # U2: each lenient parser in the panel
     u2 = {}
-    for name in LENIENT:
+    for name in lenient:
         sh = {sk: (v["hazard_rate"], v["n"]) for sk, v in slices[name].items()}
         u2[name] = read_u2(overall[name]["hazard_rate"], sh)
 
-    # U3: strict on k=20 pooled
-    k20 = [row["status"]["strict"] for r, row in zip(records, per_record)
-           if r["regime"] == "kshot" and r["k"] == 20]
-    k20_rates = rates(k20)
-    u3 = read_u3(k20_rates["lost_rate"], k20_rates["n_ref"], dict(residual_causes))
+    # U3: strict on k=20 pooled (base panel only)
+    if panel == "base":
+        k20 = [row["status"]["strict"] for r, row in zip(records, per_record)
+               if r["regime"] == "kshot" and r["k"] == 20]
+        k20_rates = rates(k20)
+        u3 = read_u3(k20_rates["lost_rate"], k20_rates["n_ref"], dict(residual_causes))
 
     record = {
-        "what": "Addendum U: what shipped parsers do to every raw model output this "
-                "project has banked. Reference = the shipped fencecheck strip_fence + "
-                "fail-closed parse_json_object. Readings applied by arithmetic from "
-                "docs/research/ADDENDUM_U_PROTOCOL.md.",
-        "preregistration": "docs/research/ADDENDUM_U_PROTOCOL.md (frozen 2026-09-04 before the runner existed)",
+        "what": ("Addendum U: what shipped parsers do to every raw model output this "
+                 "project has banked. Reference = the shipped fencecheck strip_fence + "
+                 "fail-closed parse_json_object. Readings applied by arithmetic from "
+                 "docs/research/ADDENDUM_U_PROTOCOL.md." if panel == "base" else
+                 "Addendum U-ext: three more shipped JSON helpers (instructor, smolagents, "
+                 "llama-index) on the same corpus, same reference, U2 thresholds verbatim; "
+                 "docs/research/ADDENDUM_U_EXT_PROTOCOL.md."),
+        "panel": panel,
+        "preregistration": ("docs/research/ADDENDUM_U_PROTOCOL.md (committed 7e0cf36 before the runner was written)"
+                            if panel == "base" else
+                            "docs/research/ADDENDUM_U_EXT_PROTOCOL.md (committed aba5089 before these helpers ran)"),
         "corpus": {"path": CORPUS.name, "sha256": fresh_sha, "n_records": len(records),
                    "n_fenced_by_reference": n_fenced,
                    "families_present": manifest["families_present"],
                    "artifacts_absent": manifest["artifacts_absent"]},
-        "parsers": {
+        "parsers": ({
             "strict": "json.loads(text); except ValueError -> None; non-object -> None "
                       "(evals/elsuite/basic/json_match.py:80 semantics, verbatim)",
             "autoevals_validjson": "autoevals.ValidJSON().valid_json(text) == 1 gate, then json.loads "
@@ -390,7 +480,11 @@ def run(dry: bool) -> int:
             "langchain_parse_json_markdown": "langchain_core.output_parsers.json.parse_json_markdown; exception -> None",
             "json_repair": "json_repair.loads; non-object -> None",
             "fencecheck (reference)": "tools/fencecheck.strip_fence + arcttt.scoring.parse_json_object; zero loss by construction, not ranked",
-        },
+        } if panel == "base" else {
+            "instructor_extract_json_from_codeblock": "json.loads(instructor.utils.extract_json_from_codeblock(text)); exception -> None; non-object -> None",
+            "smolagents_parse_json_blob": "smolagents.utils.parse_json_blob(text)[0]; exception -> None; non-object -> None",
+            "llama_index_parse_json_markdown": "llama_index.core.output_parsers.utils.parse_json_markdown(text) (json, then yaml fallback); exception -> None; non-object -> None",
+        }),
         "versions": versions,
         "overall": overall,
         "by_regime": regimes,
@@ -421,11 +515,11 @@ def run(dry: bool) -> int:
                    "reader can see what the preregistered rule hid.",
             "non_object_returns": {name: dict(k) for name, k in non_dict.items()},
             "overall_if_counted": {name: rates([s for d in non_dict_status[name].values() for s in d])
-                                   for name in LENIENT},
+                                   for name in lenient},
             "slices_at_or_above_0.05_if_counted": {
                 name: sorted(sk for sk, sts in non_dict_status[name].items()
                              if len(sts) >= 30 and rates(sts)["hazard_rate"] >= 0.05)
-                for name in LENIENT},
+                for name in lenient},
         },
         "per_record": per_record,
     }
@@ -433,22 +527,32 @@ def run(dry: bool) -> int:
     for name, v in overall.items():
         print(f"  {name:32s} lost {v['lost']:4d}/{v['n_ref']:<4d} ({v['lost_rate']})  diverged {v['diverged']:3d}  "
               f"fabricated {v['fabricated']:3d}/{v['n_noref']:<4d}  hazard {v['hazard_rate']}")
-    print("  JSONDiff mean score, fenced ref:", record["autoevals_jsondiff_score"]["fenced_ref_records"],
-          "unfenced ref:", record["autoevals_jsondiff_score"]["unfenced_ref_records"])
-    print("\n" + u1); [print(v) for v in u2.values()]; print(u3)
+    if panel == "base":
+        print("  JSONDiff mean score, fenced ref:", record["autoevals_jsondiff_score"]["fenced_ref_records"],
+              "unfenced ref:", record["autoevals_jsondiff_score"]["unfenced_ref_records"])
+        print("\n" + u1)
+    else:
+        record.pop("autoevals_jsondiff_score"); record.pop("u1_strict_schema_by_family")
+        record["readings"] = {"U2": u2}
+        record["fabricated_by_kind"] = record.pop("u2_substance_added_2026-09-04")["fabricated_by_kind"]
+    [print(v) for v in u2.values()]
+    if u3:
+        print(u3)
     if dry:
         print("\n(dry: nothing banked)")
         return 0
-    OUT.write_text(json.dumps(record, indent=1) + "\n", encoding="utf-8")
-    print(f"\nbanked: {OUT}")
+    out_path.write_text(json.dumps(record, indent=1) + "\n", encoding="utf-8")
+    print(f"\nbanked: {out_path}")
     return 0
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--dry", action="store_true")
+    ap.add_argument("--panel", choices=("base", "ext"), default="base",
+                    help="base = Addendum U's panel; ext = Addendum U-ext's three helpers")
     a = ap.parse_args()
-    return run(a.dry)
+    return run(a.dry, a.panel)
 
 
 if __name__ == "__main__":

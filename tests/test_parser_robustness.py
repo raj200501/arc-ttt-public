@@ -108,6 +108,42 @@ def test_decompose_fabricated_does_not_call_a_stripped_fence_recovery():
     assert pr.decompose_fabricated('{"a": 1', {"a": 1}, fenced=False) == "unfenced_malformed"
 
 
+def test_brace_depth_ignores_braces_inside_strings():
+    assert pr._brace_depth('{"a": 1}', 0) == 0
+    assert pr._brace_depth('{"a": {"b": 1}}', 6) == 1          # nested
+    assert pr._brace_depth('{"a": "{not a brace", "b": {', 27) == 1
+    assert pr._brace_depth('prose {"a":1} more {"b":2}', 19) == 0  # two top-level
+
+
+def test_decompose_marks_a_nested_fragment_as_not_recovery():
+    # the model's top-level object is unparseable (single-quoted key later);
+    # a last-span helper returns the inner menu item -- a fragment, not the answer
+    text = '{"menu":{"cnt":"1","nm":"Tea"},\'sub_total\':{\'price\':\'1\'}}'
+    assert pr.decompose_fabricated(text, {"cnt": "1", "nm": "Tea"}, fenced=False) == "nested_fragment_returned"
+    # trailing prose after a complete top-level object: recovery
+    text = '{"cnt":"1","nm":"Tea"}\nHope this helps!'
+    assert pr.decompose_fabricated(text, {"cnt": "1", "nm": "Tea"}, fenced=False) == "exact_object_present"
+
+
+def test_ext_panel_wrappers_return_object_or_none():
+    pytest.importorskip("instructor"); pytest.importorskip("smolagents"); pytest.importorskip("llama_index.core")
+    parsers, versions, raw = pr.make_parsers_ext()
+    fenced = '```json\n{"a": 1}\n```'
+    for name, fn in parsers.items():
+        assert fn(fenced) == {"a": 1}, name          # every helper handles a leading fence
+        assert fn("") is None, name                   # empty input is never an object
+    # non-object -> None (the frozen rule) where the helper returns the array;
+    # smolagents slices first "{" to last "}" and so returns the inner object
+    assert parsers["instructor_extract_json_from_codeblock"]('[{"a": 1}]') is None
+    assert parsers["llama_index_parse_json_markdown"]('[{"a": 1}]') is None
+    assert parsers["smolagents_parse_json_blob"]('[{"a": 1}]') == {"a": 1}
+    # the shipped behaviours the protocol wrote down before the run
+    assert parsers["instructor_extract_json_from_codeblock"]('{"a":1}{"b":2}') == {"b": 2}   # LAST span
+    assert parsers["smolagents_parse_json_blob"]('{"a": 2 * 3}') is None                   # no repair
+    assert parsers["llama_index_parse_json_markdown"]('{"a": 2 * 3}') == {"a": "2 * 3"}    # yaml fallback
+    assert set(versions) == {"instructor", "smolagents", "llama_index_core"}
+
+
 def test_builder_refuses_parsed_objects(tmp_path, monkeypatch):
     art = tmp_path / "cord_fence_tax_cells"
     art.mkdir()

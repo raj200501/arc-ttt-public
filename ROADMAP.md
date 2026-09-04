@@ -16,8 +16,10 @@ produced this repository is closed by its own measurements (see
   output this repository has banked — 1,950 outputs, four families.
   Strict parsing loses 100% of schema-only outputs on Qwen2.5 and
   Falcon3 and 0% on Granite and SmolLM2: the fence tax is
-  family-dependent, stated at full size. Next: the Phi-3 cells into
-  the corpus; more parsers behind the one-function interface.
+  family-dependent, stated at full size. U-ext (same day): instructor,
+  smolagents and llama-index helpers — instructor's last-span rule hands
+  back nested fragments; smolagents harmless. Next: the Phi-3 cells into
+  the corpus; the fourteen census packages still not attempted.
 - **Addendum T (in flight):** the fence tax on four other model
   families — SmolLM2, Granite, Phi-3, Falcon3 — same cells as
   Addendum S, thresholds frozen in
@@ -74,7 +76,7 @@ produced this repository is closed by its own measurements (see
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 396 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 399 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 

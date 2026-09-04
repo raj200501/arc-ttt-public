@@ -149,9 +149,24 @@ hours, mislabelled the 45 leading-fenced cases as the reference's own
 undercount and softened the sentence; the correction is in
 [`CORRECTIONS.md`](CORRECTIONS.md) (2026-09-04).
 
+**Three more shipped helpers, same corpus (Addendum U-ext, thresholds
+frozen before they ran).** None loses a parseable output; none changes
+content. Where the reference finds no object: `smolagents`'
+`parse_json_blob` returns one 5 times, all complete objects with prose
+around them — **harmless on this corpus, published as the finding**;
+llama-index's `parse_json_markdown` returns one 33 times, mostly malformed
+bodies its YAML fallback turned into objects with string-valued
+expressions; `instructor`'s `extract_json_from_codeblock` returns one
+99 times, and **81 of those are a sub-object nested inside a larger object
+the model wrote that does not parse** — its last-balanced-span rule
+hands back a menu item where the model wrote a receipt. Correctness is
+not adjudicated for any of them
+([`experiments/parser_robustness_ext_2026-09-04.json`](experiments/parser_robustness_ext_2026-09-04.json)).
+
 Run it on your own saved outputs: `tools/fence_corpus.py` builds the
-corpus, `scripts/parser_robustness.py` runs the panel; one function
-per parser, so a parser can be added without touching the readings.
+corpus, `scripts/parser_robustness.py` runs the panel (`--panel ext`
+for the second one); one function per parser, so a parser can be added
+without touching the readings.
 
 ## Why this repository found it
 
@@ -506,7 +521,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 396 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 399 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -608,7 +623,7 @@ authored as the work it is.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 396 offline tests (tiny in-test models; no downloads).
+- `tests/` — 399 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured
