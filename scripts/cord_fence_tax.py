@@ -251,6 +251,56 @@ def run_cell(rung: str, regime: str) -> int:
     return 0
 
 
+def family_reading(f_schema: float, f_kshot: float) -> str:
+    """Per-model reading, frozen in ADDENDUM_S_PROTOCOL.md / ADDENDUM_T_PROTOCOL.md:
+    (a) f_schema >= 0.50 and f_kshot <= 0.10; (b) f_schema >= 0.50 and
+    f_kshot > 0.10; (c) f_schema < 0.50. Boundaries are inclusive exactly
+    as the frozen text writes them."""
+    if f_schema < 0.50:
+        return "(c) DOES NOT REPLICATE"
+    if f_kshot <= 0.10:
+        return "(a) REPLICATES"
+    return "(b) PARTIAL"
+
+
+def combine_families(per_model: dict) -> str:
+    """Addendum T combination rule, frozen 2026-09-03: HOLDS only if (a)
+    in >= 3 of the families AND no (c); any (c) is a named exception at
+    full size; anything else is MIXED with no headline."""
+    n_a = sum(v.startswith("(a)") for v in per_model.values())
+    c_fams = [r for r, v in per_model.items() if v.startswith("(c)")]
+    if c_fams:
+        return ("(c) IN " + ", ".join(c_fams) + ": named exception(s) at full "
+                "size; the outbound sentence becomes 'on N of the families "
+                "tested' with the exception named — never 'across model "
+                "families'. Per-family: " + json.dumps(per_model))
+    if n_a >= 3:
+        return (f"HOLDS ACROSS FAMILIES: (a) in {n_a} of {len(per_model)} families "
+                "and no (c) — schema-only prompts get wrapped and k-shot prompts "
+                "do not, on public receipts, across organisations' checkpoints. "
+                "Per-family: " + json.dumps(per_model))
+    return ("MIXED: fewer than 3 families at (a), none at (c) — all rates "
+            "publish, no headline. " + json.dumps(per_model))
+
+
+def combine_sizes(per_model: dict) -> str:
+    """Addendum S combination rule (two Qwen sizes), unchanged."""
+    if any(v.startswith("(c)") for v in per_model.values()):
+        return ("(c) AT " + " AND ".join(
+            r for r, v in per_model.items() if v.startswith("(c)")) +
+            ": the fence pattern is corpus-specific at that size and the "
+            "full re-scoping commitment fires — every statement of the "
+            "finding is re-scoped to the waybill corpus in the same "
+            "commit that publishes this artifact.")
+    if all(v.startswith("(a)") for v in per_model.values()):
+        return ("(a) IT REPLICATES AT BOTH SIZES: schema-only prompts "
+                "get wrapped and k-shot prompts do not, on public "
+                "receipts nobody here authored. The headline moves "
+                "onto public data.")
+    return ("MIXED/(b): " + json.dumps(per_model) + " — all four "
+            "rates publish, no headline movement.")
+
+
 def read() -> int:
     from arcttt.scoring import field_micro_f1, parse_json_object
     from arcttt.text_task import TextTaskFormatError
@@ -307,51 +357,18 @@ def read() -> int:
               f"rate {rate:.4f}  invalid {invalid}")
 
     # The FROZEN readings, per model, combined per the protocol note's
-    # non-flattering rule — arithmetic only.
-    per_model = {}
-    for rung in table:
-        fs, fk = rates[(rung, "schema")], rates[(rung, "kshot")]
-        if fs < 0.50:
-            per_model[rung] = "(c) DOES NOT REPLICATE"
-        elif fk <= 0.10:
-            per_model[rung] = "(a) REPLICATES"
-        else:
-            per_model[rung] = "(b) PARTIAL"
-    if ADDENDUM == "T":
-        n_a = sum(v.startswith("(a)") for v in per_model.values())
-        c_fams = [r for r, v in per_model.items() if v.startswith("(c)")]
-        if c_fams:
-            finding = ("(c) IN " + ", ".join(c_fams) + ": named exception(s) at full "
-                       "size; the outbound sentence becomes 'on N of the families "
-                       "tested' with the exception named — never 'across model "
-                       "families'. Per-family: " + json.dumps(per_model))
-        elif n_a >= 3:
-            finding = (f"HOLDS ACROSS FAMILIES: (a) in {n_a} of {len(per_model)} families "
-                       "and no (c) — schema-only prompts get wrapped and k-shot prompts "
-                       "do not, on public receipts, across organisations' checkpoints. "
-                       "Per-family: " + json.dumps(per_model))
-        else:
-            finding = "MIXED: fewer than 3 families at (a), none at (c) — all rates publish, no headline. " + json.dumps(per_model)
-    elif any(v.startswith("(c)") for v in per_model.values()):
-        finding = ("(c) AT " + " AND ".join(
-            r for r, v in per_model.items() if v.startswith("(c)")) +
-            ": the fence pattern is corpus-specific at that size and the "
-            "full re-scoping commitment fires — every statement of the "
-            "finding is re-scoped to the waybill corpus in the same "
-            "commit that publishes this artifact.")
-    elif all(v.startswith("(a)") for v in per_model.values()):
-        finding = ("(a) IT REPLICATES AT BOTH SIZES: schema-only prompts "
-                   "get wrapped and k-shot prompts do not, on public "
-                   "receipts nobody here authored. The headline moves "
-                   "onto public data.")
-    else:
-        finding = ("MIXED/(b): " + json.dumps(per_model) + " — all four "
-                   "rates publish, no headline movement.")
+    # non-flattering rule — arithmetic only (pure functions below, unit-
+    # tested at the frozen boundaries in tests/test_cord_fence_tax_readings.py).
+    per_model = {rung: family_reading(rates[(rung, "schema")],
+                                      rates[(rung, "kshot")])
+                 for rung in table}
+    finding = (combine_families(per_model) if ADDENDUM == "T"
+               else combine_sizes(per_model))
 
     record = {
-        "what": "Addendum S: fence rates on CORD, the shipped tool as "
-                "classifier, readings applied by arithmetic from the "
-                "frozen row and the dated protocol note.",
+        "what": (f"Addendum {ADDENDUM}: fence rates on CORD, the shipped tool as "
+                 "classifier, readings applied by arithmetic from the "
+                 "frozen row and the dated protocol note."),
         "preregistration": "VERDICT.md Addendum S row (2026-08-25); "
                            "protocol gaps fixed in "
                            "docs/research/ADDENDUM_S_PROTOCOL.md "

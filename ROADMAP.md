@@ -12,6 +12,12 @@ produced this repository is closed by its own measurements (see
   `openai/evals` (two sites) and Braintrust `autoevals` (`JSONDiff`,
   executed repro); nothing is filed as of this date. This is the single
   item every simulated review round ranked first.
+- **Addendum U (banked 2026-09-04):** the shipped parsers on every raw
+  output this repository has banked — 1,950 outputs, four families.
+  Strict parsing loses 100% of schema-only outputs on Qwen2.5 and
+  Falcon3 and 0% on Granite and SmolLM2: the fence tax is
+  family-dependent, stated at full size. Next: the Phi-3 cells into
+  the corpus; more parsers behind the one-function interface.
 - **Addendum T (in flight):** the fence tax on four other model
   families — SmolLM2, Granite, Phi-3, Falcon3 — same cells as
   Addendum S, thresholds frozen in
@@ -68,7 +74,7 @@ produced this repository is closed by its own measurements (see
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 381 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 394 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 

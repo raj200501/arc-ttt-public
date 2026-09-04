@@ -1,13 +1,13 @@
 {
   "what": "Test and artifact counts measured in a BUILT PUBLIC EXPORT, which is a different tree from the source and carries different numbers.",
-  "public_export_tests": 347,
-  "public_export_artifacts": 211,
-  "source_tree_tests_at_same_moment": 369,
+  "public_export_tests": 394,
+  "public_export_artifacts": 222,
+  "source_tree_tests_at_same_moment": 416,
   "difference": 22,
   "why_they_differ": "export_public.sh excludes the application-gate test and its artifact along with the strategy documents. The gap is the excluded files and nothing else; if it ever differs from the count of files that script drops, something else is being lost on the way out and that is worth knowing.",
-  "measured_from": "/tmp/claude-0/-home-user-safer-1/5579d3eb-52a6-5cb4-9d8f-41a2529382c4/scratchpad/pubcut",
-  "export_head": "4b3516b171d13bc877b42252ef7810b74cae3866",
-  "measured_on": "2026-09-02",
+  "measured_from": "/tmp/claude-0/-home-user-safer-1/5579d3eb-52a6-5cb4-9d8f-41a2529382c4/scratchpad/pubexport",
+  "export_head": "dcf0b3ad5424f83b44b4734b6376a1c08ef61685",
+  "measured_on": "2026-09-04",
   "how_to_check": "git clone https://github.com/raj200501/arc-ttt-public && cd arc-ttt-public && python3 -m pytest tests/ -q --collect-only | tail -1",
   "why_this_is_banked": "Ten sentences across seven documents stated the public repository's test count as the SOURCE tree's number, because sync_test_counts.py rewrote them automatically and had no notion that some sentences describe a different tree. Every one was wrong in our favour. An outside reviewer found it by cloning the public repo. Copy about the export now has an artifact to reconcile against."
 }

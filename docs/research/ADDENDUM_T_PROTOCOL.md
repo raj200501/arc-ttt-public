@@ -64,3 +64,23 @@ banked as context only; the carried quantity is the fence RATE.
 Four families at ≤ 4B on one public corpus. It says nothing about
 hosted APIs or ≥ 7B checkpoints. Reading (c) in any family is
 published, not explained away.
+
+## Erratum — 2026-09-03, noticed while the Falcon3 cells ran, before any reading
+
+The combined-readings section above writes the exception sentence as
+*"on N of the 5 families tested"*. Four families are tabled and four
+run; the "5" is a slip. The sentence the runner emits is *"on N of the
+families tested"* with the exception named, and N is at most 4. The
+frozen text is left as written; this note governs.
+
+## Disclosure — 2026-09-04, before the T reader ran
+
+Addendum U (`ADDENDUM_U_PROTOCOL.md`) ran the shipped parsers over
+every banked raw output, including the six T cells banked so far, and
+its per-family strict-parse loss on schema-only outputs — Granite 0/89,
+SmolLM2 0/85, Falcon3 73/73 — is arithmetically the direction of this
+addendum's per-family readings before `--read` has run on all eight
+cells. Nothing in this protocol changes: the thresholds are frozen, the
+reader withholds until the Phi-3 cells exist, and the reading it prints
+is the one banked. It is stated here so nobody has to discover that the
+T result was foreseeable from a sibling artifact.

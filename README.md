@@ -94,6 +94,61 @@ buggy. Two mechanical classifiers failed their own preregistered accuracy
 gates before this one was done by hand (60%, then 70%, against an 80%
 floor); both withheld tallies stay published.
 
+## What the shipped parsers do to real outputs
+
+The census counted code and the fence tax counted outputs. **Addendum
+U** puts the real parsers on the real outputs: every raw model output
+this repository has banked — **1,950 outputs, 4 model families, 2
+corpora, 32 artifacts** — rebuilt into one corpus
+([`experiments/fence_corpus_2026-09-04.jsonl`](experiments/fence_corpus_2026-09-04.jsonl),
+provenance and the source artifact's own labels per record), then run
+through the shipped parse functions: strict `json.loads` in the exact
+shape `evals` uses, Braintrust `autoevals`' `ValidJSON` gate,
+LangChain's `parse_json_markdown`, and `json_repair`. Reference: the
+shipped `fencecheck` strip plus a fail-closed parse. Thresholds frozen
+before the run
+([`docs/research/ADDENDUM_U_PROTOCOL.md`](docs/research/ADDENDUM_U_PROTOCOL.md));
+result in
+[`experiments/parser_robustness_2026-09-04.json`](experiments/parser_robustness_2026-09-04.json),
+every per-record status banked.
+
+| parser | outputs the reference parses that it throws away | content changed | objects returned where the reference finds none |
+|---|---|---|---|
+| strict `json.loads` (the `evals` shape) | **407 / 1,823** | 0 | 0 / 127 |
+| `autoevals` `ValidJSON` gate | **407 / 1,823** | 0 | 0 / 127 |
+| LangChain `parse_json_markdown` | 0 / 1,823 | 0 | 61 / 127 |
+| `json_repair` | 0 / 1,823 | 0 | 104 / 127 |
+
+**The loss is the fence, and the fence is family-dependent.** On
+schema-only prompts, strict parsing throws away **100% of Qwen2.5's
+and Falcon3's** parseable outputs (295/295 and 73/73) and **0% of
+Granite-3.1's and SmolLM2's** (0/89, 0/85): those two families do not
+wrap at all. The frozen reading names both as exceptions, so the
+sentence is *on 2 of the 4 families tested*, never *across model
+families*. With twenty demonstrations strict parsing loses 0 of 1,171
+parseable outputs across all four families — where the fence goes, the
+loss goes. `autoevals`' own `JSONDiff` scores a fenced-but-exactly-right
+output at a mean of **0.598** against 1.000 unfenced (407 and 1,416
+outputs).
+
+**"Just repair it" is not free, and the least flattering reading of
+that governs.** The lenient parsers never changed the content of an
+output the reference parses (0 divergences). Where the reference finds
+no object, `json_repair` returns one 104 times out of 127. The frozen
+reading calls that MATERIAL; the substance check banked beside it says
+50 of the 104 are the reference's own documented undercount (a fence
+after prose, or an exact object inside prose — the lenient parser
+recovered what the model wrote), and the remaining 54 are repairs of
+malformed text whose correctness is **not adjudicated here**. So the
+licensed sentence is narrower than the reading's letter: lenient
+parsers recover more than the shipped fence check does, and they also
+manufacture objects from malformed output at a rate this corpus cannot
+yet call right or wrong.
+
+Run it on your own saved outputs: `tools/fence_corpus.py` builds the
+corpus, `scripts/parser_robustness.py` runs the panel; one function
+per parser, so a parser can be added without touching the readings.
+
 ## Why this repository found it
 
 Everything above came out of an eval harness built to test a different
@@ -447,7 +502,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 381 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 394 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -549,7 +604,7 @@ authored as the work it is.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 381 offline tests (tiny in-test models; no downloads).
+- `tests/` — 394 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured
