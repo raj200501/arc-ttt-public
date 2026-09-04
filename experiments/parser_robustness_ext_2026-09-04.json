@@ -2171,7 +2171,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "stray_brace_around_object"
    }
   },
   {
@@ -6055,7 +6055,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
    }
   },
   {
@@ -6492,7 +6492,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
    }
   },
   {
@@ -6665,7 +6665,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
    }
   },
   {
@@ -6772,7 +6772,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
    }
   },
   {
@@ -10082,7 +10082,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
    }
   },
   {
@@ -14786,7 +14786,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
    }
   },
   {
@@ -14939,7 +14939,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
    }
   },
   {
@@ -15212,7 +15212,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
    }
   },
   {
@@ -17291,7 +17291,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
    }
   },
   {
@@ -19967,8 +19967,8 @@
     "llama_index_parse_json_markdown": "fabricated"
    },
    "fabricated_kind": {
-    "smolagents_parse_json_blob": "exact_object_present",
-    "llama_index_parse_json_markdown": "exact_object_present"
+    "smolagents_parse_json_blob": "nested_fragment_returned",
+    "llama_index_parse_json_markdown": "nested_fragment_returned"
    }
   },
   {
@@ -20149,8 +20149,8 @@
     "llama_index_parse_json_markdown": "fabricated"
    },
    "fabricated_kind": {
-    "smolagents_parse_json_blob": "exact_object_present",
-    "llama_index_parse_json_markdown": "exact_object_present"
+    "smolagents_parse_json_blob": "nested_fragment_returned",
+    "llama_index_parse_json_markdown": "nested_fragment_returned"
    }
   },
   {
@@ -20531,7 +20531,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "one_of_several_objects"
    }
   },
   {
@@ -20604,7 +20604,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
    }
   },
   {
@@ -20661,7 +20661,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
    }
   },
   {
@@ -20797,7 +20797,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "stray_brace_around_object"
    }
   },
   {
@@ -21019,7 +21019,7 @@
     "llama_index_parse_json_markdown": "agree_none"
    },
    "fabricated_kind": {
-    "instructor_extract_json_from_codeblock": "exact_object_present"
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
    }
   },
   {
@@ -21146,19 +21146,45 @@
    }
   }
  ],
- "fabricated_by_kind": {
-  "llama_index_parse_json_markdown": {
-   "unfenced_malformed": 10,
-   "leading_fenced_malformed": 17,
-   "exact_object_present": 5,
-   "fence_after_prose": 1
+ "substance_check_post_hoc": {
+  "why": "added after the first run, before the row was written, and CORRECTED the same day: the first version labelled leading-fenced-but-malformed bodies as 'a fence after prose' (the reference's undercount). They are not: the reference stripped that fence and the body failed the fail-closed parse because it was truncated or held expressions. Only `exact_object_present` is recovery; the rest are repairs whose correctness is not adjudicated. The frozen readings above are untouched.",
+  "fabricated_by_kind": {
+   "llama_index_parse_json_markdown": {
+    "unfenced_malformed": 10,
+    "leading_fenced_malformed": 17,
+    "exact_object_present": 3,
+    "fence_after_prose": 1,
+    "nested_fragment_returned": 2
+   },
+   "instructor_extract_json_from_codeblock": {
+    "stray_brace_around_object": 2,
+    "exact_object_present": 3,
+    "nested_fragment_returned": 93,
+    "one_of_several_objects": 1
+   },
+   "smolagents_parse_json_blob": {
+    "exact_object_present": 3,
+    "nested_fragment_returned": 2
+   }
   },
-  "instructor_extract_json_from_codeblock": {
-   "exact_object_present": 18,
-   "nested_fragment_returned": 81
+  "nested_fragment_piece_of_cord_receipt": {
+   "instructor_extract_json_from_codeblock": {
+    "menu": 28,
+    "other": 22,
+    "total": 25,
+    "sub_total": 18
+   },
+   "smolagents_parse_json_blob": {
+    "other": 2
+   },
+   "llama_index_parse_json_markdown": {
+    "other": 2
+   }
   },
-  "smolagents_parse_json_blob": {
-   "exact_object_present": 5
+  "fabricated_objects_with_string_valued_expressions": {
+   "llama_index_parse_json_markdown": 15,
+   "instructor_extract_json_from_codeblock": 2,
+   "smolagents_parse_json_blob": 1
   }
  }
 }

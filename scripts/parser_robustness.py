@@ -30,6 +30,7 @@ from collections import defaultdict
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO / "tools"))
+sys.path.insert(0, str(REPO / "scripts"))
 
 CORPUS = REPO / "experiments" / "fence_corpus_2026-09-04.jsonl"
 MANIFEST = REPO / "experiments" / "fence_corpus_2026-09-04.manifest.json"
@@ -175,45 +176,58 @@ def _dist_version(name: str) -> str:
 
 def decompose_fabricated(text: str, obj, fenced: bool) -> str:
     """Substance check on a `fabricated` status. Added 2026-09-04 AFTER the
-    first run showed the frozen U2 reading firing MATERIAL; CORRECTED the
-    same day after an adversarial review showed the first version labelled
-    leading-fenced-but-malformed bodies as "a fence after prose" (the
-    reference had stripped that fence; the body then failed the fail-closed
-    parse because it was truncated or held expressions like `2 * 13000`).
-    Categories, checked by arithmetic, in this order:
-      exact_object_present        -- a substring of the text parses strictly to
-                                     exactly the returned object: the reference
-                                     missed an object the model wrote (its
-                                     documented undercount); recovered, not invented;
-      fence_after_prose           -- a fence exists but the text does not START
-                                     with one (the reference's leading-fence scope
-                                     missed it) and no exact object was found;
-      leading_fenced_malformed    -- the reference stripped a leading fence and
-                                     the body still failed the fail-closed parse:
-                                     the parser closed or rewrote malformed text;
-      unfenced_malformed          -- no fence anywhere; the parser closed or
-                                     rewrote malformed text.
-    Only the first category is recovery. The last two are repairs whose
-    correctness this addendum does not adjudicate. The frozen readings are
-    untouched by this section."""
-    import re
-    for m in re.finditer(r"\{", text):
-        start = m.start()
-        for end in range(len(text), start, -1):
-            if text[end - 1] != "}":
-                continue
-            try:
-                # fencecheck: ignore -- substring probe for the substance
-                # check, not a scoring path
-                if json.loads(text[start:end]) == obj:
-                    # Split added 2026-09-04 after the U-ext run: a helper that
-                    # returns a SUBSTRING trivially satisfies this probe, so say
-                    # whether the object sits at the top level of the text or is
-                    # a fragment nested inside a larger, unparseable object.
-                    return ("exact_object_present" if _brace_depth(text, start) == 0
-                            else "nested_fragment_returned")
-            except ValueError:
-                pass
+    first run showed the frozen U2 reading firing MATERIAL; corrected twice
+    the same day after adversarial reviews (see the errata in
+    ADDENDUM_U_PROTOCOL.md and ADDENDUM_U_EXT_PROTOCOL.md). Categories,
+    checked by arithmetic, in this order:
+      exact_object_present      -- a substring parses strictly to exactly the
+                                   returned object AND the text outside that
+                                   span holds no brace at all: prose (or a
+                                   fence, or a code sample) around one complete
+                                   object -- the reference's documented
+                                   undercount; recovered, not invented;
+      one_of_several_objects    -- the span is exact, and once every other
+                                   complete top-level object is peeled out of
+                                   the text nothing JSON-like remains: the
+                                   model wrote several objects; the helper
+                                   chose one;
+      nested_fragment_returned  -- the span is exact, and JSON keys (`"k":` or
+                                   `'k':`) remain outside every complete
+                                   object: the returned object is a piece of a
+                                   larger object the model wrote that does
+                                   not parse;
+      stray_brace_around_object -- the span is exact, and the text outside it
+                                   holds braces but no keys and no object;
+      fence_after_prose         -- no exact span; a fence exists but the text
+                                   does not START with one;
+      leading_fenced_malformed  -- no exact span; the reference stripped a
+                                   leading fence and the body still failed the
+                                   fail-closed parse: the parser closed or
+                                   rewrote malformed text;
+      unfenced_malformed        -- no exact span, no fence: the parser closed or
+                                   rewrote malformed text.
+    Only the first category is recovery. Repairs are not adjudicated for
+    correctness. The frozen readings are untouched by this section."""
+    span = _exact_span(text, obj)
+    if span is not None:
+        start, end = span
+        rest = text[:start] + text[end:]
+        if "{" not in rest and "}" not in rest:
+            return "exact_object_present"
+        # peel every other complete top-level object out of the rest; what
+        # remains decides whether the model wrote several objects (nothing
+        # JSON-like remains) or one larger object this span is a piece of
+        remaining = rest
+        while True:
+            other = _exact_span(remaining, None)
+            if other is None:
+                break
+            remaining = remaining[:other[0]] + remaining[other[1]:]
+        if "{" not in remaining and "}" not in remaining and not _KEY_RE.search(remaining):
+            return "one_of_several_objects"
+        if _KEY_RE.search(remaining) or _KEY_RE.search(rest):
+            return "nested_fragment_returned"
+        return "stray_brace_around_object"
     if fenced:
         return "leading_fenced_malformed"
     if "```" in text:
@@ -221,27 +235,52 @@ def decompose_fabricated(text: str, obj, fenced: bool) -> str:
     return "unfenced_malformed"
 
 
-def _brace_depth(text: str, index: int) -> int:
-    """Number of unclosed { or [ before `index`, ignoring braces inside
-    double-quoted strings. 0 means the span at `index` is top-level."""
-    depth = 0
-    in_str = esc = False
-    for ch in text[:index]:
-        if in_str:
-            if esc:
-                esc = False
-            elif ch == "\\":
-                esc = True
-            elif ch == '"':
-                in_str = False
-            continue
-        if ch == '"':
-            in_str = True
-        elif ch in "{[":
-            depth += 1
-        elif ch in "}]":
-            depth = max(0, depth - 1)
-    return depth
+import re as _re
+_KEY_RE = _re.compile(r'(?:"[^"\n]{1,80}"|\'[^\'\n]{1,80}\')\s*:')
+_EXPR_RE = _re.compile(r"^\s*[-\d.,]+\s*[*+/-]\s*[-\d.,]+")
+
+
+def _exact_span(text: str, obj):
+    """(start, end) of the first substring that parses strictly to `obj`;
+    with obj=None, of ANY substring that parses strictly to a dict."""
+    for m in _re.finditer(r"\{", text):
+        start = m.start()
+        for end in range(len(text), start, -1):
+            if text[end - 1] != "}":
+                continue
+            try:
+                # fencecheck: ignore -- substring probe for the substance
+                # check, not a scoring path
+                val = json.loads(text[start:end])
+            except ValueError:
+                continue
+            if (obj is None and isinstance(val, dict)) or (obj is not None and val == obj):
+                return start, end
+    return None
+
+
+def fragment_kind(obj: dict, vocab: dict) -> str:
+    """Which piece of a CORD receipt a fragment is, by its key set."""
+    keys = set(obj)
+    for name in ("menu", "sub_total", "total"):
+        if keys and keys <= set(vocab[name]):
+            return name
+    return "other"
+
+
+def string_valued_expressions(obj) -> int:
+    """Leaf string values that look like arithmetic (`2 * 13000`)."""
+    n = 0
+    stack = [obj]
+    while stack:
+        v = stack.pop()
+        if isinstance(v, dict):
+            stack.extend(v.values())
+        elif isinstance(v, list):
+            stack.extend(v)
+        elif isinstance(v, str) and _EXPR_RE.match(v):
+            n += 1
+    return n
 
 
 def jsondiff_scorer():
@@ -376,6 +415,10 @@ def run(dry: bool, panel: str = "base") -> int:
     residual_causes: dict[str, int] = defaultdict(int)
     fab_kinds: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     non_dict: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    frag_kinds: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    expr_counts: dict[str, int] = defaultdict(int)
+    import cord_fence_tax as _cft
+    _cord_vocab = _cft.VOCAB
     non_dict_status: dict[str, dict[str, list[str]]] = defaultdict(lambda: defaultdict(list))
     n_fenced = 0
     if panel == "base":
@@ -398,6 +441,10 @@ def run(dry: bool, panel: str = "base") -> int:
                 cat = decompose_fabricated(r["text"], got, fenced)
                 row.setdefault("fabricated_kind", {})[name] = cat
                 fab_kinds[name][cat] += 1
+                if cat == "nested_fragment_returned" and r["corpus"] == "cord":
+                    frag_kinds[name][fragment_kind(got, _cord_vocab)] += 1
+                if string_valued_expressions(got):
+                    expr_counts[name] += 1
             by_parser_slice[name][sk].append(st)
             by_parser_regime[name][r["regime"]].append(st)
             if name == "strict" and st == "lost" and r["regime"] == "kshot" and r["k"] == 20:
@@ -505,6 +552,8 @@ def run(dry: bool, panel: str = "base") -> int:
                    "is recovery; the rest are repairs whose correctness is not adjudicated. "
                    "The frozen readings above are untouched.",
             "fabricated_by_kind": {name: dict(kinds) for name, kinds in fab_kinds.items()},
+            "nested_fragment_piece_of_cord_receipt": {name: dict(k) for name, k in frag_kinds.items()},
+            "fabricated_objects_with_string_valued_expressions": dict(expr_counts),
         },
         "lenient_non_object_returns_added_2026-09-04": {
             "why": "the protocol preregistered non-dict -> None for the lenient parsers; the "
@@ -534,7 +583,8 @@ def run(dry: bool, panel: str = "base") -> int:
     else:
         record.pop("autoevals_jsondiff_score"); record.pop("u1_strict_schema_by_family")
         record["readings"] = {"U2": u2}
-        record["fabricated_by_kind"] = record.pop("u2_substance_added_2026-09-04")["fabricated_by_kind"]
+        # keep the post-hoc disclosure text in the ext artifact too
+        record["substance_check_post_hoc"] = record.pop("u2_substance_added_2026-09-04")
     [print(v) for v in u2.values()]
     if u3:
         print(u3)

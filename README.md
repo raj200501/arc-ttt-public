@@ -150,17 +150,19 @@ undercount and softened the sentence; the correction is in
 [`CORRECTIONS.md`](CORRECTIONS.md) (2026-09-04).
 
 **Three more shipped helpers, same corpus (Addendum U-ext, thresholds
-frozen before they ran).** None loses a parseable output; none changes
-content. Where the reference finds no object: `smolagents`'
-`parse_json_blob` returns one 5 times, all complete objects with prose
-around them — **harmless on this corpus, published as the finding**;
-llama-index's `parse_json_markdown` returns one 33 times, mostly malformed
-bodies its YAML fallback turned into objects with string-valued
-expressions; `instructor`'s `extract_json_from_codeblock` returns one
-99 times, and **81 of those are a sub-object nested inside a larger object
-the model wrote that does not parse** — its last-balanced-span rule
-hands back a menu item where the model wrote a receipt. Correctness is
-not adjudicated for any of them
+frozen before they ran).** On the 1,823 outputs the reference parses,
+none of the three loses one and none alters one. Where the reference
+finds no object: `smolagents`' `parse_json_blob` returns one 5 times —
+**harmless on this corpus, published as the finding**; llama-index's
+`parse_json_markdown` returns one 33 times, mostly malformed bodies
+its YAML fallback accepted (15 with expression-valued strings such as
+`2 * 13000`); `instructor`'s `extract_json_from_codeblock` returns one
+99 times, and a post-hoc substance check (dated erratum in the
+protocol; its first gloss was wrong and is corrected in
+[`CORRECTIONS.md`](CORRECTIONS.md)) finds **93 of those are a piece of a
+larger receipt the model wrote that does not parse** — a menu item, a
+`total` block or a `sub_total` block handed back as the answer by its
+last-balanced-span rule. Correctness is not adjudicated for any of them
 ([`experiments/parser_robustness_ext_2026-09-04.json`](experiments/parser_robustness_ext_2026-09-04.json)).
 
 Run it on your own saved outputs: `tools/fence_corpus.py` builds the

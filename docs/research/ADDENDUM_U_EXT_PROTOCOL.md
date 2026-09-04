@@ -58,15 +58,30 @@ correctness is not adjudicated here either.
 Artifact: `experiments/parser_robustness_ext_2026-09-04.json`. Runner:
 `PYTHONPATH=src python3 scripts/parser_robustness.py --panel ext`.
 
-## Erratum — 2026-09-04, after the run
+## Errata — 2026-09-04, after the run, two rounds of adversarial review
 
-The substance check's `exact_object_present` category is satisfied
-trivially by a helper that returns a SUBSTRING, so after this panel ran
-it was split by brace depth: `exact_object_present` now means the
-returned object sits at the top level of the text (trailing or leading
-prose around a complete object — the reference's undercount, recovered),
-and `nested_fragment_returned` means the returned object is a sub-object
-inside a larger object the model wrote that does not parse — a fragment
-handed back as the answer. Added after the data, disclosed here; the
-frozen U2 readings do not depend on it. Base-panel counts under the
-split are unchanged (json_repair 5, LangChain 3, all top-level).
+1. The substance check's `exact_object_present` category is satisfied
+   trivially by a helper that returns a SUBSTRING. After this panel ran
+   it was split — first by a brace-depth heuristic (published for under
+   an hour: 81 fragments, 18 recovered), which a review showed misfiles
+   a receipt's `total` block as top-level when the model's own braces
+   close early. The rule now looks at the text OUTSIDE the span:
+   `exact_object_present` = no brace outside it (prose, fence or code
+   sample around one complete object — recovered);
+   `one_of_several_objects` = after peeling every other complete object,
+   nothing JSON-like remains; `nested_fragment_returned` = JSON keys
+   remain outside the complete objects, so the span is a piece of a
+   larger object that does not parse; `stray_brace_around_object` =
+   braces but no keys. Under this rule instructor is 93 fragments /
+   3 recovered / 2 stray / 1 several, which matches an independent hand count
+   of all 99. Base-panel counts: json_repair 2 recovered, LangChain 2.
+   Added after the data, disclosed here and in the artifact's own
+   `substance_check_post_hoc.why`; the frozen U2 readings do not read it.
+2. "Turned into objects with string-valued expressions" over-described
+   llama-index's 27 YAML acceptances; the artifact now banks the count
+   of manufactured objects carrying an expression-valued string
+   (15 of 33) and the row says "accepted".
+3. The row's "(it did not)" for the instructor prediction read as the
+   prediction failing; it lost none (0/1,823). Reworded.
+4. smolagents parses with `json.loads(strict=False)`, not a strict
+   parse; the row now says so.

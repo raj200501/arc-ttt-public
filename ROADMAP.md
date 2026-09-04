@@ -18,7 +18,8 @@ produced this repository is closed by its own measurements (see
   Falcon3 and 0% on Granite and SmolLM2: the fence tax is
   family-dependent, stated at full size. U-ext (same day): instructor,
   smolagents and llama-index helpers — instructor's last-span rule hands
-  back nested fragments; smolagents harmless. Next: the Phi-3 cells into
+  back a piece of the receipt as the answer (post-hoc substance check,
+  disclosed); smolagents harmless. Next: the Phi-3 cells into
   the corpus; the fourteen census packages still not attempted.
 - **Addendum T (in flight):** the fence tax on four other model
   families — SmolLM2, Granite, Phi-3, Falcon3 — same cells as

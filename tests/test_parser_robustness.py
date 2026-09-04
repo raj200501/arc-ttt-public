@@ -108,21 +108,33 @@ def test_decompose_fabricated_does_not_call_a_stripped_fence_recovery():
     assert pr.decompose_fabricated('{"a": 1', {"a": 1}, fenced=False) == "unfenced_malformed"
 
 
-def test_brace_depth_ignores_braces_inside_strings():
-    assert pr._brace_depth('{"a": 1}', 0) == 0
-    assert pr._brace_depth('{"a": {"b": 1}}', 6) == 1          # nested
-    assert pr._brace_depth('{"a": "{not a brace", "b": {', 27) == 1
-    assert pr._brace_depth('prose {"a":1} more {"b":2}', 19) == 0  # two top-level
-
-
 def test_decompose_marks_a_nested_fragment_as_not_recovery():
     # the model's top-level object is unparseable (single-quoted key later);
     # a last-span helper returns the inner menu item -- a fragment, not the answer
     text = '{"menu":{"cnt":"1","nm":"Tea"},\'sub_total\':{\'price\':\'1\'}}'
     assert pr.decompose_fabricated(text, {"cnt": "1", "nm": "Tea"}, fenced=False) == "nested_fragment_returned"
+    # the receipt's total block returned after the model's own braces closed
+    # early: keys remain outside the span, so it is a fragment, not top-level
+    text = '{"menu":{"nm":"Tea"}}},"total":{"total_price":"1"}}'
+    assert pr.decompose_fabricated(text, {"total_price": "1"}, fenced=False) == "nested_fragment_returned"
     # trailing prose after a complete top-level object: recovery
     text = '{"cnt":"1","nm":"Tea"}\nHope this helps!'
     assert pr.decompose_fabricated(text, {"cnt": "1", "nm": "Tea"}, fenced=False) == "exact_object_present"
+    # several complete objects, the helper chose one
+    text = '{"a": 1}\n{"b": 2}'
+    assert pr.decompose_fabricated(text, {"b": 2}, fenced=False) == "one_of_several_objects"
+    # a complete object followed by one stray brace: neither recovery nor fragment
+    text = '{"a": 1}}'
+    assert pr.decompose_fabricated(text, {"a": 1}, fenced=False) == "stray_brace_around_object"
+
+
+def test_fragment_kind_and_expression_count():
+    vocab = {"menu": ["cnt", "nm", "price"], "sub_total": ["subtotal_price"], "total": ["total_price"]}
+    assert pr.fragment_kind({"cnt": "1", "nm": "Tea"}, vocab) == "menu"
+    assert pr.fragment_kind({"total_price": "1"}, vocab) == "total"
+    assert pr.fragment_kind({"cnt": "1", "total_price": "1"}, vocab) == "other"
+    assert pr.string_valued_expressions({"a": "2 * 13000", "b": {"c": "50000 + 4500"}, "d": "12,000"}) == 2
+    assert pr.string_valued_expressions({"a": 2}) == 0
 
 
 def test_ext_panel_wrappers_return_object_or_none():

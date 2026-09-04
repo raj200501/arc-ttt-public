@@ -1010,13 +1010,13 @@
       "artifact": "parser_robustness_2026-09-04.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 534356
+      "bytes": 534640
     },
     {
       "artifact": "parser_robustness_ext_2026-09-04.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 554297
+      "bytes": 555526
     },
     {
       "artifact": "per_tenant_verdicts_2026-08-22.json",

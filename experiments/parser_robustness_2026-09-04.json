@@ -1693,13 +1693,21 @@
    "json_repair": {
     "unfenced_malformed": 54,
     "leading_fenced_malformed": 45,
-    "exact_object_present": 5
+    "stray_brace_around_object": 2,
+    "exact_object_present": 2,
+    "one_of_several_objects": 1
    },
    "langchain_parse_json_markdown": {
-    "exact_object_present": 3,
+    "exact_object_present": 2,
     "leading_fenced_malformed": 26,
-    "unfenced_malformed": 32
+    "unfenced_malformed": 32,
+    "one_of_several_objects": 1
    }
+  },
+  "nested_fragment_piece_of_cord_receipt": {},
+  "fabricated_objects_with_string_valued_expressions": {
+   "json_repair": 5,
+   "langchain_parse_json_markdown": 1
   }
  },
  "lenient_non_object_returns_added_2026-09-04": {
@@ -2727,7 +2735,7 @@
     "json_repair": "fabricated"
    },
    "fabricated_kind": {
-    "json_repair": "exact_object_present"
+    "json_repair": "stray_brace_around_object"
    }
   },
   {
@@ -22915,8 +22923,8 @@
     "json_repair": "fabricated"
    },
    "fabricated_kind": {
-    "langchain_parse_json_markdown": "exact_object_present",
-    "json_repair": "exact_object_present"
+    "langchain_parse_json_markdown": "one_of_several_objects",
+    "json_repair": "one_of_several_objects"
    }
   },
   {
@@ -23204,7 +23212,7 @@
     "json_repair": "fabricated"
    },
    "fabricated_kind": {
-    "json_repair": "exact_object_present"
+    "json_repair": "stray_brace_around_object"
    }
   },
   {
