@@ -81,7 +81,7 @@ def parser_strict(text: str):
 
 def make_parsers() -> dict:
     parsers = {"strict": parser_strict}
-    versions = {"python_json": "stdlib"}
+    versions = {"python_json": "stdlib", "evals (site cited, not called)": _dist_version("evals")}
 
     import autoevals
     from autoevals import ValidJSON
@@ -103,7 +103,7 @@ def make_parsers() -> dict:
     def parser_langchain(text: str):
         try:
             return _as_object(parse_json_markdown(text))
-        except Exception:  # the shipped function raises OutputParserException/JSONDecodeError
+        except Exception:  # the shipped function raises json.JSONDecodeError on unparseable text
             return None
     parsers["langchain_parse_json_markdown"] = parser_langchain
     versions["langchain_core"] = _dist_version("langchain-core")
@@ -128,22 +128,29 @@ def _dist_version(name: str) -> str:
         return "unknown"
 
 
-def decompose_fabricated(text: str, obj) -> str:
-    """Substance check on a `fabricated` status, added 2026-09-04 AFTER the
-    first run showed the frozen U2 reading firing MATERIAL: the reference
-    under-credits by Addendum R's documented undercount (a fence after
-    prose is not stripped; an object inside prose is not found), so a
-    lenient parser that returns the object the model actually wrote is
-    recovering, not inventing. Categories, checked by arithmetic:
-      exact_object_present -- a substring of the text parses strictly to
-                              exactly the returned object (the reference
-                              missed it, the parser did not invent it);
-      fence_elsewhere      -- a fence exists but not at the start (the
-                              reference's leading-fence scope missed it);
-      repaired_or_invented -- neither: the parser changed malformed text
-                              into an object. NOT adjudicated for
-                              correctness here.
-    The frozen readings are untouched by this section."""
+def decompose_fabricated(text: str, obj, fenced: bool) -> str:
+    """Substance check on a `fabricated` status. Added 2026-09-04 AFTER the
+    first run showed the frozen U2 reading firing MATERIAL; CORRECTED the
+    same day after an adversarial review showed the first version labelled
+    leading-fenced-but-malformed bodies as "a fence after prose" (the
+    reference had stripped that fence; the body then failed the fail-closed
+    parse because it was truncated or held expressions like `2 * 13000`).
+    Categories, checked by arithmetic, in this order:
+      exact_object_present        -- a substring of the text parses strictly to
+                                     exactly the returned object: the reference
+                                     missed an object the model wrote (its
+                                     documented undercount); recovered, not invented;
+      fence_after_prose           -- a fence exists but the text does not START
+                                     with one (the reference's leading-fence scope
+                                     missed it) and no exact object was found;
+      leading_fenced_malformed    -- the reference stripped a leading fence and
+                                     the body still failed the fail-closed parse:
+                                     the parser closed or rewrote malformed text;
+      unfenced_malformed          -- no fence anywhere; the parser closed or
+                                     rewrote malformed text.
+    Only the first category is recovery. The last two are repairs whose
+    correctness this addendum does not adjudicate. The frozen readings are
+    untouched by this section."""
     import re
     for m in re.finditer(r"\{", text):
         start = m.start()
@@ -157,9 +164,11 @@ def decompose_fabricated(text: str, obj) -> str:
                     return "exact_object_present"
             except ValueError:
                 pass
+    if fenced:
+        return "leading_fenced_malformed"
     if "```" in text:
-        return "fence_elsewhere"
-    return "repaired_or_invented"
+        return "fence_after_prose"
+    return "unfenced_malformed"
 
 
 def jsondiff_scorer():
@@ -221,8 +230,12 @@ def read_u1(per_family: dict) -> str:
     exceptions = sorted(f for f, v in per_family.items() if v == "DOES NOT LOSE")
     n_fam = len(per_family)
     if exceptions:
+        headline = ("" if n_loses >= 3 else
+                    f" LOSES fired in only {n_loses} of {n_fam} families, so there is NO combined "
+                    f"headline in either form: the rates publish and nothing is said about "
+                    f"families as a class.")
         return (f"U1 EXCEPTION IN {', '.join(exceptions)}: named at full size; the sentence "
-                f"becomes 'on N of the {n_fam} families tested' -- never 'across families'. "
+                f"becomes 'on N of the {n_fam} families tested' -- never 'across families'.{headline} "
                 f"Per-family: {json.dumps(per_family)}")
     if n_loses >= 3:
         return (f"U1 HOLDS: fail-open parsing loses the majority of schema-only outputs in "
@@ -239,14 +252,17 @@ def read_u2(overall_hazard: float, slice_hazards: dict) -> str:
         worst = max(material, key=lambda x: x[1])
         return (f"U2 MATERIAL: hazard >= 0.05 on {len(material)} slice(s) with n >= 30; worst "
                 f"{worst[0]} at {worst[1]:.4f}. Lenient repair changes or invents content on real outputs.")
-    if overall_hazard < 0.01:
+    any_slice = any(h is not None and h >= 0.05 for h, n in slice_hazards.values())
+    if overall_hazard < 0.01 and not any_slice:
         return (f"U2 HARMLESS ON THIS CORPUS: overall hazard {overall_hazard:.4f} < 0.01 and no "
-                f"slice with n >= 30 reaches 0.05. Published as the finding.")
-    return (f"U2 PRESENT: overall hazard {overall_hazard:.4f} (>= 0.01), no slice with n >= 30 "
+                f"slice reaches 0.05. Published as the finding.")
+    return (f"U2 PRESENT: overall hazard {overall_hazard:.4f}, no slice with n >= 30 "
             f"reaches 0.05 -- stated at size, no headline.")
 
 
-def read_u3(kshot_lost_rate: float, n_ref: int, residual: dict) -> str:
+def read_u3(kshot_lost_rate, n_ref: int, residual: dict) -> str:
+    if kshot_lost_rate is None:
+        return "U3 NOT READABLE: no k=20 record the reference parses."
     if kshot_lost_rate < 0.05:
         return (f"U3 SAME PHENOMENON: strict loses {kshot_lost_rate:.4f} of k=20 ref outputs "
                 f"(n_ref={n_ref}) -- where the fence goes, the parser loss goes.")
@@ -281,7 +297,13 @@ def run(dry: bool) -> int:
     jd_fenced, jd_unfenced = [], []
     residual_causes: dict[str, int] = defaultdict(int)
     fab_kinds: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    non_dict: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    non_dict_status: dict[str, dict[str, list[str]]] = defaultdict(lambda: defaultdict(list))
     n_fenced = 0
+    import json_repair as _jr
+    from langchain_core.output_parsers.json import parse_json_markdown as _lc
+    _raw_lenient = {"json_repair": lambda t: _jr.loads(t),
+                    "langchain_parse_json_markdown": lambda t: _lc(t)}
     for r in records:
         ref, fenced = reference(r["text"], fc, parse_json_object, TextTaskFormatError)
         n_fenced += fenced
@@ -292,13 +314,33 @@ def run(dry: bool) -> int:
             st = status(ref, got)
             row["status"][name] = st
             if st == "fabricated" and name in LENIENT:
-                cat = decompose_fabricated(r["text"], got)
+                cat = decompose_fabricated(r["text"], got, fenced)
                 row.setdefault("fabricated_kind", {})[name] = cat
                 fab_kinds[name][cat] += 1
             by_parser_slice[name][sk].append(st)
             by_parser_regime[name][r["regime"]].append(st)
             if name == "strict" and st == "lost" and r["regime"] == "kshot" and r["k"] == 20:
-                residual_causes["fenced" if fenced else "unfenced_invalid_or_other"] += 1
+                # by cause: a lost ref record is fenced (the fence is the cause) or,
+                # if unfenced, the raw text is invalid JSON for another reason
+                residual_causes["fenced" if fenced else "unfenced_other"] += 1
+        # What the shipped lenient callables return when it is NOT an object
+        # (the protocol preregistered non-dict -> None; a shipped consumer
+        # would receive the value). Banked beside the readings, and a second
+        # status is banked as if those returns counted as fabricated.
+        for name, raw in _raw_lenient.items():
+            try:
+                val = raw(r["text"])
+            except Exception:
+                val = None
+            kind = ("dict" if isinstance(val, dict) else "list" if isinstance(val, list)
+                    else "empty_string" if val == "" else "none" if val is None
+                    else type(val).__name__)
+            if kind not in ("dict", "none"):
+                non_dict[name][kind] += 1
+            st_counted = row["status"][name]
+            if st_counted == "agree_none" and kind == "list":
+                st_counted = "fabricated"  # a list of objects reaches the consumer
+            non_dict_status[name][sk].append(st_counted)
         if ref is not None:
             (jd_fenced if fenced else jd_unfenced).append(jd_score(r["text"], ref))
         per_record.append(row)
@@ -328,8 +370,7 @@ def run(dry: bool) -> int:
     k20 = [row["status"]["strict"] for r, row in zip(records, per_record)
            if r["regime"] == "kshot" and r["k"] == 20]
     k20_rates = rates(k20)
-    u3 = read_u3(k20_rates["lost_rate"] if k20_rates["lost_rate"] is not None else 0.0,
-                 k20_rates["n_ref"], dict(residual_causes))
+    u3 = read_u3(k20_rates["lost_rate"], k20_rates["n_ref"], dict(residual_causes))
 
     record = {
         "what": "Addendum U: what shipped parsers do to every raw model output this "
@@ -362,13 +403,29 @@ def run(dry: bool) -> int:
         },
         "readings": {"U1": u1, "U2": u2, "U3": u3},
         "u2_substance_added_2026-09-04": {
-            "why": "added after the first run, before the row was written: the frozen U2 "
-                   "reading fires on `fabricated`, which conflates the reference's "
-                   "documented undercount (fence after prose; object inside prose) with "
-                   "repair of malformed text. The frozen readings above are untouched; "
-                   "this decomposition is published beside them and the non-flattering "
-                   "reading governs the row.",
+            "why": "added after the first run, before the row was written, and CORRECTED the "
+                   "same day: the first version labelled leading-fenced-but-malformed bodies "
+                   "as 'a fence after prose' (the reference's undercount). They are not: the "
+                   "reference stripped that fence and the body failed the fail-closed parse "
+                   "because it was truncated or held expressions. Only `exact_object_present` "
+                   "is recovery; the rest are repairs whose correctness is not adjudicated. "
+                   "The frozen readings above are untouched.",
             "fabricated_by_kind": {name: dict(kinds) for name, kinds in fab_kinds.items()},
+        },
+        "lenient_non_object_returns_added_2026-09-04": {
+            "why": "the protocol preregistered non-dict -> None for the lenient parsers; the "
+                   "shipped callables return lists (several objects found) and empty strings "
+                   "(nothing found) that a shipped consumer would receive. Counts banked, and "
+                   "the U2 slice table recomputed as if every list return counted as an "
+                   "object (an empty string is a failure any consumer would notice), so the "
+                   "reader can see what the preregistered rule hid.",
+            "non_object_returns": {name: dict(k) for name, k in non_dict.items()},
+            "overall_if_counted": {name: rates([s for d in non_dict_status[name].values() for s in d])
+                                   for name in LENIENT},
+            "slices_at_or_above_0.05_if_counted": {
+                name: sorted(sk for sk, sts in non_dict_status[name].items()
+                             if len(sts) >= 30 and rates(sts)["hazard_rate"] >= 0.05)
+                for name in LENIENT},
         },
         "per_record": per_record,
     }

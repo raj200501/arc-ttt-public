@@ -1,6 +1,7 @@
 """Addendum U pins: the per-record status, the rates, the three frozen
-readings at their exact boundaries, and the corpus builder's refusals.
-None of these touch the banked corpus or any parser library."""
+readings at their exact boundaries, the substance decomposition, and the
+corpus builder's refusals. None of these touch the banked corpus or any
+parser library."""
 import importlib.util
 import json
 import pathlib
@@ -59,23 +60,52 @@ def test_u1_boundaries_and_combination():
     r = pr.read_u1({"a": L, "b": L, "c": L, "d": D})
     assert r.startswith("U1 EXCEPTION IN d") and "HOLDS" not in r
     assert "never 'across families'" in r
+    assert "NO combined headline" not in r  # three LOSES: the exception form is licensed
 
 
-def test_u2_material_needs_n_at_least_30():
-    # a 0.10 hazard on a 29-record slice is not MATERIAL
+def test_u1_two_loses_plus_exceptions_has_no_headline_in_either_form():
+    # the case this corpus produced: {L, L, D, D}. The exception is named
+    # (the frozen letter) AND the reading says there is no combined
+    # headline at all (the non-flattering reading, which governs).
+    L, D = "LOSES", "DOES NOT LOSE"
+    r = pr.read_u1({"a": L, "b": L, "c": D, "d": D})
+    assert r.startswith("U1 EXCEPTION IN c, d")
+    assert "NO combined headline in either form" in r
+    assert "HOLDS" not in r
+
+
+def test_u2_material_needs_n_at_least_30_but_harmless_needs_no_slice_at_all():
+    # a 0.10 hazard on a 29-record slice is not MATERIAL (n < 30) ...
     r = pr.read_u2(0.004, {"s1": (0.10, 29), "s2": (0.0, 100)})
-    assert r.startswith("U2 HARMLESS")
+    assert not r.startswith("U2 MATERIAL")
+    # ... and by the protocol's letter it also blocks HARMLESS ("no slice >= 0.05")
+    assert r.startswith("U2 PRESENT")
     r = pr.read_u2(0.02, {"s1": (0.10, 30), "s2": (0.0, 100)})
     assert r.startswith("U2 MATERIAL") and "s1" in r
-    r = pr.read_u2(0.02, {"s1": (0.04, 100)})
-    assert r.startswith("U2 PRESENT")
+    assert pr.read_u2(0.02, {"s1": (0.04, 100)}).startswith("U2 PRESENT")
     assert pr.read_u2(0.0099, {"s1": (0.0499, 100)}).startswith("U2 HARMLESS")
     assert pr.read_u2(0.01, {"s1": (0.0, 100)}).startswith("U2 PRESENT")
 
 
-def test_u3_boundary():
+def test_u3_boundary_and_empty_pool():
     assert pr.read_u3(0.0499, 100, {}).startswith("U3 SAME")
     assert pr.read_u3(0.05, 100, {"fenced": 5}).startswith("U3 RESIDUAL")
+    assert pr.read_u3(None, 0, {}).startswith("U3 NOT READABLE")
+
+
+def test_decompose_fabricated_does_not_call_a_stripped_fence_recovery():
+    # a leading fence the reference stripped, body malformed (an expression):
+    # this is a REPAIR, never "the reference's undercount"
+    text = '```json\n{"a": 2 * 13000}\n```'
+    assert pr.decompose_fabricated(text, {"a": 2}, fenced=True) == "leading_fenced_malformed"
+    # prose, then a fence: the reference's leading-fence scope missed it
+    text = 'Here it is:\n```json\n{"a": 1,}\n```'
+    assert pr.decompose_fabricated(text, {"a": 1}, fenced=False) == "fence_after_prose"
+    # an exact object inside prose: recovered, whatever the fence flag says
+    text = 'Sure! {"a": 1} hope that helps'
+    assert pr.decompose_fabricated(text, {"a": 1}, fenced=False) == "exact_object_present"
+    # no fence, malformed
+    assert pr.decompose_fabricated('{"a": 1', {"a": 1}, fenced=False) == "unfenced_malformed"
 
 
 def test_builder_refuses_parsed_objects(tmp_path, monkeypatch):

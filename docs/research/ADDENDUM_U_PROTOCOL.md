@@ -147,3 +147,33 @@ Artifacts: `experiments/fence_corpus_2026-09-04.jsonl` (+ `.manifest.json`),
 `experiments/parser_robustness_2026-09-04.json`. Runner:
 `scripts/parser_robustness.py`. Builder: `tools/fence_corpus.py`.
 Both idempotent; both refuse to read a reading from a partial corpus.
+
+## Errata — 2026-09-04, after the run, from an adversarial review of the published row
+
+1. **U1 precedence.** The frozen text licenses the *"on N of the
+   families tested"* sentence as the reduced form of a headline that
+   itself needs LOSES in at least 3 families. With 2 LOSES and 2
+   exceptions the runner emitted the exception form alone; the
+   non-flattering reading — no combined headline in either form — is
+   the one that governs, and the runner's U1 text now says so
+   explicitly when LOSES < 3. Thresholds unchanged.
+2. **U2 HARMLESS.** The frozen text says HARMLESS needs "no slice ≥
+   0.05" with no size filter; the first runner filtered to n ≥ 30. Now
+   matches the letter. Did not fire on this corpus (every slice has
+   n ≥ 30).
+3. **U3 residual by cause.** The frozen text says "invalid JSON vs
+   other"; the runner's buckets are `fenced` / `unfenced_other`, which
+   is the same split stated from the reference's side. Did not fire.
+4. **The substance check.** Added after the first run; its first
+   version mislabelled leading-fenced-but-malformed bodies as "a fence
+   after prose". Corrected the same day; see `CORRECTIONS.md`.
+5. **Non-object returns.** The frozen rule "non-dict → None" for the
+   lenient parsers hides the lists `json_repair.loads` returns (15
+   records). The artifact now banks those returns and a second slice
+   table with them counted; the frozen reading is applied to the
+   preregistered rule.
+6. **"Frozen before the runner existed."** True by commit order
+   (7e0cf36 protocol at 22:10:47 UTC; c752d14 builder, runner, tests
+   and the banked run at 22:14:04 UTC). The code was written in those
+   minutes against the frozen thresholds; the order is what a reader
+   can verify, and it is the claim.
