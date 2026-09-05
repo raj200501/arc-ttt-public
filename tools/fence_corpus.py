@@ -30,8 +30,17 @@ import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 EXP = REPO / "experiments"
-CORPUS = EXP / "fence_corpus_2026-09-04.jsonl"
-MANIFEST = EXP / "fence_corpus_2026-09-04.manifest.json"
+DEFAULT_TAG = "2026-09-04"
+
+
+def paths(tag: str = DEFAULT_TAG) -> tuple[pathlib.Path, pathlib.Path]:
+    """(corpus, manifest) for a dated corpus. The first corpus (2026-09-04,
+    four families) stays as banked; a later tag is a second corpus that
+    includes what has landed since, published beside the first."""
+    return (EXP / f"fence_corpus_{tag}.jsonl", EXP / f"fence_corpus_{tag}.manifest.json")
+
+
+CORPUS, MANIFEST = paths()
 
 # (relative path, family, size, adapted, corpus, expected-regime-source)
 # The last column names WHICH artifact field carries the regime so the
@@ -150,12 +159,21 @@ def _labels(rec: dict, source_field: str, rel: str) -> dict:
     return {"regime": regime, "k": k, "decoder": decoder, "dtype": dtype}
 
 
-def build() -> tuple[list[dict], dict]:
+def build(only: set | None = None) -> tuple[list[dict], dict]:
+    """Build from every registry artifact present on disk, or -- with `only`,
+    the set of artifact paths a banked manifest lists as present -- from
+    exactly those, so an earlier corpus stays reproducible after later
+    artifacts land (an artifact in `only` that is missing is an error)."""
     records: list[dict] = []
     present, absent = [], []
     for rel, family, size, adapted, corpus, source_field in REGISTRY:
         path = EXP / rel
+        if only is not None and rel not in only:
+            absent.append(rel)
+            continue
         if not path.exists():
+            if only is not None:
+                raise CorpusError(f"{rel}: listed present in the manifest but missing on disk")
             absent.append(rel)
             continue
         rec = json.loads(path.read_text(encoding="utf-8"))
@@ -218,22 +236,30 @@ def serialize(records: list[dict]) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--check", action="store_true",
-                        help="rebuild in memory and compare with the banked corpus")
+                        help="rebuild from the banked manifest's artifact list and compare SHA")
+    parser.add_argument("--tag", default=DEFAULT_TAG,
+                        help="date tag of the corpus to build or check (default: the first corpus)")
     args = parser.parse_args()
-    records, manifest = build()
+    corpus_path, manifest_path = paths(args.tag)
+    if args.check:
+        if not corpus_path.exists() or not manifest_path.exists():
+            print(f"no banked corpus {args.tag} to check against"); return 2
+        listed = {a["artifact"] for a in json.loads(manifest_path.read_text())["artifacts_present"]}
+        records, manifest = build(only=listed)
+    else:
+        records, manifest = build()
     text = serialize(records)
     sha = hashlib.sha256(text.encode("utf-8")).hexdigest()
     manifest["corpus_sha256"] = sha
+    manifest["tag"] = args.tag
     if args.check:
-        if not CORPUS.exists():
-            print("no banked corpus to check against"); return 2
-        banked = hashlib.sha256(CORPUS.read_bytes()).hexdigest()
+        banked = hashlib.sha256(corpus_path.read_bytes()).hexdigest()
         if banked != sha:
             print(f"DRIFT: banked {banked[:12]} != rebuilt {sha[:12]} "
                   f"(absent now: {manifest['artifacts_absent']})"); return 1
-        print(f"corpus current: {len(records)} records, sha256 {sha[:12]}"); return 0
-    CORPUS.write_text(text, encoding="utf-8")
-    MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        print(f"corpus {args.tag} current: {len(records)} records, sha256 {sha[:12]}"); return 0
+    corpus_path.write_text(text, encoding="utf-8")
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(f"built {len(records)} records from {len(manifest['artifacts_present'])} artifacts "
           f"({len(manifest['artifacts_absent'])} absent: {manifest['artifacts_absent']}); "
           f"families {manifest['families_present']}; sha256 {sha[:12]}")

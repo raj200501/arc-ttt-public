@@ -21,10 +21,12 @@ produced this repository is closed by its own measurements (see
   back a piece of the receipt as the answer (post-hoc substance check,
   disclosed); smolagents harmless. Next: the Phi-3 cells into
   the corpus; the fourteen census packages still not attempted.
-- **Addendum T (in flight):** the fence tax on four other model
-  families — SmolLM2, Granite, Phi-3, Falcon3 — same cells as
-  Addendum S, thresholds frozen in
-  `docs/research/ADDENDUM_T_PROTOCOL.md` before any arm ran.
+- **Addendum T (banked 2026-09-05):** the fence tax on four other
+  families. Falcon3-1B replicates (92/100 schema-only fenced, 0/80
+  k-shot); SmolLM2, Granite-3.1 and Phi-3 fence 0/100. Reading (c) in
+  three of four: the tax is family-specific, not a property of small
+  models as a class — 1 of 4 families in T, 2 of 5 counting Qwen2.5
+  from Addendum S — and every document says so.
 - **`tools/fencecheck.py`:** stdlib, one file; `scan` for fail-open
   parse sites, `score` for what a fence costs your saved outputs. Next:
   a `--baseline` mode that diffs two scored files, and the

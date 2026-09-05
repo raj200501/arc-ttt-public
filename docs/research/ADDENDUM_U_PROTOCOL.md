@@ -177,3 +177,26 @@ Both idempotent; both refuse to read a reading from a partial corpus.
    and the banked run at 22:14:04 UTC). The code was written in those
    minutes against the frozen thresholds; the order is what a reader
    can verify, and it is the claim.
+
+## Extension note — 2026-09-04, written while the Phi-3 cells are still running
+
+The reading above was taken ONCE on the four-family manifest, as the
+frozen rule requires. When the two Phi-3 cells land, the corpus is
+rebuilt (the manifest names them present), both panels are re-run, and
+the results publish as a SECOND, dated reading — "U on five families"
+— beside the first, never replacing it. U1's family count becomes 5;
+the same thresholds apply; the four-family numbers stay quotable as
+what they are. If Phi-3 fires LOSES the exception sentence keeps its
+form; if it fires DOES NOT LOSE there are three exceptions and the same
+"no combined headline" conclusion; if PARTIAL it is stated at size.
+Nothing about the U-ext panel changes either.
+
+**Second reading taken 2026-09-05** on `fence_corpus_2026-09-05`
+(2130 records, 34 artifacts, five families): U1 LOSES in Qwen2.5 and
+Falcon3, DOES NOT LOSE in Granite, Phi-3 (0/87) and SmolLM2 — three
+exceptions, no combined headline in either form; U2 MATERIAL for both
+lenient parsers; U3 SAME PHENOMENON (0/1248). The U-ext panel on the same
+corpus: instructor MATERIAL (111/143, 105 fragments), smolagents HARMLESS,
+llama-index MATERIAL. Artifacts `parser_robustness_2026-09-05.json` and
+`parser_robustness_ext_2026-09-05.json`; the 2026-09-04 artifacts are
+unchanged and stay reproducible from their own manifest (`--check`).

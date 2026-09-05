@@ -106,6 +106,27 @@ This tool flagged itself on its first run, on exactly that function. A
 tool you cannot tell "yes, on purpose" gets deleted after the first false
 positive.
 
+## Measure what a parser does to saved outputs
+
+`score` tells you how many of your outputs a strict parse rejects.
+Two sibling scripts go one step further and run real parsers over
+real outputs, the way Addendum U did on this repository's own banked
+model text:
+
+```
+python3 tools/fence_corpus.py                       # every banked raw output -> one JSONL, SHA-banked manifest
+PYTHONPATH=src python3 scripts/parser_robustness.py           # strict json.loads, autoevals, langchain, json_repair
+PYTHONPATH=src python3 scripts/parser_robustness.py --panel ext   # instructor, smolagents, llama-index helpers
+```
+
+The builder refuses artifacts whose "prediction" is already a parsed
+object, refuses a registry that contradicts an artifact's own labels,
+and names absent artifacts rather than dropping them. The runner
+refuses a corpus that does not match a fresh rebuild. A parser is one
+function `text -> object | None`; add yours to the panel and the frozen
+readings apply to it unchanged. Per-record statuses are banked, so
+every rate in the artifact can be recomputed by a stranger.
+
 ## Licence
 
 MIT. Copy the single file into your repo if that is easier than depending

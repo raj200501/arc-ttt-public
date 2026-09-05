@@ -3,21 +3,19 @@
  "panel": "base",
  "preregistration": "docs/research/ADDENDUM_U_PROTOCOL.md (committed 7e0cf36 before the runner was written)",
  "corpus": {
-  "path": "fence_corpus_2026-09-04.jsonl",
-  "tag": "2026-09-04",
-  "sha256": "ae6e9315abd83310f8691a808f699c938ae2f599b4cf9f224ad14e1373f07ffc",
-  "n_records": 1950,
+  "path": "fence_corpus_2026-09-05.jsonl",
+  "tag": "2026-09-05",
+  "sha256": "69e601fc45527af1cf2737eca18a763d7a0bcb412fdb465ed9cdc5b5ce34cbcb",
+  "n_records": 2130,
   "n_fenced_by_reference": 452,
   "families_present": [
    "falcon3",
    "granite",
+   "phi3",
    "qwen2.5",
    "smollm2"
   ],
-  "artifacts_absent": [
-   "cord_fence_tax_families_cells/phi3-mini_schema.json",
-   "cord_fence_tax_families_cells/phi3-mini_kshot.json"
-  ]
+  "artifacts_absent": []
  },
  "parsers": {
   "strict": "json.loads(text); except ValueError -> None; non-object -> None (evals/elsuite/basic/json_match.py:80 semantics, verbatim)",
@@ -35,56 +33,56 @@
  },
  "overall": {
   "strict": {
-   "n": 1950,
-   "n_ref": 1823,
-   "n_noref": 127,
+   "n": 2130,
+   "n_ref": 1987,
+   "n_noref": 143,
    "lost": 407,
    "diverged": 0,
    "fabricated": 0,
-   "ok": 1416,
-   "lost_rate": 0.2233,
+   "ok": 1580,
+   "lost_rate": 0.2048,
    "diverged_rate": 0.0,
    "fabricated_rate": 0.0,
    "hazard_rate": 0.0
   },
   "autoevals_validjson": {
-   "n": 1950,
-   "n_ref": 1823,
-   "n_noref": 127,
+   "n": 2130,
+   "n_ref": 1987,
+   "n_noref": 143,
    "lost": 407,
    "diverged": 0,
    "fabricated": 0,
-   "ok": 1416,
-   "lost_rate": 0.2233,
+   "ok": 1580,
+   "lost_rate": 0.2048,
    "diverged_rate": 0.0,
    "fabricated_rate": 0.0,
    "hazard_rate": 0.0
   },
   "langchain_parse_json_markdown": {
-   "n": 1950,
-   "n_ref": 1823,
-   "n_noref": 127,
+   "n": 2130,
+   "n_ref": 1987,
+   "n_noref": 143,
    "lost": 0,
    "diverged": 0,
-   "fabricated": 61,
-   "ok": 1823,
+   "fabricated": 75,
+   "ok": 1987,
    "lost_rate": 0.0,
    "diverged_rate": 0.0,
-   "fabricated_rate": 0.4803,
-   "hazard_rate": 0.0313
+   "fabricated_rate": 0.5245,
+   "hazard_rate": 0.0352
   },
   "json_repair": {
-   "n": 1950,
-   "n_ref": 1823,
-   "n_noref": 127,
+   "n": 2130,
+   "n_ref": 1987,
+   "n_noref": 143,
    "lost": 0,
    "diverged": 0,
-   "fabricated": 104,
-   "ok": 1823,
+   "fabricated": 119,
+   "ok": 1987,
    "lost_rate": 0.0,
    "diverged_rate": 0.0,
-   "fabricated_rate": 0.8189,
-   "hazard_rate": 0.0533
+   "fabricated_rate": 0.8322,
+   "hazard_rate": 0.0559
   }
  },
  "by_regime": {
@@ -103,27 +101,27 @@
     "hazard_rate": 0.0
    },
    "kshot": {
-    "n": 1270,
-    "n_ref": 1221,
-    "n_noref": 49,
+    "n": 1350,
+    "n_ref": 1298,
+    "n_noref": 52,
     "lost": 9,
     "diverged": 0,
     "fabricated": 0,
-    "ok": 1212,
-    "lost_rate": 0.0074,
+    "ok": 1289,
+    "lost_rate": 0.0069,
     "diverged_rate": 0.0,
     "fabricated_rate": 0.0,
     "hazard_rate": 0.0
    },
    "schema": {
-    "n": 620,
-    "n_ref": 542,
-    "n_noref": 78,
+    "n": 720,
+    "n_ref": 629,
+    "n_noref": 91,
     "lost": 368,
     "diverged": 0,
     "fabricated": 0,
-    "ok": 174,
-    "lost_rate": 0.679,
+    "ok": 261,
+    "lost_rate": 0.5851,
     "diverged_rate": 0.0,
     "fabricated_rate": 0.0,
     "hazard_rate": 0.0
@@ -157,27 +155,27 @@
     "hazard_rate": 0.0
    },
    "kshot": {
-    "n": 1270,
-    "n_ref": 1221,
-    "n_noref": 49,
+    "n": 1350,
+    "n_ref": 1298,
+    "n_noref": 52,
     "lost": 9,
     "diverged": 0,
     "fabricated": 0,
-    "ok": 1212,
-    "lost_rate": 0.0074,
+    "ok": 1289,
+    "lost_rate": 0.0069,
     "diverged_rate": 0.0,
     "fabricated_rate": 0.0,
     "hazard_rate": 0.0
    },
    "schema": {
-    "n": 620,
-    "n_ref": 542,
-    "n_noref": 78,
+    "n": 720,
+    "n_ref": 629,
+    "n_noref": 91,
     "lost": 368,
     "diverged": 0,
     "fabricated": 0,
-    "ok": 174,
-    "lost_rate": 0.679,
+    "ok": 261,
+    "lost_rate": 0.5851,
     "diverged_rate": 0.0,
     "fabricated_rate": 0.0,
     "hazard_rate": 0.0
@@ -211,30 +209,30 @@
     "hazard_rate": 0.0
    },
    "kshot": {
-    "n": 1270,
-    "n_ref": 1221,
-    "n_noref": 49,
+    "n": 1350,
+    "n_ref": 1298,
+    "n_noref": 52,
     "lost": 0,
     "diverged": 0,
-    "fabricated": 9,
-    "ok": 1221,
+    "fabricated": 10,
+    "ok": 1298,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
-    "fabricated_rate": 0.1837,
-    "hazard_rate": 0.0071
+    "fabricated_rate": 0.1923,
+    "hazard_rate": 0.0074
    },
    "schema": {
-    "n": 620,
-    "n_ref": 542,
-    "n_noref": 78,
+    "n": 720,
+    "n_ref": 629,
+    "n_noref": 91,
     "lost": 0,
     "diverged": 0,
-    "fabricated": 52,
-    "ok": 542,
+    "fabricated": 65,
+    "ok": 629,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
-    "fabricated_rate": 0.6667,
-    "hazard_rate": 0.0839
+    "fabricated_rate": 0.7143,
+    "hazard_rate": 0.0903
    },
    "schema_kshot": {
     "n": 30,
@@ -265,30 +263,30 @@
     "hazard_rate": 0.0
    },
    "kshot": {
-    "n": 1270,
-    "n_ref": 1221,
-    "n_noref": 49,
+    "n": 1350,
+    "n_ref": 1298,
+    "n_noref": 52,
     "lost": 0,
     "diverged": 0,
-    "fabricated": 34,
-    "ok": 1221,
+    "fabricated": 36,
+    "ok": 1298,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
-    "fabricated_rate": 0.6939,
-    "hazard_rate": 0.0268
+    "fabricated_rate": 0.6923,
+    "hazard_rate": 0.0267
    },
    "schema": {
-    "n": 620,
-    "n_ref": 542,
-    "n_noref": 78,
+    "n": 720,
+    "n_ref": 629,
+    "n_noref": 91,
     "lost": 0,
     "diverged": 0,
-    "fabricated": 70,
-    "ok": 542,
+    "fabricated": 83,
+    "ok": 629,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
-    "fabricated_rate": 0.8974,
-    "hazard_rate": 0.1129
+    "fabricated_rate": 0.9121,
+    "hazard_rate": 0.1153
    },
    "schema_kshot": {
     "n": 30,
@@ -354,6 +352,32 @@
     "diverged": 0,
     "fabricated": 0,
     "ok": 89,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 0.0,
+    "hazard_rate": 0.0
+   },
+   "phi3|3.8B|prompted|cord|kshot|k=20|greedy": {
+    "n": 80,
+    "n_ref": 77,
+    "n_noref": 3,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 0,
+    "ok": 77,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 0.0,
+    "hazard_rate": 0.0
+   },
+   "phi3|3.8B|prompted|cord|schema|k=0|greedy": {
+    "n": 100,
+    "n_ref": 87,
+    "n_noref": 13,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 0,
+    "ok": 87,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
     "fabricated_rate": 0.0,
@@ -681,6 +705,32 @@
     "diverged": 0,
     "fabricated": 0,
     "ok": 89,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 0.0,
+    "hazard_rate": 0.0
+   },
+   "phi3|3.8B|prompted|cord|kshot|k=20|greedy": {
+    "n": 80,
+    "n_ref": 77,
+    "n_noref": 3,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 0,
+    "ok": 77,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 0.0,
+    "hazard_rate": 0.0
+   },
+   "phi3|3.8B|prompted|cord|schema|k=0|greedy": {
+    "n": 100,
+    "n_ref": 87,
+    "n_noref": 13,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 0,
+    "ok": 87,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
     "fabricated_rate": 0.0,
@@ -1013,6 +1063,32 @@
     "fabricated_rate": 1.0,
     "hazard_rate": 0.11
    },
+   "phi3|3.8B|prompted|cord|kshot|k=20|greedy": {
+    "n": 80,
+    "n_ref": 77,
+    "n_noref": 3,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 1,
+    "ok": 77,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 0.3333,
+    "hazard_rate": 0.0125
+   },
+   "phi3|3.8B|prompted|cord|schema|k=0|greedy": {
+    "n": 100,
+    "n_ref": 87,
+    "n_noref": 13,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 13,
+    "ok": 87,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 1.0,
+    "hazard_rate": 0.13
+   },
    "qwen2.5|0.5B|prompted|cord|kshot|k=20|greedy": {
     "n": 80,
     "n_ref": 77,
@@ -1340,6 +1416,32 @@
     "fabricated_rate": 1.0,
     "hazard_rate": 0.11
    },
+   "phi3|3.8B|prompted|cord|kshot|k=20|greedy": {
+    "n": 80,
+    "n_ref": 77,
+    "n_noref": 3,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 2,
+    "ok": 77,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 0.6667,
+    "hazard_rate": 0.025
+   },
+   "phi3|3.8B|prompted|cord|schema|k=0|greedy": {
+    "n": 100,
+    "n_ref": 87,
+    "n_noref": 13,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 13,
+    "ok": 87,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 1.0,
+    "hazard_rate": 0.13
+   },
    "qwen2.5|0.5B|prompted|cord|kshot|k=20|greedy": {
     "n": 80,
     "n_ref": 77,
@@ -1642,6 +1744,19 @@
    "fabricated_rate": 0.0,
    "hazard_rate": 0.0
   },
+  "phi3": {
+   "n": 100,
+   "n_ref": 87,
+   "n_noref": 13,
+   "lost": 0,
+   "diverged": 0,
+   "fabricated": 0,
+   "ok": 87,
+   "lost_rate": 0.0,
+   "diverged_rate": 0.0,
+   "fabricated_rate": 0.0,
+   "hazard_rate": 0.0
+  },
   "qwen2.5": {
    "n": 320,
    "n_ref": 295,
@@ -1676,23 +1791,23 @@
    "mean": 0.598
   },
   "unfenced_ref_records": {
-   "n": 1416,
+   "n": 1580,
    "mean": 1.0
   }
  },
  "readings": {
-  "U1": "U1 EXCEPTION IN granite, smollm2: named at full size; the sentence becomes 'on N of the 4 families tested' -- never 'across families'. LOSES fired in only 2 of 4 families, so there is NO combined headline in either form: the rates publish and nothing is said about families as a class. Per-family: {\"falcon3\": \"LOSES\", \"granite\": \"DOES NOT LOSE\", \"qwen2.5\": \"LOSES\", \"smollm2\": \"DOES NOT LOSE\"}",
+  "U1": "U1 EXCEPTION IN granite, phi3, smollm2: named at full size; the sentence becomes 'on N of the 5 families tested' -- never 'across families'. LOSES fired in only 2 of 5 families, so there is NO combined headline in either form: the rates publish and nothing is said about families as a class. Per-family: {\"falcon3\": \"LOSES\", \"granite\": \"DOES NOT LOSE\", \"phi3\": \"DOES NOT LOSE\", \"qwen2.5\": \"LOSES\", \"smollm2\": \"DOES NOT LOSE\"}",
   "U2": {
-   "langchain_parse_json_markdown": "U2 MATERIAL: hazard >= 0.05 on 6 slice(s) with n >= 30; worst smollm2|1.7B|prompted|cord|schema|k=0|greedy at 0.1500. Lenient repair changes or invents content on real outputs.",
-   "json_repair": "U2 MATERIAL: hazard >= 0.05 on 8 slice(s) with n >= 30; worst falcon3|1B|prompted|cord|schema|k=0|greedy at 0.1900. Lenient repair changes or invents content on real outputs."
+   "langchain_parse_json_markdown": "U2 MATERIAL: hazard >= 0.05 on 7 slice(s) with n >= 30; worst smollm2|1.7B|prompted|cord|schema|k=0|greedy at 0.1500. Lenient repair changes or invents content on real outputs.",
+   "json_repair": "U2 MATERIAL: hazard >= 0.05 on 9 slice(s) with n >= 30; worst falcon3|1B|prompted|cord|schema|k=0|greedy at 0.1900. Lenient repair changes or invents content on real outputs."
   },
-  "U3": "U3 SAME PHENOMENON: strict loses 0.0000 of k=20 ref outputs (n_ref=1171) -- where the fence goes, the parser loss goes."
+  "U3": "U3 SAME PHENOMENON: strict loses 0.0000 of k=20 ref outputs (n_ref=1248) -- where the fence goes, the parser loss goes."
  },
  "u2_substance_added_2026-09-04": {
   "why": "added after the first run, before the row was written, and CORRECTED the same day: the first version labelled leading-fenced-but-malformed bodies as 'a fence after prose' (the reference's undercount). They are not: the reference stripped that fence and the body failed the fail-closed parse because it was truncated or held expressions. Only `exact_object_present` is recovery; the rest are repairs whose correctness is not adjudicated. The frozen readings above are untouched.",
   "fabricated_by_kind": {
    "json_repair": {
-    "unfenced_malformed": 54,
+    "unfenced_malformed": 69,
     "leading_fenced_malformed": 45,
     "stray_brace_around_object": 2,
     "exact_object_present": 2,
@@ -1701,7 +1816,7 @@
    "langchain_parse_json_markdown": {
     "exact_object_present": 2,
     "leading_fenced_malformed": 26,
-    "unfenced_malformed": 32,
+    "unfenced_malformed": 46,
     "one_of_several_objects": 1
    }
   },
@@ -1716,35 +1831,35 @@
   "non_object_returns": {
    "json_repair": {
     "empty_string": 8,
-    "list": 15
+    "list": 16
    }
   },
   "overall_if_counted": {
    "langchain_parse_json_markdown": {
-    "n": 1950,
-    "n_ref": 1823,
-    "n_noref": 127,
+    "n": 2130,
+    "n_ref": 1987,
+    "n_noref": 143,
     "lost": 0,
     "diverged": 0,
-    "fabricated": 61,
-    "ok": 1823,
+    "fabricated": 75,
+    "ok": 1987,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
-    "fabricated_rate": 0.4803,
-    "hazard_rate": 0.0313
+    "fabricated_rate": 0.5245,
+    "hazard_rate": 0.0352
    },
    "json_repair": {
-    "n": 1950,
-    "n_ref": 1823,
-    "n_noref": 127,
+    "n": 2130,
+    "n_ref": 1987,
+    "n_noref": 143,
     "lost": 0,
     "diverged": 0,
-    "fabricated": 119,
-    "ok": 1823,
+    "fabricated": 135,
+    "ok": 1987,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
-    "fabricated_rate": 0.937,
-    "hazard_rate": 0.061
+    "fabricated_rate": 0.9441,
+    "hazard_rate": 0.0634
    }
   },
   "slices_at_or_above_0.05_if_counted": {
@@ -1752,6 +1867,7 @@
     "falcon3|1B|prompted|cord|kshot|k=20|greedy",
     "falcon3|1B|prompted|cord|schema|k=0|greedy",
     "granite|2B|prompted|cord|schema|k=0|greedy",
+    "phi3|3.8B|prompted|cord|schema|k=0|greedy",
     "qwen2.5|0.5B|prompted|cord|schema|k=0|greedy",
     "qwen2.5|1.5B|prompted|cord|schema|k=0|greedy",
     "smollm2|1.7B|prompted|cord|schema|k=0|greedy"
@@ -1760,6 +1876,7 @@
     "falcon3|1B|prompted|cord|kshot|k=20|greedy",
     "falcon3|1B|prompted|cord|schema|k=0|greedy",
     "granite|2B|prompted|cord|schema|k=0|greedy",
+    "phi3|3.8B|prompted|cord|schema|k=0|greedy",
     "qwen2.5|0.5B|prompted|cord|schema|k=0|greedy",
     "qwen2.5|0.5B|prompted|waybill|kshot|k=1|greedy",
     "qwen2.5|1.5B|prompted|cord|kshot|k=20|greedy",
@@ -21498,6 +21615,2045 @@
   },
   {
    "id": "cord_fence_tax_families_cells/granite-2b_kshot:cord-099",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-000",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-001",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-002",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-003",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-004",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-005",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-006",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-007",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-008",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-009",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-010",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-011",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-012",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-013",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-014",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-015",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-016",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-017",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-018",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-019",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-020",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-021",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-022",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-023",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-024",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-025",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-026",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-027",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-028",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-029",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-030",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-031",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-032",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-033",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-034",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-035",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-036",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-037",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-038",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-039",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-040",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-041",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-042",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-043",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-044",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-045",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-046",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-047",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-048",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-049",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-050",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-051",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-052",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-053",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-054",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-055",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-056",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-057",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-058",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-059",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-060",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-061",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-062",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-063",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-064",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-065",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-066",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-067",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-068",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-069",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-070",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-071",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-072",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-073",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-074",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-075",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-076",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-077",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-078",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-079",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-080",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-081",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-082",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-083",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-084",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-085",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-086",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-087",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-088",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-089",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-090",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-091",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-092",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-093",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-094",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-095",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-096",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-097",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-098",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-099",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-000",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-001",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-002",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-003",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-005",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-006",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-007",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-008",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-011",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-012",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-013",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-014",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-015",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "agree_none",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-017",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-018",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-019",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-021",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-022",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-023",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-024",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-025",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-026",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-027",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-028",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-029",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-030",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-031",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-032",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-034",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-035",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-039",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-040",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-041",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-042",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-043",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-045",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-046",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-047",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-048",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-049",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-052",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-054",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-055",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-056",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-057",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-058",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-059",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-060",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-061",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-062",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-063",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-064",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-067",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-068",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-069",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-070",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-071",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-072",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-073",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-074",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-075",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-076",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "agree_none",
+    "json_repair": "agree_none"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-077",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-078",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-079",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-082",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-083",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-085",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-086",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-087",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "strict": "agree_none",
+    "autoevals_validjson": "agree_none",
+    "langchain_parse_json_markdown": "fabricated",
+    "json_repair": "fabricated"
+   },
+   "fabricated_kind": {
+    "langchain_parse_json_markdown": "unfenced_malformed",
+    "json_repair": "unfenced_malformed"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-088",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-089",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-091",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-092",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-093",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-094",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-095",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-097",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-098",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "strict": "ok",
+    "autoevals_validjson": "ok",
+    "langchain_parse_json_markdown": "ok",
+    "json_repair": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-099",
    "fenced": false,
    "ref": true,
    "status": {

@@ -1,0 +1,90 @@
+{
+  "what": "Addendum T: fence rates on CORD, the shipped tool as classifier, readings applied by arithmetic from the frozen row and the dated protocol note.",
+  "preregistration": "docs/research/ADDENDUM_T_PROTOCOL.md (frozen 2026-09-03 before any arm)",
+  "run_date": "2026-09-01",
+  "run_date_note": "RUN_DATE is the Addendum S stamp; the Addendum T cells ran 2026-09-03 to 2026-09-05 (driver log work/t_driver.log, commit times). The cell records banked before 2026-09-05 also carry the S protocol path and, for the bfloat16 Phi-3 cells, a decode string that says float32; the dtype field is the true one. Runner constants, fixed 2026-09-05; the cells are not re-run.",
+  "classified_by": "tools/fencecheck.py strip_fence(), leading-fence scope (undercount property documented in Addendum R's erratum)",
+  "rows": [
+    {
+      "model": "tiiuae/Falcon3-1B-Instruct",
+      "regime": "kshot",
+      "n": 80,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "invalid": 14,
+      "mean_micro_f1_context_only": 0.4066
+    },
+    {
+      "model": "tiiuae/Falcon3-1B-Instruct",
+      "regime": "schema",
+      "n": 100,
+      "fenced": 92,
+      "fence_rate": 0.92,
+      "invalid": 27,
+      "mean_micro_f1_context_only": 0.1677
+    },
+    {
+      "model": "ibm-granite/granite-3.1-2b-instruct",
+      "regime": "kshot",
+      "n": 80,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "invalid": 1,
+      "mean_micro_f1_context_only": 0.7135
+    },
+    {
+      "model": "ibm-granite/granite-3.1-2b-instruct",
+      "regime": "schema",
+      "n": 100,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "invalid": 11,
+      "mean_micro_f1_context_only": 0.322
+    },
+    {
+      "model": "microsoft/Phi-3-mini-4k-instruct",
+      "regime": "kshot",
+      "n": 80,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "invalid": 3,
+      "mean_micro_f1_context_only": 0.6731
+    },
+    {
+      "model": "microsoft/Phi-3-mini-4k-instruct",
+      "regime": "schema",
+      "n": 100,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "invalid": 13,
+      "mean_micro_f1_context_only": 0.3394
+    },
+    {
+      "model": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+      "regime": "kshot",
+      "n": 80,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "invalid": 1,
+      "mean_micro_f1_context_only": 0.6799
+    },
+    {
+      "model": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+      "regime": "schema",
+      "n": 100,
+      "fenced": 0,
+      "fence_rate": 0.0,
+      "invalid": 15,
+      "mean_micro_f1_context_only": 0.2314
+    }
+  ],
+  "reading_per_model": {
+    "smollm2-1.7b": "(c) DOES NOT REPLICATE",
+    "granite-2b": "(c) DOES NOT REPLICATE",
+    "phi3-mini": "(c) DOES NOT REPLICATE",
+    "falcon3-1b": "(a) REPLICATES"
+  },
+  "the_finding": "(c) IN smollm2-1.7b, granite-2b, phi3-mini: named exception(s) at full size; the outbound sentence becomes 'on N of the families tested' with the exception named \u2014 never 'across model families'. Per-family: {\"smollm2-1.7b\": \"(c) DOES NOT REPLICATE\", \"granite-2b\": \"(c) DOES NOT REPLICATE\", \"phi3-mini\": \"(c) DOES NOT REPLICATE\", \"falcon3-1b\": \"(a) REPLICATES\"}",
+  "note_on_n": "schema cells n=100 (the row's letter); k-shot cells n=80 \u2014 demonstrations are the E6 train-20 and a receipt cannot demonstrate itself; deviation declared in the protocol note before data",
+  "addendum": "T"
+}

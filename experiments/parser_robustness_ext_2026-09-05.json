@@ -3,21 +3,19 @@
  "panel": "ext",
  "preregistration": "docs/research/ADDENDUM_U_EXT_PROTOCOL.md (committed aba5089 before these helpers ran)",
  "corpus": {
-  "path": "fence_corpus_2026-09-04.jsonl",
-  "tag": "2026-09-04",
-  "sha256": "ae6e9315abd83310f8691a808f699c938ae2f599b4cf9f224ad14e1373f07ffc",
-  "n_records": 1950,
+  "path": "fence_corpus_2026-09-05.jsonl",
+  "tag": "2026-09-05",
+  "sha256": "69e601fc45527af1cf2737eca18a763d7a0bcb412fdb465ed9cdc5b5ce34cbcb",
+  "n_records": 2130,
   "n_fenced_by_reference": 452,
   "families_present": [
    "falcon3",
    "granite",
+   "phi3",
    "qwen2.5",
    "smollm2"
   ],
-  "artifacts_absent": [
-   "cord_fence_tax_families_cells/phi3-mini_schema.json",
-   "cord_fence_tax_families_cells/phi3-mini_kshot.json"
-  ]
+  "artifacts_absent": []
  },
  "parsers": {
   "instructor_extract_json_from_codeblock": "json.loads(instructor.utils.extract_json_from_codeblock(text)); exception -> None; non-object -> None",
@@ -31,43 +29,43 @@
  },
  "overall": {
   "instructor_extract_json_from_codeblock": {
-   "n": 1950,
-   "n_ref": 1823,
-   "n_noref": 127,
+   "n": 2130,
+   "n_ref": 1987,
+   "n_noref": 143,
    "lost": 0,
    "diverged": 0,
-   "fabricated": 99,
-   "ok": 1823,
+   "fabricated": 111,
+   "ok": 1987,
    "lost_rate": 0.0,
    "diverged_rate": 0.0,
-   "fabricated_rate": 0.7795,
-   "hazard_rate": 0.0508
+   "fabricated_rate": 0.7762,
+   "hazard_rate": 0.0521
   },
   "smolagents_parse_json_blob": {
-   "n": 1950,
-   "n_ref": 1823,
-   "n_noref": 127,
+   "n": 2130,
+   "n_ref": 1987,
+   "n_noref": 143,
    "lost": 0,
    "diverged": 0,
    "fabricated": 5,
-   "ok": 1823,
+   "ok": 1987,
    "lost_rate": 0.0,
    "diverged_rate": 0.0,
-   "fabricated_rate": 0.0394,
-   "hazard_rate": 0.0026
+   "fabricated_rate": 0.035,
+   "hazard_rate": 0.0023
   },
   "llama_index_parse_json_markdown": {
-   "n": 1950,
-   "n_ref": 1823,
-   "n_noref": 127,
+   "n": 2130,
+   "n_ref": 1987,
+   "n_noref": 143,
    "lost": 0,
    "diverged": 0,
    "fabricated": 33,
-   "ok": 1823,
+   "ok": 1987,
    "lost_rate": 0.0,
    "diverged_rate": 0.0,
-   "fabricated_rate": 0.2598,
-   "hazard_rate": 0.0169
+   "fabricated_rate": 0.2308,
+   "hazard_rate": 0.0155
   }
  },
  "by_regime": {
@@ -86,30 +84,30 @@
     "hazard_rate": 0.0
    },
    "kshot": {
-    "n": 1270,
-    "n_ref": 1221,
-    "n_noref": 49,
+    "n": 1350,
+    "n_ref": 1298,
+    "n_noref": 52,
     "lost": 0,
     "diverged": 0,
-    "fabricated": 38,
-    "ok": 1221,
+    "fabricated": 40,
+    "ok": 1298,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
-    "fabricated_rate": 0.7755,
-    "hazard_rate": 0.0299
+    "fabricated_rate": 0.7692,
+    "hazard_rate": 0.0296
    },
    "schema": {
-    "n": 620,
-    "n_ref": 542,
-    "n_noref": 78,
+    "n": 720,
+    "n_ref": 629,
+    "n_noref": 91,
     "lost": 0,
     "diverged": 0,
-    "fabricated": 61,
-    "ok": 542,
+    "fabricated": 71,
+    "ok": 629,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
-    "fabricated_rate": 0.7821,
-    "hazard_rate": 0.0984
+    "fabricated_rate": 0.7802,
+    "hazard_rate": 0.0986
    },
    "schema_kshot": {
     "n": 30,
@@ -140,30 +138,30 @@
     "hazard_rate": 0.0
    },
    "kshot": {
-    "n": 1270,
-    "n_ref": 1221,
-    "n_noref": 49,
+    "n": 1350,
+    "n_ref": 1298,
+    "n_noref": 52,
     "lost": 0,
     "diverged": 0,
     "fabricated": 2,
-    "ok": 1221,
-    "lost_rate": 0.0,
-    "diverged_rate": 0.0,
-    "fabricated_rate": 0.0408,
-    "hazard_rate": 0.0016
-   },
-   "schema": {
-    "n": 620,
-    "n_ref": 542,
-    "n_noref": 78,
-    "lost": 0,
-    "diverged": 0,
-    "fabricated": 3,
-    "ok": 542,
+    "ok": 1298,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
     "fabricated_rate": 0.0385,
-    "hazard_rate": 0.0048
+    "hazard_rate": 0.0015
+   },
+   "schema": {
+    "n": 720,
+    "n_ref": 629,
+    "n_noref": 91,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 3,
+    "ok": 629,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 0.033,
+    "hazard_rate": 0.0042
    },
    "schema_kshot": {
     "n": 30,
@@ -194,30 +192,30 @@
     "hazard_rate": 0.0
    },
    "kshot": {
-    "n": 1270,
-    "n_ref": 1221,
-    "n_noref": 49,
+    "n": 1350,
+    "n_ref": 1298,
+    "n_noref": 52,
     "lost": 0,
     "diverged": 0,
     "fabricated": 13,
-    "ok": 1221,
+    "ok": 1298,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
-    "fabricated_rate": 0.2653,
-    "hazard_rate": 0.0102
+    "fabricated_rate": 0.25,
+    "hazard_rate": 0.0096
    },
    "schema": {
-    "n": 620,
-    "n_ref": 542,
-    "n_noref": 78,
+    "n": 720,
+    "n_ref": 629,
+    "n_noref": 91,
     "lost": 0,
     "diverged": 0,
     "fabricated": 20,
-    "ok": 542,
+    "ok": 629,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
-    "fabricated_rate": 0.2564,
-    "hazard_rate": 0.0323
+    "fabricated_rate": 0.2198,
+    "hazard_rate": 0.0278
    },
    "schema_kshot": {
     "n": 30,
@@ -287,6 +285,32 @@
     "diverged_rate": 0.0,
     "fabricated_rate": 1.0,
     "hazard_rate": 0.11
+   },
+   "phi3|3.8B|prompted|cord|kshot|k=20|greedy": {
+    "n": 80,
+    "n_ref": 77,
+    "n_noref": 3,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 2,
+    "ok": 77,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 0.6667,
+    "hazard_rate": 0.025
+   },
+   "phi3|3.8B|prompted|cord|schema|k=0|greedy": {
+    "n": 100,
+    "n_ref": 87,
+    "n_noref": 13,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 10,
+    "ok": 87,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 0.7692,
+    "hazard_rate": 0.1
    },
    "qwen2.5|0.5B|prompted|cord|kshot|k=20|greedy": {
     "n": 80,
@@ -610,6 +634,32 @@
     "diverged": 0,
     "fabricated": 0,
     "ok": 89,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 0.0,
+    "hazard_rate": 0.0
+   },
+   "phi3|3.8B|prompted|cord|kshot|k=20|greedy": {
+    "n": 80,
+    "n_ref": 77,
+    "n_noref": 3,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 0,
+    "ok": 77,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 0.0,
+    "hazard_rate": 0.0
+   },
+   "phi3|3.8B|prompted|cord|schema|k=0|greedy": {
+    "n": 100,
+    "n_ref": 87,
+    "n_noref": 13,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 0,
+    "ok": 87,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
     "fabricated_rate": 0.0,
@@ -942,6 +992,32 @@
     "fabricated_rate": 0.0,
     "hazard_rate": 0.0
    },
+   "phi3|3.8B|prompted|cord|kshot|k=20|greedy": {
+    "n": 80,
+    "n_ref": 77,
+    "n_noref": 3,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 0,
+    "ok": 77,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 0.0,
+    "hazard_rate": 0.0
+   },
+   "phi3|3.8B|prompted|cord|schema|k=0|greedy": {
+    "n": 100,
+    "n_ref": 87,
+    "n_noref": 13,
+    "lost": 0,
+    "diverged": 0,
+    "fabricated": 0,
+    "ok": 87,
+    "lost_rate": 0.0,
+    "diverged_rate": 0.0,
+    "fabricated_rate": 0.0,
+    "hazard_rate": 0.0
+   },
    "qwen2.5|0.5B|prompted|cord|kshot|k=20|greedy": {
     "n": 80,
     "n_ref": 77,
@@ -1219,8 +1295,8 @@
  },
  "readings": {
   "U2": {
-   "instructor_extract_json_from_codeblock": "U2 MATERIAL: hazard >= 0.05 on 8 slice(s) with n >= 30; worst falcon3|1B|prompted|cord|kshot|k=20|greedy at 0.1750. Lenient repair changes or invents content on real outputs.",
-   "smolagents_parse_json_blob": "U2 HARMLESS ON THIS CORPUS: overall hazard 0.0026 < 0.01 and no slice reaches 0.05. Published as the finding.",
+   "instructor_extract_json_from_codeblock": "U2 MATERIAL: hazard >= 0.05 on 9 slice(s) with n >= 30; worst falcon3|1B|prompted|cord|kshot|k=20|greedy at 0.1750. Lenient repair changes or invents content on real outputs.",
+   "smolagents_parse_json_blob": "U2 HARMLESS ON THIS CORPUS: overall hazard 0.0023 < 0.01 and no slice reaches 0.05. Published as the finding.",
    "llama_index_parse_json_markdown": "U2 MATERIAL: hazard >= 0.05 on 3 slice(s) with n >= 30; worst falcon3|1B|prompted|cord|schema|k=0|greedy at 0.1100. Lenient repair changes or invents content on real outputs."
   }
  },
@@ -1228,48 +1304,48 @@
   "why": "the protocol preregistered non-dict -> None for the lenient parsers; the shipped callables return lists (several objects found) and empty strings (nothing found) that a shipped consumer would receive. Counts banked, and the U2 slice table recomputed as if every list return counted as an object (an empty string is a failure any consumer would notice), so the reader can see what the preregistered rule hid.",
   "non_object_returns": {
    "instructor_extract_json_from_codeblock": {
-    "list": 14
+    "list": 17
    }
   },
   "overall_if_counted": {
    "instructor_extract_json_from_codeblock": {
-    "n": 1950,
-    "n_ref": 1823,
-    "n_noref": 127,
+    "n": 2130,
+    "n_ref": 1987,
+    "n_noref": 143,
     "lost": 0,
     "diverged": 0,
-    "fabricated": 113,
-    "ok": 1823,
+    "fabricated": 128,
+    "ok": 1987,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
-    "fabricated_rate": 0.8898,
-    "hazard_rate": 0.0579
+    "fabricated_rate": 0.8951,
+    "hazard_rate": 0.0601
    },
    "smolagents_parse_json_blob": {
-    "n": 1950,
-    "n_ref": 1823,
-    "n_noref": 127,
+    "n": 2130,
+    "n_ref": 1987,
+    "n_noref": 143,
     "lost": 0,
     "diverged": 0,
     "fabricated": 5,
-    "ok": 1823,
+    "ok": 1987,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
-    "fabricated_rate": 0.0394,
-    "hazard_rate": 0.0026
+    "fabricated_rate": 0.035,
+    "hazard_rate": 0.0023
    },
    "llama_index_parse_json_markdown": {
-    "n": 1950,
-    "n_ref": 1823,
-    "n_noref": 127,
+    "n": 2130,
+    "n_ref": 1987,
+    "n_noref": 143,
     "lost": 0,
     "diverged": 0,
     "fabricated": 33,
-    "ok": 1823,
+    "ok": 1987,
     "lost_rate": 0.0,
     "diverged_rate": 0.0,
-    "fabricated_rate": 0.2598,
-    "hazard_rate": 0.0169
+    "fabricated_rate": 0.2308,
+    "hazard_rate": 0.0155
    }
   },
   "slices_at_or_above_0.05_if_counted": {
@@ -1277,6 +1353,7 @@
     "falcon3|1B|prompted|cord|kshot|k=20|greedy",
     "falcon3|1B|prompted|cord|schema|k=0|greedy",
     "granite|2B|prompted|cord|schema|k=0|greedy",
+    "phi3|3.8B|prompted|cord|schema|k=0|greedy",
     "qwen2.5|0.5B|prompted|cord|schema|k=0|greedy",
     "qwen2.5|0.5B|prompted|waybill|kshot|k=1|greedy",
     "qwen2.5|1.5B|prompted|cord|kshot|k=20|greedy",
@@ -19232,6 +19309,1842 @@
    }
   },
   {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-000",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-001",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-002",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-003",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-004",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-005",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-006",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-007",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-008",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-009",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-010",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-011",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "fabricated",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   },
+   "fabricated_kind": {
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-012",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-013",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-014",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-015",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-016",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-017",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-018",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-019",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-020",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-021",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-022",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-023",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-024",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "agree_none",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-025",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "agree_none",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-026",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "agree_none",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-027",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-028",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-029",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-030",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-031",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-032",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-033",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-034",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "fabricated",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   },
+   "fabricated_kind": {
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-035",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "fabricated",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   },
+   "fabricated_kind": {
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-036",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-037",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-038",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-039",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "fabricated",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   },
+   "fabricated_kind": {
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-040",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-041",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "fabricated",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   },
+   "fabricated_kind": {
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-042",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-043",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-044",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-045",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-046",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-047",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-048",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-049",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-050",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-051",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-052",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-053",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-054",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-055",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-056",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-057",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-058",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-059",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "fabricated",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   },
+   "fabricated_kind": {
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-060",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-061",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-062",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-063",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-064",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-065",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-066",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-067",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "fabricated",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   },
+   "fabricated_kind": {
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-068",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-069",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-070",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-071",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-072",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-073",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-074",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-075",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-076",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-077",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-078",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-079",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "fabricated",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   },
+   "fabricated_kind": {
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-080",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-081",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-082",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-083",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-084",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-085",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-086",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-087",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-088",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "fabricated",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   },
+   "fabricated_kind": {
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-089",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-090",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-091",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-092",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-093",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "fabricated",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   },
+   "fabricated_kind": {
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-094",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-095",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-096",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-097",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-098",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_schema:cord-099",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-000",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-001",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-002",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-003",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-005",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-006",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-007",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-008",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-011",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-012",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-013",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-014",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-015",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "fabricated",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   },
+   "fabricated_kind": {
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-017",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-018",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-019",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-021",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-022",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-023",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-024",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-025",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-026",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-027",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-028",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-029",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-030",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-031",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-032",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-034",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-035",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-039",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-040",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-041",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-042",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-043",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-045",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-046",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-047",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-048",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-049",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-052",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-054",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-055",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-056",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-057",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-058",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-059",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-060",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-061",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-062",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-063",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-064",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-067",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-068",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-069",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-070",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-071",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-072",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-073",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-074",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-075",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-076",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "fabricated",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   },
+   "fabricated_kind": {
+    "instructor_extract_json_from_codeblock": "nested_fragment_returned"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-077",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-078",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-079",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-082",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-083",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-085",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-086",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-087",
+   "fenced": false,
+   "ref": false,
+   "status": {
+    "instructor_extract_json_from_codeblock": "agree_none",
+    "smolagents_parse_json_blob": "agree_none",
+    "llama_index_parse_json_markdown": "agree_none"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-088",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-089",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-091",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-092",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-093",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-094",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-095",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-097",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-098",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
+   "id": "cord_fence_tax_families_cells/phi3-mini_kshot:cord-099",
+   "fenced": false,
+   "ref": true,
+   "status": {
+    "instructor_extract_json_from_codeblock": "ok",
+    "smolagents_parse_json_blob": "ok",
+    "llama_index_parse_json_markdown": "ok"
+   }
+  },
+  {
    "id": "cord_fence_tax_families_cells/falcon3-1b_schema:cord-000",
    "fenced": true,
    "ref": true,
@@ -21160,7 +23073,7 @@
    "instructor_extract_json_from_codeblock": {
     "stray_brace_around_object": 2,
     "exact_object_present": 3,
-    "nested_fragment_returned": 93,
+    "nested_fragment_returned": 105,
     "one_of_several_objects": 1
    },
    "smolagents_parse_json_blob": {
@@ -21170,10 +23083,10 @@
   },
   "nested_fragment_piece_of_cord_receipt": {
    "instructor_extract_json_from_codeblock": {
-    "menu": 28,
+    "menu": 34,
     "other": 22,
-    "total": 25,
-    "sub_total": 18
+    "total": 27,
+    "sub_total": 22
    },
    "smolagents_parse_json_blob": {
     "other": 2

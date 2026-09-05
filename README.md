@@ -30,14 +30,27 @@ only difference between the columns is three backticks.
 
 Two things fall out, and the second is why this survives in shipped code.
 
-**The tax grows with capability.** The better the model, the more the
-wrap costs — it had more to lose. All three print as `0.0000`.
+**Within one family the tax grows with capability.** Across Qwen2.5
+0.5B→3B the better the model, the more the wrap costs — it had more to
+lose. All three print as `0.0000`. (Across families it does not follow:
+the most capable checkpoint tested, Phi-3-mini at 3.8B, wraps nothing.)
 
 **Demonstrations suppress it.** Given twenty examples of bare JSON the
 same checkpoints wrap nothing; given a bare field list they wrap
 everything. The tax lands entirely on the *cheap* prompt regime — the one
 you reach for to make a small model economical — and is invisible in the
 expensive regime most harnesses run.
+
+**And it is family-specific, not a property of small models as a
+class.** Addendum T ran the same two regimes on four other families
+(`VERDICT.md`, thresholds frozen first): Falcon3-1B fences 92/100
+schema-only outputs and 0/80 k-shot — the pattern replicates — while
+SmolLM2-1.7B, Granite-3.1-2B and Phi-3-mini fence **0/100** under the
+bare field list. By T's own rule that is *on 1 of the 4 families
+tested*; counting Qwen2.5 from Addendum S and the waybill rungs, the
+tax has been measured on **2 of 5 families** (Qwen2.5 at three sizes;
+Falcon3-1B). What about a family produces the wrap was not tested. This
+repository says "1 of 4" and "2 of 5", never "across model families".
 
 That second claim compares two prompts differing in three ways at once
 (examples, ~4,300 tokens vs ~196, many turns vs one). **Addendum R** in
@@ -165,10 +178,24 @@ larger receipt the model wrote that does not parse** — a menu item, a
 last-balanced-span rule. Correctness is not adjudicated for any of them
 ([`experiments/parser_robustness_ext_2026-09-04.json`](experiments/parser_robustness_ext_2026-09-04.json)).
 
+**Re-read on five families (2026-09-05), the second dated reading
+preregistered beside the first, never replacing it.** With the two
+Phi-3 cells landed the corpus is **2,130 outputs, 5 families, 34
+artifacts** ([`experiments/parser_robustness_2026-09-05.json`](experiments/parser_robustness_2026-09-05.json),
+[`…_ext_2026-09-05.json`](experiments/parser_robustness_ext_2026-09-05.json)).
+Strict parsing loses 295/295 schema-only outputs on Qwen2.5, 73/73 on
+Falcon3, and 0/89, 0/87, 0/85 on Granite, Phi-3 and SmolLM2 — three
+exceptions now, still no combined headline; 0 of 1,248 k=20 outputs lost
+(9 of the 50 k=1 and k=3 outputs on the 0.5B waybill arms were).
+`json_repair` returns an object on 119 of 143 no-reference outputs,
+`instructor`'s helper on 111, 105 of them fragments; smolagents stays
+harmless (5 of 143).
+
 Run it on your own saved outputs: `tools/fence_corpus.py` builds the
-corpus, `scripts/parser_robustness.py` runs the panel (`--panel ext`
-for the second one); one function per parser, so a parser can be added
-without touching the readings.
+corpus (`--tag` for a dated rebuild), `scripts/parser_robustness.py`
+runs the panel (`--panel ext` for the second one, `--tag` to match);
+one function per parser, so a parser can be added without touching
+the readings.
 
 ## Why this repository found it
 

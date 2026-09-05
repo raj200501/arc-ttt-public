@@ -32,10 +32,19 @@ sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO / "tools"))
 sys.path.insert(0, str(REPO / "scripts"))
 
-CORPUS = REPO / "experiments" / "fence_corpus_2026-09-04.jsonl"
-MANIFEST = REPO / "experiments" / "fence_corpus_2026-09-04.manifest.json"
-OUT = REPO / "experiments" / "parser_robustness_2026-09-04.json"
-OUT_EXT = REPO / "experiments" / "parser_robustness_ext_2026-09-04.json"
+DEFAULT_TAG = "2026-09-04"
+
+
+def artifact_paths(tag: str):
+    """(corpus, manifest, base-out, ext-out) for a dated corpus. The first
+    reading (2026-09-04, four families) is never overwritten by a later
+    tag; a later tag is the second, dated reading published beside it."""
+    exp = REPO / "experiments"
+    return (exp / f"fence_corpus_{tag}.jsonl", exp / f"fence_corpus_{tag}.manifest.json",
+            exp / f"parser_robustness_{tag}.json", exp / f"parser_robustness_ext_{tag}.json")
+
+
+CORPUS, MANIFEST, OUT, OUT_EXT = artifact_paths(DEFAULT_TAG)
 
 LENIENT = ("langchain_parse_json_markdown", "json_repair")
 # Addendum U-ext (docs/research/ADDENDUM_U_EXT_PROTOCOL.md, frozen after U
@@ -386,17 +395,22 @@ def read_u3(kshot_lost_rate, n_ref: int, residual: dict) -> str:
 # main
 # --------------------------------------------------------------------------
 
-def run(dry: bool, panel: str = "base") -> int:
+def run(dry: bool, panel: str = "base", tag: str = DEFAULT_TAG) -> int:
     import fence_corpus
     lenient = LENIENT if panel == "base" else LENIENT_EXT
+    CORPUS, MANIFEST, OUT, OUT_EXT = artifact_paths(tag)
     out_path = OUT if panel == "base" else OUT_EXT
-    records_fresh, manifest_fresh = fence_corpus.build()
-    fresh_sha = hashlib.sha256(fence_corpus.serialize(records_fresh).encode("utf-8")).hexdigest()
-    if not CORPUS.exists() or hashlib.sha256(CORPUS.read_bytes()).hexdigest() != fresh_sha:
-        print("REFUSED: the banked corpus does not match a fresh rebuild -- run "
-              "tools/fence_corpus.py first so the reading is taken on the manifest it names.")
+    if not CORPUS.exists() or not MANIFEST.exists():
+        print(f"REFUSED: no corpus tagged {tag} -- run tools/fence_corpus.py --tag {tag} first.")
         return 2
     manifest = json.loads(MANIFEST.read_text())
+    listed = {a["artifact"] for a in manifest["artifacts_present"]}
+    records_fresh, _ = fence_corpus.build(only=listed)
+    fresh_sha = hashlib.sha256(fence_corpus.serialize(records_fresh).encode("utf-8")).hexdigest()
+    if hashlib.sha256(CORPUS.read_bytes()).hexdigest() != fresh_sha:
+        print("REFUSED: the banked corpus does not match a rebuild from its own manifest -- "
+              "an artifact it lists has changed; rebuild and re-bank deliberately.")
+        return 2
     records = [json.loads(l) for l in CORPUS.read_text(encoding="utf-8").splitlines() if l.strip()]
 
     fc = _fencecheck()
@@ -515,7 +529,7 @@ def run(dry: bool, panel: str = "base") -> int:
         "preregistration": ("docs/research/ADDENDUM_U_PROTOCOL.md (committed 7e0cf36 before the runner was written)"
                             if panel == "base" else
                             "docs/research/ADDENDUM_U_EXT_PROTOCOL.md (committed aba5089 before these helpers ran)"),
-        "corpus": {"path": CORPUS.name, "sha256": fresh_sha, "n_records": len(records),
+        "corpus": {"path": CORPUS.name, "tag": tag, "sha256": fresh_sha, "n_records": len(records),
                    "n_fenced_by_reference": n_fenced,
                    "families_present": manifest["families_present"],
                    "artifacts_absent": manifest["artifacts_absent"]},
@@ -601,8 +615,10 @@ def main() -> int:
     ap.add_argument("--dry", action="store_true")
     ap.add_argument("--panel", choices=("base", "ext"), default="base",
                     help="base = Addendum U's panel; ext = Addendum U-ext's three helpers")
+    ap.add_argument("--tag", default=DEFAULT_TAG,
+                    help="date tag of the corpus to read (default: the first, four-family corpus)")
     a = ap.parse_args()
-    return run(a.dry, a.panel)
+    return run(a.dry, a.panel, a.tag)
 
 
 if __name__ == "__main__":

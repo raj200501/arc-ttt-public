@@ -47,6 +47,10 @@ FAMILIES = {"smollm2-1.7b": ("HuggingFaceTB/SmolLM2-1.7B-Instruct", "float32"),
 FAMILIES_CELLS_DIR = REPO / "experiments" / "cord_fence_tax_families_cells"
 FAMILIES_OUT = REPO / "experiments" / "cord_fence_tax_families_2026-09-03.json"
 ADDENDUM = "S"  # set from the CLI; "T" selects the family table
+# The artifact date stamp for Addendum S, whose cells ran 2026-09-01. It is a
+# constant, so the Addendum T cells (run 2026-09-03 to 09-05) also carry it;
+# the reader now banks a `run_date_note` saying so, and the driver log and
+# commit times carry the true dates. Disclosed in the T VERDICT row.
 RUN_DATE = "2026-09-01"
 
 RUNGS = {"0.5b": "Qwen/Qwen2.5-0.5B-Instruct",
@@ -226,7 +230,7 @@ def run_cell(rung: str, regime: str) -> int:
         "what": f"Addendum {ADDENDUM} cell: {model_id}, {regime} regime, raw "
                 "CORD outputs. Rates and readings live in the assembled "
                 "artifact (--read), applied to all cells symmetrically.",
-        "protocol": "docs/research/ADDENDUM_S_PROTOCOL.md",
+        "protocol": ("docs/research/ADDENDUM_T_PROTOCOL.md" if ADDENDUM == "T" else "docs/research/ADDENDUM_S_PROTOCOL.md"),
         "run_date": RUN_DATE,
         "model": model_id,
         "dtype": dtype_name,
@@ -238,7 +242,7 @@ def run_cell(rung: str, regime: str) -> int:
         "demos": ("experiments/ladder_e6_cord_split/train.jsonl"
                   if regime == "kshot" else None),
         "split_manifest_sha256": manifest["files"],
-        "decode": "greedy, max_new_tokens=512, float32, CPU",
+        "decode": f"greedy, max_new_tokens={MAX_NEW_TOKENS}, {dtype_name}, CPU",
         "resumed_from_checkpoint": resumed,
         "per_document_seconds": seconds,
         "predictions": predictions,
@@ -374,6 +378,12 @@ def read() -> int:
                            "docs/research/ADDENDUM_S_PROTOCOL.md "
                            "(2026-09-01) before any cell ran",
         "run_date": RUN_DATE,
+        "run_date_note": ("RUN_DATE is the Addendum S stamp; the Addendum T cells ran 2026-09-03 to "
+                          "2026-09-05 (driver log work/t_driver.log, commit times). The cell records "
+                          "banked before 2026-09-05 also carry the S protocol path and, for the "
+                          "bfloat16 Phi-3 cells, a decode string that says float32; the dtype field "
+                          "is the true one. Runner constants, fixed 2026-09-05; the cells are not "
+                          "re-run." if ADDENDUM == "T" else "the S cells ran on this date"),
         "classified_by": "tools/fencecheck.py strip_fence(), leading-"
                          "fence scope (undercount property documented in "
                          "Addendum R's erratum)",
