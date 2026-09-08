@@ -106,6 +106,16 @@ This tool flagged itself on its first run, on exactly that function. A
 tool you cannot tell "yes, on purpose" gets deleted after the first false
 positive.
 
+## A wider scope, opt-in
+
+`score --scope any` also credits a fence that comes after prose and a
+bare object inside prose (one complete object, nothing JSON-like around
+it), and reports those counts beside the default numbers. The default
+stays one leading fence, because that is the scope every published
+number here was measured with; the wider scope is a policy choice you
+make. On this repository's own 2,130 banked outputs it credits 3 more
+(Addendum W).
+
 ## Measure what a parser does to saved outputs
 
 `score` tells you how many of your outputs a strict parse rejects.

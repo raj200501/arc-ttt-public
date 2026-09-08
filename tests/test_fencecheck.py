@@ -504,3 +504,30 @@ def test_score_refuses_a_verdict_when_nothing_parses(tmp_path, capsys) -> None:
     rc = fc.main(["score", str(prose)])
     assert rc == 2
     assert "REFUSING a verdict" in capsys.readouterr().out
+
+
+# ---------------------------------------------------------------- Addendum W
+def test_extract_json_leading_scope_is_exactly_strip_fence():
+    for text in ('```json\n{"a": 1}\n```', '{"a": 1}', 'Sure: {"a": 1}', 'prose\n```json\n{"a": 1}\n```'):
+        body, kind = fc.extract_json(text, "leading")
+        assert body == fc.strip_fence(text)[0]
+        assert kind == ("leading_fence" if fc.strip_fence(text)[1] else "none")
+
+
+def test_extract_json_any_scope_widens_in_order():
+    assert fc.extract_json('```json\n{"a": 1}\n```', "any") == ('{"a": 1}', "leading_fence")
+    assert fc.extract_json('Here you go:\n```json\n{"a": 1}\n```\nthanks', "any") == ('{"a": 1}', "fence_after_prose")
+    assert fc.extract_json('Sure! {"a": 1} hope that helps', "any") == ('{"a": 1}', "bare_object_in_prose")
+    # a fragment of a larger, non-parsing object is NOT credited
+    body, kind = fc.extract_json('{"menu":{"nm":"Tea"},\'total\':{\'p\':1}}', "any")
+    assert kind == "none"
+    # two objects in prose: neither is "one object with prose around it"
+    assert fc.extract_json('{"a": 1} and {"b": 2}', "any")[1] == "none"
+    # a plain object is untouched, kind none
+    assert fc.extract_json('{"a": 1}', "any") == ('{"a": 1}', "none")
+
+
+def test_extract_json_rejects_unknown_scope():
+    import pytest
+    with pytest.raises(ValueError):
+        fc.extract_json("{}", "everywhere")

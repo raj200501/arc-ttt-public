@@ -21,6 +21,11 @@ produced this repository is closed by its own measurements (see
   back a piece of the receipt as the answer (post-hoc substance check,
   disclosed); smolagents harmless. Next: the Phi-3 cells into
   the corpus; the fourteen census packages still not attempted.
+- **Addendum V (in flight, 2026-09-08):** the JSON-constrained decoder
+  re-run on five families' schema-only prompts, fifty receipts each,
+  against each family's banked greedy cell — does it remove invalid
+  JSON off-family? Thresholds frozen in
+  `docs/research/ADDENDUM_V_PROTOCOL.md` before any cell ran.
 - **Addendum T (banked 2026-09-05):** the fence tax on four other
   families. Falcon3-1B replicates (92/100 schema-only fenced, 0/80
   k-shot); SmolLM2, Granite-3.1 and Phi-3 fence 0/100. Reading (c) in
@@ -28,9 +33,11 @@ produced this repository is closed by its own measurements (see
   models as a class — 1 of 4 families in T, 2 of 5 counting Qwen2.5
   from Addendum S — and every document says so.
 - **`tools/fencecheck.py`:** stdlib, one file; `scan` for fail-open
-  parse sites, `score` for what a fence costs your saved outputs. Next:
-  a `--baseline` mode that diffs two scored files, and the
-  prose-prefixed-fence scope documented in Addendum R's erratum.
+  parse sites, `score` for what a fence costs your saved outputs, and
+  since Addendum W (2026-09-08) `score --scope any` for the
+  prose-prefixed fence and the bare object in prose — measured at 3 of
+  the 143 outputs the default scope rejects on this repository's corpus.
+  Next: a `--baseline` mode that diffs two scored files.
 
 ## Next
 
@@ -79,7 +86,7 @@ produced this repository is closed by its own measurements (see
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 399 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 408 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 

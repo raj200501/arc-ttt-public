@@ -70,8 +70,11 @@ python3 tools/fencecheck.py score predictions.jsonl
 turns the failure into a zero or a silent skip — only the conjunction,
 because parsing strictly is not a defect on its own. `score` reads your
 saved outputs and tells you how many are valid JSON your scorer rejects.
-Exit status 1 on a finding, so it drops into CI. See
-[`tools/README.md`](tools/README.md).
+`score --scope any` also credits a fence after prose or a bare object
+inside prose, reported beside the default numbers — on this
+repository's own 2,130 banked outputs that wider scope credits 3 more
+of the 143 the default rejects (Addendum W in [`VERDICT.md`](VERDICT.md)). Exit status 1 on a finding,
+so it drops into CI. See [`tools/README.md`](tools/README.md).
 
 ## How common is it?
 
@@ -550,7 +553,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 399 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 408 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -652,7 +655,7 @@ authored as the work it is.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 399 offline tests (tiny in-test models; no downloads).
+- `tests/` — 408 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

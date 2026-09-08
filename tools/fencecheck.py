@@ -266,6 +266,61 @@ _METADATA_KEYS = frozenset({"id", "doc_id", "document_id", "task_id",
                             "arm", "mode", "config", "run", "sha256"})
 
 
+_KEY_PATTERN = re.compile(r'(?:"[^"\n]{1,80}"|\'[^\'\n]{1,80}\')\s*:')
+_FENCE_BLOCK = re.compile(r"```[^\n]*\n(.*?)```", re.DOTALL)
+
+
+def _bare_object_in_prose(text: str):
+    """The first {...} span that parses strictly to an object AND whose
+    surrounding text holds no other brace and no "key": pattern -- one
+    complete object with prose around it (Addendum U's
+    `exact_object_present` rule). None otherwise."""
+    for m in re.finditer(r"\{", text):
+        start = m.start()
+        for end in range(len(text), start, -1):
+            if text[end - 1] != "}":
+                continue
+            span = text[start:end]
+            # fencecheck: ignore -- probing a candidate span for the
+            # opt-in wider scope; the fail-closed parse is the point.
+            try:
+                value = json.loads(span)
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(value, dict):
+                continue
+            rest = text[:start] + text[end:]
+            if not rest.strip():
+                return None  # the text IS the object; nothing to widen
+            if "{" in rest or "}" in rest or _KEY_PATTERN.search(rest):
+                return None
+            return span
+    return None
+
+
+def extract_json(text: str, scope: str = "leading") -> tuple[str, str]:
+    """Return (body, kind). scope="leading" is exactly strip_fence -- one
+    leading fence, nothing else; every frozen reading uses it. scope="any"
+    (Addendum W, opt-in) widens, in this order: a leading fence; else the
+    first fenced block anywhere in the text; else a bare object inside
+    prose; else the text unchanged. kind is one of "none",
+    "leading_fence", "fence_after_prose", "bare_object_in_prose"."""
+    if scope not in ("leading", "any"):
+        raise ValueError(f"scope must be 'leading' or 'any', not {scope!r}")
+    body, was_fenced = strip_fence(text)
+    if was_fenced:
+        return body, "leading_fence"
+    if scope == "leading":
+        return body, "none"
+    block = _FENCE_BLOCK.search(text)
+    if block:
+        return block.group(1).strip(), "fence_after_prose"
+    bare = _bare_object_in_prose(text)
+    if bare is not None:
+        return bare, "bare_object_in_prose"
+    return body, "none"
+
+
 def _already_parsed(record: object) -> bool:
     """True when the record carries an OUTPUT key whose value is not
     text -- a dict, list or null: an already-parsed object, not model
@@ -305,7 +360,7 @@ def _whole_json(text: str):
         return None
 
 
-def score_file(path: pathlib.Path) -> dict:
+def score_file(path: pathlib.Path, scope: str = "leading") -> dict:
     raw = path.read_text(encoding="utf-8", errors="replace")
     records: list[object] = []
     stripped = raw.strip()
@@ -354,6 +409,8 @@ def score_file(path: pathlib.Path) -> dict:
                 "or split the file.")}
 
     total = fenced = valid_asis = valid_stripped = recovered = 0
+    valid_any = 0
+    any_kinds: dict[str, int] = {}
     already_parsed = 0
     examples: list[str] = []
     for record in records:
@@ -372,8 +429,14 @@ def score_file(path: pathlib.Path) -> dict:
                 recovered += 1
                 if len(examples) < 3:
                     examples.append(text.strip()[:120])
+            if scope == "any":
+                body, kind = extract_json(text, "any")
+                any_ok = _parses(body)
+                valid_any += any_ok
+                if any_ok and not stripped_ok:
+                    any_kinds[kind] = any_kinds.get(kind, 0) + 1
             break
-    return {
+    result = {
         "outputs": total,
         "fenced": fenced,
         "parse_as_written": valid_asis,
@@ -382,6 +445,12 @@ def score_file(path: pathlib.Path) -> dict:
         "already_parsed_records": already_parsed,
         "examples": examples,
     }
+    if scope == "any":
+        # Addendum W: the opt-in wider scope, reported BESIDE the
+        # leading-fence numbers, never instead of them.
+        result["parse_after_any_scope"] = valid_any
+        result["recovered_by_any_scope_beyond_stripping"] = any_kinds
+    return result
 
 
 def _parses(text: str) -> bool:
@@ -412,6 +481,10 @@ def main(argv: list[str] | None = None) -> int:
         "score", help="read saved model outputs and report the fence tax")
     score.add_argument("path")
     score.add_argument("--json", action="store_true")
+    score.add_argument("--scope", choices=("leading", "any"), default="leading",
+                       help="leading (default): one leading fence, the scope every "
+                            "published reading uses; any: also a fence after prose "
+                            "or a bare object inside prose, reported beside it")
 
     args = parser.parse_args(argv)
     target = pathlib.Path(args.path).expanduser()
@@ -440,7 +513,7 @@ def main(argv: list[str] | None = None) -> int:
                   "it — check the line and decide.")
         return 1 if findings else 0
 
-    report = score_file(target)
+    report = score_file(target, scope=args.scope)
     if report.get("refused"):
         if args.json:
             print(json.dumps(report, indent=2))
@@ -481,6 +554,15 @@ def main(argv: list[str] | None = None) -> int:
     print(f"  fenced                  {report['fenced']}")
     print(f"  parse as written        {report['parse_as_written']}")
     print(f"  parse after stripping   {report['parse_after_stripping']}")
+    if "parse_after_any_scope" in report:
+        # Addendum W: the opt-in wider scope, printed BESIDE the default
+        # numbers (a reviewer ran --scope any without --json and saw
+        # nothing of it, 2026-09-08).
+        extra = report["recovered_by_any_scope_beyond_stripping"]
+        print(f"  parse after any scope   {report['parse_after_any_scope']}"
+              + (f"   (+{sum(extra.values())}: "
+                 + ", ".join(f"{k} {v}" for k, v in sorted(extra.items())) + ")"
+                 if extra else "   (no further recoveries)"))
     recovered = report["recovered_by_stripping"]
     if not recovered:
         print("\nNothing is being lost to a fence in this file.")

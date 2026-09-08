@@ -1,0 +1,234 @@
+{
+  "what": "Addendum W: the shipped instrument's two scopes on every banked raw output (fence_corpus_2026-09-05). leading = one leading fence (every frozen reading); any = also a fence after prose or a bare object inside prose (opt-in). Readings applied by arithmetic from docs/research/ADDENDUM_W_PROTOCOL.md.",
+  "preregistration": "docs/research/ADDENDUM_W_PROTOCOL.md (frozen 2026-09-08, commit 2fa6cd6)",
+  "prediction_written_before_the_run": "newly credited between 5 and 15 of 2,130, mostly bare_object_in_prose; zero divergences; no S/T fence rate moves by >= 0.05",
+  "corpus": {
+    "path": "fence_corpus_2026-09-05.jsonl",
+    "sha256": "69e601fc45527af1cf2737eca18a763d7a0bcb412fdb465ed9cdc5b5ce34cbcb",
+    "n_records": 2130
+  },
+  "n_noref_leading": 143,
+  "newly_credited": {
+    "n": 3,
+    "by_kind": {
+      "fence_after_prose": 2,
+      "bare_object_in_prose": 1
+    },
+    "by_slice": {
+      "falcon3|1B|prompted|cord|schema|k=0|greedy": 1,
+      "qwen2.5|0.5B|prompted|waybill|kshot|k=3|greedy": 1,
+      "qwen2.5|3B|prompted|cord|kshot|k=20|greedy": 1
+    },
+    "records": [
+      {
+        "id": "waybill_fence_dose_k3_2026-08-25:h-3305",
+        "kind": "fence_after_prose",
+        "slice": "qwen2.5|0.5B|prompted|waybill|kshot|k=3|greedy",
+        "recovered_score": null
+      },
+      {
+        "id": "ladder_e6_cord_prompted_2026-08-31:cord-092",
+        "kind": "fence_after_prose",
+        "slice": "qwen2.5|3B|prompted|cord|kshot|k=20|greedy",
+        "recovered_score": 0.9167
+      },
+      {
+        "id": "cord_fence_tax_families_cells/falcon3-1b_schema:cord-052",
+        "kind": "bare_object_in_prose",
+        "slice": "falcon3|1B|prompted|cord|schema|k=0|greedy",
+        "recovered_score": 0.2857
+      }
+    ],
+    "recovered_cord_score_mean": 0.6012,
+    "recovered_cord_records": 2
+  },
+  "diverged": [],
+  "schema_cell_fence_rates_both_scopes": {
+    "cord_fence_tax_cells/0.5b_kshot.json": {
+      "n": 80,
+      "fenced_leading": 0,
+      "fenced_any_fences_only": 0,
+      "credited_any_kind_not_none": 0,
+      "leading": 0.0,
+      "any": 0.0,
+      "any_letter_kind_not_none": 0.0,
+      "by_kind": {
+        "none": 80
+      }
+    },
+    "cord_fence_tax_cells/0.5b_schema.json": {
+      "n": 100,
+      "fenced_leading": 100,
+      "fenced_any_fences_only": 100,
+      "credited_any_kind_not_none": 100,
+      "leading": 1.0,
+      "any": 1.0,
+      "any_letter_kind_not_none": 1.0,
+      "by_kind": {
+        "leading_fence": 100
+      }
+    },
+    "cord_fence_tax_cells/1.5b_kshot.json": {
+      "n": 80,
+      "fenced_leading": 0,
+      "fenced_any_fences_only": 0,
+      "credited_any_kind_not_none": 0,
+      "leading": 0.0,
+      "any": 0.0,
+      "any_letter_kind_not_none": 0.0,
+      "by_kind": {
+        "none": 80
+      }
+    },
+    "cord_fence_tax_cells/1.5b_schema.json": {
+      "n": 100,
+      "fenced_leading": 100,
+      "fenced_any_fences_only": 100,
+      "credited_any_kind_not_none": 100,
+      "leading": 1.0,
+      "any": 1.0,
+      "any_letter_kind_not_none": 1.0,
+      "by_kind": {
+        "leading_fence": 100
+      }
+    },
+    "cord_fence_tax_families_cells/falcon3-1b_kshot.json": {
+      "n": 80,
+      "fenced_leading": 0,
+      "fenced_any_fences_only": 0,
+      "credited_any_kind_not_none": 0,
+      "leading": 0.0,
+      "any": 0.0,
+      "any_letter_kind_not_none": 0.0,
+      "by_kind": {
+        "none": 80
+      }
+    },
+    "cord_fence_tax_families_cells/falcon3-1b_schema.json": {
+      "n": 100,
+      "fenced_leading": 92,
+      "fenced_any_fences_only": 96,
+      "credited_any_kind_not_none": 97,
+      "leading": 0.92,
+      "any": 0.96,
+      "any_letter_kind_not_none": 0.97,
+      "by_kind": {
+        "leading_fence": 92,
+        "fence_after_prose": 4,
+        "none": 3,
+        "bare_object_in_prose": 1
+      }
+    },
+    "cord_fence_tax_families_cells/granite-2b_kshot.json": {
+      "n": 80,
+      "fenced_leading": 0,
+      "fenced_any_fences_only": 0,
+      "credited_any_kind_not_none": 0,
+      "leading": 0.0,
+      "any": 0.0,
+      "any_letter_kind_not_none": 0.0,
+      "by_kind": {
+        "none": 80
+      }
+    },
+    "cord_fence_tax_families_cells/granite-2b_schema.json": {
+      "n": 100,
+      "fenced_leading": 0,
+      "fenced_any_fences_only": 0,
+      "credited_any_kind_not_none": 0,
+      "leading": 0.0,
+      "any": 0.0,
+      "any_letter_kind_not_none": 0.0,
+      "by_kind": {
+        "none": 100
+      }
+    },
+    "cord_fence_tax_families_cells/phi3-mini_kshot.json": {
+      "n": 80,
+      "fenced_leading": 0,
+      "fenced_any_fences_only": 0,
+      "credited_any_kind_not_none": 0,
+      "leading": 0.0,
+      "any": 0.0,
+      "any_letter_kind_not_none": 0.0,
+      "by_kind": {
+        "none": 80
+      }
+    },
+    "cord_fence_tax_families_cells/phi3-mini_schema.json": {
+      "n": 100,
+      "fenced_leading": 0,
+      "fenced_any_fences_only": 0,
+      "credited_any_kind_not_none": 0,
+      "leading": 0.0,
+      "any": 0.0,
+      "any_letter_kind_not_none": 0.0,
+      "by_kind": {
+        "none": 100
+      }
+    },
+    "cord_fence_tax_families_cells/smollm2-1.7b_kshot.json": {
+      "n": 80,
+      "fenced_leading": 0,
+      "fenced_any_fences_only": 0,
+      "credited_any_kind_not_none": 0,
+      "leading": 0.0,
+      "any": 0.0,
+      "any_letter_kind_not_none": 0.0,
+      "by_kind": {
+        "none": 80
+      }
+    },
+    "cord_fence_tax_families_cells/smollm2-1.7b_schema.json": {
+      "n": 100,
+      "fenced_leading": 0,
+      "fenced_any_fences_only": 0,
+      "credited_any_kind_not_none": 0,
+      "leading": 0.0,
+      "any": 0.0,
+      "any_letter_kind_not_none": 0.0,
+      "by_kind": {
+        "none": 100
+      }
+    }
+  },
+  "t_exception_recheck_with_any_rates": {
+    "falcon3-1b": {
+      "schema_leading_rate": 0.92,
+      "schema_any_rate": 0.97,
+      "kshot_leading_rate": 0.0,
+      "kshot_any_rate": 0.0,
+      "frozen_reading": "(a) REPLICATES",
+      "reading_with_any_rates": "(a) REPLICATES"
+    },
+    "granite-2b": {
+      "schema_leading_rate": 0.0,
+      "schema_any_rate": 0.0,
+      "kshot_leading_rate": 0.0,
+      "kshot_any_rate": 0.0,
+      "frozen_reading": "(c) DOES NOT REPLICATE",
+      "reading_with_any_rates": "(c) DOES NOT REPLICATE"
+    },
+    "phi3-mini": {
+      "schema_leading_rate": 0.0,
+      "schema_any_rate": 0.0,
+      "kshot_leading_rate": 0.0,
+      "kshot_any_rate": 0.0,
+      "frozen_reading": "(c) DOES NOT REPLICATE",
+      "reading_with_any_rates": "(c) DOES NOT REPLICATE"
+    },
+    "smollm2-1.7b": {
+      "schema_leading_rate": 0.0,
+      "schema_any_rate": 0.0,
+      "kshot_leading_rate": 0.0,
+      "kshot_any_rate": 0.0,
+      "frozen_reading": "(c) DOES NOT REPLICATE",
+      "reading_with_any_rates": "(c) DOES NOT REPLICATE"
+    }
+  },
+  "readings": {
+    "W1": "W1 ZERO DIVERGENCES, as the extraction order guarantees (a leading fence returns before the scope is consulted; a whole-object text has nothing outside it) -- a regression check, not an empirical finding.",
+    "W2": "W2 UNDER A TENTH: 3 of the 143 outputs the leading scope rejected (0.0210) are credited by the wider scope, on this corpus.",
+    "W3": "W3 MOVES by the letter: >= 0.05 of the cell under the wider scope in falcon3-1b_schema.json (falcon3-1b_schema.json: 92 -> 97 by the letter (kind != none), 96 counting fences only) -- the T reading is re-checked with the any-scope rate in `t_exception_recheck_with_any_rates`; the frozen reading is not re-taken."
+  }
+}
