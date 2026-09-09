@@ -164,29 +164,40 @@ def run_cell(family: str) -> int:
 # --------------------------------------------------------------------------
 
 def family_reading(i_greedy: int, i_constrained: int, regressions: int) -> str:
+    """The frozen per-family reading. The protocol's regression rule --
+    `regressions >= 3` is a regression finding regardless of the invalid
+    counts -- is appended by arithmetic here; the first banked artifact
+    carried it only in prose (protocol erratum 5)."""
     if i_greedy <= 1:
-        return "UNTESTABLE AT SIZE (greedy invalid <= 1)"
-    if i_constrained <= 1 and regressions == 0:
-        return "REMOVES"
-    if i_constrained <= i_greedy // 2:
-        return "REDUCES"
-    return "NO EFFECT"
+        base = "UNTESTABLE AT SIZE (greedy invalid <= 1)"
+    elif i_constrained <= 1 and regressions == 0:
+        base = "REMOVES"
+    elif i_constrained <= i_greedy // 2:
+        base = "REDUCES"
+    else:
+        base = "NO EFFECT"
+    if regressions >= 3:
+        base += f"; REGRESSION FINDING ({regressions} >= 3)"
+    return base
 
 
 def combine(per_family: dict) -> str:
     testable = {f: v for f, v in per_family.items() if not v.startswith("UNTESTABLE")}
-    n_removes = sum(v == "REMOVES" for v in testable.values())
-    exceptions = sorted(f for f, v in testable.items() if v == "NO EFFECT")
+    n_removes = sum(v.startswith("REMOVES") for v in testable.values())
+    exceptions = sorted(f for f, v in testable.items() if v.startswith("NO EFFECT"))
+    regress = sorted(f for f, v in per_family.items() if "REGRESSION FINDING" in v)
     n_fam = len(per_family)
+    tail = (f" REGRESSION FINDING in {', '.join(regress)} (published regardless of the invalid counts)."
+            if regress else "")
     if exceptions:
         return (f"V EXCEPTION IN {', '.join(exceptions)}: named at full size; the sentence becomes "
-                f"'on N of the {n_fam} families tested' -- never 'across families'. "
+                f"'on N of the {n_fam} families tested' -- never 'across families'.{tail} "
                 f"Per-family: {json.dumps(per_family)}")
     if n_removes >= 4:
         return (f"V HOLDS: the decoder removes invalid JSON in {n_removes} of {n_fam} families and "
-                f"no family is an exception. Per-family: {json.dumps(per_family)}")
+                f"no family is an exception.{tail} Per-family: {json.dumps(per_family)}")
     return (f"V MIXED: REMOVES in {n_removes} of {n_fam} families, no exception -- all counts "
-            f"publish, no headline. Per-family: {json.dumps(per_family)}")
+            f"publish, no headline.{tail} Per-family: {json.dumps(per_family)}")
 
 
 def _sign_test(wins: int, losses: int) -> float:
@@ -262,6 +273,60 @@ def read() -> int:
               f"fenced {fen_g:2d} -> {fen_c:2d}  dF1 {mean_d:+.4f} ({wins}W/{losses}L/{ties}T p={p:.3f})  "
               f"fallbacks {fallbacks}/{steps}  {reading}")
     finding = combine(per_family)
+
+    # Added 2026-09-09 AFTER the reading, disclosed in the protocol's errata:
+    # the residual decomposed by cause, the decoder's intervention counts,
+    # and the decoding-path confound between the arms (the comparator cells
+    # were decoded by model.generate, which applies each checkpoint's
+    # generation_config defaults -- Qwen2.5-0.5B's repetition_penalty 1.1
+    # even in greedy mode -- while the constrained decoder is plain top-1
+    # over raw logits). The frozen readings above do not read any of this.
+    post_hoc = {}
+    for family, (model_id, dtype_name, comparator) in CELLS.items():
+        cell = json.loads((CELLS_DIR / f"{family}_schema_constrained.json").read_text())
+        comp = json.loads(comparator.read_text())
+        acct = cell["per_document_decode"]
+        inv_by_stop, regress_by_stop = {}, {}
+        for doc_id, text in cell["predictions"].items():
+            oc, _ = classify(text); og, _ = classify(comp["predictions"][doc_id])
+            if oc is None:
+                st = acct[doc_id]["stopped_on"]; inv_by_stop[st] = inv_by_stop.get(st, 0) + 1
+                if og is not None:
+                    regress_by_stop[st] = regress_by_stop.get(st, 0) + 1
+        identical = sum(cell["predictions"][d] == comp["predictions"][d] for d in cell["predictions"])
+        identical_after_strip = sum(fc.strip_fence(cell["predictions"][d])[0] == fc.strip_fence(comp["predictions"][d])[0]
+                                    for d in cell["predictions"])
+        # what happened to each greedy-invalid document, and whether the
+        # validator fired on it (a constrained step) -- so a removal can be
+        # attributed to the constraint or to the decoding path
+        outcomes = {}
+        for doc_id, text in cell["predictions"].items():
+            og, _ = classify(comp["predictions"][doc_id])
+            if og is None:
+                oc, _ = classify(text)
+                key = ("became_valid" if oc is not None else "still_invalid") + (
+                    "_with_validator_step" if acct[doc_id]["constrained_steps"] > 0 else "_without_validator_step")
+                outcomes[key] = outcomes.get(key, 0) + 1
+        docs_with_steps = sorted(d for d, a in acct.items() if a["constrained_steps"] > 0)
+        gen_defaults = {}
+        try:
+            from huggingface_hub import hf_hub_download
+            gen_defaults = {k: v for k, v in json.loads(pathlib.Path(
+                hf_hub_download(model_id, "generation_config.json")).read_text()).items()
+                if k in ("repetition_penalty", "do_sample", "temperature", "top_p", "top_k")}
+        except Exception as exc:  # noqa: BLE001
+            gen_defaults = {"unavailable": str(exc)[:80]}
+        post_hoc[family] = {
+            "constrained_invalid_by_stop_reason": inv_by_stop,
+            "regressions_by_stop_reason": regress_by_stop,
+            "constrained_steps_total": sum(a["constrained_steps"] for a in acct.values()),
+            "fallbacks_total": sum(a["fallbacks"] for a in acct.values()),
+            "identical_texts_to_greedy_comparator": identical,
+            "identical_after_symmetric_strip": identical_after_strip,
+            "greedy_invalid_outcomes": outcomes,
+            "documents_where_the_validator_fired": docs_with_steps,
+            "comparator_generation_config_defaults_applied_by_model_generate": gen_defaults,
+        }
     record = {
         "what": "Addendum V: the JSON-constrained greedy decoder on five families, schema-only, "
                 "the first 50 receipts, against each family's banked greedy cell on the same "
@@ -270,6 +335,14 @@ def read() -> int:
         "preregistration": "docs/research/ADDENDUM_V_PROTOCOL.md (frozen 2026-09-08, commit 379346f, before any cell ran)",
         "prediction_written_before_the_run": "REMOVES on Qwen2.5-0.5B; at least REDUCES on the other four; fallbacks under 5% of constrained steps",
         "rows": rows, "reading_per_family": per_family, "the_finding": finding,
+        "post_hoc_added_2026-09-09": {
+            "why": "added after the reading: every constrained-invalid output is decomposed by the "
+                   "decoder's stop reason; the decoder's intervention counts show whether the prefix "
+                   "validator ever fired; identical-text counts and the comparator's generation "
+                   "defaults expose a decoding-path confound the protocol did not anticipate. The "
+                   "frozen readings are untouched.",
+            "per_family": post_hoc,
+        },
     }
     OUT.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
     print(f"\n{finding}\nbanked: {OUT}")

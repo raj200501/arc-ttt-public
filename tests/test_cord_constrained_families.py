@@ -17,6 +17,8 @@ def test_family_reading_boundaries():
     assert v.family_reading(27, 0, 0) == "REMOVES"
     assert v.family_reading(27, 1, 0) == "REMOVES"            # <= 1 inclusive
     assert v.family_reading(27, 1, 1) == "REDUCES"            # one regression blocks REMOVES
+    assert v.family_reading(6, 7, 5) == "NO EFFECT; REGRESSION FINDING (5 >= 3)"   # the frozen rule, by arithmetic
+    assert v.family_reading(6, 7, 2) == "NO EFFECT"
     assert v.family_reading(27, 2, 0) == "REDUCES"
     assert v.family_reading(27, 13, 0) == "REDUCES"           # 27 // 2 == 13, inclusive
     assert v.family_reading(27, 14, 0) == "NO EFFECT"
@@ -31,6 +33,8 @@ def test_combine_needs_four_removes_and_no_exception():
     assert v.combine({"a": R, "b": R, "c": R, "d": D, "e": D}).startswith("V MIXED")
     r = v.combine({"a": R, "b": R, "c": R, "d": R, "e": N})
     assert r.startswith("V EXCEPTION IN e") and "HOLDS" not in r and "never 'across families'" in r
+    r = v.combine({"a": "NO EFFECT; REGRESSION FINDING (5 >= 3)", "b": N, "c": N, "d": N, "e": N})
+    assert "REGRESSION FINDING in a" in r
     # an untestable family counts neither way
     assert v.combine({"a": R, "b": R, "c": R, "d": R, "e": U}).startswith("V HOLDS")
     assert v.combine({"a": R, "b": R, "c": R, "d": U, "e": U}).startswith("V MIXED")

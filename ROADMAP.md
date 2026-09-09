@@ -21,11 +21,14 @@ produced this repository is closed by its own measurements (see
   back a piece of the receipt as the answer (post-hoc substance check,
   disclosed); smolagents harmless. Next: the Phi-3 cells into
   the corpus; the fourteen census packages still not attempted.
-- **Addendum V (in flight, 2026-09-08):** the JSON-constrained decoder
-  re-run on five families' schema-only prompts, fifty receipts each,
-  against each family's banked greedy cell — does it remove invalid
-  JSON off-family? Thresholds frozen in
-  `docs/research/ADDENDUM_V_PROTOCOL.md` before any cell ran.
+- **Addendum V (banked 2026-09-09):** the JSON-constrained decoder on
+  five families' schema-only prompts: NO EFFECT in all five by the
+  frozen thresholds (Falcon3 14 → 8, one short; its six recoveries are
+  the one clean decoder effect), five regressions on Qwen 0.5B from a
+  comparator confound (`model.generate`'s repetition-penalty default)
+  that also touches Ladder II's SYSTEM rows, and every remaining invalid
+  output a truncation at the 512-token cap. The drop-in claim is
+  withdrawn.
 - **Addendum T (banked 2026-09-05):** the fence tax on four other
   families. Falcon3-1B replicates (92/100 schema-only fenced, 0/80
   k-shot); SmolLM2, Granite-3.1 and Phi-3 fence 0/100. Reading (c) in
@@ -43,9 +46,13 @@ produced this repository is closed by its own measurements (see
 
 - One external team running `fencecheck scan` in CI, with a published
   before/after — the falsifiable test the application names.
-- The JSON-constrained decoder (`src/arcttt/constrained_json.py`) as a
-  drop-in for any HF causal LM: it removed every invalid output on both
-  arms in Ladder II and is schema-blind by design.
+- ~~The JSON-constrained decoder as a drop-in for any HF causal LM~~ —
+  withdrawn 2026-09-09 by Addendum V: on five families' schema-only
+  cells it cleared no family's bar (Falcon3 14 → 8 missed REDUCES by
+  one; every remaining invalid output is a truncation at the token
+  cap) and its Qwen comparison carried a decoding-defaults confound.
+  `tools/jsongreedy.py` stays published with that row as its measured
+  limit.
 - Other corpora for the fence tax beyond waybills and CORD.
 
 ## What is explicitly not on the roadmap
@@ -86,7 +93,7 @@ produced this repository is closed by its own measurements (see
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 408 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 410 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 

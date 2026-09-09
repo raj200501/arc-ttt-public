@@ -169,3 +169,25 @@ architectures and a doubled adaptation set. The ladder stops here by
 its own rule: no rung is left that the decompositions license, and the
 readings that would let a worse bar clear have been named rather than
 used.
+
+## Erratum — 2026-09-09, from Addendum V
+
+The SYSTEM readings compare constrained-decoder arms against E6's and
+E9's greedy arms, which were decoded by `model.generate`; that call
+applies Qwen2.5-3B's `generation_config` defaults even with
+`do_sample=False`, including `repetition_penalty` 1.05, while the
+constrained decoder is plain top-1 over raw logits. The SYSTEM arms
+therefore differ by the decoding path as well as by the constraint, and
+"lifts every configuration" above is not attributable to the decoder
+alone; none of those readings cleared, so no claim is withdrawn, but the
+sentence is re-scoped here. E7's removal of every invalid output is
+consistent with the constraint doing that work — its constrained steps
+land on E6's invalid documents 4 of 4 (prompted; three single-quote
+faults and one prose preamble) and 7 of 8 (adapted) — and is no longer
+stated as isolated: one E6 fault, cord-058's extra closer, vanished in E7
+with no constrained step (the decoding path, not the constraint), and
+both arms are bfloat16, so the penalty is not the only candidate for the
+other body differences. The ADAPT readings, same decoder on both
+arms, are unaffected. Addendum V then found the decoder has no effect on
+five other families' schema-only cells, whose invalid outputs are
+truncations at the token cap.

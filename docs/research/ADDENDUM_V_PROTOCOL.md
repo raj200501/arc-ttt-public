@@ -99,3 +99,41 @@ and `experiments/cord_constrained_families_2026-09-08.json` (the
 reading). Runner: `scripts/cord_constrained_families.py`; driver:
 `scripts/run_addendum_v.sh`. The reader withholds until all five cells
 exist.
+
+## Errata — 2026-09-09, after the reading, corrected the same day under review
+
+1. **The invalid-reading prediction failed in every family.** Written
+   before the run: REMOVES on Qwen2.5-0.5B, at least REDUCES on the
+   other four. Measured: NO EFFECT in all five; Falcon3 14 → 8 misses
+   REDUCES by one. The fallback clause (under 5% of constrained steps)
+   held trivially: 0 fallbacks. Published as written.
+2. **Cause, decomposed post-hoc.** Every output still invalid under the
+   constraint stopped at the 512-token cap (two of Qwen's are repetition
+   loops). The validator fired on 7 Falcon3 documents — exactly its
+   non-truncation faults, four prose answers and three syntax faults —
+   and six of those became valid; it fired 0 times in the other four
+   families. A syntax constraint cannot close a document the model has
+   not finished. Banked in the artifact's `post_hoc_added_2026-09-09`.
+3. **A confound the protocol did not anticipate, on one family.** The
+   comparator cells were decoded by `model.generate`, which applies a
+   checkpoint's `generation_config` defaults even with `do_sample=False`;
+   Qwen2.5-0.5B ships `repetition_penalty` 1.1 and is the only family
+   here that does, while the constrained decoder is plain top-1 over raw
+   logits. On Qwen the arms differ in 47 of 50 bodies with 0 constrained
+   steps: four greedy-invalid outputs became valid by the path alone and
+   five valid ones broke — the regressions are the penalty difference.
+   Phi-3 diverges on 32 bodies with 0 steps and no penalty; attributed to
+   bfloat16 numerics, untested. SmolLM2 and Granite are byte-identical
+   (a genuine null, not a design artefact) and Falcon3 differs only where
+   the validator fired. Ladder II's ADAPT readings held the decoder
+   constant across arms and are unaffected; its SYSTEM readings compared
+   against `generate` arms (Qwen2.5-3B ships 1.05) and carry an erratum.
+   The design that would isolate the decoder — one loop, constraint
+   toggled — has not been run.
+4. **Consequence.** The roadmap's "drop-in for any HF causal LM" is
+   withdrawn; `tools/jsongreedy.py` stays published with this addendum as
+   its measured limit, Falcon3's six recoveries included.
+5. **The regression rule was not applied by arithmetic** in the first
+   banked artifact (it lived only in the VERDICT prose); the reader now
+   appends "REGRESSION FINDING" to the per-family reading and names it
+   in the combined finding. Qwen2.5-0.5B: 5 ≥ 3.

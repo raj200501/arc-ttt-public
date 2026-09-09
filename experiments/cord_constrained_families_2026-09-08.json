@@ -1,0 +1,250 @@
+{
+  "what": "Addendum V: the JSON-constrained greedy decoder on five families, schema-only, the first 50 receipts, against each family's banked greedy cell on the same documents. Both arms classified by the shipped fencecheck strip and the fail-closed parse. Readings applied by arithmetic from the frozen thresholds.",
+  "preregistration": "docs/research/ADDENDUM_V_PROTOCOL.md (frozen 2026-09-08, commit 379346f, before any cell ran)",
+  "prediction_written_before_the_run": "REMOVES on Qwen2.5-0.5B; at least REDUCES on the other four; fallbacks under 5% of constrained steps",
+  "rows": [
+    {
+      "family": "qwen2.5-0.5b",
+      "model": "Qwen/Qwen2.5-0.5B-Instruct",
+      "n": 50,
+      "invalid_greedy": 6,
+      "invalid_constrained": 7,
+      "regressions": 5,
+      "fenced_greedy": 50,
+      "fenced_constrained": 50,
+      "score_mean_delta_constrained_minus_greedy": 0.0119,
+      "score_wins_losses_ties": [
+        19,
+        15,
+        16
+      ],
+      "score_sign_test_p": 0.3038,
+      "score_reading": "UNSEPARATED",
+      "fallbacks": 0,
+      "constrained_steps": 0,
+      "steps": 17728,
+      "fallback_share_of_steps": 0.0,
+      "stopped_on": {
+        "complete": 43,
+        "max_new_tokens": 7
+      },
+      "reading": "NO EFFECT; REGRESSION FINDING (5 >= 3)"
+    },
+    {
+      "family": "smollm2-1.7b",
+      "model": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+      "n": 50,
+      "invalid_greedy": 8,
+      "invalid_constrained": 8,
+      "regressions": 0,
+      "fenced_greedy": 0,
+      "fenced_constrained": 0,
+      "score_mean_delta_constrained_minus_greedy": 0.0,
+      "score_wins_losses_ties": [
+        0,
+        0,
+        50
+      ],
+      "score_sign_test_p": 1.0,
+      "score_reading": "UNSEPARATED",
+      "fallbacks": 0,
+      "constrained_steps": 0,
+      "steps": 16017,
+      "fallback_share_of_steps": 0.0,
+      "stopped_on": {
+        "complete": 42,
+        "max_new_tokens": 8
+      },
+      "reading": "NO EFFECT"
+    },
+    {
+      "family": "granite-2b",
+      "model": "ibm-granite/granite-3.1-2b-instruct",
+      "n": 50,
+      "invalid_greedy": 5,
+      "invalid_constrained": 5,
+      "regressions": 0,
+      "fenced_greedy": 0,
+      "fenced_constrained": 0,
+      "score_mean_delta_constrained_minus_greedy": 0.0,
+      "score_wins_losses_ties": [
+        0,
+        0,
+        50
+      ],
+      "score_sign_test_p": 1.0,
+      "score_reading": "UNSEPARATED",
+      "fallbacks": 0,
+      "constrained_steps": 0,
+      "steps": 15848,
+      "fallback_share_of_steps": 0.0,
+      "stopped_on": {
+        "complete": 45,
+        "max_new_tokens": 5
+      },
+      "reading": "NO EFFECT"
+    },
+    {
+      "family": "phi3-mini",
+      "model": "microsoft/Phi-3-mini-4k-instruct",
+      "n": 50,
+      "invalid_greedy": 8,
+      "invalid_constrained": 7,
+      "regressions": 0,
+      "fenced_greedy": 0,
+      "fenced_constrained": 0,
+      "score_mean_delta_constrained_minus_greedy": 0.0184,
+      "score_wins_losses_ties": [
+        11,
+        9,
+        30
+      ],
+      "score_sign_test_p": 0.4119,
+      "score_reading": "UNSEPARATED",
+      "fallbacks": 0,
+      "constrained_steps": 0,
+      "steps": 17019,
+      "fallback_share_of_steps": 0.0,
+      "stopped_on": {
+        "complete": 43,
+        "max_new_tokens": 7
+      },
+      "reading": "NO EFFECT"
+    },
+    {
+      "family": "falcon3-1b",
+      "model": "tiiuae/Falcon3-1B-Instruct",
+      "n": 50,
+      "invalid_greedy": 14,
+      "invalid_constrained": 8,
+      "regressions": 0,
+      "fenced_greedy": 46,
+      "fenced_constrained": 50,
+      "score_mean_delta_constrained_minus_greedy": 0.0224,
+      "score_wins_losses_ties": [
+        6,
+        0,
+        44
+      ],
+      "score_sign_test_p": 0.0156,
+      "score_reading": "GAIN",
+      "fallbacks": 0,
+      "constrained_steps": 11,
+      "steps": 20929,
+      "fallback_share_of_steps": 0.0,
+      "stopped_on": {
+        "complete": 42,
+        "max_new_tokens": 8
+      },
+      "reading": "NO EFFECT"
+    }
+  ],
+  "reading_per_family": {
+    "qwen2.5-0.5b": "NO EFFECT; REGRESSION FINDING (5 >= 3)",
+    "smollm2-1.7b": "NO EFFECT",
+    "granite-2b": "NO EFFECT",
+    "phi3-mini": "NO EFFECT",
+    "falcon3-1b": "NO EFFECT"
+  },
+  "the_finding": "V EXCEPTION IN falcon3-1b, granite-2b, phi3-mini, qwen2.5-0.5b, smollm2-1.7b: named at full size; the sentence becomes 'on N of the 5 families tested' -- never 'across families'. REGRESSION FINDING in qwen2.5-0.5b (published regardless of the invalid counts). Per-family: {\"qwen2.5-0.5b\": \"NO EFFECT; REGRESSION FINDING (5 >= 3)\", \"smollm2-1.7b\": \"NO EFFECT\", \"granite-2b\": \"NO EFFECT\", \"phi3-mini\": \"NO EFFECT\", \"falcon3-1b\": \"NO EFFECT\"}",
+  "post_hoc_added_2026-09-09": {
+    "why": "added after the reading: every constrained-invalid output is decomposed by the decoder's stop reason; the decoder's intervention counts show whether the prefix validator ever fired; identical-text counts and the comparator's generation defaults expose a decoding-path confound the protocol did not anticipate. The frozen readings are untouched.",
+    "per_family": {
+      "qwen2.5-0.5b": {
+        "constrained_invalid_by_stop_reason": {
+          "max_new_tokens": 7
+        },
+        "regressions_by_stop_reason": {
+          "max_new_tokens": 5
+        },
+        "constrained_steps_total": 0,
+        "fallbacks_total": 0,
+        "identical_texts_to_greedy_comparator": 0,
+        "identical_after_symmetric_strip": 3,
+        "greedy_invalid_outcomes": {
+          "became_valid_without_validator_step": 4,
+          "still_invalid_without_validator_step": 2
+        },
+        "documents_where_the_validator_fired": [],
+        "comparator_generation_config_defaults_applied_by_model_generate": {
+          "do_sample": true,
+          "repetition_penalty": 1.1,
+          "temperature": 0.7,
+          "top_p": 0.8,
+          "top_k": 20
+        }
+      },
+      "smollm2-1.7b": {
+        "constrained_invalid_by_stop_reason": {
+          "max_new_tokens": 8
+        },
+        "regressions_by_stop_reason": {},
+        "constrained_steps_total": 0,
+        "fallbacks_total": 0,
+        "identical_texts_to_greedy_comparator": 50,
+        "identical_after_symmetric_strip": 50,
+        "greedy_invalid_outcomes": {
+          "still_invalid_without_validator_step": 8
+        },
+        "documents_where_the_validator_fired": [],
+        "comparator_generation_config_defaults_applied_by_model_generate": {}
+      },
+      "granite-2b": {
+        "constrained_invalid_by_stop_reason": {
+          "max_new_tokens": 5
+        },
+        "regressions_by_stop_reason": {},
+        "constrained_steps_total": 0,
+        "fallbacks_total": 0,
+        "identical_texts_to_greedy_comparator": 50,
+        "identical_after_symmetric_strip": 50,
+        "greedy_invalid_outcomes": {
+          "still_invalid_without_validator_step": 5
+        },
+        "documents_where_the_validator_fired": [],
+        "comparator_generation_config_defaults_applied_by_model_generate": {}
+      },
+      "phi3-mini": {
+        "constrained_invalid_by_stop_reason": {
+          "max_new_tokens": 7
+        },
+        "regressions_by_stop_reason": {},
+        "constrained_steps_total": 0,
+        "fallbacks_total": 0,
+        "identical_texts_to_greedy_comparator": 18,
+        "identical_after_symmetric_strip": 18,
+        "greedy_invalid_outcomes": {
+          "became_valid_without_validator_step": 1,
+          "still_invalid_without_validator_step": 7
+        },
+        "documents_where_the_validator_fired": [],
+        "comparator_generation_config_defaults_applied_by_model_generate": {}
+      },
+      "falcon3-1b": {
+        "constrained_invalid_by_stop_reason": {
+          "max_new_tokens": 8
+        },
+        "regressions_by_stop_reason": {},
+        "constrained_steps_total": 11,
+        "fallbacks_total": 0,
+        "identical_texts_to_greedy_comparator": 7,
+        "identical_after_symmetric_strip": 43,
+        "greedy_invalid_outcomes": {
+          "became_valid_with_validator_step": 6,
+          "still_invalid_without_validator_step": 7,
+          "still_invalid_with_validator_step": 1
+        },
+        "documents_where_the_validator_fired": [
+          "cord-003",
+          "cord-009",
+          "cord-016",
+          "cord-020",
+          "cord-022",
+          "cord-032",
+          "cord-038"
+        ],
+        "comparator_generation_config_defaults_applied_by_model_generate": {}
+      }
+    }
+  }
+}

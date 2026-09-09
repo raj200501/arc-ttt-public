@@ -1,0 +1,427 @@
+{
+ "what": "Addendum V cell: tiiuae/Falcon3-1B-Instruct, schema-only prompts re-decoded with the JSON-constrained greedy decoder; raw text per document. Readings live in the assembled artifact (--read).",
+ "protocol": "docs/research/ADDENDUM_V_PROTOCOL.md (frozen 2026-09-08, commit 379346f)",
+ "model": "tiiuae/Falcon3-1B-Instruct",
+ "dtype": "float32",
+ "regime": "schema",
+ "n": 50,
+ "k": 0,
+ "schema_instruction": "Extract the receipt fields from the document and return them as a\nsingle JSON object. Use only these keys:\n- menu: a list of objects; keys among: cnt, discountprice, nm, num, price, sub, unitprice, vatyn\n- sub_total: an object; keys among: discount_price, etc, service_price, subtotal_price, tax_price\n- total: an object; keys among: cashprice, changeprice, creditcardprice, emoneyprice, menuqty_cnt, menutype_cnt, total_etc, total_price\nOmit any key the document does not support.",
+ "comparator_cell": "experiments/cord_fence_tax_families_cells/falcon3-1b_schema.json",
+ "decoder": {
+  "kind": "constrained greedy",
+  "top_k": 16,
+  "max_new_tokens": 512,
+  "allow_leading_fence": true,
+  "validator": "arcttt.constrained_json.is_json_prefix",
+  "stop": "eos | complete | max_new_tokens"
+ },
+ "decode": "constrained greedy top_k=16, max_new_tokens=512, float32, CPU",
+ "resumed_from_checkpoint": 0,
+ "per_document_seconds": {
+  "cord-000": 78.1,
+  "cord-001": 69.5,
+  "cord-002": 61.5,
+  "cord-003": 71.5,
+  "cord-004": 59.9,
+  "cord-005": 61.9,
+  "cord-006": 83.1,
+  "cord-007": 35.0,
+  "cord-008": 80.3,
+  "cord-009": 87.1,
+  "cord-010": 71.4,
+  "cord-011": 154.4,
+  "cord-012": 366.6,
+  "cord-013": 67.2,
+  "cord-014": 68.9,
+  "cord-015": 66.8,
+  "cord-016": 59.9,
+  "cord-017": 69.1,
+  "cord-018": 57.9,
+  "cord-019": 78.3,
+  "cord-020": 63.3,
+  "cord-021": 128.1,
+  "cord-022": 345.3,
+  "cord-023": 183.5,
+  "cord-024": 80.9,
+  "cord-025": 82.7,
+  "cord-026": 72.8,
+  "cord-027": 60.9,
+  "cord-028": 60.3,
+  "cord-029": 70.9,
+  "cord-030": 62.8,
+  "cord-031": 60.5,
+  "cord-032": 69.8,
+  "cord-033": 60.8,
+  "cord-034": 79.3,
+  "cord-035": 71.2,
+  "cord-036": 74.1,
+  "cord-037": 64.1,
+  "cord-038": 54.5,
+  "cord-039": 60.6,
+  "cord-040": 48.0,
+  "cord-041": 83.0,
+  "cord-042": 76.0,
+  "cord-043": 80.2,
+  "cord-044": 58.7,
+  "cord-045": 64.0,
+  "cord-046": 56.2,
+  "cord-047": 58.4,
+  "cord-048": 82.5,
+  "cord-049": 62.0
+ },
+ "per_document_decode": {
+  "cord-000": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 473,
+   "stopped_on": "complete"
+  },
+  "cord-001": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 425,
+   "stopped_on": "complete"
+  },
+  "cord-002": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 377,
+   "stopped_on": "complete"
+  },
+  "cord-003": {
+   "fallbacks": 0,
+   "constrained_steps": 1,
+   "steps": 348,
+   "stopped_on": "complete"
+  },
+  "cord-004": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 379,
+   "stopped_on": "complete"
+  },
+  "cord-005": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 386,
+   "stopped_on": "complete"
+  },
+  "cord-006": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 512,
+   "stopped_on": "max_new_tokens"
+  },
+  "cord-007": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 218,
+   "stopped_on": "complete"
+  },
+  "cord-008": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 463,
+   "stopped_on": "complete"
+  },
+  "cord-009": {
+   "fallbacks": 0,
+   "constrained_steps": 5,
+   "steps": 512,
+   "stopped_on": "max_new_tokens"
+  },
+  "cord-010": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 446,
+   "stopped_on": "complete"
+  },
+  "cord-011": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 368,
+   "stopped_on": "complete"
+  },
+  "cord-012": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 380,
+   "stopped_on": "complete"
+  },
+  "cord-013": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 376,
+   "stopped_on": "complete"
+  },
+  "cord-014": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 438,
+   "stopped_on": "complete"
+  },
+  "cord-015": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 423,
+   "stopped_on": "complete"
+  },
+  "cord-016": {
+   "fallbacks": 0,
+   "constrained_steps": 1,
+   "steps": 352,
+   "stopped_on": "complete"
+  },
+  "cord-017": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 437,
+   "stopped_on": "complete"
+  },
+  "cord-018": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 366,
+   "stopped_on": "complete"
+  },
+  "cord-019": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 489,
+   "stopped_on": "complete"
+  },
+  "cord-020": {
+   "fallbacks": 0,
+   "constrained_steps": 1,
+   "steps": 369,
+   "stopped_on": "complete"
+  },
+  "cord-021": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 512,
+   "stopped_on": "max_new_tokens"
+  },
+  "cord-022": {
+   "fallbacks": 0,
+   "constrained_steps": 1,
+   "steps": 388,
+   "stopped_on": "complete"
+  },
+  "cord-023": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 427,
+   "stopped_on": "complete"
+  },
+  "cord-024": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 512,
+   "stopped_on": "max_new_tokens"
+  },
+  "cord-025": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 512,
+   "stopped_on": "max_new_tokens"
+  },
+  "cord-026": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 453,
+   "stopped_on": "complete"
+  },
+  "cord-027": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 386,
+   "stopped_on": "complete"
+  },
+  "cord-028": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 375,
+   "stopped_on": "complete"
+  },
+  "cord-029": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 447,
+   "stopped_on": "complete"
+  },
+  "cord-030": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 405,
+   "stopped_on": "complete"
+  },
+  "cord-031": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 383,
+   "stopped_on": "complete"
+  },
+  "cord-032": {
+   "fallbacks": 0,
+   "constrained_steps": 1,
+   "steps": 444,
+   "stopped_on": "complete"
+  },
+  "cord-033": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 381,
+   "stopped_on": "complete"
+  },
+  "cord-034": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 498,
+   "stopped_on": "complete"
+  },
+  "cord-035": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 441,
+   "stopped_on": "complete"
+  },
+  "cord-036": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 478,
+   "stopped_on": "complete"
+  },
+  "cord-037": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 419,
+   "stopped_on": "complete"
+  },
+  "cord-038": {
+   "fallbacks": 0,
+   "constrained_steps": 1,
+   "steps": 348,
+   "stopped_on": "complete"
+  },
+  "cord-039": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 364,
+   "stopped_on": "complete"
+  },
+  "cord-040": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 302,
+   "stopped_on": "complete"
+  },
+  "cord-041": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 512,
+   "stopped_on": "max_new_tokens"
+  },
+  "cord-042": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 487,
+   "stopped_on": "complete"
+  },
+  "cord-043": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 512,
+   "stopped_on": "max_new_tokens"
+  },
+  "cord-044": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 364,
+   "stopped_on": "complete"
+  },
+  "cord-045": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 401,
+   "stopped_on": "complete"
+  },
+  "cord-046": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 353,
+   "stopped_on": "complete"
+  },
+  "cord-047": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 371,
+   "stopped_on": "complete"
+  },
+  "cord-048": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 512,
+   "stopped_on": "max_new_tokens"
+  },
+  "cord-049": {
+   "fallbacks": 0,
+   "constrained_steps": 0,
+   "steps": 405,
+   "stopped_on": "complete"
+  }
+ },
+ "predictions": {
+  "cord-000": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 16.50,\n            \"nm\": \"GANGACHE\",\n            \"num\": 1,\n            \"price\": 16.50,\n            \"sub\": \"16,500\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 13.00,\n            \"nm\": \"EGG TART\",\n            \"num\": 1,\n            \"price\": 13.00,\n            \"sub\": \"13,000\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 16.00,\n            \"nm\": \"PIZZA TOAST\",\n            \"num\": 1,\n            \"price\": 16.00,\n            \"sub\": \"16,000\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 16.50,\n        \"service_price\": 0,\n        \"subtotal_price\": 16.50,\n        \"tax_price\": 0,\n        \"cashprice\": 50.00,\n        \"change_price\": 4.50\n    },\n    \"total\": {\n        \"cashprice\": 50.00,\n        \"change_price\": 4.50,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 3,\n        \"menutype_cnt\": 1,\n        \"total_price\": 45.50,\n        \"vatyn\": 0\n    }\n}",
+  "cord-001": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 23.000,\n            \"nm\": \"Kopi Susu Kolonel\",\n            \"num\": 1,\n            \"price\": 50.000,\n            \"sub\": \"Kembali\",\n            \"unitprice\": 27.000,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 27.000,\n            \"nm\": \"Kopi Susu Kolonel\",\n            \"num\": 2,\n            \"price\": 50.000,\n            \"sub\": \"Kembali\",\n            \"unitprice\": 27.000,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 23.000,\n        \"service_price\": 0,\n        \"subtotal_price\": 23.000,\n        \"tax_price\": 0,\n        \"cashprice\": 0,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 50.000,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_price\": 50.000\n    }\n}",
+  "cord-002": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 20000,\n            \"nm\": \"S-Ovaltine\",\n            \"num\": 1,\n            \"price\": 1818,\n            \"sub\": \"PB1\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 20000,\n            \"nm\": \"PB1\",\n            \"num\": 2,\n            \"price\": 1818,\n            \"sub\": \"Subtotal\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discountprice\": 20000,\n        \"serviceprice\": 0,\n        \"subtotal_price\": 18180,\n        \"taxprice\": 0,\n        \"cashprice\": 100000,\n        \"changeprice\": 80000\n    },\n    \"total\": {\n        \"cashprice\": 100000,\n        \"changeprice\": 80000,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 20000,\n        \"total_price\": 20000\n    }\n}",
+  "cord-003": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 28000,\n            \"nm\": \"M-Caramel Black Tea\",\n            \"num\": 1,\n            \"price\": 70,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 0,\n            \"nm\": \"Less Ice\",\n            \"num\": 1,\n            \"price\": 0,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        }\n    ],\n    \"sub_total\": {\n        \"discountprice\": 28000,\n        \"service_price\": 0,\n        \"subtotal_price\": 28000,\n        \"tax_price\": 0,\n        \"cashprice\": 28000,\n        \"changeprice\": 0\n    },\n    \"total\": {\n        \"cashprice\": 28000,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 28000\n    }\n}",
+  "cord-004": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 41000,\n            \"nm\": \"BBQ Chicken\",\n            \"num\": 1,\n            \"price\": 50.000,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 0,\n            \"nm\": \"ITEMS\",\n            \"num\": 1,\n            \"price\": 41000,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        }\n    ],\n    \"sub_total\": {\n        \"discountprice\": 0,\n        \"service_price\": 0,\n        \"subtotal_price\": 0,\n        \"tax_price\": 0,\n        \"cashprice\": 0,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 0,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 41000\n    }\n}",
+  "cord-005": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 8,\n            \"discountprice\": 1.00,\n            \"nm\": \"LE MINERAL\",\n            \"num\": 1,\n            \"price\": 8000,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 0,\n            \"nm\": \"NET1 AMT\",\n            \"num\": 1,\n            \"price\": 7270,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        }\n    ],\n    \"sub_total\": {\n        \"discountprice\": 0,\n        \"service_price\": 0,\n        \"subtotal_price\": 7270,\n        \"tax_price\": 0,\n        \"cashprice\": 8000,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 8000,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 8000\n    }\n}",
+  "cord-006": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 19.00,\n            \"nm\": \"Potato Sacher\",\n            \"num\": 1,\n            \"price\": 19.00,\n            \"sub\": \"Sausages\",\n            \"unitprice\": 1.00,\n            \"vatyn\": 0.00\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 52.00,\n            \"nm\": \"Oreo\",\n            \"num\": 1,\n            \"price\": 52.00,\n            \"sub\": \"Green Tea Spread\",\n            \"unitprice\": 1.00,\n            \"vatyn\": 0.00\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 52.00,\n            \"nm\": \"Choco Banana\",\n            \"num\": 1,\n            \"price\": 52.00,\n            \"sub\": \"Bananas\",\n            \"unitprice\": 1.00,\n            \"vatyn\": 0.00\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 19.00,\n        \"service_price\": 1.00,\n        \"subtotal_price\": 19.00,\n        \"tax_price\": 0.00,\n        \"cashprice\": 123.00,\n        \"change_price\": 0.00,\n        \"creditcard_price\": 123.00,\n        \"menutype_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 123.00,\n        \"total_price\": 123.00\n    },\n    \"total\": {\n        \"cashprice\": 123.00,\n        \"change_price\": 0.00,\n        \"creditcard_price\": 123.00,\n        \"emoney_price\": 1",
+  "cord-007": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": -9545,\n            \"nm\": \"Choco Devil\",\n            \"num\": 1,\n            \"price\": 360,\n            \"sub\": 63636,\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 0,\n            \"nm\": \"CP 360 Club Card -9,545\",\n            \"num\": 1,\n            \"price\": 360,\n            \"sub\": 63636,\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": 63636,\n    \"total\": 59500\n}",
+  "cord-008": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 40.000,\n            \"nm\": \"X3X\",\n            \"num\": 1,\n            \"price\": 3000.00,\n            \"sub\": \"TALAM\",\n            \"unitprice\": 100.00,\n            \"vatyn\": 0.00\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 0.00,\n            \"nm\": \"Mika\",\n            \"num\": 1,\n            \"price\": 4.00,\n            \"sub\": \"KECIL\",\n            \"unitprice\": 10.00,\n            \"vatyn\": 0.00\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 0.00,\n        \"service_price\": 0.00,\n        \"subtotal_price\": 4.00,\n        \"tax_price\": 0.00,\n        \"cashprice\": 20.00,\n        \"changeprice\": 0.00,\n        \"creditcardprice\": 0.00,\n        \"menutype_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0.00,\n        \"total_price\": 4.00\n    },\n    \"total\": {\n        \"cashprice\": 20.00,\n        \"changeprice\": 0.00,\n        \"creditcardprice\": 0.00,\n        \"emoneyprice\": 0.00,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0.00,\n        \"total_price\": 4.00\n    }\n}",
+  "cord-009": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 2000,\n            \"nm\": \"Tahu Ikan Oma Giok\",\n            \"num\": 1,\n            \"price\": 20000,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\",\n        \n        \"sub_total\": {\n            \"discount_price\": 2000,\n            \"service_price\": \"\",\n            \"subtotal_price\": \"\",\n            \"tax_price\": \"\",\n            \"cashprice\": 20000,\n            \"changeprice\": 0,\n            \"creditcardprice\": \"\",\n            \"menutype_cnt\": 1,\n            \"menuqty_cnt\": 1,\n            \"total_etc\": \"\",\n            \"total_price\": 20000,\n        \n        \"total\": {\n            \"cashprice\": 20000,\n            \"changeprice\": 0,\n            \"creditcardprice\": \"\",\n            \"emoneyprice\": \"\",\n            \"menuqty_cnt\": 1,\n            \"menutype_cnt\": 1,\n            \"total_etc\": \"\",\n            \"total_price\": 20000,\n        \n        \"total_price\": 20000,\n        \n        \"total_qty\": 1,\n        \n        \"menu_type\": \"Tahu Ikan Oma Giok\",\n        \n        \"sub_total_price\": 20000,\n        \n        \"subtotal_price\": 20000,\n        \n        \"total_price\": 20000,\n        \n        \"total_qty\": 1,\n        \n        \"menu_type\": \"CASH\",\n        \n        \"sub_total_qty\": 1,\n        \n        \"subtotal_qty\": 1,\n        \n        \"total_qty\": 1,\n        \n        \"menu_type\": \"CHANGED\",\n        \n        \"subtotal_qty\": 1,\n        \n        \"",
+  "cord-010": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 20,\n            \"nm\": \"Serbu 1\",\n            \"num\": 2,\n            \"price\": 40.000,\n            \"sub\": \"Chocolate Peanut Bread\",\n            \"unitprice\": 20.000,\n            \"vatyn\": 0.00\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 20,\n            \"nm\": \"Serbu 1\",\n            \"num\": 2,\n            \"price\": 40.000,\n            \"sub\": \"Serbu 1\",\n            \"unitprice\": 20.000,\n            \"vatyn\": 0.00\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 20,\n        \"service_price\": 0,\n        \"subtotal_price\": 60.000,\n        \"tax_price\": 0.00,\n        \"cashprice\": 60.000,\n        \"change_price\": 0.00,\n        \"creditcard_price\": 0.00,\n        \"emoney_price\": 0.00,\n        \"menu_qty_cnt\": 2,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 60.000,\n        \"change_price\": 0.00,\n        \"creditcard_price\": 0.00,\n        \"emoney_price\": 0.00,\n        \"menu_qty_cnt\": 2,\n        \"menutype_cnt\": 1,\n        \"total_price\": 60.000\n    }\n}",
+  "cord-011": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 10,\n            \"nm\": \"Se'I Sapi Lada Hitam\",\n            \"num\": 1,\n            \"price\": 35.000,\n            \"sub\": \"Nasi Putih\",\n            \"unitprice\": 10.000,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 10,\n            \"nm\": \"Se'I Sapi Matah\",\n            \"num\": 1,\n            \"price\": 16.000,\n            \"sub\": \"Milk Shake Coklat\",\n            \"unitprice\": 16.000,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 8.100,\n        \"service_price\": 0,\n        \"subtotal_price\": 81.000,\n        \"tax_price\": 0\n    },\n    \"total\": {\n        \"cashprice\": 89.100,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 2,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 89.100\n    }\n}",
+  "cord-012": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 72.000,\n            \"nm\": \"Kembali\",\n            \"num\": 0,\n            \"price\": 72.000,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 0,\n            \"nm\": \"GoPay\",\n            \"num\": 0,\n            \"price\": 0,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 72.000,\n        \"service_price\": 0,\n        \"subtotal_price\": 72.000,\n        \"tax_price\": 0,\n        \"cashprice\": 0,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 0,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_price\": 72.000\n    }\n}",
+  "cord-013": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 727,\n            \"nm\": \"MINERAL 600 ML\",\n            \"num\": 1,\n            \"price\": 600,\n            \"sub\": \"600\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 33636,\n            \"nm\": \"BULGOGI RICE R\",\n            \"num\": 1,\n            \"price\": 33636,\n            \"sub\": \"R\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 4136,\n        \"service_price\": 0,\n        \"subtotal_price\": 4136,\n        \"tax_price\": 0,\n        \"cashprice\": 50000,\n        \"changeprice\": -4500\n    },\n    \"total\": {\n        \"cashprice\": 50000,\n        \"changeprice\": -4500,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 45500\n    }\n}",
+  "cord-014": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 12.000,\n            \"nm\": \"Arem Arem\",\n            \"num\": 2,\n            \"price\": 12.000,\n            \"sub\": \"Kroket\",\n            \"unitprice\": 1.00,\n            \"vatyn\": 0.00\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 12.000,\n            \"nm\": \"Subtotal\",\n            \"num\": 2,\n            \"price\": 12.000,\n            \"sub\": \"Subtotal Rp 36.000\",\n            \"unitprice\": 1.00,\n            \"vatyn\": 0.00\n        }\n    ],\n    \"sub_total\": {\n        \"discountprice\": 12.000,\n        \"serviceprice\": 12.000,\n        \"subtotal_price\": 36.000,\n        \"taxprice\": 3.600,\n        \"cashprice\": 39.600,\n        \"changeprice\": 0.00,\n        \"creditcardprice\": 0.00,\n        \"emoneyprice\": 0.00,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 39.600,\n        \"changeprice\": 0.00,\n        \"creditcardprice\": 0.00,\n        \"emoneyprice\": 0.00,\n        \"menuqty_cnt\": 2,\n        \"menutype_cnt\": 1\n    }\n}",
+  "cord-015": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 12.000,\n            \"nm\": \"Arem Arem\",\n            \"num\": 2,\n            \"price\": 24.000,\n            \"sub\": \"Pepenero Pastel\",\n            \"unitprice\": \"15.000\",\n            \"vatyn\": \"0.10\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 30.000,\n            \"nm\": \"Arem Arem\",\n            \"num\": 2,\n            \"price\": 30.000,\n            \"sub\": \"Pepenero Pastel\",\n            \"unitprice\": \"30.000\",\n            \"vatyn\": \"0.10\"\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 5.400,\n        \"service_price\": 0,\n        \"subtotal_price\": 54.000,\n        \"tax_price\": 5.400,\n        \"cashprice\": 100.000,\n        \"changeprice\": 40.600\n    },\n    \"total\": {\n        \"cashprice\": 100.000,\n        \"changeprice\": 40.600,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 2,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 59.400,\n        \"total_price\": 59.400\n    }\n}",
+  "cord-016": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 20,\n            \"nm\": \"Menu 1\",\n            \"num\": 1,\n            \"price\": 20,\n            \"sub\": \"100\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 20,\n            \"nm\": \"Menu 2\",\n            \"num\": 2,\n            \"price\": 20,\n            \"sub\": \"100\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 20,\n        \"service_price\": 0,\n        \"subtotal_price\": 20,\n        \"tax_price\": 0,\n        \"cashprice\": 100,\n        \"changeprice\": 80,\n        \"creditcardprice\": 0\n    },\n    \"total\": {\n        \"cashprice\": 100,\n        \"changeprice\": 80,\n        \"creditcardprice\": 0,\n        \"menuqty_cnt\": 2,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 20000,\n        \"total_price\": 20000\n    }\n}",
+  "cord-017": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 20,\n            \"nm\": \"Lemonade\",\n            \"num\": 16,\n            \"price\": 20,\n            \"sub\": \"16OZ\",\n            \"unitprice\": \"1\",\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 20,\n            \"nm\": \"Lemonade\",\n            \"num\": 16,\n            \"price\": 20,\n            \"sub\": \"20,000\",\n            \"unitprice\": \"1\",\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 20,\n            \"nm\": \"Lemonade\",\n            \"num\": 16,\n            \"price\": 20,\n            \"sub\": \"20,000\",\n            \"unitprice\": \"1\",\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 20,\n        \"service_price\": 0,\n        \"subtotal_price\": 20,\n        \"tax_price\": 0,\n        \"cashprice\": 100,\n        \"change_price\": 80\n    },\n    \"total\": {\n        \"cashprice\": 100,\n        \"change_price\": 80,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 200\n    }\n}",
+  "cord-018": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 3,\n            \"discountprice\": 10000,\n            \"nm\": \"Beef C Roll\",\n            \"num\": 1,\n            \"price\": 10000,\n            \"sub\": \"kaya bred\",\n            \"unitprice\": 10000,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 15000,\n            \"nm\": \"Cured Beef\",\n            \"num\": 1,\n            \"price\": 15000,\n            \"sub\": \"COOKED\",\n            \"unitprice\": 15000,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discountprice\": 10000,\n        \"serviceprice\": 15000,\n        \"subtotal_price\": 25000,\n        \"taxprice\": 7500\n    },\n    \"total\": {\n        \"cashprice\": 100000,\n        \"changeprice\": 75000,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 2,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 25000,\n        \"total_price\": 25000\n    }\n}",
+  "cord-019": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 12.50,\n            \"nm\": \"FUTAMI 17 GREEN TEA (CLAS 12,500)\",\n            \"num\": 1,\n            \"price\": 12.50,\n            \"sub\": \"GREEN TEA\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 13.00,\n            \"nm\": \"EGG TART\",\n            \"num\": 1,\n            \"price\": 13.00,\n            \"sub\": \"TART\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 17.00,\n            \"nm\": \"GRAIN CROQUE MONSIEUR\",\n            \"num\": 1,\n            \"price\": 17.00,\n            \"sub\": \"MONSIEUR\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 12.50,\n        \"service_price\": 13.00,\n        \"subtotal_price\": 12.50,\n        \"tax_price\": 0,\n        \"cashprice\": 50.00,\n        \"change_price\": 7.50\n    },\n    \"total\": {\n        \"cashprice\": 50.00,\n        \"change_price\": 7.50,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 42.50,\n        \"total_price\": 42.50\n    }\n}",
+  "cord-020": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 1000,\n            \"nm\": \"JAMUR\",\n            \"num\": 1,\n            \"price\": 10000,\n            \"sub\": \"JAMUR\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 500,\n            \"nm\": \"TAHU\",\n            \"num\": 1,\n            \"price\": 5000,\n            \"sub\": \"TAHU\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 1500,\n        \"service_price\": 0,\n        \"subtotal_price\": 16500,\n        \"tax_price\": 0,\n        \"cashprice\": 20000,\n        \"changeprice\": 3500\n    },\n    \"total\": {\n        \"cashprice\": 20000,\n        \"changeprice\": 3500,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 2,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 16500,\n        \"total_price\": 16500\n    }\n}",
+  "cord-021": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": \"Rp 34,363\",\n            \"nm\": \"Discount BCA 15%\",\n            \"num\": 1,\n            \"price\": \"Rp 34,363\",\n            \"sub\": \"Rp 34,363\",\n            \"unitprice\": \"1\",\n            \"vatyn\": \"0\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": \"Rp 34,363\",\n            \"nm\": \"Sliders Set\",\n            \"num\": 1,\n            \"price\": \"Rp 113,636\",\n            \"sub\": \"Rp 113,636\",\n            \"unitprice\": \"1\",\n            \"vatyn\": \"0\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": \"Rp 34,363\",\n            \"nm\": \"Chicken Vege Rice Bowl\",\n            \"num\": 1,\n            \"price\": \"Rp 86,363\",\n            \"sub\": \"Rp 86,363\",\n            \"unitprice\": \"1\",\n            \"vatyn\": \"0\"\n        }\n    ],\n    \"sub_total\": {\n        \"discountprice\": \"Rp 34,363\",\n        \"serviceprice\": \"Rp 9,736\",\n        \"subtotal_price\": \"Rp 120,099\",\n        \"taxprice\": \"Rp 20,446\"\n    },\n    \"total\": {\n        \"cashprice\": \"Rp 224,908\",\n        \"changeprice\": \"Rp 0\",\n        \"creditcardprice\": \"Rp 224,908\",\n        \"emoneyprice\": \"Rp 0\",\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": \"Rp",
+  "cord-022": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 0.5,\n            \"nm\": \"RedVelvet Nutella\",\n            \"num\": 1,\n            \"price\": 280,\n            \"sub\": \"280,000\",\n            \"unitprice\": \"0.5\",\n            \"vatyn\": \"0\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 0,\n            \"nm\": \"Free Mini Candle\",\n            \"num\": 1,\n            \"price\": 1,\n            \"sub\": \"1\",\n            \"unitprice\": \"1\",\n            \"vatyn\": \"0\"\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 0,\n        \"service_price\": 0,\n        \"subtotal_price\": 280,\n        \"tax_price\": 0,\n        \"cashprice\": 280,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 280,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_price\": 308\n    }\n}",
+  "cord-023": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 1818,\n            \"nm\": \"BUBBLE GUM\",\n            \"num\": 1,\n            \"price\": 18.00,\n            \"sub\": \"18,182\",\n            \"unitprice\": 1,\n            \"vatyn\": 0.05\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 1818,\n            \"nm\": \"PAJAK\",\n            \"num\": 1,\n            \"price\": 10.00,\n            \"sub\": \"10%\",\n            \"unitprice\": 1,\n            \"vatyn\": 0.05\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 1818,\n        \"service_price\": 0,\n        \"subtotal_price\": 18.18,\n        \"tax_price\": 0,\n        \"cashprice\": 20.00,\n        \"changeprice\": 0.00,\n        \"creditcardprice\": 0.00,\n        \"emoneyprice\": 0.00,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 20.00,\n        \"changeprice\": 0.00,\n        \"creditcardprice\": 0.00,\n        \"emoneyprice\": 0.00,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_price\": 20.00\n    }\n}",
+  "cord-024": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 11000,\n            \"nm\": \"Pain au Chocolat\",\n            \"num\": 1,\n            \"price\": 11000,\n            \"sub\": \"11,000\",\n            \"unitprice\": 1000,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 12000,\n            \"nm\": \"Choco Caturrado\",\n            \"num\": 1,\n            \"price\": 12000,\n            \"sub\": \"12,000\",\n            \"unitprice\": 1000,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 9000,\n            \"nm\": \"Milk Pastry Roll\",\n            \"num\": 1,\n            \"price\": 9000,\n            \"sub\": \"9,000\",\n            \"unitprice\": 1000,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 13500,\n            \"nm\": \"Real Cheese Inside Bread\",\n            \"num\": 1,\n            \"price\": 13500,\n            \"sub\": \"13,500\",\n            \"unitprice\": 1000,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 15000,\n            \"nm\": \"Sausage Bread\",\n            \"num\": 1,\n            \"price\": 15000,\n            \"sub\": \"15,000\",\n            \"unitprice\": 1000,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 20000,\n            \"nm\": \"Ham Cheese Flat Bread\",\n            \"num",
+  "cord-025": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 1,\n            \"nm\": \"Sop Sui Jiao\",\n            \"num\": 1,\n            \"price\": 33000,\n            \"sub\": \"1Prs\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 1,\n            \"nm\": \"Ha Kaou Udng\",\n            \"num\": 1,\n            \"price\": 28000,\n            \"sub\": \"1Prs\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 1,\n            \"nm\": \"Sio May Kpting\",\n            \"num\": 1,\n            \"price\": 23500,\n            \"sub\": \"1Prs\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 1,\n            \"nm\": \"Siomay Kmbinasi\",\n            \"num\": 1,\n            \"price\": 23000,\n            \"sub\": \"1Prs\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 1,\n            \"nm\": \"Leng Hong Kien\",\n            \"num\": 1,\n            \"price\": 30000,\n            \"sub\": \"1Prs\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 1,\n            \"nm\": \"Mie Trsi Kgkung\",\n            \"num\": 1,\n            \"price\": 35500,\n            \"sub\": \"1Prs\",\n            \"unitprice\": 1,\n            \"",
+  "cord-026": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 5.000,\n            \"nm\": \"SAYUR\",\n            \"num\": 1,\n            \"price\": 5.000,\n            \"sub\": \"SAYUR\",\n            \"unitprice\": 1,\n            \"vatyn\": 0.00\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 4.000,\n            \"nm\": \"KERUPUK/SAMBEL\",\n            \"num\": 1,\n            \"price\": 2.000,\n            \"sub\": \"KERUPUK/SAMBEL\",\n            \"unitprice\": 1,\n            \"vatyn\": 0.00\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 5.000,\n        \"service_price\": 2.000,\n        \"subtotal_price\": 7.000,\n        \"tax_price\": 0.00,\n        \"cashprice\": 7.000,\n        \"changeprice\": 0.00,\n        \"creditcardprice\": 0.00,\n        \"emoneyprice\": 0.00,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 7.000,\n        \"changeprice\": 0.00,\n        \"creditcardprice\": 0.00,\n        \"emoneyprice\": 0.00,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_price\": 14.000,\n        \"vatyn\": 0.00\n    }\n}",
+  "cord-027": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 16.363,\n            \"nm\": \"Thai Iced Tea (L)\",\n            \"num\": 1,\n            \"price\": 16.363,\n            \"sub\": \"Jumlah Item 1\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 16.363,\n            \"nm\": \"Pajak Resto\",\n            \"num\": 1,\n            \"price\": 16.363,\n            \"sub\": \"Grand Total\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 16.363,\n        \"service_price\": 0,\n        \"subtotal_price\": 16.363,\n        \"tax_price\": 0,\n        \"cashprice\": 16.363,\n        \"change_price\": 0\n    },\n    \"total\": {\n        \"cashprice\": 16.363,\n        \"change_price\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 1,\n        \"total_price\": 17.999\n    }\n}",
+  "cord-028": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 12000,\n            \"nm\": \"chapsal twister donnut\",\n            \"num\": 1,\n            \"price\": 12000,\n            \"sub\": \"chapsal twister donnut\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 10000,\n            \"nm\": \"CASH\",\n            \"num\": 1,\n            \"price\": 10000,\n            \"sub\": \"\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 12000,\n        \"service_price\": 0,\n        \"subtotal_price\": 12000,\n        \"tax_price\": 0,\n        \"cashprice\": 22000,\n        \"changeprice\": 0\n    },\n    \"total\": {\n        \"cashprice\": 22000,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 22000,\n        \"total_price\": 22000\n    }\n}",
+  "cord-029": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": \"30000\",\n            \"nm\": \"Sabun Beras\",\n            \"num\": 1,\n            \"price\": \"30000\",\n            \"sub\": \"Sub Total 30000\",\n            \"unitprice\": \"1\",\n            \"vatyn\": \"0\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": \"50000\",\n            \"nm\": \"Tunai\",\n            \"num\": 1,\n            \"price\": \"50000\",\n            \"sub\": \"Discount(0%)\",\n            \"unitprice\": \"1\",\n            \"vatyn\": \"0\"\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": \"30000\",\n        \"service_price\": \"0\",\n        \"subtotal_price\": \"30000\",\n        \"tax_price\": \"0\",\n        \"cashprice\": \"30000\",\n        \"changeprice\": \"0\",\n        \"creditcardprice\": \"0\",\n        \"emoneyprice\": \"0\",\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": \"30000\",\n        \"changeprice\": \"0\",\n        \"creditcardprice\": \"0\",\n        \"emoneyprice\": \"0\",\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": \"30000\",\n        \"total_price\": \"30000\"\n    }\n}",
+  "cord-030": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 12000,\n            \"nm\": \"FRANKFRUT S/USAGE ROLL\",\n            \"num\": 1,\n            \"price\": 12000,\n            \"sub\": \"S/USAGE ROLL\",\n            \"unitprice\": 1000,\n            \"vatyn\": 0.05\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 9000,\n            \"nm\": \"REDBEAN BRE/D\",\n            \"num\": 1,\n            \"price\": 9000,\n            \"sub\": \"REDBEAN BRE/D\",\n            \"unitprice\": 1000,\n            \"vatyn\": 0.05\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 5000,\n        \"service_price\": 1000,\n        \"subtotal_price\": 15000,\n        \"tax_price\": 1000,\n        \"cashprice\": 50000,\n        \"changeprice\": 29000\n    },\n    \"total\": {\n        \"cashprice\": 50000,\n        \"changeprice\": 29000,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 2,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 79000\n    }\n}",
+  "cord-031": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 24000,\n            \"nm\": \"Premium Toasted Pan Bread\",\n            \"num\": 1,\n            \"price\": 24000,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 0,\n            \"nm\": \"No Discount\",\n            \"num\": 1,\n            \"price\": 0,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 0,\n        \"service_price\": 0,\n        \"subtotal_price\": 0,\n        \"tax_price\": 0,\n        \"cashprice\": 0,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 24000,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 24000\n    }\n}",
+  "cord-032": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 6.000,\n            \"nm\": \"Nasi\",\n            \"num\": 1,\n            \"price\": 6.000,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 6.000,\n            \"nm\": \"Nasi\",\n            \"num\": 2,\n            \"price\": 6.000,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 6.000,\n            \"nm\": \"Nasi\",\n            \"num\": 3,\n            \"price\": 6.000,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        }\n    ],\n    \"sub_total\": {\n        \"discountprice\": 6.000,\n        \"serviceprice\": \"\",\n        \"subtotal_price\": 6.000,\n        \"taxprice\": \"\",\n        \"cashprice\": 6.000,\n        \"changeprice\": \"\",\n        \"creditcardprice\": \"\",\n        \"emoneyprice\": \"\",\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 6.000,\n        \"changeprice\": \"\",\n        \"creditcardprice\": \"\",\n        \"emoneyprice\": \"\",\n        \"menuqty_cnt\": 3,\n        \"menutype_cnt\": 1\n    }\n}",
+  "cord-033": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 50,\n            \"nm\": \"GRAINS PAN BREAD\",\n            \"num\": 1,\n            \"price\": 20.50,\n            \"sub\": \"GRAINS PAN BREAD\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 37,\n            \"nm\": \"ICED HIBISCUS LYCHEE TEA\",\n            \"num\": 1,\n            \"price\": 37.00,\n            \"sub\": \"ICED HIBISCUS LYCHEE TEA\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 50,\n        \"service_price\": 0,\n        \"subtotal_price\": 37.00,\n        \"tax_price\": 0,\n        \"cashprice\": 7.50,\n        \"changeprice\": 0\n    },\n    \"total\": {\n        \"cashprice\": 7.50,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 57.50,\n        \"total_price\": 57.50\n    }\n}",
+  "cord-034": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 50.50,\n            \"nm\": \"GRILLED BABY POTATO\",\n            \"num\": 1,\n            \"price\": 50.50,\n            \"sub\": \"GRILLED BABY POTATO\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 76.00,\n            \"nm\": \"TRUFFLE CREAM\",\n            \"num\": 1,\n            \"price\": 76.00,\n            \"sub\": \"TRUFFLE CREAM\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 70.50,\n            \"nm\": \"CARBONARA\",\n            \"num\": 1,\n            \"price\": 70.50,\n            \"sub\": \"CARBONARA\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discountprice\": 243.00,\n        \"serviceprice\": 0,\n        \"subtotal_price\": 243.00,\n        \"taxprice\": 0,\n        \"cashprice\": 0,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 283.338,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_price\": 283.338\n    }\n}",
+  "cord-035": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 76500,\n            \"nm\": \"Black Pepper Meatball\",\n            \"num\": 1,\n            \"price\": 76500,\n            \"sub\": \"261,000\",\n            \"unitprice\": \"261,000\",\n            \"vatyn\": \"0.02\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 82500,\n            \"nm\": \"Quarto Foramangi Pasta\",\n            \"num\": 1,\n            \"price\": 82500,\n            \"sub\": \"27666\",\n            \"unitprice\": \"27666\",\n            \"vatyn\": \"0.02\"\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 261000,\n        \"service_price\": 0,\n        \"subtotal_price\": 261000,\n        \"tax_price\": 0,\n        \"cashprice\": 0,\n        \"change_price\": 0,\n        \"creditcard_price\": 0,\n        \"emoney_price\": 0,\n        \"menu_qty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 304326,\n        \"change_price\": 0,\n        \"creditcard_price\": 0,\n        \"emoney_price\": 0,\n        \"menu_qty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_price\": 304326\n    }\n}",
+  "cord-036": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 17.272,\n            \"nm\": \"Soft Ori 3 Top\",\n            \"num\": 1,\n            \"price\": 17.272,\n            \"sub\": 0,\n            \"unitprice\": 0,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 0,\n            \"nm\": \"Top Oreo\",\n            \"num\": 0,\n            \"price\": 0,\n            \"sub\": 0,\n            \"unitprice\": 0,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 0,\n            \"nm\": \"Top Banana\",\n            \"num\": 0,\n            \"price\": 0,\n            \"sub\": 0,\n            \"unitprice\": 0,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 17.272,\n        \"service_price\": 0,\n        \"subtotal_price\": 17.272,\n        \"tax_price\": 0,\n        \"cashprice\": 17.272,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 18.999,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_price\": 18.999,\n        \"vatyn\": 0\n    }\n}",
+  "cord-037": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 6364,\n            \"nm\": \"PB1-TAX\",\n            \"num\": 1,\n            \"price\": 6364,\n            \"sub\": \"For Here\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 50000,\n            \"nm\": \"Gyro Platter Regular\",\n            \"num\": 1,\n            \"price\": 50000,\n            \"sub\": \"\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 6364,\n        \"service_price\": 0,\n        \"subtotal_price\": 6364,\n        \"tax_price\": 0,\n        \"cashprice\": 70000,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"menutype_cnt\": 1,\n        \"menuqty_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 70000\n    },\n    \"total\": {\n        \"cashprice\": 70000,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 70000\n    }\n}",
+  "cord-038": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 20,\n            \"nm\": \"TT\",\n            \"num\": 1,\n            \"price\": 20,\n            \"sub\": \"20,000\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 20,\n            \"nm\": \"TOTAL\",\n            \"num\": 1,\n            \"price\": 20,\n            \"sub\": \"20,000\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 20,\n        \"service_price\": 0,\n        \"subtotal_price\": 20,\n        \"tax_price\": 0,\n        \"cashprice\": 100,\n        \"changeprice\": 80\n    },\n    \"total\": {\n        \"cashprice\": 100,\n        \"changeprice\": 80,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 200\n    }\n}",
+  "cord-039": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 2000,\n            \"nm\": \"Subtotal\",\n            \"num\": 1,\n            \"price\": 8900,\n            \"sub\": \"Subtotal\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 2300,\n            \"nm\": \"Total\",\n            \"num\": 1,\n            \"price\": 97900,\n            \"sub\": \"Total\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discountprice\": 8900,\n        \"service_price\": 0,\n        \"subtotal_price\": 8900,\n        \"tax_price\": 0,\n        \"cashprice\": 100000,\n        \"changeprice\": 2100\n    },\n    \"total\": {\n        \"cashprice\": 100000,\n        \"changeprice\": 2100,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 1,\n        \"total_price\": 97900\n    }\n}",
+  "cord-040": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 95,\n            \"nm\": \"Gojek Chicken Chilli Sauce H\",\n            \"num\": 1,\n            \"price\": 95,\n            \"sub\": \"Gojek Chicken Soy Sauce F\",\n            \"unitprice\": 180,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 180,\n            \"nm\": \"Gojek French Fries\",\n            \"num\": 1,\n            \"price\": 70,\n            \"sub\": \"\",\n            \"unitprice\": 0,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": 345,\n    \"total\": {\n        \"cashprice\": 379,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 379\n    },\n    \"total_price\": 379\n}",
+  "cord-041": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 150000,\n            \"nm\": \"GONG GIBAB\",\n            \"num\": 1,\n            \"price\": 150000,\n            \"sub\": \"GONG GIBAB\",\n            \"unitprice\": 0,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 105000,\n            \"nm\": \"CHULPAN CHEESE DAK GALBI\",\n            \"num\": 1,\n            \"price\": 105000,\n            \"sub\": \"CHULPAN CHEESE DAK GALBI\",\n            \"unitprice\": 0,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 230000,\n            \"nm\": \"CREAM TEOK PO KI\",\n            \"num\": 1,\n            \"price\": 230000,\n            \"sub\": \"CREAM TEOK PO KI\",\n            \"unitprice\": 0,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 95000,\n            \"nm\": \"EL KEUN HWANGTAE\",\n            \"num\": 1,\n            \"price\": 95000,\n            \"sub\": \"EL KEUN HWANGTAE\",\n            \"unitprice\": 0,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 120000,\n            \"nm\": \"SUNDUBU(TUKBEGI) CHAM KKOT SAL\",\n            \"num\": 1,\n            \"price\": 120000,\n            \"sub\": \"SUNDUBU(TUKBEGI) CHAM KKOT SAL\",\n            \"unitprice\": 0,\n            \"vatyn\": 0\n        },\n        {",
+  "cord-042": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 1750,\n            \"nm\": \"CINNAMON SUGAR\",\n            \"num\": 1,\n            \"price\": 17000,\n            \"sub\": \"CINNAMON SUGAR\",\n            \"unitprice\": 17000,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 1750,\n            \"nm\": \"TRIPPLE CHEESE\",\n            \"num\": 1,\n            \"price\": 17000,\n            \"sub\": \"TRIPPLE CHEESE\",\n            \"unitprice\": 17000,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 1750,\n            \"nm\": \"SUB TOTAL\",\n            \"num\": 1,\n            \"price\": 17000,\n            \"sub\": \"SUB TOTAL\",\n            \"unitprice\": 17000,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discountprice\": 5300,\n        \"service_price\": 0,\n        \"subtotal_price\": 53000,\n        \"tax_price\": 0,\n        \"cashprice\": 0,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0\n    },\n    \"total\": {\n        \"cashprice\": 53000,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 3,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 53000\n    }\n}",
+  "cord-043": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 6.000,\n            \"nm\": \"PAPER BAG\",\n            \"num\": 1,\n            \"price\": 170.000,\n            \"sub\": \"BESAR\",\n            \"unitprice\": 1,\n            \"vatyn\": 0.00\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 272.000,\n            \"nm\": \"BESAR\",\n            \"num\": 1,\n            \"price\": 272.000,\n            \"sub\": \"BESAR\",\n            \"unitprice\": 1,\n            \"vatyn\": 0.00\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 278.000,\n            \"nm\": \"PAPER BAG\",\n            \"num\": 1,\n            \"price\": 278.000,\n            \"sub\": \"BESAR\",\n            \"unitprice\": 1,\n            \"vatyn\": 0.00\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 6.000,\n        \"service_price\": 1,\n        \"subtotal_price\": 272.000,\n        \"tax_price\": 278.000,\n        \"cashprice\": 300.000,\n        \"changeprice\": 0.000,\n        \"creditcardprice\": 0.000,\n        \"emoneyprice\": 0.000,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 300.000,\n        \"changeprice\": 0.000,\n        \"creditcardprice\": 0.000,\n        \"emoneyprice\": 0.000,\n        \"menuqty_cnt\": 1,\n        \"menutype",
+  "cord-044": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 16.363,\n            \"nm\": \"Thai Iced Tea (L)\",\n            \"num\": 1,\n            \"price\": 16.363,\n            \"sub\": \"Jumlah Item 1\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 16.363,\n            \"nm\": \"Pajak Resto 1,636\",\n            \"num\": 1,\n            \"price\": 16.363,\n            \"sub\": \"Grand Total\",\n            \"unitprice\": 1,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discountprice\": 16.363,\n        \"serviceprice\": 0,\n        \"subtotal_price\": 16.363,\n        \"taxprice\": 0\n    },\n    \"total\": {\n        \"cashprice\": 17.999,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 17.999\n    }\n}",
+  "cord-045": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 85000,\n            \"nm\": \"AOP Seafood\",\n            \"num\": 1,\n            \"price\": 85000,\n            \"sub\": \"Subtotal\",\n            \"unitprice\": 25000,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 95000,\n            \"nm\": \"Omurice Katsu Curry\",\n            \"num\": 1,\n            \"price\": 95000,\n            \"sub\": \"Subtotal\",\n            \"unitprice\": 26160,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 35000,\n            \"nm\": \"Earl Gray Tea\",\n            \"num\": 1,\n            \"price\": 35000,\n            \"sub\": \"Subtotal\",\n            \"unitprice\": 25000,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": 240000,\n    \"total\": {\n        \"cashprice\": 287760,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 3,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 287760\n    }\n}",
+  "cord-046": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 22000,\n            \"nm\": \"Marble Castile\",\n            \"num\": 1,\n            \"price\": 22000,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 0,\n            \"nm\": \"Cement\",\n            \"num\": 1,\n            \"price\": 22000,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 22000,\n        \"service_price\": 0,\n        \"subtotal_price\": 22000,\n        \"tax_price\": 0,\n        \"cashprice\": 22000,\n        \"changeprice\": 0\n    },\n    \"total\": {\n        \"cashprice\": 22000,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 22000\n    }\n}",
+  "cord-047": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 42000,\n            \"nm\": \"Seaweed Chicken\",\n            \"num\": 1,\n            \"price\": 42000,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 0,\n            \"nm\": \"0\",\n            \"num\": 1,\n            \"price\": 0,\n            \"sub\": \"\",\n            \"unitprice\": \"\",\n            \"vatyn\": \"\"\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 0,\n        \"service_price\": 0,\n        \"subtotal_price\": 0,\n        \"tax_price\": 0,\n        \"cashprice\": 0,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 0,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 1,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 0\n    }\n}",
+  "cord-048": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 5592,\n            \"nm\": \"Chokocha Flt\",\n            \"num\": 1,\n            \"price\": 13636,\n            \"sub\": \"Bbq Bento\",\n            \"unitprice\": 13636,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 5592,\n            \"nm\": \"Chokocha Flt\",\n            \"num\": 1,\n            \"price\": 13636,\n            \"sub\": \"Bbq Bento\",\n            \"unitprice\": 13636,\n            \"vatyn\": 0\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 5592,\n            \"nm\": \"Chokocha Flt\",\n            \"num\": 1,\n            \"price\": 13636,\n            \"sub\": \"Bbq Bento\",\n            \"unitprice\": 13636,\n            \"vatyn\": 0\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 5592,\n        \"service_price\": 0,\n        \"subtotal_price\": 5592,\n        \"tax_price\": 0,\n        \"cashprice\": 70000,\n        \"change_price\": 0,\n        \"creditcard_price\": 0,\n        \"emoney_price\": 0,\n        \"menu_qty_cnt\": 3,\n        \"menutype_cnt\": 1\n    },\n    \"total\": {\n        \"cashprice\": 70000,\n        \"change_price\": 0,\n        \"creditcard_price\": 0,\n        \"emoney_price\": 0,\n        \"menu_qty_cnt\": 3,\n        \"menutype_cnt\": 1,\n        \"total_price\": 61500,\n        \"vatyn\": 0",
+  "cord-049": "```json\n{\n    \"menu\": [\n        {\n            \"cnt\": 1,\n            \"discountprice\": 52.000,\n            \"nm\": \"Nasi Campur\",\n            \"num\": 1,\n            \"price\": 52.000,\n            \"sub\": \"Bali\",\n            \"unitprice\": 1,\n            \"vatyn\": 0.00\n        },\n        {\n            \"cnt\": 1,\n            \"discountprice\": 22.000,\n            \"nm\": \"Lemon\",\n            \"num\": 1,\n            \"price\": 22.000,\n            \"sub\": \"Bali\",\n            \"unitprice\": 1,\n            \"vatyn\": 0.00\n        }\n    ],\n    \"sub_total\": {\n        \"discount_price\": 74.000,\n        \"service_price\": 0,\n        \"subtotal_price\": 71.000,\n        \"tax_price\": 7.400,\n        \"cashprice\": 81.400,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0\n    },\n    \"total\": {\n        \"cashprice\": 81.400,\n        \"changeprice\": 0,\n        \"creditcardprice\": 0,\n        \"emoneyprice\": 0,\n        \"menuqty_cnt\": 2,\n        \"menutype_cnt\": 1,\n        \"total_etc\": 0,\n        \"total_price\": 153.400\n    }\n}"
+ }
+}

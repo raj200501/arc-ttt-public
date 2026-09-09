@@ -137,6 +137,39 @@ function `text -> object | None`; add yours to the panel and the frozen
 readings apply to it unchanged. Per-record statuses are banked, so
 every rate in the artifact can be recomputed by a stranger.
 
+## The other side: stop emitting invalid JSON in the first place
+
+`jsongreedy.py` is the JSON-constrained greedy decoder this repository
+measured with, as one file for any Hugging Face causal LM: at each step
+the top-k candidate tokens are tried in logit order and the first that
+keeps the output a valid JSON prefix is emitted; if none does, the
+top-1 token goes out anyway and the fallback is counted, so it never
+stalls and never invents text. Schema-blind by design.
+
+```
+python3 tools/jsongreedy.py --model Qwen/Qwen2.5-0.5B-Instruct --prompt "..."
+```
+
+```python
+from jsongreedy import generate
+text, info = generate(model, tokenizer, [{"role": "user", "content": prompt}])
+```
+
+What it does and does not do is measured, not asserted, and the second
+measurement went against it. Ladder II rung E7 (Qwen2.5-3B, both arms):
+every invalid output removed, consistent with the constraint firing on
+E6's syntax faults (11 of 12 removals carry a constrained step; one
+vanished without one). Addendum V (five families, schema-only prompts,
+fifty receipts each): **no family cleared the bar** — the remaining
+invalid outputs are truncations at the token cap, which a syntax
+constraint cannot close; the validator fired 0 times in four families
+and, on Falcon3, on exactly its seven non-truncation faults, fixing six
+(14 → 8, one short of the bar). Read both rows in
+[`VERDICT.md`](../VERDICT.md) before using it; it addresses one fault
+class — syntax — and nothing else. A valid object is not a correct
+one. The decoding core is pinned byte-identical to
+`src/arcttt/constrained_json.py`, the module every banked run used.
+
 ## Licence
 
 MIT. Copy the single file into your repo if that is easier than depending
