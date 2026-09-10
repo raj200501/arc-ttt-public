@@ -33,6 +33,7 @@ number that was never taken.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import pathlib
 import re
@@ -54,6 +55,19 @@ def collected(tree: pathlib.Path) -> int:
             "could not read a collection count from the export at "
             f"{tree}:\n{result.stdout[-2000:]}")
     return int(match.group(1))
+
+
+def banked_artifacts(tree: pathlib.Path) -> int:
+    """The coverage map's rule, applied to the export: every experiments/*.json
+    except the gate exhaust the map excludes from its own total. A bare glob
+    counted the map itself and read one higher than the map (231 against
+    230 on 2026-09-10), and a draft carried both numbers for the same noun."""
+    spec = importlib.util.spec_from_file_location(
+        "verification_coverage", REPO / "scripts" / "verification_coverage.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return sum(1 for p in (tree / "experiments").glob("*.json")
+               if p.name not in module.EXHAUST)
 
 
 def head_sha(tree: pathlib.Path) -> str:
@@ -83,7 +97,7 @@ def main() -> int:
             "them from the source tree is the defect it exists to fix.")
 
     tests = collected(tree)
-    artifacts = len(list((tree / "experiments").glob("*.json")))
+    artifacts = banked_artifacts(tree)
     source_tests = collected(REPO)
 
     record = {

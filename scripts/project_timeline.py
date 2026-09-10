@@ -60,7 +60,14 @@ def main() -> int:
     end = dt.date.fromisoformat(last)
     days = (end - start).days + 1
 
-    artifacts = len(list((REPO / "experiments").glob("*.json")))
+    # One referent for "banked artifacts": the coverage map's total, the
+    # number every outbound sentence quotes (a bare glob counted 232 where
+    # the map counts 229 on 2026-09-10, and a reviewer saw both).
+    coverage = REPO / "experiments" / "verification_coverage.json"
+    if coverage.exists():
+        artifacts = json.loads(coverage.read_text(encoding="utf-8"))["total_artifacts"]
+    else:
+        artifacts = len(list((REPO / "experiments").glob("*.json")))
 
     corrections = None
     ledger = REPO / "experiments" / "self_correction_ledger.json"

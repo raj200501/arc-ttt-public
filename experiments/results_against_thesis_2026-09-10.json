@@ -1,0 +1,91 @@
+{
+  "what": "Every preregistered result in this repository that went AGAINST one of its own theses, enumerated so a reviewer can count them. Two theses: the adaptation thesis the company started with (closed), and the fence lane's own generality claims (narrowed by its own replications). Each entry names the VERDICT.md row and the artifact. Supersedes the 2026-09-03 artifact, whose nine entries are carried verbatim.",
+  "date": "2026-09-10",
+  "theses": [
+    {
+      "thesis": "per-tenant adaptation of a small open model beats prompting for private document extraction",
+      "results": [
+        {
+          "n": 1,
+          "row": "Addendum I",
+          "finding": "the cheapest hosted API tier beats the adapted 0.5B on every run (0W/14L/16T to 1W/13L/16T)",
+          "artifact": "experiments/waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_2026-08-22.json"
+        },
+        {
+          "n": 2,
+          "row": "Addendum J",
+          "finding": "a bare field list takes the hosted tier to 0.8930 \u2014 the cost argument's premise fails",
+          "artifact": "experiments/waybill_market_baseline_*_declare-schema*"
+        },
+        {
+          "n": 3,
+          "row": "Addendum K",
+          "finding": "document grounding moved 0.8833 to 0.8833",
+          "artifact": "experiments/addendum_k_grounding*.json"
+        },
+        {
+          "n": 4,
+          "row": "Addendum N (withdrawn)",
+          "finding": "the 1.5B 'cannot produce a usable object' result was a markdown fence; withdrawn in place",
+          "artifact": "experiments/fence_rescore.json"
+        },
+        {
+          "n": 5,
+          "row": "Addendum O",
+          "finding": "an unadapted 3B on a 196-token prompt matches the adapted 0.5B (0.8958 vs 0.8833)",
+          "artifact": "experiments/waybill_scale_rung_3b_schema_2026-08-25.json"
+        },
+        {
+          "n": 6,
+          "row": "Addendum P",
+          "finding": "at matched batching the quality tolerance breaks; no cost ratio is citable",
+          "artifact": "experiments/waybill_matched_batch_2026-08-25.json"
+        },
+        {
+          "n": 7,
+          "row": "Addendum Q",
+          "finding": "adaptation at 3B loses to twenty demonstrations (D=-0.0390)",
+          "artifact": "experiments/waybill_adapted_3b_2026-08-25.json"
+        },
+        {
+          "n": 8,
+          "row": "Engineering ladder E2/E3/E5/E6",
+          "finding": "four rungs fail the frozen two-statistics bar; E5 by one win; E6 dead flat on CORD",
+          "artifact": "experiments/ladder_results_2026-08-31.json"
+        },
+        {
+          "n": 9,
+          "row": "Ladder II E7/E8/E9",
+          "finding": "three architectures clear the mean tolerance and never separate by sign test against the best prompting available; order-robustness is what survives",
+          "artifact": "experiments/ladder_results_2026-08-31.json"
+        }
+      ],
+      "count": 9
+    },
+    {
+      "thesis": "the fence tax is a general property of small instruction-tuned models, and a schema-blind JSON-constrained decoder is a drop-in fix for invalid output on any HF causal LM",
+      "results": [
+        {
+          "n": 10,
+          "row": "Addendum T",
+          "finding": "the fence tax replicates on 1 of the 4 other families tested (Falcon3-1B 92/100 schema-only fenced, 0/80 k-shot); SmolLM2-1.7B, Granite-3.1-2B and Phi-3-mini fence 0/100 \u2014 reading (c) in three of four; 'across model families' retired from every document",
+          "artifact": "experiments/cord_fence_tax_families_2026-09-03.json"
+        },
+        {
+          "n": 11,
+          "row": "Addendum U (U1, five families)",
+          "finding": "strict parsing loses 100% of schema-only outputs on Qwen2.5 and Falcon3 and 0% on Granite, Phi-3 and SmolLM2 \u2014 LOSES in 2 of 5, three named exceptions, no combined headline in either form",
+          "artifact": "experiments/parser_robustness_2026-09-05.json"
+        },
+        {
+          "n": 12,
+          "row": "Addendum V",
+          "finding": "the constrained decoder has NO EFFECT by the frozen bar on all five families' schema-only cells (Falcon3 14 -> 8, one short); every remaining invalid output is a truncation at the token cap; five regressions on Qwen 0.5B from a comparator confound; the 'drop-in for any HF causal LM' claim withdrawn and Ladder II's SYSTEM rows carry the same erratum",
+          "artifact": "experiments/cord_constrained_families_2026-09-08.json"
+        }
+      ],
+      "count": 3
+    }
+  ],
+  "count": 12
+}

@@ -3,8 +3,9 @@
 The company is the eval-integrity work: the fence tax, the shipped
 check, and the discipline that found them. The adaptation program that
 produced this repository is closed by its own measurements (see
-`VERDICT.md`; the nine results against it are enumerated in
-`experiments/results_against_thesis_2026-09-03.json`).
+`VERDICT.md`; the nine results against it, and the three since against the fence
+lane's own generality claims, are enumerated in
+`experiments/results_against_thesis_2026-09-10.json`).
 
 ## Now
 
@@ -93,7 +94,7 @@ produced this repository is closed by its own measurements (see
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 410 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 412 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 
