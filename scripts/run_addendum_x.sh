@@ -13,16 +13,29 @@
 #      worth running;
 #   3. arm C, re-run only for a family whose chat template reads the clock
 #      and whose banked cells therefore carry a prompt we cannot reproduce;
-#   4. arm P, smallest family first so a broken flag shows up in minutes;
+#   4. arm P;
 #   5. arm G, only where the banked scope says it runs;
 #   6. the reading, which withholds until all of the above exist.
+# Stages 2-5 run family by family rather than stage by stage, and the family
+# order is chosen below for what it leaves behind if the box is reclaimed.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 export PYTHONPATH=src HF_HUB_DISABLE_PROGRESS_BARS=1 TRANSFORMERS_VERBOSITY=error
 RUN="python3 scripts/cord_decoder_isolation.py"
 
-# smallest/fastest first: a broken flag surfaces in 25 minutes, not 5 hours
-FAMILIES="qwen2.5-0.5b smollm2-1.7b falcon3-1b granite-2b phi3-mini"
+# Order is scheduling, not protocol: the readings, bars and cells are fixed
+# in the frozen protocol and none of them depends on the order arms run in.
+# It is chosen so the most informative cells exist earliest, because this box
+# is reclaimed on idle and a run that is interrupted for good should leave
+# the decisive data behind rather than the cheapest data:
+#   qwen2.5-0.5b  the only family with generation modifiers -> the whole of X3,
+#                 the contrast that can narrow Addendum V's own sentence
+#   falcon3-1b    the only family where the validator ever fired -> the only
+#                 place X1 can read anything but INERT
+#   granite-2b    the clock-dependent prompt -> its arm C must be re-run
+#   smollm2-1.7b  control: V saw byte-identical arms
+#   phi3-mini     control, and the slowest by 2x: V saw 32 of 50 bodies differ
+FAMILIES="qwen2.5-0.5b falcon3-1b granite-2b smollm2-1.7b phi3-mini"
 
 scope_says () {   # scope_says <family> <key>
   python3 - "$1" "$2" <<'PY'
@@ -34,24 +47,20 @@ PY
 
 $RUN --bank-configs || exit 1
 
+# One family at a time, all of its arms, so a family's contrasts become
+# readable together instead of five half-finished families.
 for f in $FAMILIES; do
   echo "=== determinism gate: $f"
   $RUN --determinism "$f" || echo "!! gate stage failed for $f (continuing; the reader withholds)"
-done
 
-for f in $FAMILIES; do
   if ! scope_says "$f" arm_C_reused_from_V; then
     echo "=== arm C (constrained, re-run under the pinned prompt): $f"
     $RUN --constrained "$f" || echo "!! arm C failed for $f"
   fi
-done
 
-for f in $FAMILIES; do
   echo "=== arm P (plain, constraint off): $f"
   $RUN --cell "$f" || echo "!! arm P failed for $f (continuing; the reader withholds)"
-done
 
-for f in $FAMILIES; do
   if scope_says "$f" arm_G_runs; then
     echo "=== arm G (generate, defaults neutralised): $f"
     $RUN --generate-neutral "$f" || echo "!! arm G failed for $f"

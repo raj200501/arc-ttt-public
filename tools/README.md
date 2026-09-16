@@ -106,6 +106,38 @@ This tool flagged itself on its first run, on exactly that function. A
 tool you cannot tell "yes, on purpose" gets deleted after the first false
 positive.
 
+## Is your prompt the same one you used last week?
+
+```
+python3 fencecheck.py template path/to/checkpoint/    # or a whole HF cache
+```
+
+Some chat templates build their own system message and put the **current
+date** in it. Nothing warns you. Outputs you banked on Tuesday and
+outputs you banked on Friday were not produced from the same prompt, so
+they cannot be compared with each other and neither can be reproduced
+later.
+
+`template` reads `tokenizer_config.json` or a bare `.jinja` template —
+standard library only, no model libraries needed — and reports every
+template that calls the clock, with the line and the surrounding text.
+Exit status is `1` when something is found, so it drops into CI beside
+the other two.
+
+This is not hypothetical. It was found in **this repository's own banked
+work** on 2026-09-16: `ibm-granite/granite-3.1-2b-instruct` renders
+`strftime_now('%B %d, %Y')` into its system message, and two cells of one
+experiment — compared against each other in a published result — had been
+produced five days apart. The published sentence said the two arms were
+byte-identical; nobody knew the arms had been sent different prompts. The
+row is in [`CORRECTIONS.md`](../CORRECTIONS.md), with dated errata beside
+the frozen protocols. Of the seven checkpoints this repository has run,
+exactly one is affected — which is why a checker is worth more than a
+habit of remembering.
+
+The fix is the same one Addendum X uses: pass the system message
+explicitly, pinned to a fixed value, and record it beside the outputs.
+
 ## A wider scope, opt-in
 
 `score --scope any` also credits a fence that comes after prose and a

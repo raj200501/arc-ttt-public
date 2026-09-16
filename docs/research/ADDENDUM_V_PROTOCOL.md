@@ -159,3 +159,34 @@ exist.
    sha256 of the rendered prompt per document so a reader can check prompt
    identity between compared arms instead of assuming it. Found before the
    X protocol froze, not after a result depended on it.
+
+## Erratum — 2026-09-16, from Addendum X's determinism gate
+
+7. **Phi-3's cells do not reproduce, and erratum 3's Phi-3 sentence is
+   upgraded from an attribution to a measurement.** Erratum 3 said Phi-3
+   "diverges on 32 bodies with 0 constrained steps and no penalty;
+   attributed to bfloat16 numerics, untested." Addendum X tested it, and
+   the result is worse than the attribution. Re-decoding the first five
+   documents of this family today: the `model.generate` comparator does
+   not reproduce the text banked on 2026-09-03 on two of five documents —
+   identically in two separate runs today, so a stable difference between
+   then and now — and the constrained arm differed from this addendum's
+   own banked text on a third document in one gate run and matched it in
+   the next. In isolation that document is stable (a fresh process
+   reproduces it twice), so the instability is order-dependent inside a
+   process rather than random.
+
+   **Consequence for this addendum.** Its Phi-3 row is not
+   byte-reproducible: a stranger re-running the command does not get the
+   banked text back on that family. The invalid counts are not withdrawn
+   and the reading is not re-taken — nothing here is known to be wrong —
+   but the 32-of-50 between-arm divergence this addendum reported for
+   Phi-3 **needs no cross-arm explanation at all**, because the family
+   does not reproduce against itself. The other four families re-decode
+   0-of-10 mismatches on both arms, which is the first evidence this
+   repository has that any of its cells reproduce.
+
+   **Consequence for Addendum X.** Its own frozen protocol makes a failed
+   gate terminal, so X withholds entirely: nothing it banked is read about
+   the constraint, the decoding path or the generation defaults. The gate
+   was written to be able to end the addendum and it did.

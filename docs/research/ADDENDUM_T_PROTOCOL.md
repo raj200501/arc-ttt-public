@@ -102,3 +102,19 @@ withdrawn:** reading (c) for Granite rests on 0 of 100 outputs carrying a
 fence, and nothing about a date in a system message makes a fenced output
 unfenced. What cannot be claimed is that these cells are byte-reproducible.
 Addendum X pins the date for every arm it runs.
+
+## Erratum — 2026-09-16, from Addendum X's determinism gate
+
+**The Phi-3 comparator cell does not reproduce.** Re-running this
+protocol's own `model.generate` call on the first five documents of
+`microsoft/Phi-3-mini-4k-instruct` today returns different text from the
+cell banked on 2026-09-03 on two of those five — the same two documents
+in each of two runs, so this is a stable difference between then and now
+rather than randomness. **The fence rates read here are not withdrawn:**
+reading (c) for Phi-3 rests on 0 of 100 outputs carrying a fence, and a
+rounding difference does not make a fenced output unfenced. What is
+withdrawn is the claim that a stranger re-running the command gets these
+Phi-3 cells back. Banked in
+`experiments/cord_decoder_isolation_cells/phi3-mini_determinism.json` and
+its `_run1` companion; the row is in `CORRECTIONS.md`. The other four
+families in this addendum re-decode byte-identically.

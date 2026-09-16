@@ -463,6 +463,79 @@ def _parses(text: str) -> bool:
     return True
 
 
+# ------------------------------------------------- chat templates that move
+# A chat template that reads the clock renders a DIFFERENT PROMPT EVERY DAY.
+# Nothing warns you. Outputs banked on Tuesday and outputs banked on Friday
+# were not produced from the same input, so they cannot be compared to each
+# other and neither can be reproduced later.
+#
+# This is not hypothetical and it is not rare. It was found in this
+# repository's own banked work on 2026-09-16:
+# `ibm-granite/granite-3.1-2b-instruct` builds its own system message
+# containing `strftime_now('%B %d, %Y')`, and two cells of one experiment --
+# compared against each other in a published result -- had been produced five
+# days apart. The comparison was reported as byte-identical arms without
+# anyone knowing the arms had been sent different prompts.
+CLOCK_CALLS = (
+    "strftime_now", "datetime.now", "datetime.today", "date.today",
+    "utcnow", "time.time", "now()", "today()",
+)
+_TEMPLATE_FILES = ("tokenizer_config.json", "chat_template.json",
+                   "chat_template.jinja", "chat_template.j2")
+
+
+def _template_sources(path: pathlib.Path):
+    """Yield (file, key, template_text) for every chat template under path.
+
+    Accepts a tokenizer_config.json, a bare .jinja template, or a directory
+    to walk. Kept to the standard library on purpose: this has to run in a
+    repository that has no model libraries installed.
+    """
+    files = ([path] if path.is_file()
+             else sorted(f for f in path.rglob("*") if f.name in _TEMPLATE_FILES))
+    for file in files:
+        try:
+            raw = file.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        if file.suffix == ".json":
+            try:
+                data = json.loads(raw)
+            except (json.JSONDecodeError, ValueError):
+                continue
+            if not isinstance(data, dict):
+                continue
+            template = data.get("chat_template")
+            if isinstance(template, str):
+                yield file, "chat_template", template
+            elif isinstance(template, list):
+                # some checkpoints ship several named templates
+                for entry in template:
+                    if isinstance(entry, dict) and isinstance(entry.get("template"), str):
+                        yield file, f"chat_template[{entry.get('name', '?')}]", entry["template"]
+        else:
+            yield file, file.name, raw
+
+
+def scan_chat_templates(path: pathlib.Path) -> list:
+    """Every chat template whose rendered prompt depends on the clock."""
+    findings = []
+    for file, key, template in _template_sources(path):
+        hits = sorted({call for call in CLOCK_CALLS if call in template})
+        if not hits:
+            continue
+        where = min(template.find(h) for h in hits if h in template)
+        line = template.count("\n", 0, where) + 1
+        findings.append({
+            "file": str(file),
+            "template": key,
+            "calls": hits,
+            "line_in_template": line,
+            "excerpt": " ".join(template[max(0, where - 90):where + 60].split()),
+        })
+    return findings
+
+
 # ---------------------------------------------------------------- main
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
@@ -485,6 +558,12 @@ def main(argv: list[str] | None = None) -> int:
                        help="leading (default): one leading fence, the scope every "
                             "published reading uses; any: also a fence after prose "
                             "or a bare object inside prose, reported beside it")
+
+    template = sub.add_parser(
+        "template", help="report chat templates that render a different "
+                         "prompt every day")
+    template.add_argument("path")
+    template.add_argument("--json", action="store_true")
 
     args = parser.parse_args(argv)
     target = pathlib.Path(args.path).expanduser()
@@ -511,6 +590,29 @@ def main(argv: list[str] | None = None) -> int:
             print("\nEach of these scores a correct-but-fenced answer as a "
                   "failure. That is only a defect if model output reaches "
                   "it — check the line and decide.")
+        return 1 if findings else 0
+
+    if args.command == "template":
+        findings = scan_chat_templates(target)
+        if args.json:
+            print(json.dumps({"findings": findings}, indent=2))
+        elif not findings:
+            print("fencecheck: no chat template here reads the clock.")
+            print("Prompts rendered from these templates depend on the "
+                  "messages and nothing else.")
+        else:
+            print(f"fencecheck: {len(findings)} chat template(s) render a "
+                  "DIFFERENT PROMPT EVERY DAY.\n")
+            for item in findings:
+                print(f"  {item['file']}  ({item['template']}, line "
+                      f"{item['line_in_template']})")
+                print(f"      calls: {', '.join(item['calls'])}")
+                print(f"      {item['excerpt']}")
+            print("\nOutputs you banked on different days were not produced "
+                  "from the same prompt, so they cannot be compared with each "
+                  "other and cannot be reproduced later. Pass the system "
+                  "message explicitly, pinned to a fixed value, and record it "
+                  "beside the outputs.")
         return 1 if findings else 0
 
     report = score_file(target, scope=args.scope)

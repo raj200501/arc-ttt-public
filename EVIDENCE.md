@@ -298,7 +298,7 @@ It has been executed once, as a **labeled dress rehearsal**: an adversarial AI a
 ## The fence lane, measured against its own claims (2026-09-04 to 09-09)
 
 The eval-integrity work that replaced the adaptation thesis was held to
-the same rule, and three of its own generality claims narrowed under
+the same rule, and four of its own generality claims narrowed under
 preregistered replication: the fence tax replicates on Falcon3-1B and
 not on SmolLM2, Granite-3.1 or Phi-3 (Addendum T); strict parsing loses
 100% of schema-only outputs on two families and 0% on three (Addendum
@@ -307,9 +307,27 @@ drop-in claim is withdrawn (Addendum V). What survives at full size is
 narrower and stands: where a fence occurs a fail-open parse loses the
 output, the shipped lenient helpers manufacture objects from malformed
 text on every family measured, and the instrument's own undercount is
-3 of 143 (Addendum W). Rows in `VERDICT.md`; the twelve results against
+3 of 143 (Addendum W). Rows in `VERDICT.md`; the thirteen results against
 both theses are enumerated in
-`experiments/results_against_thesis_2026-09-10.json`.
+`experiments/results_against_thesis_2026-09-16.json`.
+
+**The fourth of those is the one worth reading, because the instrument
+refused to report its own result.** Addendum X was built to do the thing
+Addendum V said had not been done — isolate the constrained decoder from
+the decoding path by toggling one boolean in one loop. Before reading
+anything it re-decodes the cells it reuses and requires them to come back
+byte-identical. Four families do, 0 mismatches of 10 comparisons each —
+the first evidence this repository has ever had that any of its cells
+reproduce at all. `Phi-3-mini`, the one bfloat16 family, does not, and
+the frozen protocol makes that terminal, so **nothing is read about the
+decoder**. The banked cells for the four passing families sit unread, and
+the reader is the thing that refuses to read them. What the failure buys
+is a fact that was previously an assumption: every Phi-3 number in
+Addenda S, T, U and V is not byte-reproducible, and V's guess that
+Phi-3's divergence was *bfloat16 numerics, untested* is now tested. The
+withholding, both disagreeing gate runs, and a note listing what was and
+was not run are in
+`experiments/cord_decoder_isolation_2026-09-16.json`.
 
 ## Check it yourself
 
@@ -340,7 +358,7 @@ It is **not** blind, it fixes **no** bar in advance, and it is one corpus — it
 All three verdict scripts are dependency-free. To go past arithmetic to primary evidence,
 `python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json` re-scores every
 stored prediction against gold regenerated from the deterministic corpus generator —
-it checks the *predictions*, not the summaries. 422 offline tests, no downloads:
+it checks the *predictions*, not the summaries. 429 offline tests, no downloads:
 `python3 -m pytest tests/ -q`.
 
 ---

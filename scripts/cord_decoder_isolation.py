@@ -584,28 +584,53 @@ def run_determinism(family: str) -> int:
     banked_c = json.loads(banked_cell.read_text())["predictions"]
     banked_g0 = json.loads(comparator.read_text())["predictions"]
     holdout = v._holdout()[:DETERMINISM_DOCS]
-    model, tokenizer, model_id, dtype_name = _load(family)
-
-    rows, mismatches = [], 0
-    for row in holdout:
-        ids, _digest = _prompt_ids(tokenizer, family, row["text"])
-        res = constrained_greedy_generate(model, tokenizer, ids,
-                                          max_new_tokens=MAX_NEW_TOKENS, top_k=TOP_K)
-        # Arm G0 is reused too, so it is gated on the same documents, with the
-        # comparator's own call reproduced verbatim (checkpoint config in force).
-        with torch.no_grad():
-            out = model.generate(input_ids=ids, attention_mask=torch.ones_like(ids),
-                                 max_new_tokens=MAX_NEW_TOKENS, do_sample=False,
-                                 pad_token_id=tokenizer.pad_token_id)
-        g0_text = tokenizer.decode(out[0][ids.shape[1]:], skip_special_tokens=True).strip()
-        same_c = res.text == banked_c[row["id"]]
-        same_g0 = g0_text == banked_g0[row["id"]]
-        mismatches += (not same_c) + (not same_g0)
-        rows.append({"id": row["id"], "arm_C_identical": same_c, "arm_G0_identical": same_g0,
+    WORK.mkdir(parents=True, exist_ok=True)
+    config_key = (f"{CELLS[family][0]}|gate|{CELLS[family][1]}|n={DETERMINISM_DOCS}"
+                  f"|mnt={MAX_NEW_TOKENS}|render={RENDER_DATE}|X")
+    ckpt_path = WORK / f"{family}_gate.ckpt.jsonl"
+    done = _checkpoint(ckpt_path, config_key)
+    if len(done) >= len(holdout):
+        rows = [done[r["id"]]["row"] for r in holdout]
+        mismatches = sum(not r["arm_C_identical"] for r in rows) + \
+            sum(not r["arm_G0_identical"] for r in rows)
+        model = tokenizer = None
+        model_id, dtype_name = CELLS[family][0], CELLS[family][1]
+    else:
+        model, tokenizer, model_id, dtype_name = _load(family)
+        if done:
+            print(f"[X:{family}:gate] resuming {len(done)}/{len(holdout)}", flush=True)
+        rows, mismatches = [], 0
+        with open(ckpt_path, "a", encoding="utf-8") as ckpt:
+            for row in holdout:
+                if row["id"] in done:
+                    r = done[row["id"]]["row"]
+                    rows.append(r)
+                    mismatches += (not r["arm_C_identical"]) + (not r["arm_G0_identical"])
+                    continue
+                ids, _digest = _prompt_ids(tokenizer, family, row["text"])
+                res = constrained_greedy_generate(model, tokenizer, ids,
+                                                  max_new_tokens=MAX_NEW_TOKENS, top_k=TOP_K)
+                # Arm G0 is reused too, so it is gated on the same documents, with
+                # the comparator's own call reproduced verbatim (config in force).
+                with torch.no_grad():
+                    out = model.generate(input_ids=ids, attention_mask=torch.ones_like(ids),
+                                         max_new_tokens=MAX_NEW_TOKENS, do_sample=False,
+                                         pad_token_id=tokenizer.pad_token_id)
+                g0_text = tokenizer.decode(out[0][ids.shape[1]:],
+                                           skip_special_tokens=True).strip()
+                same_c = res.text == banked_c[row["id"]]
+                same_g0 = g0_text == banked_g0[row["id"]]
+                mismatches += (not same_c) + (not same_g0)
+                r = {"id": row["id"], "arm_C_identical": same_c,
+                     "arm_G0_identical": same_g0,
                      "rerun_C_text": None if same_c else res.text,
-                     "rerun_G0_text": None if same_g0 else g0_text})
-        print(f"[X:{family}:gate] {row['id']} C={'OK' if same_c else 'DIFFERS'} "
-              f"G0={'OK' if same_g0 else 'DIFFERS'}", flush=True)
+                     "rerun_G0_text": None if same_g0 else g0_text}
+                rows.append(r)
+                ckpt.write(json.dumps({"config": config_key, "id": row["id"], "row": r},
+                                      ensure_ascii=False) + "\n")
+                ckpt.flush()
+                print(f"[X:{family}:gate] {row['id']} C={'OK' if same_c else 'DIFFERS'} "
+                      f"G0={'OK' if same_g0 else 'DIFFERS'}", flush=True)
 
     _bank(gate_path, {
         "what": f"Addendum X determinism gate: the first {DETERMINISM_DOCS} documents of "
@@ -746,6 +771,63 @@ def read() -> int:
     fc = cft._fc()
     scope = _scope()
 
+    # The gate is checked FIRST, and it is terminal. A failed gate voids the
+    # reuse the whole design rests on, so no later cell can rescue the reading
+    # and there is nothing to be gained by decoding more of them. Ordering the
+    # two checks this way changes no reading -- both withhold -- it only stops
+    # the runner from spending hours on cells it has already been told not to
+    # read.
+    gates = {f: json.loads((OUT_DIR / f"{f}_determinism.json").read_text())
+             for f in CELLS if (OUT_DIR / f"{f}_determinism.json").exists()}
+    failed = sorted(f for f, g in gates.items() if not g["passed"])
+    if failed:
+        record = {
+            "what": "Addendum X: WITHHELD. The determinism gate failed, so the reuse "
+                    "of the banked arms is void and none of X1, X2 or X3 is read. "
+                    "The gate failure is the result this addendum returns.",
+            "protocol": "docs/research/ADDENDUM_X_PROTOCOL.md (frozen 2026-09-16)",
+            "date": "2026-09-16",
+            "environment": _environment(),
+            "reading": "WITHHELD BY THE DETERMINISM GATE",
+            "failed_families": failed,
+            "determinism_gate": {f: {"n": g["n"], "mismatches": g["mismatches"],
+                                     "passed": g["passed"],
+                                     "documents": g["documents"]}
+                                 for f, g in gates.items()},
+            "cells_that_exist": sorted(p.name for p in OUT_DIR.glob("*.json")),
+            "cells_not_run": sorted(
+                f"{f}_{suffix}.json"
+                for f in CELLS
+                for suffix in ("plain", "generate_neutral")
+                if (suffix != "generate_neutral" or scope[f]["arm_G_runs"])
+                and not (OUT_DIR / f"{f}_{suffix}.json").exists()),
+            "why_the_remaining_cells_were_not_run": (
+                "A failed gate is terminal by the frozen protocol: it voids the reuse "
+                "every contrast depends on. Decoding the remaining cells could not "
+                "change the withholding, so the compute was not spent. What was and "
+                "was not run is listed above rather than left to be inferred."),
+            "disclosure_the_operator_owes_the_reader": (
+                "While the run was in progress the per-family X1 quantities for the "
+                "families that passed the gate were computed by hand, to decide which "
+                "cells to schedule next on a box that is reclaimed on idle. They are "
+                "NOT published, the reader does not compute them, and no sentence "
+                "anywhere in this repository rests on them. This note exists so that "
+                "a successor addendum reading the same cells cannot be mistaken for "
+                "an author who already knew the answer and wrote a protocol to fit."),
+            "what_this_does_not_say": (
+                "Nothing here reads on the constraint, the decoding path or the "
+                "generation defaults. The banked cells for the families that passed "
+                "the gate are raw data for a successor addendum, not results of this "
+                "one, and this artifact deliberately does not compute their readings."),
+            "how_to_recompute": "PYTHONPATH=src python3 scripts/cord_decoder_isolation.py --read",
+        }
+        OUT.write_text(json.dumps(record, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+        print("WITHHELD BY THE DETERMINISM GATE: " + ", ".join(failed) +
+              ". A reused arm does not reproduce, and that non-determinism is the "
+              "result. See the banked gate cells.")
+        print(f"banked: {OUT.relative_to(REPO)}")
+        return 1
+
     missing = []
     for family in CELLS:
         for path in (OUT_DIR / f"{family}_plain.json",
@@ -758,14 +840,6 @@ def read() -> int:
     if missing:
         print("WITHHELD: missing cells " + ", ".join(sorted(missing)) +
               " -- the reading is stated once every preregistered cell exists.")
-        return 1
-
-    gates = {f: json.loads((OUT_DIR / f"{f}_determinism.json").read_text()) for f in CELLS}
-    failed = sorted(f for f, g in gates.items() if not g["passed"])
-    if failed:
-        print("WITHHELD BY THE DETERMINISM GATE: " + ", ".join(failed) +
-              ". A reused arm does not reproduce, and that non-determinism is the "
-              "result. See the banked gate cells.")
         return 1
 
     gold = {json.loads(l)["id"]: json.loads(l)["gold"] for l in

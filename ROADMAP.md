@@ -3,9 +3,9 @@
 The company is the eval-integrity work: the fence tax, the shipped
 check, and the discipline that found them. The adaptation program that
 produced this repository is closed by its own measurements (see
-`VERDICT.md`; the nine results against it, and the three since against the fence
+`VERDICT.md`; the nine results against it, and the four since against the fence
 lane's own generality claims, are enumerated in
-`experiments/results_against_thesis_2026-09-10.json`).
+`experiments/results_against_thesis_2026-09-16.json`).
 
 ## Now
 
@@ -30,17 +30,32 @@ lane's own generality claims, are enumerated in
   that also touches Ladder II's SYSTEM rows, and every remaining invalid
   output a truncation at the 512-token cap. The drop-in claim is
   withdrawn.
-- **Addendum X (preregistered 2026-09-16, running):** the experiment V
-  named and did not run — one loop, the constraint toggled, everything
-  else equal. V varied three things at once, so every sentence it
-  published about the decoder is an attribution rather than a
-  measurement. X separates the constraint (the same function with
-  `enforce=False`), the decoding path (`model.generate` with the
-  checkpoint's modifiers neutralised) and the `generation_config`
-  defaults, on the same fifty documents. It can narrow one of V's own
-  published sentences, and it withholds entirely if a five-document
-  determinism gate on the reused constrained arm fails. Bars and the
-  prediction are frozen in `docs/research/ADDENDUM_X_PROTOCOL.md`.
+- **`fencecheck template` (shipped 2026-09-16):** a third check, from a
+  defect found in this repository's own banked work. A chat template
+  that builds its own system message can put the current date in it,
+  so outputs banked on different days were never produced from the
+  same prompt and none of them can be reproduced later. Reads
+  `tokenizer_config.json` or a bare `.jinja`, standard library only,
+  exit 1 on a finding. One of the seven checkpoints this project has
+  run is affected.
+- **Addendum X (2026-09-16): WITHHELD by its own determinism gate, and
+  the gate failure is the result.** X was built to separate the
+  constraint from the decoding path and the generation defaults — the
+  experiment V named and did not run. Before reading anything it
+  re-decodes the arms it reuses and requires byte-identity. Four
+  families pass 0-of-10; `Phi-3-mini`, the one bfloat16 family, does
+  not, so nothing is read about the decoder at all. Two failures: the
+  `model.generate` comparator no longer reproduces the text banked on
+  2026-09-03 (same two documents in both of today's runs), and the
+  constrained arm differed on one document in one gate run and matched
+  in the next. **Every Phi-3 number in Addenda S, T, U and V is
+  therefore not byte-reproducible** — errata beside T and V, row in
+  `CORRECTIONS.md`. It does settle one thing V left open: V attributed
+  Phi-3's 32-of-50 between-arm divergence to bfloat16 numerics and
+  called it untested; it is tested now, and the family does not
+  reproduce against itself. Next: a successor addendum that measures
+  the Phi-3 instability directly, under its own preregistration, before
+  anything reads the four banked-and-unread families.
 - **Addendum T (banked 2026-09-05):** the fence tax on four other
   families. Falcon3-1B replicates (92/100 schema-only fenced, 0/80
   k-shot); SmolLM2, Granite-3.1 and Phi-3 fence 0/100. Reading (c) in
@@ -105,7 +120,7 @@ lane's own generality claims, are enumerated in
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 422 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 429 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 

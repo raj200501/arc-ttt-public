@@ -531,3 +531,66 @@ def test_extract_json_rejects_unknown_scope():
     import pytest
     with pytest.raises(ValueError):
         fc.extract_json("{}", "everywhere")
+
+
+# ---------------------------------------------------------------------------
+# `template` -- chat templates whose rendered prompt depends on the clock.
+# Found in this repository's own banked work on 2026-09-16: two cells of one
+# experiment, compared against each other in a published result, had been
+# rendered five days apart under different prompts.
+# ---------------------------------------------------------------------------
+
+def _tokenizer_config(tmp_path, template):
+    import json as _json
+    d = tmp_path / "ckpt"
+    d.mkdir()
+    (d / "tokenizer_config.json").write_text(
+        _json.dumps({"model_max_length": 4096, "chat_template": template}))
+    return d
+
+
+def test_template_flags_a_clock_call_and_names_it(tmp_path):
+    d = _tokenizer_config(tmp_path, (
+        "{%- if messages[0]['role'] == 'system' %}\n"
+        "{%- set system_message = messages[0]['content'] %}\n"
+        "{%- else %}\n"
+        "{%- set system_message = \"Today's Date: \" + strftime_now('%B %d, %Y') %}\n"
+        "{%- endif %}"))
+    findings = fc.scan_chat_templates(d)
+    assert len(findings) == 1
+    assert findings[0]["calls"] == ["strftime_now"]
+    assert findings[0]["line_in_template"] == 4
+    assert "strftime_now" in findings[0]["excerpt"]
+
+
+def test_template_is_quiet_when_the_prompt_depends_only_on_the_messages(tmp_path):
+    d = _tokenizer_config(tmp_path, "{% for m in messages %}{{ m['content'] }}{% endfor %}")
+    assert fc.scan_chat_templates(d) == []
+
+
+def test_template_reads_a_bare_jinja_file_too(tmp_path):
+    d = tmp_path / "ckpt2"
+    d.mkdir()
+    (d / "chat_template.jinja").write_text("{{ datetime.now() }}{{ messages }}")
+    findings = fc.scan_chat_templates(d)
+    assert len(findings) == 1
+    assert "datetime.now" in findings[0]["calls"]
+
+
+def test_template_ignores_unparseable_and_unrelated_json(tmp_path):
+    d = tmp_path / "ckpt3"
+    d.mkdir()
+    (d / "tokenizer_config.json").write_text("{not json at all")
+    assert fc.scan_chat_templates(d) == []
+    (d / "tokenizer_config.json").write_text('{"model_max_length": 4096}')
+    assert fc.scan_chat_templates(d) == []
+
+
+def test_template_exit_status_drops_into_ci(tmp_path, capsys):
+    clean = _tokenizer_config(tmp_path, "{{ messages }}")
+    assert fc.main(["template", str(clean)]) == 0
+    dirty = tmp_path / "dirty"
+    dirty.mkdir()
+    (dirty / "chat_template.jinja").write_text("{{ strftime_now('%Y') }}")
+    assert fc.main(["template", str(dirty)]) == 1
+    assert "DIFFERENT PROMPT EVERY DAY" in capsys.readouterr().out

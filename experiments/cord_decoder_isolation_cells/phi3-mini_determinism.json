@@ -1,0 +1,67 @@
+{
+ "what": "Addendum X determinism gate: the first 5 documents of phi3-mini re-decoded on BOTH reused arms -- the constrained arm (Addendum V's cell) and the generate comparator (Addendum S/T's cell) -- and compared byte-for-byte. Both arms are reused rather than re-run; this is the check that makes the reuse legitimate, and it is a sample, not a proof.",
+ "protocol": "docs/research/ADDENDUM_X_PROTOCOL.md (frozen 2026-09-16)",
+ "model": "microsoft/Phi-3-mini-4k-instruct",
+ "dtype": "bfloat16",
+ "n": 5,
+ "mismatches": 2,
+ "passed": false,
+ "documents": [
+  {
+   "id": "cord-000",
+   "arm_C_identical": true,
+   "arm_G0_identical": true,
+   "rerun_C_text": null,
+   "rerun_G0_text": null
+  },
+  {
+   "id": "cord-001",
+   "arm_C_identical": true,
+   "arm_G0_identical": false,
+   "rerun_C_text": null,
+   "rerun_G0_text": "{\n  \"menu\": [\n    {\n      \"cnt\": 1,\n      \"discountprice\": null,\n      \"nm\": \"Kopi Susu Kolonel\",\n      \"num\": null,\n      \"price\": 23.000,\n      \"sub\": null,\n      \"unitprice\": null,\n      \"vatyn\": null\n    }\n  ],\n  \"sub_total\": {\n    \"discount_price\": null,\n    \"etc\": null,\n    \"service_price\": null,\n    \"subtotal_price\": 23.000\n  },\n  \"total\": {\n    \"cashprice\": null,\n    \"changeprice\": null,\n    \"creditcardprice\": null,\n    \"emoneyprice\": null,\n    \"menuqty_cnt\": 1,\n    \"menutype_cnt\": null,\n    \"total_etc\": null,\n    \"total_price\": 50.000\n  }\n}"
+  },
+  {
+   "id": "cord-002",
+   "arm_C_identical": true,
+   "arm_G0_identical": false,
+   "rerun_C_text": null,
+   "rerun_G0_text": "{\n  \"menu\": [\n    {\n      \"cnt\": 1,\n      \"discountprice\": 18180,\n      \"nm\": \"S-Ovaltine 50%\",\n      \"num\": \"PB1\",\n      \"price\": 18180,\n      \"sub\": 18180,\n      \"unitprice\": 18180,\n      \"vatyn\": 18180\n    }\n  ],\n  \"sub_total\": {\n    \"discount_price\": 18180,\n    \"etc\": null,\n    \"service_price\": null,\n    \"subtotal_price\": 18180,\n    \"tax_price\": null\n  },\n  \"total\": {\n    \"cashprice\": null,\n    \"changeprice\": 80000,\n    \"creditcardprice\": null,\n    \"emoneyprice\": null,\n    \"menuqty_cnt\": 1,\n    \"menutype_cnt\": null,\n    \"total_etc\": null,\n    \"total_price\": 20000\n  }\n}"
+  },
+  {
+   "id": "cord-003",
+   "arm_C_identical": true,
+   "arm_G0_identical": true,
+   "rerun_C_text": null,
+   "rerun_G0_text": null
+  },
+  {
+   "id": "cord-004",
+   "arm_C_identical": true,
+   "arm_G0_identical": true,
+   "rerun_C_text": null,
+   "rerun_G0_text": null
+  }
+ ],
+ "environment": {
+  "python": "3.11.15",
+  "torch": "2.13.0+cpu",
+  "transformers": "5.16.1",
+  "platform": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+  "torch_threads": 4,
+  "render_date_pinned_for_clock_dependent_templates": "September 16, 2026"
+ },
+ "run": 2,
+ "first_run": "phi3-mini_determinism_run1.json",
+ "the_two_runs_disagree": {
+  "stable_across_both_runs": [
+   "cord-001 arm G0",
+   "cord-002 arm G0"
+  ],
+  "differed_in_run_1_and_matched_in_run_2": [
+   "cord-004 arm C"
+  ],
+  "what_that_separates": "Two different failures, not one. The arm G0 mismatches reproduce on both re-runs, so re-running model.generate today does not give the text the Addendum S/T comparator cell banked on 2026-09-03 -- a stable difference between then and now, not randomness. The arm C mismatch appeared once and not the second time, which is run-to-run instability in the constrained decoder itself on this checkpoint. Only this family is affected; the other four are 0 of 10 on both arms.",
+  "why_both_runs_are_banked": "The gate was run a second time only because the first failure had to be characterised, and the second run FAILS TOO. Re-running a gate until it passes would be the thing this page exists to prevent, so both runs are published and the reading withholds on either one."
+ }
+}

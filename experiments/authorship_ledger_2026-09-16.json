@@ -1,19 +1,19 @@
 {
   "what": "Per-author commit counts of THIS tree, with the tree's identity, so the figure cannot be restated about a different repository.",
   "referent": "source tree (full history)",
-  "head": "a1537858670d33e07d822af50026cd5178c823bd",
+  "head": "300db2ec36cfa7d1fe03bc725198ff41223b7dd0",
   "remote": "/home/user/safer-1/arc-ttt/arc-ttt.git.bundle",
   "date": "2026-09-16",
-  "total_commits": 563,
+  "total_commits": 564,
   "by_author": {
-    "Raj Kashikar": 83,
+    "Raj Kashikar": 84,
     "Claude <noreply@anthropic.com>": 480
   },
   "how_agent_commits_are_counted": "A commit counts as the agent's if it is AUTHORED by the agent or carries a Co-authored-by trailer naming it. Before 2026-09-16 only the first case existed. From that date commits are authored by the founder so that the forge credits his contribution graph, with the agent named in a trailer; counting author lines alone would have moved agent-written commits into the human column, which is the direction that flatters us.",
   "agent_commits_by_author_line": 480,
-  "agent_commits_by_coauthor_trailer": 4,
-  "agent_commits": 484,
+  "agent_commits_by_coauthor_trailer": 5,
+  "agent_commits": 485,
   "human_commits": 79,
-  "agent_share": 0.8597,
+  "agent_share": 0.8599,
   "how_to_reproduce": "git shortlog -sne HEAD in the tree named by `head` and `remote`; any other tree is a different referent."
 }

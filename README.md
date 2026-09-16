@@ -69,14 +69,20 @@ doing the work, and will withdraw the sentence if it is not the examples.
 One file, standard library, no install, Python 3.9+:
 
 ```
-python3 tools/fencecheck.py scan  path/to/your/repo
-python3 tools/fencecheck.py score predictions.jsonl
+python3 tools/fencecheck.py scan     path/to/your/repo
+python3 tools/fencecheck.py score    predictions.jsonl
+python3 tools/fencecheck.py template path/to/checkpoint/
 ```
 
 `scan` reports code that parses model JSON with no fence handling **and**
 turns the failure into a zero or a silent skip — only the conjunction,
 because parsing strictly is not a defect on its own. `score` reads your
 saved outputs and tells you how many are valid JSON your scorer rejects.
+`template` reports chat templates that put the **current date** into the
+system message they build, so that outputs banked on different days were
+never produced from the same prompt — found in this repository's own
+banked work on 2026-09-16, in one of the seven checkpoints it has run
+(`CORRECTIONS.md`).
 `score --scope any` also credits a fence after prose or a bare object
 inside prose, reported beside the default numbers — on this
 repository's own 2,130 banked outputs that wider scope credits 3 more
@@ -240,9 +246,9 @@ decoder, retrieved demonstrations, a doubled adaptation set) never
 separated adaptation from the best prompting available to it by sign
 test. What survived, sign-test-backed: an adapted model is robust to
 demonstration order where a prompted one is not. Every result is in
-[`VERDICT.md`](VERDICT.md); the nine results against the adaptation thesis, and the three since
+[`VERDICT.md`](VERDICT.md); the nine results against the adaptation thesis, and the four since
 against the fence lane's own generality claims, are enumerated in
-[`experiments/results_against_thesis_2026-09-10.json`](experiments/results_against_thesis_2026-09-10.json).
+[`experiments/results_against_thesis_2026-09-16.json`](experiments/results_against_thesis_2026-09-16.json).
 The full program follows, collapsed, because the withdrawals are part
 of the record and the harness described there is what found the fence.
 
@@ -560,7 +566,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 422 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 429 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -666,7 +672,7 @@ authored as the work it is.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 422 offline tests (tiny in-test models; no downloads).
+- `tests/` — 429 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

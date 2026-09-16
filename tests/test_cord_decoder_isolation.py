@@ -238,3 +238,47 @@ def test_the_protocol_is_frozen_before_the_cells_exist():
                    "CONSTRAINT INERT", "PATH REPRODUCES",
                    "V'S ATTRIBUTION IS TOO STRONG"):
         assert needle in text, needle
+
+
+# ---------------------------------------------------------------------------
+# The gate is terminal. It fired for real on 2026-09-16 (phi3-mini), so the
+# behaviour it forced is pinned here: a failed gate withholds the whole
+# addendum, is checked BEFORE the missing-cell check so no further hours are
+# spent decoding cells that cannot be read, and banks an artifact saying so.
+# ---------------------------------------------------------------------------
+
+def test_a_failed_gate_withholds_and_is_banked():
+    import json as _json
+    m = _load_module()
+    artifact = REPO / "experiments" / "cord_decoder_isolation_2026-09-16.json"
+    if not artifact.exists():
+        pytest.skip("the addendum's reading has not been run in this tree")
+    banked = _json.loads(artifact.read_text())
+    gates = banked.get("determinism_gate", {})
+    failed = [f for f, g in gates.items() if not g["passed"]]
+    if failed:
+        assert banked["reading"] == "WITHHELD BY THE DETERMINISM GATE"
+        assert banked["failed_families"] == sorted(failed)
+        # none of the three contrasts may be reported alongside a failed gate
+        for key in ("x1_finding", "x2_per_family", "x3", "rows"):
+            assert key not in banked, f"{key} published despite a failed gate"
+        assert "cells_not_run" in banked and "why_the_remaining_cells_were_not_run" in banked
+    else:
+        assert banked["reading"] != "WITHHELD BY THE DETERMINISM GATE"
+
+
+def test_both_gate_runs_are_kept_when_they_disagree():
+    """The gate was run twice on phi3-mini and the runs disagree. Re-running a
+    gate until it passes is the failure this page exists to prevent, so both
+    runs stay banked and both must fail."""
+    import json as _json
+    cells = REPO / "experiments" / "cord_decoder_isolation_cells"
+    second, first = cells / "phi3-mini_determinism.json", cells / "phi3-mini_determinism_run1.json"
+    if not second.exists():
+        pytest.skip("the phi3 gate has not been run in this tree")
+    if not first.exists():
+        pytest.skip("only one gate run exists")
+    a, b = _json.loads(first.read_text()), _json.loads(second.read_text())
+    assert not a["passed"] and not b["passed"], "a re-run that passes must not replace one that failed"
+    assert b.get("first_run") == first.name
+    assert "the_two_runs_disagree" in b

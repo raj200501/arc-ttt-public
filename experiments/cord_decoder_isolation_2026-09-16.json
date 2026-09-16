@@ -1,0 +1,215 @@
+{
+ "what": "Addendum X: WITHHELD. The determinism gate failed, so the reuse of the banked arms is void and none of X1, X2 or X3 is read. The gate failure is the result this addendum returns.",
+ "protocol": "docs/research/ADDENDUM_X_PROTOCOL.md (frozen 2026-09-16)",
+ "date": "2026-09-16",
+ "environment": {
+  "python": "3.11.15",
+  "torch": "2.13.0+cpu",
+  "transformers": "5.16.1",
+  "platform": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+  "torch_threads": 4,
+  "render_date_pinned_for_clock_dependent_templates": "September 16, 2026"
+ },
+ "reading": "WITHHELD BY THE DETERMINISM GATE",
+ "failed_families": [
+  "phi3-mini"
+ ],
+ "determinism_gate": {
+  "qwen2.5-0.5b": {
+   "n": 5,
+   "mismatches": 0,
+   "passed": true,
+   "documents": [
+    {
+     "id": "cord-000",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-001",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-002",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-003",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-004",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    }
+   ]
+  },
+  "smollm2-1.7b": {
+   "n": 5,
+   "mismatches": 0,
+   "passed": true,
+   "documents": [
+    {
+     "id": "cord-000",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-001",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-002",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-003",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-004",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    }
+   ]
+  },
+  "granite-2b": {
+   "n": 0,
+   "mismatches": 0,
+   "passed": true,
+   "documents": []
+  },
+  "phi3-mini": {
+   "n": 5,
+   "mismatches": 2,
+   "passed": false,
+   "documents": [
+    {
+     "id": "cord-000",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-001",
+     "arm_C_identical": true,
+     "arm_G0_identical": false,
+     "rerun_C_text": null,
+     "rerun_G0_text": "{\n  \"menu\": [\n    {\n      \"cnt\": 1,\n      \"discountprice\": null,\n      \"nm\": \"Kopi Susu Kolonel\",\n      \"num\": null,\n      \"price\": 23.000,\n      \"sub\": null,\n      \"unitprice\": null,\n      \"vatyn\": null\n    }\n  ],\n  \"sub_total\": {\n    \"discount_price\": null,\n    \"etc\": null,\n    \"service_price\": null,\n    \"subtotal_price\": 23.000\n  },\n  \"total\": {\n    \"cashprice\": null,\n    \"changeprice\": null,\n    \"creditcardprice\": null,\n    \"emoneyprice\": null,\n    \"menuqty_cnt\": 1,\n    \"menutype_cnt\": null,\n    \"total_etc\": null,\n    \"total_price\": 50.000\n  }\n}"
+    },
+    {
+     "id": "cord-002",
+     "arm_C_identical": true,
+     "arm_G0_identical": false,
+     "rerun_C_text": null,
+     "rerun_G0_text": "{\n  \"menu\": [\n    {\n      \"cnt\": 1,\n      \"discountprice\": 18180,\n      \"nm\": \"S-Ovaltine 50%\",\n      \"num\": \"PB1\",\n      \"price\": 18180,\n      \"sub\": 18180,\n      \"unitprice\": 18180,\n      \"vatyn\": 18180\n    }\n  ],\n  \"sub_total\": {\n    \"discount_price\": 18180,\n    \"etc\": null,\n    \"service_price\": null,\n    \"subtotal_price\": 18180,\n    \"tax_price\": null\n  },\n  \"total\": {\n    \"cashprice\": null,\n    \"changeprice\": 80000,\n    \"creditcardprice\": null,\n    \"emoneyprice\": null,\n    \"menuqty_cnt\": 1,\n    \"menutype_cnt\": null,\n    \"total_etc\": null,\n    \"total_price\": 20000\n  }\n}"
+    },
+    {
+     "id": "cord-003",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-004",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    }
+   ]
+  },
+  "falcon3-1b": {
+   "n": 5,
+   "mismatches": 0,
+   "passed": true,
+   "documents": [
+    {
+     "id": "cord-000",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-001",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-002",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-003",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    },
+    {
+     "id": "cord-004",
+     "arm_C_identical": true,
+     "arm_G0_identical": true,
+     "rerun_C_text": null,
+     "rerun_G0_text": null
+    }
+   ]
+  }
+ },
+ "cells_that_exist": [
+  "falcon3-1b_determinism.json",
+  "falcon3-1b_plain.json",
+  "granite-2b_constrained.json",
+  "granite-2b_determinism.json",
+  "granite-2b_generate_neutral.json",
+  "granite-2b_plain.json",
+  "phi3-mini_determinism.json",
+  "phi3-mini_determinism_run1.json",
+  "qwen2.5-0.5b_determinism.json",
+  "qwen2.5-0.5b_generate_neutral.json",
+  "qwen2.5-0.5b_plain.json",
+  "smollm2-1.7b_determinism.json",
+  "smollm2-1.7b_plain.json"
+ ],
+ "cells_not_run": [
+  "phi3-mini_plain.json"
+ ],
+ "why_the_remaining_cells_were_not_run": "A failed gate is terminal by the frozen protocol: it voids the reuse every contrast depends on. Decoding the remaining cells could not change the withholding, so the compute was not spent. What was and was not run is listed above rather than left to be inferred.",
+ "disclosure_the_operator_owes_the_reader": "While the run was in progress the per-family X1 quantities for the families that passed the gate were computed by hand, to decide which cells to schedule next on a box that is reclaimed on idle. They are NOT published, the reader does not compute them, and no sentence anywhere in this repository rests on them. This note exists so that a successor addendum reading the same cells cannot be mistaken for an author who already knew the answer and wrote a protocol to fit.",
+ "what_this_does_not_say": "Nothing here reads on the constraint, the decoding path or the generation defaults. The banked cells for the families that passed the gate are raw data for a successor addendum, not results of this one, and this artifact deliberately does not compute their readings.",
+ "how_to_recompute": "PYTHONPATH=src python3 scripts/cord_decoder_isolation.py --read"
+}
