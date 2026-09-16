@@ -210,12 +210,14 @@ class ConstrainedResult:
     constrained_steps: int  # steps where the top-1 token was rejected
     steps: int
     stopped_on: str         # "eos" | "complete" | "max_new_tokens"
+    token_ids: list = dataclasses.field(default_factory=list)
 
 
 def constrained_greedy_generate(model, tokenizer, input_ids, *,
                                 max_new_tokens: int = 512, top_k: int = 16,
                                 allow_leading_fence: bool = True,
                                 validator: Callable[[str], bool] = is_json_prefix,
+                                enforce: bool = True,
                                 ) -> ConstrainedResult:
     """Greedy decoding with a JSON-prefix constraint over the decoded text.
 
@@ -226,6 +228,16 @@ def constrained_greedy_generate(model, tokenizer, input_ids, *,
     constrained on the JSON inside it rather than fought on the fence.
     Stops at EOS, at max_new_tokens, or as soon as the root closes and
     the text parses (a complete document needs no more tokens).
+
+    `enforce=False` turns the constraint OFF and changes nothing else:
+    the top-1 token is always taken and EOS is never suppressed, while
+    the cap, the fence tolerance and the stop rule stay exactly as they
+    are above. It exists so the constraint can be measured against its
+    own decoding path instead of against `model.generate` -- one loop,
+    one boolean, everything else equal (Addendum X, and the reason V
+    could only attribute where X measures). With `enforce=True` every
+    branch below behaves as it did before the flag existed; that is
+    pinned by test rather than asserted here.
     """
     import torch
 
@@ -258,20 +270,28 @@ def constrained_greedy_generate(model, tokenizer, input_ids, *,
             logits = out.logits[0, -1]
             cand = torch.topk(logits, top_k).indices.tolist()
             chosen = None
-            for rank, tok_id in enumerate(cand):
-                if tok_id == eos:
-                    if is_complete_json(body(text)):
-                        chosen, stopped_on = tok_id, "eos"
+            if not enforce:
+                # The constraint off: top-1, and EOS accepted whenever the
+                # model asks for it. No validator call, so no constrained
+                # step and no fallback can be recorded on this path.
+                chosen = cand[0]
+                if chosen == eos:
+                    stopped_on = "eos"
+            else:
+                for rank, tok_id in enumerate(cand):
+                    if tok_id == eos:
+                        if is_complete_json(body(text)):
+                            chosen, stopped_on = tok_id, "eos"
+                            break
+                        continue  # EOS before the document is complete
+                    trial = tokenizer.decode(generated + [tok_id],
+                                             skip_special_tokens=True)
+                    inner = body(trial)
+                    if validator(inner):
+                        chosen = tok_id
+                        if rank > 0:
+                            constrained_steps += 1
                         break
-                    continue  # EOS before the document is complete
-                trial = tokenizer.decode(generated + [tok_id],
-                                         skip_special_tokens=True)
-                inner = body(trial)
-                if validator(inner):
-                    chosen = tok_id
-                    if rank > 0:
-                        constrained_steps += 1
-                    break
             if chosen is None:
                 chosen = cand[0]
                 fallbacks += 1
@@ -287,4 +307,5 @@ def constrained_greedy_generate(model, tokenizer, input_ids, *,
                                                dtype=attn.dtype)], dim=1)
     return ConstrainedResult(text=text.strip(), fallbacks=fallbacks,
                              constrained_steps=constrained_steps,
-                             steps=len(generated), stopped_on=stopped_on)
+                             steps=len(generated), stopped_on=stopped_on,
+                             token_ids=list(generated))

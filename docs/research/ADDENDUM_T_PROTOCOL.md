@@ -84,3 +84,21 @@ cells. Nothing in this protocol changes: the thresholds are frozen, the
 reader withholds until the Phi-3 cells exist, and the reading it prints
 is the one banked. It is stated here so nobody has to discover that the
 T result was foreseeable from a sibling artifact.
+
+## Erratum — 2026-09-16, found by audit of the Addendum X preregistration
+
+**The Granite cells' prompt embeds the date they were run.**
+`ibm-granite/granite-3.1-2b-instruct`'s chat template builds its own
+system message containing `strftime_now('%B %d, %Y')`, so the schema-only
+and k-shot cells banked here carry the wall-clock date of their run inside
+the prompt. Two consequences, both stated rather than smoothed over.
+**Reproducibility:** re-running these cells on any other day sends a
+different prompt, so they are not reproducible in the sense the rest of
+this repository claims for its artifacts. **Comparability:** any later
+addendum that reads a Granite cell banked on a different day is comparing
+across prompts as well as across arms — which is exactly what Addendum V
+did, and it carries its own erratum. **The fence rates read here are not
+withdrawn:** reading (c) for Granite rests on 0 of 100 outputs carrying a
+fence, and nothing about a date in a system message makes a fenced output
+unfenced. What cannot be claimed is that these cells are byte-reproducible.
+Addendum X pins the date for every arm it runs.

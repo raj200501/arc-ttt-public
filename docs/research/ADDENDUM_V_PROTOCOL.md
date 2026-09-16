@@ -137,3 +137,25 @@ exist.
    banked artifact (it lived only in the VERDICT prose); the reader now
    appends "REGRESSION FINDING" to the per-family reading and names it
    in the combined finding. Qwen2.5-0.5B: 5 ≥ 3.
+
+## Erratum — 2026-09-16, found by audit of the Addendum X preregistration
+
+6. **Granite's two arms were not sent the same prompt.**
+   `ibm-granite/granite-3.1-2b-instruct`'s chat template builds its own
+   system message and puts `strftime_now('%B %d, %Y')` inside it, so a
+   call with no explicit system turn embeds the wall-clock date. This
+   addendum's constrained cell and the Addendum S/T comparator cell it was
+   read against were produced five days apart, so they carried different
+   prompts. Erratum 3 above lists Granite among the families whose arms
+   are "byte-identical (a genuine null, not a design artefact)"; that
+   sentence is now known to describe a pair of runs with different inputs,
+   and it can no longer be read as evidence that the decoder had nothing
+   to fix — it is evidence that the output did not move when both the
+   prompt date and the decoder changed. **No Granite number here is
+   withdrawn, and none is defended.** The affected claim is the inference,
+   not the count. Addendum X pins that family's system message to a frozen
+   date, re-runs its constrained arm rather than reusing this one, adds a
+   `generate` arm because this comparator cannot serve as one, and banks a
+   sha256 of the rendered prompt per document so a reader can check prompt
+   identity between compared arms instead of assuming it. Found before the
+   X protocol froze, not after a result depended on it.

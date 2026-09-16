@@ -49,20 +49,40 @@ def ledger() -> dict:
         remote = None
     total = int(_git("rev-list", "--count", "HEAD").strip())
     by_author: dict[str, int] = {}
-    for line in _git("shortlog", "-sne", "HEAD").splitlines():
-        line = line.strip()
-        if not line:
+    agent = human = 0
+    agent_by_author = agent_by_trailer = 0
+    # Read the AUTHOR LINE AND THE TRAILERS, not the author line alone.
+    #
+    # Until 2026-09-16 every agent commit was authored "Claude
+    # <noreply@anthropic.com>", so counting author lines answered the
+    # question. From that date commits are authored by the founder (so they
+    # register as his contributions on the forge, which is what a
+    # contribution graph measures) and carry a Co-authored-by trailer naming
+    # the agent. Counting author lines alone would from then on have moved
+    # every agent-written commit into the human column -- silently, and in
+    # the direction that flatters the founder, which is the direction this
+    # repository's rules say to resolve against. A commit co-authored by the
+    # agent is an agent commit here, whoever signs the author line.
+    for record in _git("log", "--format=%x00%an <%ae>%x1f%B", "HEAD").split("\x00"):
+        if not record.strip():
             continue
-        count, ident = line.split("\t", 1)
-        # Fold the founder's several e-mail identities into one line and
-        # the agent org's into one, so the ratio is about people.
-        key = ("Claude <noreply@anthropic.com>" if "noreply@anthropic.com" in ident
-               and ident.startswith("Claude")
-               else "Raj Kashikar" if "Raj Kashikar" in ident
-               else ident)
-        by_author[key] = by_author.get(key, 0) + int(count)
-    agent = by_author.get("Claude <noreply@anthropic.com>", 0)
-    human = by_author.get("Raj Kashikar", 0)
+        ident, body = record.split("\x1f", 1)
+        ident = ident.strip()
+        key = ("Claude <noreply@anthropic.com>"
+               if "noreply@anthropic.com" in ident and ident.startswith("Claude")
+               else "Raj Kashikar" if "Raj Kashikar" in ident else ident)
+        by_author[key] = by_author.get(key, 0) + 1
+        authored_by_agent = key == "Claude <noreply@anthropic.com>"
+        co_authored_by_agent = any(
+            line.strip().lower().startswith("co-authored-by:")
+            and "noreply@anthropic.com" in line
+            for line in body.splitlines())
+        if authored_by_agent or co_authored_by_agent:
+            agent += 1
+            agent_by_author += authored_by_agent
+            agent_by_trailer += (not authored_by_agent) and co_authored_by_agent
+        else:
+            human += 1
     is_export = (REPO / "scripts" / "export_public.sh").exists() is False
     return {
         "what": "Per-author commit counts of THIS tree, with the tree's "
@@ -77,6 +97,16 @@ def ledger() -> dict:
         "date": time.strftime("%Y-%m-%d", time.gmtime()),
         "total_commits": total,
         "by_author": by_author,
+        "how_agent_commits_are_counted": (
+            "A commit counts as the agent's if it is AUTHORED by the agent or "
+            "carries a Co-authored-by trailer naming it. Before 2026-09-16 only "
+            "the first case existed. From that date commits are authored by the "
+            "founder so that the forge credits his contribution graph, with the "
+            "agent named in a trailer; counting author lines alone would have "
+            "moved agent-written commits into the human column, which is the "
+            "direction that flatters us."),
+        "agent_commits_by_author_line": agent_by_author,
+        "agent_commits_by_coauthor_trailer": agent_by_trailer,
         "agent_commits": agent,
         "human_commits": human,
         "agent_share": round(agent / total, 4) if total else None,

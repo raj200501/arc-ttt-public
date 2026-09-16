@@ -560,7 +560,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 412 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 422 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -625,9 +625,13 @@ sharpening. No claims beyond the artifacts in `experiments/`.
 Roughly **four in five commits in the source tree are authored by
 `Claude <noreply@anthropic.com>`** — an autonomous agent organisation
 Raj Kashikar built and operates — rather than by Raj himself
-(**479 against 82**, banked at source HEAD `86987e4` on 2026-09-10 in
-`experiments/authorship_ledger_2026-09-10.json`; the exact figures move
-with every commit, the ratio is the claim). Every file in the fence lane — the tool, all three census runs,
+(**484 against 79**, banked at source HEAD `a153785` on 2026-09-16 in
+`experiments/authorship_ledger_2026-09-16.json`; the exact figures move
+with every commit, the ratio is the claim. Since 2026-09-16, each commit is
+authored under Raj's name so the forge credits his contribution graph,
+with the agent named in a `Co-authored-by` trailer — the ledger counts a
+commit as the agent's either way, because counting author lines alone
+would have moved agent-written commits into the human column). Every file in the fence lane — the tool, all three census runs,
 the hand-adjudication, the impact table, the CORD replication — is
 agent-authored.
 
@@ -650,7 +654,7 @@ here, which a reviewer caught within the day (second dated correction,
 same page). What is here: `scripts/authorship_ledger.py`, which banks
 the per-author commit split of whatever tree it runs in *together with
 that tree's HEAD and remote*, and
-`experiments/authorship_ledger_2026-09-10.json`, the source tree's
+`experiments/authorship_ledger_2026-09-16.json`, the source tree's
 ledger banked at a named SHA. Run the script here and it reports this
 export's own numbers and says so. **The source-tree ratio cannot be
 re-derived from this repository**; it is a disclosure backed by a banked
@@ -662,7 +666,7 @@ authored as the work it is.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 412 offline tests (tiny in-test models; no downloads).
+- `tests/` — 422 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

@@ -30,6 +30,17 @@ lane's own generality claims, are enumerated in
   that also touches Ladder II's SYSTEM rows, and every remaining invalid
   output a truncation at the 512-token cap. The drop-in claim is
   withdrawn.
+- **Addendum X (preregistered 2026-09-16, running):** the experiment V
+  named and did not run — one loop, the constraint toggled, everything
+  else equal. V varied three things at once, so every sentence it
+  published about the decoder is an attribution rather than a
+  measurement. X separates the constraint (the same function with
+  `enforce=False`), the decoding path (`model.generate` with the
+  checkpoint's modifiers neutralised) and the `generation_config`
+  defaults, on the same fifty documents. It can narrow one of V's own
+  published sentences, and it withholds entirely if a five-document
+  determinism gate on the reused constrained arm fails. Bars and the
+  prediction are frozen in `docs/research/ADDENDUM_X_PROTOCOL.md`.
 - **Addendum T (banked 2026-09-05):** the fence tax on four other
   families. Falcon3-1B replicates (92/100 schema-only fenced, 0/80
   k-shot); SmolLM2, Granite-3.1 and Phi-3 fence 0/100. Reading (c) in
@@ -94,7 +105,7 @@ lane's own generality claims, are enumerated in
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 412 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 422 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 
