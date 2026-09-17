@@ -1100,7 +1100,7 @@
       "artifact": "public_export_counts.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 1348
+      "bytes": 1349
     },
     {
       "artifact": "results_against_thesis_2026-09-03.json",

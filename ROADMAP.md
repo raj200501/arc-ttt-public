@@ -38,6 +38,11 @@ lane's own generality claims, are enumerated in
   `tokenizer_config.json` or a bare `.jinja`, standard library only,
   exit 1 on a finding. One of the seven checkpoints this project has
   run is affected.
+- **Addendum Y (preregistered 2026-09-17, running):** the Phi-3 instability
+  measured directly — immediate repeat, state dependence, the plain path,
+  and thread count, in one process on ten documents — and the same design
+  on Qwen2.5-0.5B in bfloat16 and float32 so the dtype hypothesis can
+  fail in public. Readings frozen in `docs/research/ADDENDUM_Y_PROTOCOL.md`.
 - **Addendum X (2026-09-16): WITHHELD by its own determinism gate, and
   the gate failure is the result.** X was built to separate the
   constraint from the decoding path and the generation defaults — the
@@ -120,7 +125,7 @@ lane's own generality claims, are enumerated in
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 429 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 434 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 
