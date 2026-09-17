@@ -38,6 +38,12 @@ lane's own generality claims, are enumerated in
   `tokenizer_config.json` or a bare `.jinja`, standard library only,
   exit 1 on a finding. One of the seven checkpoints this project has
   run is affected.
+- **Anchors (2026-09-17):** every frozen protocol since Addendum S and
+  the X/Y readings now carry an OpenTimestamps anchor
+  (`docs/research/ANCHORS.md`). Stated plainly there: an anchor made
+  after a run proves the bytes existed by that day, not that the
+  protocol preceded its data; from Addendum Z on, a protocol is anchored
+  before its first arm runs and the stamp is quoted in its freeze line.
 - **Addendum Y (banked 2026-09-17):** the Phi-3 instability measured
   directly. In one unbroken process every pair reproduces 0-of-10 on
   immediate repeat, state dependence and the `generate` path — Phi-3 in
@@ -133,7 +139,7 @@ lane's own generality claims, are enumerated in
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 435 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 438 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 

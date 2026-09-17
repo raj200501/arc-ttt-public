@@ -344,6 +344,10 @@ the day after it was written. Addendum X stays withheld; Y explains its
 gate's flake without reversing it.
 `experiments/phi3_instability_2026-09-17.json`.
 
+Frozen protocols since Addendum S carry OpenTimestamps anchors beside
+them; `docs/research/ANCHORS.md` says exactly what each anchor proves
+and, for the ones made after their run, what it does not.
+
 ## Check it yourself
 
 ```bash
@@ -373,7 +377,7 @@ It is **not** blind, it fixes **no** bar in advance, and it is one corpus — it
 All three verdict scripts are dependency-free. To go past arithmetic to primary evidence,
 `python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json` re-scores every
 stored prediction against gold regenerated from the deterministic corpus generator —
-it checks the *predictions*, not the summaries. 435 offline tests, no downloads:
+it checks the *predictions*, not the summaries. 438 offline tests, no downloads:
 `python3 -m pytest tests/ -q`.
 
 ---
