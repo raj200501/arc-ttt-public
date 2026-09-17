@@ -1088,13 +1088,13 @@
       "artifact": "phi3_instability_2026-09-17.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 2558
+      "bytes": 2876
     },
     {
       "artifact": "project_timeline.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 1079
+      "bytes": 1143
     },
     {
       "artifact": "prompt_payload_asymmetry_2026-08-14.json",
@@ -1106,7 +1106,7 @@
       "artifact": "public_export_counts.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 1348
+      "bytes": 1349
     },
     {
       "artifact": "results_against_thesis_2026-09-03.json",
@@ -1142,7 +1142,7 @@
       "artifact": "self_correction_ledger.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 1526
+      "bytes": 1528
     },
     {
       "artifact": "summary.json",

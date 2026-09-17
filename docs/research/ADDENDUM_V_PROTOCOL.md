@@ -182,9 +182,10 @@ exist.
    and the reading is not re-taken — nothing here is known to be wrong —
    but the 32-of-50 between-arm divergence this addendum reported for
    Phi-3 **needs no cross-arm explanation at all**, because the family
-   does not reproduce against itself. The other four families re-decode
-   0-of-10 mismatches on both arms, which is the first evidence this
-   repository has that any of its cells reproduce.
+   does not reproduce against itself. Three of the other four families re-decode
+   0-of-10 mismatches on both arms (Granite could not be compared: its
+   prompt is clock-dependent and its arm was re-run instead), which is the
+   first evidence this repository has that any of its cells reproduce.
 
    **Consequence for Addendum X.** Its own frozen protocol makes a failed
    gate terminal, so X withholds entirely: nothing it banked is read about

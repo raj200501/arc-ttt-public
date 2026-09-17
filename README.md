@@ -167,9 +167,11 @@ reference parses (0 divergences). Where the reference finds no object,
 `json_repair` returns one 104 times out of 127 and LangChain 61; the
 frozen reading fires MATERIAL for both (hazard ≥ 0.05 on 8 and 6 slices
 with n ≥ 30; worst Falcon3 schema-only 0.19, SmolLM2 schema-only 0.15).
-A substance check banked beside the reading agrees with it: only 5 of
-`json_repair`'s 104 (3 of LangChain's 61) are an exact object the
-reference missed; the other 99 (58) are leading-fenced or unfenced
+A substance check banked beside the reading agrees with it: only 2 of
+`json_repair`'s 104 (2 of LangChain's 61) are an exact object the
+reference missed — 3 more (1) are that object beside stray braces or one
+of several, which the artifact's own note does not count as recovery, and
+a first version of this sentence did; the other 99 (58) are leading-fenced or unfenced
 bodies that were truncated or held expressions, which the parser closed
 or rewrote — in `cord_fence_tax_cells/0.5b_schema:cord-000` the field
 `"sub": 2 * 13000` comes back as `2`. Their correctness is **not
@@ -566,7 +568,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 434 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 435 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -631,7 +633,7 @@ sharpening. No claims beyond the artifacts in `experiments/`.
 Roughly **four in five commits in the source tree are authored by
 `Claude <noreply@anthropic.com>`** — an autonomous agent organisation
 Raj Kashikar built and operates — rather than by Raj himself
-(**484 against 79**, banked at source HEAD `a153785` on 2026-09-16 in
+(**485 against 79**, banked at source HEAD `300db2e` on 2026-09-16 in
 `experiments/authorship_ledger_2026-09-16.json`; the exact figures move
 with every commit, the ratio is the claim. Since 2026-09-16, each commit is
 authored under Raj's name so the forge credits his contribution graph,
@@ -672,7 +674,7 @@ authored as the work it is.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 434 offline tests (tiny in-test models; no downloads).
+- `tests/` — 435 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

@@ -63,6 +63,11 @@
   "qwen2.5-0.5b/float32": "REPRODUCES"
  },
  "Y5_thread_count_differs_of_2": 1,
+ "post_hoc_gate_flake_identity": {
+  "x_gate_run1_flaked_text_equals_y_1_thread_text": true,
+  "y_4_thread_text_equals_v_banked_text": true,
+  "what_it_means": "If both are true, the gate's flake was byte-for-byte the 1-thread decode: a change of reduction order, not a random decoder and not a different prompt."
+ },
  "thread_reading": "THREAD-SENSITIVE",
  "dtype_reading": "BFLOAT16 IS NOT SUFFICIENT ON THIS FAMILY: both Qwen pairs reproduce, so Phi-3's instability is not explained by its dtype alone",
  "pairs_that_may_be_called_reproducible": [

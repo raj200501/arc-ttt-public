@@ -500,6 +500,8 @@ def _template_sources(path: pathlib.Path):
             continue
         if file.suffix == ".json":
             try:
+                # fencecheck: ignore -- a tokenizer config read from disk, not
+                # model output; an unparseable file is skipped, never scored.
                 data = json.loads(raw)
             except (json.JSONDecodeError, ValueError):
                 continue

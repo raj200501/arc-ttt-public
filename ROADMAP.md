@@ -54,8 +54,9 @@ lane's own generality claims, are enumerated in
   the gate failure is the result.** X was built to separate the
   constraint from the decoding path and the generation defaults — the
   experiment V named and did not run. Before reading anything it
-  re-decodes the arms it reuses and requires byte-identity. Four
-  families pass 0-of-10; `Phi-3-mini`, the one bfloat16 family, does
+  re-decodes the arms it reuses and requires byte-identity. Three
+  families pass 0-of-10 (Granite's gate is not applicable: its arm was
+  re-run, not reused); `Phi-3-mini`, the one bfloat16 family, does
   not, so nothing is read about the decoder at all. Two failures: the
   `model.generate` comparator no longer reproduces the text banked on
   2026-09-03 (same two documents in both of today's runs), and the
@@ -132,7 +133,7 @@ lane's own generality claims, are enumerated in
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 434 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 435 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 

@@ -316,7 +316,7 @@ refused to report its own result.** Addendum X was built to do the thing
 Addendum V said had not been done — isolate the constrained decoder from
 the decoding path by toggling one boolean in one loop. Before reading
 anything it re-decodes the cells it reuses and requires them to come back
-byte-identical. Four families do, 0 mismatches of 10 comparisons each —
+byte-identical. Three families do, 0 mismatches of 10 comparisons each (Granite's gate is not applicable: its cells were re-run under a pinned prompt, not reused) —
 the first evidence this repository has ever had that any of its cells
 reproduce at all. `Phi-3-mini`, the one bfloat16 family, does not, and
 the frozen protocol makes that terminal, so **nothing is read about the
@@ -373,7 +373,7 @@ It is **not** blind, it fixes **no** bar in advance, and it is one corpus — it
 All three verdict scripts are dependency-free. To go past arithmetic to primary evidence,
 `python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json` re-scores every
 stored prediction against gold regenerated from the deterministic corpus generator —
-it checks the *predictions*, not the summaries. 434 offline tests, no downloads:
+it checks the *predictions*, not the summaries. 435 offline tests, no downloads:
 `python3 -m pytest tests/ -q`.
 
 ---

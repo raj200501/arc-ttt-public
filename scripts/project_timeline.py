@@ -94,8 +94,9 @@ def main() -> int:
             "a reader supplies the caveat. They are derived and banked "
             "because outbound copy quotes them and a quoted figure has to "
             "reconcile to something recomputable. The question of whether "
-            "the work was any good is answered by VERDICT.md, where six of "
-            "the results go against this project, and by "
+            "the work was any good is answered by VERDICT.md and by "
+            "results_against_thesis (the results that go against this project, "
+            "counted there rather than retyped here), and by "
             "verification_coverage.json, which reports what fraction of it "
             "a stranger can actually re-derive."),
         "how_to_recompute": "PYTHONPATH=src python3 scripts/project_timeline.py",

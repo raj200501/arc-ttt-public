@@ -255,6 +255,26 @@ def read() -> int:
         print(f"{family:13s} {dtype_name:8s} Y1={y1} Y2={y2} Y3={y3} then_vs_now={then_now}  {reading}")
     th = json.loads((OUT_DIR / "phi3-mini_bfloat16_threads.json").read_text())
     y5 = sum(r["differ"] for r in th["documents"].values())
+    # Post-hoc, computed not read: does the text Addendum X's gate flaked to
+    # equal the 1-thread decode here? If so, the flake IS a reduction-order
+    # change and nothing else. Suggested by a simulated reviewer who checked
+    # the bytes; the frozen readings above do not depend on it.
+    gate_flake = None
+    run1 = x.OUT_DIR / "phi3-mini_determinism_run1.json"
+    if run1.exists() and "cord-004" in th["documents"]:
+        docs = {d["id"]: d for d in json.loads(run1.read_text())["documents"]}
+        flaked = docs.get("cord-004", {}).get("rerun_C_text")
+        if flaked is not None:
+            gate_flake = {
+                "x_gate_run1_flaked_text_equals_y_1_thread_text":
+                    strip(flaked) == strip(th["documents"]["cord-004"]["threads_1"]),
+                "y_4_thread_text_equals_v_banked_text":
+                    strip(th["documents"]["cord-004"]["threads_4"]) == strip(
+                        json.loads(PAIRS[("phi3-mini", "bfloat16")][0].read_text())["predictions"]["cord-004"]),
+                "what_it_means": ("If both are true, the gate's flake was byte-for-byte the "
+                                  "1-thread decode: a change of reduction order, not a random "
+                                  "decoder and not a different prompt."),
+            }
     dtype = dtype_reading(per_pair["qwen2.5-0.5b/bfloat16"], per_pair["qwen2.5-0.5b/float32"])
     threads = thread_reading(y5)
     reproducing = sorted(k for k, r in per_pair.items() if r == "REPRODUCES")
@@ -266,6 +286,7 @@ def read() -> int:
         "date": "2026-09-17", "environment": x._environment(),
         "rows": rows, "per_pair": per_pair,
         "Y5_thread_count_differs_of_2": y5,
+        "post_hoc_gate_flake_identity": gate_flake,
         "thread_reading": threads, "dtype_reading": dtype,
         "pairs_that_may_be_called_reproducible": reproducing,
         "the_sentence_licensed": (

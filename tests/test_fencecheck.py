@@ -594,3 +594,13 @@ def test_template_exit_status_drops_into_ci(tmp_path, capsys):
     (dirty / "chat_template.jinja").write_text("{{ strftime_now('%Y') }}")
     assert fc.main(["template", str(dirty)]) == 1
     assert "DIFFERENT PROMPT EVERY DAY" in capsys.readouterr().out
+
+
+def test_the_tool_does_not_flag_its_own_tree():
+    """A seed-stage reviewer ran `scan tools/` and the template scanner's own
+    json.loads of a tokenizer config came back as a fail-open site. A tool
+    that flags itself on a config-file read is a tool nobody leaves in CI.
+    The site now carries the ignore marker, and this pins the whole tree."""
+    findings, files = fc.scan_path(REPO / "tools")
+    assert files >= 3
+    assert findings == [], findings
