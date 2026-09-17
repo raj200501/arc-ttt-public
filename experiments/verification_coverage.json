@@ -7,19 +7,19 @@
     "EXTERNAL": "third-party quote, labelled as such, not ours to verify."
   },
   "counts": {
-    "AGGREGATE": 90,
+    "AGGREGATE": 92,
     "ARITHMETIC": 81,
     "EXTERNAL": 7,
     "PRIMARY": 56
   },
-  "total_artifacts": 234,
+  "total_artifacts": 236,
   "excluded_as_gate_exhaust": [
     "verification_coverage.json",
     "outbound_reconciliation.json",
     "review_simulation.json"
   ],
   "primary_verifiable": 56,
-  "primary_verifiable_fraction": 0.2393,
+  "primary_verifiable_fraction": 0.2373,
   "why_the_total_is_banked": "Outbound copy cites this total ('179 banked artifacts') and the reconciliation gate had been matching it against an unrelated 179 in an unrelated artifact -- a figure that traced to nothing, passing because some number of that value happened to exist somewhere. A cited figure has to be a figure this map deliberately publishes.",
   "artifacts": [
     {
@@ -1085,6 +1085,12 @@
       "bytes": 5724
     },
     {
+      "artifact": "phi3_instability_2026-09-17.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 2558
+    },
+    {
       "artifact": "project_timeline.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
@@ -1100,7 +1106,7 @@
       "artifact": "public_export_counts.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 1349
+      "bytes": 1348
     },
     {
       "artifact": "results_against_thesis_2026-09-03.json",
@@ -1119,6 +1125,12 @@
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
       "bytes": 4967
+    },
+    {
+      "artifact": "results_against_thesis_2026-09-17.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 5657
     },
     {
       "artifact": "schema_conformance_decomposition_2026-08-22.json",

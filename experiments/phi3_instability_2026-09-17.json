@@ -1,0 +1,81 @@
+{
+ "what": "Addendum Y: the decoder's reproducibility measured directly on the family that failed Addendum X's gate, and on a second family in both dtypes so the dtype hypothesis can be wrong in public.",
+ "protocol": "docs/research/ADDENDUM_Y_PROTOCOL.md (frozen 2026-09-17)",
+ "date": "2026-09-17",
+ "environment": {
+  "python": "3.11.15",
+  "torch": "2.13.0+cpu",
+  "transformers": "5.16.1",
+  "platform": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+  "torch_threads": 4,
+  "render_date_pinned_for_clock_dependent_templates": "September 16, 2026"
+ },
+ "rows": {
+  "phi3-mini/bfloat16": {
+   "Y1_immediate_repeat_differs": 0,
+   "Y2_state_differs": 0,
+   "Y3_generate_state_differs": 0,
+   "then_vs_now": {
+    "constrained_a1_vs_banked": 0,
+    "generate_g1_vs_banked": 4
+   },
+   "documents_differing": {
+    "Y1": [],
+    "Y2": [],
+    "Y3": []
+   },
+   "resumed_from_checkpoint_entries": 0,
+   "reading": "REPRODUCES"
+  },
+  "qwen2.5-0.5b/bfloat16": {
+   "Y1_immediate_repeat_differs": 0,
+   "Y2_state_differs": 0,
+   "Y3_generate_state_differs": 0,
+   "then_vs_now": {},
+   "documents_differing": {
+    "Y1": [],
+    "Y2": [],
+    "Y3": []
+   },
+   "resumed_from_checkpoint_entries": 0,
+   "reading": "REPRODUCES"
+  },
+  "qwen2.5-0.5b/float32": {
+   "Y1_immediate_repeat_differs": 0,
+   "Y2_state_differs": 0,
+   "Y3_generate_state_differs": 0,
+   "then_vs_now": {
+    "constrained_a1_vs_banked": 0,
+    "generate_g1_vs_banked": 0
+   },
+   "documents_differing": {
+    "Y1": [],
+    "Y2": [],
+    "Y3": []
+   },
+   "resumed_from_checkpoint_entries": 0,
+   "reading": "REPRODUCES"
+  }
+ },
+ "per_pair": {
+  "phi3-mini/bfloat16": "REPRODUCES",
+  "qwen2.5-0.5b/bfloat16": "REPRODUCES",
+  "qwen2.5-0.5b/float32": "REPRODUCES"
+ },
+ "Y5_thread_count_differs_of_2": 1,
+ "thread_reading": "THREAD-SENSITIVE",
+ "dtype_reading": "BFLOAT16 IS NOT SUFFICIENT ON THIS FAMILY: both Qwen pairs reproduce, so Phi-3's instability is not explained by its dtype alone",
+ "pairs_that_may_be_called_reproducible": [
+  "phi3-mini/bfloat16",
+  "qwen2.5-0.5b/bfloat16",
+  "qwen2.5-0.5b/float32"
+ ],
+ "the_sentence_licensed": "'This repository's cells reproduce' may be said only of: phi3-mini/bfloat16, qwen2.5-0.5b/bfloat16, qwen2.5-0.5b/float32 -- named, on ten documents, never unqualified.",
+ "predictions_written_before_the_run": [
+  "Y1 = 0 on all three pairs",
+  "Phi-3/bfloat16 reads STATE-DEPENDENT",
+  "Phi-3/bfloat16 is THREAD-SENSITIVE",
+  "the Qwen pairs are not predicted"
+ ],
+ "how_to_recompute": "PYTHONPATH=src python3 scripts/phi3_instability.py --read"
+}

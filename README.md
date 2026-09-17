@@ -246,9 +246,9 @@ decoder, retrieved demonstrations, a doubled adaptation set) never
 separated adaptation from the best prompting available to it by sign
 test. What survived, sign-test-backed: an adapted model is robust to
 demonstration order where a prompted one is not. Every result is in
-[`VERDICT.md`](VERDICT.md); the nine results against the adaptation thesis, and the four since
+[`VERDICT.md`](VERDICT.md); the nine results against the adaptation thesis, and the five since
 against the fence lane's own generality claims, are enumerated in
-[`experiments/results_against_thesis_2026-09-16.json`](experiments/results_against_thesis_2026-09-16.json).
+[`experiments/results_against_thesis_2026-09-17.json`](experiments/results_against_thesis_2026-09-17.json).
 The full program follows, collapsed, because the withdrawals are part
 of the record and the harness described there is what found the fence.
 

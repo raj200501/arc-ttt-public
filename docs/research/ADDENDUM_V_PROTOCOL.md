@@ -190,3 +190,24 @@ exist.
    gate terminal, so X withholds entirely: nothing it banked is read about
    the constraint, the decoding path or the generation defaults. The gate
    was written to be able to end the addendum and it did.
+
+## Erratum — 2026-09-17, narrowing erratum 7, from Addendum Y
+
+8. **"The family does not reproduce against itself" was too strong.**
+   Addendum Y decoded the first ten Phi-3 documents in one unbroken
+   process — the constrained decoder twice back to back, a third pass
+   after twenty decodes, `model.generate` in two sweeps — and every
+   comparison was byte-identical, including 10 of 10 against this
+   addendum's own banked constrained cell. What Addendum X's gate caught
+   is narrower and now has a mechanism: the flaking document (`cord-004`)
+   decodes to different text at four threads and at one thread in the
+   same process, i.e. a change in floating-point reduction order flips a
+   token at bfloat16 precision; the other probed document does not. The
+   dtype alone is not sufficient — Qwen2.5-0.5B reproduces in bfloat16 as
+   well — so the correct sentence is: Phi-3's cells reproduce within a
+   process at a fixed thread count and are not guaranteed to across a
+   change of reduction order. Erratum 7's consequence for this addendum
+   is unchanged: its Phi-3 row is not guaranteed reproducible by a
+   stranger on another box, and its between-arm Phi-3 divergence needs no
+   cross-arm explanation. The `generate` comparator banked on 2026-09-03
+   still differs today on 4 of 10 documents, cause unrecorded.

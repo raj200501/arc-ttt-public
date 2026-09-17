@@ -118,3 +118,10 @@ Phi-3 cells back. Banked in
 `experiments/cord_decoder_isolation_cells/phi3-mini_determinism.json` and
 its `_run1` companion; the row is in `CORRECTIONS.md`. The other four
 families in this addendum re-decode byte-identically.
+
+**Narrowed 2026-09-17 by Addendum Y.** Re-run today, the same
+`model.generate` call agrees with itself across two sweeps in one process
+(10 of 10) and differs from this addendum's banked Phi-3 cell on 4 of 10
+documents (`cord-001/002/007/008`). The banked cell carries no environment
+record, so what changed between 2026-09-03 and now cannot be named. Every
+cell banked since Addendum X carries one. The fence rates stand.

@@ -3,9 +3,9 @@
 The company is the eval-integrity work: the fence tax, the shipped
 check, and the discipline that found them. The adaptation program that
 produced this repository is closed by its own measurements (see
-`VERDICT.md`; the nine results against it, and the four since against the fence
+`VERDICT.md`; the nine results against it, and the five since against the fence
 lane's own generality claims, are enumerated in
-`experiments/results_against_thesis_2026-09-16.json`).
+`experiments/results_against_thesis_2026-09-17.json`).
 
 ## Now
 
@@ -38,11 +38,18 @@ lane's own generality claims, are enumerated in
   `tokenizer_config.json` or a bare `.jinja`, standard library only,
   exit 1 on a finding. One of the seven checkpoints this project has
   run is affected.
-- **Addendum Y (preregistered 2026-09-17, running):** the Phi-3 instability
-  measured directly — immediate repeat, state dependence, the plain path,
-  and thread count, in one process on ten documents — and the same design
-  on Qwen2.5-0.5B in bfloat16 and float32 so the dtype hypothesis can
-  fail in public. Readings frozen in `docs/research/ADDENDUM_Y_PROTOCOL.md`.
+- **Addendum Y (banked 2026-09-17):** the Phi-3 instability measured
+  directly. In one unbroken process every pair reproduces 0-of-10 on
+  immediate repeat, state dependence and the `generate` path — Phi-3 in
+  bfloat16 included, and its constrained pass matches V's banked cell
+  10/10 — so the prediction that Phi-3 would read state-dependent failed.
+  What fired is the mechanism: the document that flaked in X's gate
+  decodes differently at 4 threads and at 1 (reduction order at eight
+  mantissa bits), while Qwen reproduces in bfloat16 too, so the dtype
+  alone is not sufficient. Phi-3's 2026-09-03 `generate` cell still
+  differs today on 4 of 10 for reasons the unrecorded environment cannot
+  name. The 09-16 sentence "every Phi-3 number is not byte-reproducible"
+  was too strong and is narrowed (CORRECTIONS). X stays withheld.
 - **Addendum X (2026-09-16): WITHHELD by its own determinism gate, and
   the gate failure is the result.** X was built to separate the
   constraint from the decoding path and the generation defaults — the

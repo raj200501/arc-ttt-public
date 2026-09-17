@@ -214,6 +214,16 @@ wherever the validator never fired, were frozen before the arm ran —
 the toggle possible defaults to the constrained behaviour, so nothing
 already banked changes and the pinned core stays what it was.
 
+Addendum X then withheld itself: its determinism gate found Phi-3-mini
+not reproducing its banked cells, so nothing was read about the decoder
+at all. Addendum Y measured that failure and found the decoder
+reproduces byte-for-byte in one process on every family and dtype tested
+(0 of 10 on every count), and that the one document that flaked decodes
+differently at four threads and at one — reduction order at bfloat16
+precision, not a random decoder. If you bank outputs from this decoder in
+bfloat16, pin the thread count and record it beside them; the environment
+record every cell here now carries is the minimum.
+
 ## Licence
 
 MIT. Copy the single file into your repo if that is easier than depending

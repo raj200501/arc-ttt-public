@@ -298,7 +298,7 @@ It has been executed once, as a **labeled dress rehearsal**: an adversarial AI a
 ## The fence lane, measured against its own claims (2026-09-04 to 09-09)
 
 The eval-integrity work that replaced the adaptation thesis was held to
-the same rule, and four of its own generality claims narrowed under
+the same rule, and five of its own generality claims narrowed under
 preregistered replication: the fence tax replicates on Falcon3-1B and
 not on SmolLM2, Granite-3.1 or Phi-3 (Addendum T); strict parsing loses
 100% of schema-only outputs on two families and 0% on three (Addendum
@@ -307,9 +307,9 @@ drop-in claim is withdrawn (Addendum V). What survives at full size is
 narrower and stands: where a fence occurs a fail-open parse loses the
 output, the shipped lenient helpers manufacture objects from malformed
 text on every family measured, and the instrument's own undercount is
-3 of 143 (Addendum W). Rows in `VERDICT.md`; the thirteen results against
+3 of 143 (Addendum W). Rows in `VERDICT.md`; the fourteen results against
 both theses are enumerated in
-`experiments/results_against_thesis_2026-09-16.json`.
+`experiments/results_against_thesis_2026-09-17.json`.
 
 **The fourth of those is the one worth reading, because the instrument
 refused to report its own result.** Addendum X was built to do the thing
@@ -328,6 +328,21 @@ Phi-3's divergence was *bfloat16 numerics, untested* is now tested. The
 withholding, both disagreeing gate runs, and a note listing what was and
 was not run are in
 `experiments/cord_decoder_isolation_2026-09-16.json`.
+
+**The fifth is the one that corrected the fourth the next day.** Addendum
+Y measured the Phi-3 failure directly rather than leaving it as a
+verdict: in one unbroken process the decoder reproduces on every pair,
+0 of 10 on immediate repeat, on a third pass after twenty decodes, and on
+the `generate` path, Phi-3 in bfloat16 included. The prediction that it
+would read state-dependent failed. What fired is the mechanism: the one
+document that flaked decodes to different text at four threads and at
+one, so a change in floating-point reduction order flips a token at
+bfloat16 precision, and the dtype alone is not the cause, because Qwen
+reproduces in bfloat16 too. The sentence *every Phi-3 number is not
+byte-reproducible* was too strong and is narrowed in `CORRECTIONS.md`
+the day after it was written. Addendum X stays withheld; Y explains its
+gate's flake without reversing it.
+`experiments/phi3_instability_2026-09-17.json`.
 
 ## Check it yourself
 

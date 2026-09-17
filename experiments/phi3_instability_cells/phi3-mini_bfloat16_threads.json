@@ -1,0 +1,27 @@
+{
+ "what": "Addendum Y thread-count cell: microsoft/Phi-3-mini-4k-instruct in bfloat16, the constrained decoder at 4 threads and at 1 thread on two documents, one process.",
+ "protocol": "docs/research/ADDENDUM_Y_PROTOCOL.md (frozen 2026-09-17)",
+ "family": "phi3-mini",
+ "model": "microsoft/Phi-3-mini-4k-instruct",
+ "dtype": "bfloat16",
+ "documents": {
+  "cord-004": {
+   "threads_4": "{\n  \"menu\": [\n    {\n      \"cnt\": 1,\n      \"discountprice\": 0,\n      \"nm\": \"BBQ Chicken\",\n      \"num\": \"41,000\",\n      \"price\": \"41,000\",\n      \"sub\": \"41,000\",\n      \"unitprice\": \"41,000\",\n      \"vatyn\": \"50.000\"\n    }\n  ],\n  \"sub_total\": {\n    \"discount_price\": \"0\",\n    \"etc\": \"41,000\",\n    \"service_price\": \"0\",\n    \"subtotal_price\": \"41,000\",\n    \"tax_price\": \"50.000\"\n  },\n  \"total\": {\n    \"cashprice\": \"41,000\",\n    \"changeprice\": \"9,000\",\n    \"creditcardprice\": \"0\",\n    \"emoneyprice\": \"0\",\n    \"menuqty_cnt\": \"1\",\n    \"menutype_cnt\": \"1\",\n    \"total_etc\": \"41,000\",\n    \"total_price\": \"41,000\"\n  }\n}",
+   "threads_1": "{\n  \"menu\": [\n    {\n      \"cnt\": 1,\n      \"discountprice\": 0,\n      \"nm\": \"BBQ Chicken\",\n      \"num\": \"41,000\",\n      \"price\": \"41,000\",\n      \"sub\": \"41,000\",\n      \"unitprice\": \"41,000\",\n      \"vatyn\": \"50.000\"\n    }\n  ],\n  \"sub_total\": {\n    \"discount_price\": \"41,000\",\n    \"etc\": \"41,000\",\n    \"service_price\": \"0\",\n    \"subtotal_price\": \"41,000\",\n    \"tax_price\": \"50.000\"\n  },\n  \"total\": {\n    \"cashprice\": \"41,000\",\n    \"changeprice\": \"9,000\",\n    \"creditcardprice\": \"0\",\n    \"emoneyprice\": \"0\",\n    \"menuqty_cnt\": \"1\",\n    \"menutype_cnt\": \"1\",\n    \"total_etc\": \"41,000\",\n    \"total_price\": \"41,000\"\n  }\n}",
+   "differ": true
+  },
+  "cord-000": {
+   "threads_4": "{\n  \"menu\": [\n    {\n      \"cnt\": 1,\n      \"nm\": \"EGG TART\",\n      \"num\": 1,\n      \"price\": 13000,\n      \"sub\": 13000,\n      \"unitprice\": 13000,\n      \"vatyn\": 0\n    },\n    {\n      \"cnt\": 1,\n      \"nm\": \"PIZZA TOAST\",\n      \"num\": 1,\n      \"price\": 16000,\n      \"sub\": 16000,\n      \"unitprice\": 16000,\n      \"vatyn\": 0\n    }\n  ],\n  \"sub_total\": {\n    \"discount_price\": 0,\n    \"etc\": 0,\n    \"service_price\": 0,\n    \"subtotal_price\": 29000\n  },\n  \"total\": {\n    \"cashprice\": 50000,\n    \"changeprice\": 4500,\n    \"creditcardprice\": 0,\n    \"emoneyprice\": 0,\n    \"menuqty_cnt\": 2,\n    \"menutype_cnt\": 2,\n    \"total_etc\": 0,\n    \"total_price\": 45500\n  }\n}",
+   "threads_1": "{\n  \"menu\": [\n    {\n      \"cnt\": 1,\n      \"nm\": \"EGG TART\",\n      \"num\": 1,\n      \"price\": 13000,\n      \"sub\": 13000,\n      \"unitprice\": 13000,\n      \"vatyn\": 0\n    },\n    {\n      \"cnt\": 1,\n      \"nm\": \"PIZZA TOAST\",\n      \"num\": 1,\n      \"price\": 16000,\n      \"sub\": 16000,\n      \"unitprice\": 16000,\n      \"vatyn\": 0\n    }\n  ],\n  \"sub_total\": {\n    \"discount_price\": 0,\n    \"etc\": 0,\n    \"service_price\": 0,\n    \"subtotal_price\": 29000\n  },\n  \"total\": {\n    \"cashprice\": 50000,\n    \"changeprice\": 4500,\n    \"creditcardprice\": 0,\n    \"emoneyprice\": 0,\n    \"menuqty_cnt\": 2,\n    \"menutype_cnt\": 2,\n    \"total_etc\": 0,\n    \"total_price\": 45500\n  }\n}",
+   "differ": false
+  }
+ },
+ "environment": {
+  "python": "3.11.15",
+  "torch": "2.13.0+cpu",
+  "transformers": "5.16.1",
+  "platform": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+  "torch_threads": 4,
+  "render_date_pinned_for_clock_dependent_templates": "September 16, 2026"
+ }
+}
