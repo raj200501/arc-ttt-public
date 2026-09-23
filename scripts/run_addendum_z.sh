@@ -17,7 +17,12 @@ LOG="$WORK/run.log"
 mkdir -p "$WORK"
 
 running() {
-  [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null
+  # a pid alone is not enough: the container reboots when reclaimed and
+  # pids restart, so the recorded pid can belong to anything by then
+  [ -f "$PIDFILE" ] || return 1
+  local pid; pid="$(cat "$PIDFILE")"
+  kill -0 "$pid" 2>/dev/null || return 1
+  tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null | grep -q "novel_schema_rerun.py --run"
 }
 
 banked() {

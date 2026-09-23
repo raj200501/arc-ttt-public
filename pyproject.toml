@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "arcttt"
 version = "0.0.1"
-description = "Per-tenant adaptation lab: small-model document extraction with preregistered evals (grew out of an ARC Prize 2026 entry)"
+description = "Eval-integrity instruments (fencecheck) and the preregistered evidence behind them; grew out of an ARC Prize 2026 entry and a per-tenant adaptation program its own gates closed"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 # transformers upper bound: DynamicCache.crop's legacy positive-argument

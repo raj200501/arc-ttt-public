@@ -826,7 +826,7 @@ All six k=30 arms banked, verdict GO, board complete.
 ## Addendum C — Scale-rung gate (frozen 2026-08-17T20:35Z, before any run)
 
 Frozen the evening the Addendum B verdict landed (GO, mean +46.5,
-156W/0L/2T over 158), before any rung above 0.5B has produced a single k=30
+156W/0L), before any rung above 0.5B has produced a single k=30
 novel-schema record and before any GPU beyond Kaggle's free tier has
 been rented. The company-shape decision of the same date (lab + quiet
 data partners) makes this the next public artifact: the scale curve.
@@ -1387,6 +1387,31 @@ the symptom.
 Finder credit: reported by an outside reader who recomputed the published
 interval from the artifacts rather than accepting it, per the standing
 offer in `CORRECTIONS.md`.
+
+**P15 — three more in-place edits to anchored text, restored (2026-09-23).**
+The anchored snapshot `snapshots_ENTERPRISE_EVAL_SPEC_2026-08-20T1330Z.md`
+is the file's first 1,303 lines, and three of them had been changed in
+place after the anchor, none with an erratum — the class P3 forbids and
+P12(b) already recorded once:
+(a) Addendum C's preamble (line 829) had its sign test changed from
+"156W/0L" to "156W/0L/2T over 158" on 2026-08-22 (commit `f60d5f3`, an
+audit sweep that restored dropped ties across the primary pages). The
+content of the edit is right — B.9.2 records 158 scored pairs and the
+banked summary carries 2 ties — and it is stated here instead: **read
+line 829 as 156W/0L/2T over 158 scored of 180 designed.**
+(b) Addendum B's header said the generator had "10 tests" when it was
+frozen; from 2026-08-25 the repository's test-count syncer rewrote it to
+the suite's count on every sync. (c) The frontier-API cost estimate's
+token arithmetic, "500 instructions + 500 test input", was rewritten by
+the same syncer to carry a test count where a token count belongs. The
+syncer now excludes this file and every `*_PROTOCOL.md`.
+All three lines are restored to their anchored bytes, and
+`tests/test_spec_matches_anchor.py` now fails if this file stops
+beginning with its last anchored snapshot byte for byte — the check that
+would have caught all three the day they happened. Found by a simulated
+review (round 9) that diffed the file against its anchor
+after a same-day audit had caught (b) and (c) and missed (a), and after an
+outbound draft had said the file matched its anchors.
 
 ---
 

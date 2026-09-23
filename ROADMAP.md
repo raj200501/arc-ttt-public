@@ -9,7 +9,10 @@ lane's own generality claims, are enumerated in
 
 ## Now
 
-- **Addendum Z (preregistered 2026-09-23; launches after its anchor):**
+- **Addendum Z (preregistered and anchored 2026-09-23T0219Z; PAUSED
+  06:08Z with no arm banked — three seed-1 adaptations were cut short, two
+  by container reboots and one stopped by the owner's compute cutoff; every
+  restart is counted and resumes from the run log):**
   the +46.5 gate run again on this box with every prediction stored,
   under the Addendum B recipe unchanged and a protocol anchored before
   the first arm — the first one here anchored before its run (the anchor
@@ -80,14 +83,17 @@ lane's own generality claims, are enumerated in
   `model.generate` comparator no longer reproduces the text banked on
   2026-09-03 (same two documents in both of today's runs), and the
   constrained arm differed on one document in one gate run and matched
-  in the next. **Every Phi-3 number in Addenda S, T, U and V is
-  therefore not byte-reproducible** — errata beside T and V, row in
-  `CORRECTIONS.md`. It does settle one thing V left open: V attributed
+  in the next. The sentence first written here — *every Phi-3 number
+  in Addenda S, T, U and V is not byte-reproducible* — was too strong
+  and is narrowed by Addendum Y above (errata beside T and V, rows in
+  `CORRECTIONS.md` dated 2026-09-16 and 2026-09-17). It does settle one thing V left open: V attributed
   Phi-3's 32-of-50 between-arm divergence to bfloat16 numerics and
   called it untested; it is tested now, and the family does not
-  reproduce against itself. Next: a successor addendum that measures
-  the Phi-3 instability directly, under its own preregistration, before
-  anything reads the four banked-and-unread families.
+  reproduce against itself. The Phi-3 instability has since been
+  measured directly (Addendum Y). Still next: a successor addendum,
+  under its own preregistration, that reads the four banked-and-unread
+  families — drafted and audited 2026-09-23 as Addendum AA
+  (`docs/research/ADDENDUM_AA_PROTOCOL.md`, not yet frozen, nothing read).
 - **Addendum T (banked 2026-09-05):** the fence tax on four other
   families. Falcon3-1B replicates (92/100 schema-only fenced, 0/80
   k-shot); SmolLM2, Granite-3.1 and Phi-3 fence 0/100. Reading (c) in
@@ -152,7 +158,7 @@ lane's own generality claims, are enumerated in
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 459 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 493 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 

@@ -205,12 +205,12 @@ one. The decoding core is pinned byte-identical to
 **Both of those rows compared this decoder against `model.generate`,
 which varies the decoding path as well as the constraint — so they say
 what the constraint was *credited with*, not what it *did*.** Addendum X
-is preregistered and running: the same function with the constraint
-toggled by one boolean, against `generate` with the checkpoint's own
-generation defaults neutralised, on the same fifty documents per family.
-Its bars, and the prediction that arms C and P are byte-identical
-wherever the validator never fired, were frozen before the arm ran —
-`docs/research/ADDENDUM_X_PROTOCOL.md`. The `enforce` flag that makes
+was preregistered to separate them: the same function with the
+constraint toggled by one boolean, against `generate` with the
+checkpoint's own generation defaults neutralised, on the same fifty
+documents per family. Its bars, and the prediction that arms C and P are
+byte-identical wherever the validator never fired, were frozen before
+the arm ran — `docs/research/ADDENDUM_X_PROTOCOL.md`. The `enforce` flag that makes
 the toggle possible defaults to the constrained behaviour, so nothing
 already banked changes and the pinned core stays what it was.
 

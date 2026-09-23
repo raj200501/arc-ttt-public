@@ -399,7 +399,10 @@ program.
 mean +46.5 micro-F1 over 30-shot prompting across three novel-schema
 seeds (+36.0 / +49.0 / +54.4 vs a +5 bar frozen 2026-08-12 before any
 data; receipt-level sign test 156W/0L/2T over 158 scored of 180 designed (p < 1e-15); CI excludes zero;
-`experiments/novel_schema_summary_2026-08-12.json`).** Stated per the
+`experiments/novel_schema_summary_2026-08-12.json`).** **Re-run pending:** Addendum Z, preregistered and
+anchored 2026-09-23, re-runs this gate with every model output stored;
+its number replaces this one whichever way it moves, and a non-GO
+withdraws it (`docs/research/ADDENDUM_Z_PROTOCOL.md`). Stated per the
 spec's claim rule, always beside the CORD negative: on CORD receipts —
 a domain the base model already knows — the same adaptation recipe
 FAILED its preregistered gates at all three scales tested (Addendum A:
@@ -568,7 +571,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 459 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 493 offline tests
 pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
@@ -674,7 +677,7 @@ authored as the work it is.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 459 offline tests (tiny in-test models; no downloads).
+- `tests/` — 493 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

@@ -37,21 +37,36 @@ the run date beside it and never described as a pre-registration proof.
 
 ## The anchors
 
-| file | anchored | first arm ran | proves freeze-before-run? |
-|---|---|---|---|
-| `ENTERPRISE_EVAL_SPEC.md` | 2026-08-19, 2026-08-20 (three stamps) | — | yes for the gates it froze |
-| `snapshots_BLIND_HOLDOUT_PROTOCOL` | 2026-08-20T2030Z | after | yes |
-| `ADDENDUM_S_PROTOCOL.md` | 2026-09-17T0750Z | 2026-09-03 | **no** — after the run |
-| `ADDENDUM_T_PROTOCOL.md` | 2026-09-17T0750Z | 2026-09-03 | **no** |
-| `ADDENDUM_U_PROTOCOL.md`, `ADDENDUM_U_EXT_PROTOCOL.md` | 2026-09-17T0750Z | 2026-09-04 | **no** |
-| `ADDENDUM_V_PROTOCOL.md` | 2026-09-17T0750Z | 2026-09-08 | **no** |
-| `ADDENDUM_W_PROTOCOL.md` | 2026-09-17T0750Z | 2026-09-08 | **no** |
-| `ADDENDUM_X_PROTOCOL.md` | 2026-09-17T0750Z | 2026-09-16 | **no** |
-| `ADDENDUM_Y_PROTOCOL.md` | 2026-09-17T0750Z | 2026-09-17 (earlier the same day) | **no** |
-| `ADDENDUM_Z_PROTOCOL.md` | 2026-09-23T0219Z | after the stamp, by the runner's own clocks (`started_utc` in every arm) | **yes**, to the extent an anchor can: the bytes predate the stamp; that the arms started after it is ours to report — the first under the policy above; the stamp is quoted in the protocol's freeze line |
-| `experiments/cord_decoder_isolation_2026-09-16.json` | 2026-09-17T0750Z | — | the reading existed by then |
-| `experiments/phi3_instability_2026-09-17.json` | 2026-09-17T0750Z | — | the reading existed by then |
-| `experiments/results_against_thesis_2026-09-17.json` | 2026-09-17T0750Z | — | the ledger existed by then |
+The stamp in a file's name is when it was submitted to the calendars.
+What the proof attests is the **Bitcoin block** it was folded into —
+the time a stranger can check, and the only one that matters. Every
+proof below was upgraded to a complete Bitcoin attestation on
+2026-09-23 (`ots upgrade`; until then ten of them were calendar
+promises only, which a simulated reviewer pointed out). Block times
+are the block header timestamps (blockstream.info), earliest
+attestation per proof.
+
+| file | stamp | attested in (block, time UTC) | first arm ran | proves freeze-before-run? |
+|---|---|---|---|---|
+| `ENTERPRISE_EVAL_SPEC.md` | 2026-08-19T0119Z, 2026-08-19T0330Z, 2026-08-20T1330Z | 963117 (08-19 02:22), 963127 (08-19 04:23), 963319 (08-20 14:25) | — | yes for the gates it froze |
+| `snapshots_BLIND_HOLDOUT_PROTOCOL` | 2026-08-20T2030Z | 963325 (08-20 15:39) | after | yes |
+| `ADDENDUM_S_PROTOCOL.md` | 2026-09-17T0750Z | 967383 (09-17 08:02) | 2026-09-03 | **no** — after the run |
+| `ADDENDUM_T_PROTOCOL.md` | 2026-09-17T0750Z | 967383 (09-17 08:02) | 2026-09-03 | **no** |
+| `ADDENDUM_U_PROTOCOL.md`, `ADDENDUM_U_EXT_PROTOCOL.md` | 2026-09-17T0750Z | 967383 (09-17 08:02) | 2026-09-04 | **no** |
+| `ADDENDUM_V_PROTOCOL.md` | 2026-09-17T0750Z | 967383 (09-17 08:02) | 2026-09-08 | **no** |
+| `ADDENDUM_W_PROTOCOL.md` | 2026-09-17T0750Z | 967383 (09-17 08:02) | 2026-09-08 | **no** |
+| `ADDENDUM_X_PROTOCOL.md` | 2026-09-17T0750Z | 967383 (09-17 08:02) | 2026-09-16 | **no** |
+| `ADDENDUM_Y_PROTOCOL.md` | 2026-09-17T0750Z | 967383 (09-17 08:02) | 2026-09-17 (earlier the same day) | **no** |
+| `ADDENDUM_Z_PROTOCOL.md` | 2026-09-23T0219Z | **968216 (2026-09-23 02:36:37)** | first process 02:19:54 (`started_utc`), killed by a container restart ~03:04 before saving anything; restarted 03:07; **no document had been decoded at the attested time** | **yes** — the attested time precedes every decoded output of the run; the runner's start clock is ours to report, the block time is not |
+| `experiments/cord_decoder_isolation_2026-09-16.json` | 2026-09-17T0750Z | 967383 (09-17 08:02) | — | the reading existed by then |
+| `experiments/phi3_instability_2026-09-17.json` | 2026-09-17T0750Z | 967383 (09-17 08:02) | — | the reading existed by then |
+| `experiments/results_against_thesis_2026-09-17.json` | 2026-09-17T0750Z | 967383 (09-17 08:02) | — | the ledger existed by then |
+
+Note on the 2026-08-20 blind-holdout row: the snapshot is *stamped*
+20:30Z in its name but *attested* at 15:39Z, earlier than the name
+says. Why the name says 20:30Z is not recorded. The block time bounds
+the bytes from above; the earlier bound is the stronger claim, and it
+is the block's, not ours.
 
 The protocols carry dated errata appended after their freeze lines; the
 anchored bytes are the files as they stood at their stamp, errata to

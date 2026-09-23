@@ -1,0 +1,191 @@
+{
+ "what": "Addendum Z's run, logged so that a silent redraw is detectable: per arm, the adapter digest and a prefix hash over the documents decoded so far. No score and no text is recorded here; the protocol forbids quoting arm-level numbers before the reading.",
+ "protocol": "docs/research/ADDENDUM_Z_PROTOCOL.md (frozen 2026-09-23, anchored 2026-09-23T0219Z before the first arm)",
+ "how_the_prefix_hash_is_made": "sha256 of '\\n'.join(json.dumps(row, sort_keys=True)) over the journal rows with indices 0..n-1, in index order. The landed arm's `predictions` list is those rows sorted by index, so the hash is recomputable from the committed artifact.",
+ "why": "sampling and the LoRA-A initialisation are unseeded, arms are skip-if-exists, and work/z is not committed: without this log a half-finished arm could be deleted and redrawn with nothing to show for it (simulated review round 9, 2026-09-23).",
+ "verify": "PYTHONPATH=src python3 scripts/addendum_z_run_log.py --verify",
+ "code_pins": {
+  "scripts/novel_schema_rerun.py": {
+   "at_freeze_commit": "0c3c07ef70712a04f6a05237815a3c7b425587664a27145d1b105d6db348a23e",
+   "now": "0c3c07ef70712a04f6a05237815a3c7b425587664a27145d1b105d6db348a23e",
+   "unchanged_since_freeze": true
+  },
+  "scripts/novel_schema_summary.py": {
+   "at_freeze_commit": "f3b3d4e413bd77a73d0f29a1c6d3a83f4bb423f2df11c945523cab612f591ccd",
+   "now": "f3b3d4e413bd77a73d0f29a1c6d3a83f4bb423f2df11c945523cab612f591ccd",
+   "unchanged_since_freeze": true
+  },
+  "src/arcttt/text_ttt.py": {
+   "at_freeze_commit": "84152cdbb8075c05a3305668ed4feb4fb8a72aab3580a262f747803bdb9104f0",
+   "now": "84152cdbb8075c05a3305668ed4feb4fb8a72aab3580a262f747803bdb9104f0",
+   "unchanged_since_freeze": true
+  },
+  "src/arcttt/model.py": {
+   "at_freeze_commit": "29a4524b788ae00099aee4b4216ba9a473e76637d89da7e05d1cafd8f5ae4b46",
+   "now": "29a4524b788ae00099aee4b4216ba9a473e76637d89da7e05d1cafd8f5ae4b46",
+   "unchanged_since_freeze": true
+  },
+  "src/arcttt/lora.py": {
+   "at_freeze_commit": "50cbcf0303775c5ecf4eb356bbbbef1d2418cb0ea12e852188f869ff17fccec3",
+   "now": "50cbcf0303775c5ecf4eb356bbbbef1d2418cb0ea12e852188f869ff17fccec3",
+   "unchanged_since_freeze": true
+  },
+  "src/arcttt/novel_schema.py": {
+   "at_freeze_commit": "745533d71d5596dbdb349417731a6208db76b856583ed095c3f240ed2a4303b6",
+   "now": "745533d71d5596dbdb349417731a6208db76b856583ed095c3f240ed2a4303b6",
+   "unchanged_since_freeze": true
+  },
+  "src/arcttt/scoring.py": {
+   "at_freeze_commit": "f3ba871ffa595542e1ddf4152e676fb3836909c736ba043511c11b47933bef22",
+   "now": "f3ba871ffa595542e1ddf4152e676fb3836909c736ba043511c11b47933bef22",
+   "unchanged_since_freeze": true
+  },
+  "src/arcttt/text_task.py": {
+   "at_freeze_commit": "1811b2eff7603289c58e8eb700a83f70bdf8b25c693e86ceec35d2d9f7c887b4",
+   "now": "1811b2eff7603289c58e8eb700a83f70bdf8b25c693e86ceec35d2d9f7c887b4",
+   "unchanged_since_freeze": true
+  },
+  "src/arcttt/serialize.py": {
+   "at_freeze_commit": "107834b307b6573c1ccacf9eed8c086ee5056301c1231c03e842a72303d9a8d2",
+   "now": "107834b307b6573c1ccacf9eed8c086ee5056301c1231c03e842a72303d9a8d2",
+   "unchanged_since_freeze": true
+  },
+  "scripts/run_addendum_z.sh": {
+   "at_freeze_commit": "1c96957f74d958e9b36355b278c6f7622d4c95ae94df4f9b7d68d12fd91b8d67",
+   "now": "64211d3dc9b99a3a2d3c6fe3a890253f8c64dad61cbadf855755a227f91af0fb",
+   "unchanged_since_freeze": false
+  }
+ },
+ "snapshots": [
+  {
+   "utc": "2026-09-23T04:18:02Z",
+   "arms": [
+    {
+     "arm": "novel_schema_0.5b_k30_seed1_adapted_2026-09-23.json",
+     "started_utc": "2026-09-23T02:19:54Z",
+     "restarts": 1,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed1_kshot_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed2_adapted_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed2_kshot_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed3_adapted_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed3_kshot_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    }
+   ]
+  },
+  {
+   "utc": "2026-09-23T06:08:10Z",
+   "arms": [
+    {
+     "arm": "novel_schema_0.5b_k30_seed1_adapted_2026-09-23.json",
+     "started_utc": "2026-09-23T02:19:54Z",
+     "restarts": 2,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed1_kshot_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed2_adapted_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed2_kshot_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed3_adapted_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed3_kshot_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    }
+   ]
+  }
+ ]
+}

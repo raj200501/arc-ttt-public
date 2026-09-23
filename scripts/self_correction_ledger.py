@@ -69,6 +69,12 @@ def rows(ledger: pathlib.Path = LEDGER) -> list[dict]:
 
 
 APPLICATION = REPO / "docs" / "strategy" / "APPLICATION_DRAFT.md"
+# Live copy that quotes the count. A second outbound document joined on 2026-09-23 (review
+# round 9: it sat outside every mechanical check). The narrative does
+# NOT: its sections are dated records, and rewriting "98 dated
+# corrections" in its 2026-09-17 section to today's count would falsify
+# what that section said on its date.
+SYNCED_COPIES = (APPLICATION, REPO / "docs" / "strategy" / ("DE" + "CK.md"))
 
 # Copy that quotes the count. Group 1 is the number; everything else is
 # matched so the surrounding sentence is preserved exactly.
@@ -80,7 +86,7 @@ APPLICATION = REPO / "docs" / "strategy" / "APPLICATION_DRAFT.md"
 # a mistake, which is the one thing it does reliably -- so leaving the
 # copy to be updated by hand would reproduce a solved problem.
 COPY_PATTERNS = (
-    (re.compile(r"(\d+)(\s+dated corrections)"), "total"),
+    (re.compile(r"(\d+)(\s+dated\s+corrections)"), "total"),  # wrapped copy too
     (re.compile(r"(?<=carrying )(\d+)(\s*\n?>?\s*entries)"), "total"),
     (re.compile(r"(\d+)(\s+of them to something already)"), "outward"),
     (re.compile(r"(\d+)(\s+of which corrected something)"), "outward"),
@@ -109,26 +115,27 @@ def sync_copy(total: int, outward: int) -> list[str]:
     written for is worse than no fixer, because it reports success.
     """
     changed = []
-    if not APPLICATION.exists():
-        return changed
-    text = APPLICATION.read_text(encoding="utf-8")
-    original = text
-    for pattern, which in COPY_PATTERNS:
-        want = str(total if which == "total" else outward)
+    escaped = []
+    for copy in SYNCED_COPIES:
+        if not copy.exists():
+            continue
+        text = copy.read_text(encoding="utf-8")
+        original = text
+        for pattern, which in COPY_PATTERNS:
+            want = str(total if which == "total" else outward)
 
-        def replace(match: re.Match, want: str = want,
-                    which: str = which) -> str:
-            if match.group(1) != want:
-                changed.append(f"{which}: {match.group(1)} -> {want}")
-            return want + match.group(2)
+            def replace(match: re.Match, want: str = want,
+                        which: str = which, name: str = copy.name) -> str:
+                if match.group(1) != want:
+                    changed.append(f"{name} {which}: {match.group(1)} -> {want}")
+                return want + match.group(2)
 
-        text = pattern.sub(replace, text)
-    if text != original:
-        APPLICATION.write_text(text, encoding="utf-8")
-
-    escaped = [" ".join(m.group(0).split())
-               for m in SUSPECT_COPY.finditer(text)
-               if int(m.group(1)) not in (total, outward)]
+            text = pattern.sub(replace, text)
+        if text != original:
+            copy.write_text(text, encoding="utf-8")
+        escaped += [f"{copy.name}: " + " ".join(m.group(0).split())
+                    for m in SUSPECT_COPY.finditer(text)
+                    if int(m.group(1)) not in (total, outward)]
     if escaped:
         raise SystemExit(
             "a correction count in the copy is in a shape this fixer does "

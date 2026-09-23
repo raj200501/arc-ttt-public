@@ -753,6 +753,15 @@ def _prefix_divergence(a, b, a_stopped_on: str = "complete"):
     return None
 
 
+def _without_generate_stop(b, eos_ids):
+    """The generate arm's ids without its own trailing stop token, if any.
+    See the 2026-09-23 erratum in `read_families`."""
+    b = list(b)
+    if b and b[-1] in eos_ids:
+        return b[:-1]
+    return b
+
+
 def _text_prefix_divergence(a: str, b: str, a_stopped_on: str = "complete"):
     """The same rule on decoded text, for the families where no token ids
     were banked for the generate arm. Weaker, and named as weaker."""
@@ -765,10 +774,215 @@ def _arm_c_path(family: str, scope: dict) -> pathlib.Path:
             else OUT_DIR / f"{family}_constrained.json")
 
 
-def read() -> int:
+def read_families(families, scope: dict) -> tuple:
+    """X1, X2 and X3 per family: the arithmetic of `read()`, moved here
+    unchanged (2026-09-23) so that a successor addendum reading the same
+    cells does so with this code rather than a copy of it. `read()` calls it
+    for every family once the gate has passed; nothing about X's own
+    reading changes. Returns (rows, x1_per_family, x2_per_family, x3,
+    prompt_mismatches)."""
     from arcttt.scoring import field_micro_f1, parse_json_object
     from arcttt.text_task import TextTaskFormatError
     fc = cft._fc()
+
+    gold = {json.loads(l)["id"]: json.loads(l)["gold"] for l in
+            (cft.SPLIT_DIR / "gold.jsonl").read_text().splitlines() if l.strip()}
+    for r in cft._read_jsonl(cft.SPLIT_DIR / "train.jsonl"):
+        gold[r["id"]] = r["gold"]
+
+    def classify(text):
+        body, fenced = fc.strip_fence(text)
+        try:
+            return parse_json_object(body), fenced
+        except TextTaskFormatError:
+            return None, fenced
+
+    rows, x1_per_family, x2_per_family = [], {}, {}
+    x3 = None
+    prompt_mismatches = []
+    for family, (model_id, dtype_name, comparator) in (
+            (f, CELLS[f]) for f in CELLS if f in families):
+        plain = json.loads((OUT_DIR / f"{family}_plain.json").read_text())
+        const = json.loads(_arm_c_path(family, scope).read_text())
+        g0 = json.loads(comparator.read_text())
+        ids = list(plain["predictions"])
+
+        # Prompt identity between the arms X compares: checked, not assumed.
+        if "per_document_prompt_sha256_16" in const:
+            prompt_mismatches += [
+                f"{family}/{d} (C vs P)" for d in ids
+                if const["per_document_prompt_sha256_16"][d]
+                != plain["per_document_prompt_sha256_16"][d]]
+
+        # ---- X1: the constraint, isolated (C against P, the same loop)
+        i_p = i_c = regressions = identical = 0
+        wins = losses = ties = 0
+        deltas, differing_docs, zero_step_differs, nonzero_step_identical = [], [], [], []
+        fen_p = fen_c = 0
+        for doc_id in ids:
+            op, fp = classify(plain["predictions"][doc_id])
+            oc, fcd = classify(const["predictions"][doc_id])
+            i_p += op is None
+            i_c += oc is None
+            fen_p += fp
+            fen_c += fcd
+            regressions += (op is not None and oc is None)
+            same = plain["predictions"][doc_id] == const["predictions"][doc_id]
+            identical += same
+            steps_here = const["per_document_decode"][doc_id]["constrained_steps"]
+            if not same:
+                differing_docs.append(doc_id)
+                if steps_here == 0:
+                    zero_step_differs.append(doc_id)
+            elif steps_here > 0:
+                # equally impossible in the other direction: the validator
+                # rejected a top-1 token here, so the arms cannot be identical
+                nonzero_step_identical.append(doc_id)
+            sp = field_micro_f1(op, gold[doc_id]) if op is not None else 0.0
+            sc = field_micro_f1(oc, gold[doc_id]) if oc is not None else 0.0
+            d = sc - sp
+            deltas.append(d)
+            wins += d > 1e-9
+            losses += d < -1e-9
+            ties += abs(d) <= 1e-9
+        x1 = x1_reading(i_p, i_c, regressions, identical, len(ids))
+        x1_per_family[family] = x1
+
+        # The prediction written before the run, checked PER DOCUMENT. Summing
+        # a family's constrained steps makes the check vacuous wherever the
+        # validator fired at all -- Falcon3 fired on 7 of 50, so a family-wide
+        # sum would have excused its other 43 documents.
+        c_steps = sum(a["constrained_steps"] for a in const["per_document_decode"].values())
+        accounting_ok = not zero_step_differs and not nonzero_step_identical
+
+        # ---- X2: the implementation path (P against G, or G0 where G == G0)
+        has_g = scope[family]["arm_G_runs"]
+        if has_g:
+            g = json.loads((OUT_DIR / f"{family}_generate_neutral.json").read_text())
+            other, other_name = g["predictions"], "G"
+            prompt_mismatches += [
+                f"{family}/{d} (P vs G)" for d in ids
+                if g["per_document_prompt_sha256_16"][d]
+                != plain["per_document_prompt_sha256_16"][d]]
+            # ERRATUM 2026-09-23 (protocol wins, found from the code alone by
+            # the Addendum AA pre-freeze audit, before any cell was read): the
+            # plain loop breaks on EOS WITHOUT appending it, while `generate`
+            # keeps its stop token in the returned ids. Where the plain arm
+            # stopped on EOS, the code as first written therefore counted the
+            # generate arm's own stop token as a divergence -- but the frozen
+            # protocol says the two "must end in the same place", and a stop
+            # token is where generate ended, not a further token. The
+            # comparison now drops ONE trailing token from the generate arm if
+            # it is in that arm's own EOS set. The as-coded count is kept
+            # beside it, and both publish.
+            eos_ids = g.get("effective_generation_config", {}).get("eos_token_id")
+            eos_ids = set(eos_ids if isinstance(eos_ids, list) else
+                          ([] if eos_ids is None else [eos_ids]))
+            div = {d: at for d in ids
+                   if (at := _prefix_divergence(
+                       plain["per_document_token_ids"][d],
+                       _without_generate_stop(g["per_document_token_ids"][d], eos_ids),
+                       plain["per_document_decode"][d]["stopped_on"])) is not None}
+            div_as_coded = {d: at for d in ids
+                            if (at := _prefix_divergence(
+                                plain["per_document_token_ids"][d],
+                                g["per_document_token_ids"][d],
+                                plain["per_document_decode"][d]["stopped_on"])) is not None}
+            comparison, basis = "P vs G (token prefix)", "token ids"
+        else:
+            other = {d: g0["predictions"][d].strip() for d in ids}
+            other_name = "G0"
+            div = {d: at for d in ids
+                   if (at := _text_prefix_divergence(
+                       plain["predictions"][d], other[d],
+                       plain["per_document_decode"][d]["stopped_on"])) is not None}
+            comparison, basis = "P vs G0 (text prefix; G == G0, no modifiers)", "decoded text"
+            div_as_coded = div  # decoded text carries no stop token; nothing to correct
+        i_other = sum(classify(other[d])[0] is None for d in ids)
+        x2 = x2_reading(len(div), basis)
+        x2_per_family[family] = x2
+
+        mean_d = round(sum(deltas) / len(deltas), 4)
+        p = v._sign_test(wins, losses) if mean_d >= 0 else v._sign_test(losses, wins)
+        rows.append({
+            "family": family, "model": model_id, "dtype": dtype_name, "n": len(ids),
+            "arm_C_source": str(_arm_c_path(family, scope).relative_to(REPO)),
+            "x1_invalid_plain": i_p, "x1_invalid_constrained": i_c,
+            "x1_regressions_plain_valid_constrained_invalid": regressions,
+            "x1_identical_documents": identical, "x1_differing_documents": differing_docs,
+            "x1_reading": x1,
+            "constrained_steps_banked": c_steps,
+            "documents_with_zero_steps_but_differing_arms": zero_step_differs,
+            "documents_with_steps_but_identical_arms": nonzero_step_identical,
+            "fenced_plain": fen_p, "fenced_constrained": fen_c,
+            "accounting_consistent": accounting_ok,
+            "x2_comparison": comparison, "x2_basis": basis,
+            "x2_compared_against": other_name,
+            "x2_invalid_plain": i_p, "x2_invalid_other_arm": i_other,
+            "x2_invalid_difference_other_minus_plain": i_other - i_p,
+            "x2_divergent_documents": len(div), "x2_first_divergence_index": div,
+            "x2_divergent_documents_as_first_coded": len(div_as_coded),
+            "x2_documents_changed_by_the_eos_erratum": sorted(set(div_as_coded) ^ set(div)),
+            "x2_reading": x2,
+            "score_mean_delta_constrained_minus_plain": mean_d,
+            "score_wins_losses_ties": [wins, losses, ties],
+            "score_sign_test_p": round(p, 4),
+        })
+        print(f"{family:14s} X1 invalid {i_p:2d} -> {i_c:2d} (identical {identical}/{len(ids)}, "
+              f"reg {regressions})  {x1:34s} | X2 {x2:18s} vs {other_name} "
+              f"(invalid {i_other}) | accounting {'ok' if accounting_ok else 'INCONSISTENT'}")
+
+        # ---- X3: the defaults, on the family that ships one
+        if scope[family]["modifiers"]:
+            g = json.loads((OUT_DIR / f"{family}_generate_neutral.json").read_text())
+            d_def = sum(g["predictions"][d] != g0["predictions"][d].strip() for d in ids)
+            v_reg = v_regressions().get(family)
+            detail = []
+            for doc_id in ids:
+                o_g0, _ = classify(g0["predictions"][doc_id])
+                oc, _ = classify(const["predictions"][doc_id])
+                if o_g0 is not None and oc is None:      # one of V's regressions
+                    o_g, _ = classify(g["predictions"][doc_id])
+                    detail.append({"id": doc_id,
+                                   "valid_without_the_defaults": o_g is not None})
+            recomputed = len(detail)
+            explained = sum(not d["valid_without_the_defaults"] for d in detail)
+            reproduces = (v_reg is None or recomputed == v_reg)
+            # The residual V did not explain is attributed on the same documents:
+            # if arms C and P differ there, the constraint owns it; if they agree,
+            # the difference is elsewhere in the path.
+            residual = [d["id"] for d in detail if d["valid_without_the_defaults"]]
+            residual_attribution = {
+                doc_id: ("the constraint (arms C and P differ on this document)"
+                         if plain["predictions"][doc_id] != const["predictions"][doc_id]
+                         else "the path (arms C and P agree; the difference is elsewhere)")
+                for doc_id in residual}
+            x3 = {
+                "family": family,
+                "documents_differing_G_vs_G0": d_def,
+                "v_published_regressions": v_reg,
+                "v_regressions_recomputed_here": recomputed,
+                "v_regression_count_reproduces": reproduces,
+                "v_regressions_reexamined": detail,
+                "regressions_explained_by_the_defaults": explained,
+                "residual_documents": residual,
+                "residual_attributed_by_arithmetic": residual_attribution,
+                "reading": (x3_reading(explained, recomputed, reproduces)
+                            if v_reg is not None else
+                            "no published regression count for this family"),
+                "note_if_v_does_not_reproduce": (
+                    None if reproduces else
+                    f"V published {v_reg} regressions for this family; recomputing the "
+                    f"same quantity from the same two banked cells gives {recomputed}. "
+                    "That disagreement is a finding in its own right and is read before "
+                    "anything else in X3."),
+            }
+            print(f"{'':14s} X3 G vs G0 differ on {d_def}/{len(ids)}; {x3['reading']}")
+
+    return rows, x1_per_family, x2_per_family, x3, prompt_mismatches
+
+
+def read() -> int:
     scope = _scope()
 
     # The gate is checked FIRST, and it is terminal. A failed gate voids the
@@ -842,176 +1056,8 @@ def read() -> int:
               " -- the reading is stated once every preregistered cell exists.")
         return 1
 
-    gold = {json.loads(l)["id"]: json.loads(l)["gold"] for l in
-            (cft.SPLIT_DIR / "gold.jsonl").read_text().splitlines() if l.strip()}
-    for r in cft._read_jsonl(cft.SPLIT_DIR / "train.jsonl"):
-        gold[r["id"]] = r["gold"]
-
-    def classify(text):
-        body, fenced = fc.strip_fence(text)
-        try:
-            return parse_json_object(body), fenced
-        except TextTaskFormatError:
-            return None, fenced
-
-    rows, x1_per_family, x2_per_family = [], {}, {}
-    x3 = None
-    prompt_mismatches = []
-    for family, (model_id, dtype_name, comparator) in CELLS.items():
-        plain = json.loads((OUT_DIR / f"{family}_plain.json").read_text())
-        const = json.loads(_arm_c_path(family, scope).read_text())
-        g0 = json.loads(comparator.read_text())
-        ids = list(plain["predictions"])
-
-        # Prompt identity between the arms X compares: checked, not assumed.
-        if "per_document_prompt_sha256_16" in const:
-            prompt_mismatches += [
-                f"{family}/{d} (C vs P)" for d in ids
-                if const["per_document_prompt_sha256_16"][d]
-                != plain["per_document_prompt_sha256_16"][d]]
-
-        # ---- X1: the constraint, isolated (C against P, the same loop)
-        i_p = i_c = regressions = identical = 0
-        wins = losses = ties = 0
-        deltas, differing_docs, zero_step_differs, nonzero_step_identical = [], [], [], []
-        fen_p = fen_c = 0
-        for doc_id in ids:
-            op, fp = classify(plain["predictions"][doc_id])
-            oc, fcd = classify(const["predictions"][doc_id])
-            i_p += op is None
-            i_c += oc is None
-            fen_p += fp
-            fen_c += fcd
-            regressions += (op is not None and oc is None)
-            same = plain["predictions"][doc_id] == const["predictions"][doc_id]
-            identical += same
-            steps_here = const["per_document_decode"][doc_id]["constrained_steps"]
-            if not same:
-                differing_docs.append(doc_id)
-                if steps_here == 0:
-                    zero_step_differs.append(doc_id)
-            elif steps_here > 0:
-                # equally impossible in the other direction: the validator
-                # rejected a top-1 token here, so the arms cannot be identical
-                nonzero_step_identical.append(doc_id)
-            sp = field_micro_f1(op, gold[doc_id]) if op is not None else 0.0
-            sc = field_micro_f1(oc, gold[doc_id]) if oc is not None else 0.0
-            d = sc - sp
-            deltas.append(d)
-            wins += d > 1e-9
-            losses += d < -1e-9
-            ties += abs(d) <= 1e-9
-        x1 = x1_reading(i_p, i_c, regressions, identical, len(ids))
-        x1_per_family[family] = x1
-
-        # The prediction written before the run, checked PER DOCUMENT. Summing
-        # a family's constrained steps makes the check vacuous wherever the
-        # validator fired at all -- Falcon3 fired on 7 of 50, so a family-wide
-        # sum would have excused its other 43 documents.
-        c_steps = sum(a["constrained_steps"] for a in const["per_document_decode"].values())
-        accounting_ok = not zero_step_differs and not nonzero_step_identical
-
-        # ---- X2: the implementation path (P against G, or G0 where G == G0)
-        has_g = scope[family]["arm_G_runs"]
-        if has_g:
-            g = json.loads((OUT_DIR / f"{family}_generate_neutral.json").read_text())
-            other, other_name = g["predictions"], "G"
-            prompt_mismatches += [
-                f"{family}/{d} (P vs G)" for d in ids
-                if g["per_document_prompt_sha256_16"][d]
-                != plain["per_document_prompt_sha256_16"][d]]
-            div = {d: at for d in ids
-                   if (at := _prefix_divergence(
-                       plain["per_document_token_ids"][d],
-                       g["per_document_token_ids"][d],
-                       plain["per_document_decode"][d]["stopped_on"])) is not None}
-            comparison, basis = "P vs G (token prefix)", "token ids"
-        else:
-            other = {d: g0["predictions"][d].strip() for d in ids}
-            other_name = "G0"
-            div = {d: at for d in ids
-                   if (at := _text_prefix_divergence(
-                       plain["predictions"][d], other[d],
-                       plain["per_document_decode"][d]["stopped_on"])) is not None}
-            comparison, basis = "P vs G0 (text prefix; G == G0, no modifiers)", "decoded text"
-        i_other = sum(classify(other[d])[0] is None for d in ids)
-        x2 = x2_reading(len(div), basis)
-        x2_per_family[family] = x2
-
-        mean_d = round(sum(deltas) / len(deltas), 4)
-        p = v._sign_test(wins, losses) if mean_d >= 0 else v._sign_test(losses, wins)
-        rows.append({
-            "family": family, "model": model_id, "dtype": dtype_name, "n": len(ids),
-            "arm_C_source": str(_arm_c_path(family, scope).relative_to(REPO)),
-            "x1_invalid_plain": i_p, "x1_invalid_constrained": i_c,
-            "x1_regressions_plain_valid_constrained_invalid": regressions,
-            "x1_identical_documents": identical, "x1_differing_documents": differing_docs,
-            "x1_reading": x1,
-            "constrained_steps_banked": c_steps,
-            "documents_with_zero_steps_but_differing_arms": zero_step_differs,
-            "documents_with_steps_but_identical_arms": nonzero_step_identical,
-            "fenced_plain": fen_p, "fenced_constrained": fen_c,
-            "accounting_consistent": accounting_ok,
-            "x2_comparison": comparison, "x2_basis": basis,
-            "x2_compared_against": other_name,
-            "x2_invalid_plain": i_p, "x2_invalid_other_arm": i_other,
-            "x2_invalid_difference_other_minus_plain": i_other - i_p,
-            "x2_divergent_documents": len(div), "x2_first_divergence_index": div,
-            "x2_reading": x2,
-            "score_mean_delta_constrained_minus_plain": mean_d,
-            "score_wins_losses_ties": [wins, losses, ties],
-            "score_sign_test_p": round(p, 4),
-        })
-        print(f"{family:14s} X1 invalid {i_p:2d} -> {i_c:2d} (identical {identical}/{len(ids)}, "
-              f"reg {regressions})  {x1:34s} | X2 {x2:18s} vs {other_name} "
-              f"(invalid {i_other}) | accounting {'ok' if accounting_ok else 'INCONSISTENT'}")
-
-        # ---- X3: the defaults, on the family that ships one
-        if scope[family]["modifiers"]:
-            g = json.loads((OUT_DIR / f"{family}_generate_neutral.json").read_text())
-            d_def = sum(g["predictions"][d] != g0["predictions"][d].strip() for d in ids)
-            v_reg = v_regressions().get(family)
-            detail = []
-            for doc_id in ids:
-                o_g0, _ = classify(g0["predictions"][doc_id])
-                oc, _ = classify(const["predictions"][doc_id])
-                if o_g0 is not None and oc is None:      # one of V's regressions
-                    o_g, _ = classify(g["predictions"][doc_id])
-                    detail.append({"id": doc_id,
-                                   "valid_without_the_defaults": o_g is not None})
-            recomputed = len(detail)
-            explained = sum(not d["valid_without_the_defaults"] for d in detail)
-            reproduces = (v_reg is None or recomputed == v_reg)
-            # The residual V did not explain is attributed on the same documents:
-            # if arms C and P differ there, the constraint owns it; if they agree,
-            # the difference is elsewhere in the path.
-            residual = [d["id"] for d in detail if d["valid_without_the_defaults"]]
-            residual_attribution = {
-                doc_id: ("the constraint (arms C and P differ on this document)"
-                         if plain["predictions"][doc_id] != const["predictions"][doc_id]
-                         else "the path (arms C and P agree; the difference is elsewhere)")
-                for doc_id in residual}
-            x3 = {
-                "family": family,
-                "documents_differing_G_vs_G0": d_def,
-                "v_published_regressions": v_reg,
-                "v_regressions_recomputed_here": recomputed,
-                "v_regression_count_reproduces": reproduces,
-                "v_regressions_reexamined": detail,
-                "regressions_explained_by_the_defaults": explained,
-                "residual_documents": residual,
-                "residual_attributed_by_arithmetic": residual_attribution,
-                "reading": (x3_reading(explained, recomputed, reproduces)
-                            if v_reg is not None else
-                            "no published regression count for this family"),
-                "note_if_v_does_not_reproduce": (
-                    None if reproduces else
-                    f"V published {v_reg} regressions for this family; recomputing the "
-                    f"same quantity from the same two banked cells gives {recomputed}. "
-                    "That disagreement is a finding in its own right and is read before "
-                    "anything else in X3."),
-            }
-            print(f"{'':14s} X3 G vs G0 differ on {d_def}/{len(ids)}; {x3['reading']}")
+    rows, x1_per_family, x2_per_family, x3, prompt_mismatches = read_families(
+        list(CELLS), scope)
 
     x1_finding = x1_combine(x1_per_family)
     inconsistent = sorted(r["family"] for r in rows if not r["accounting_consistent"])
@@ -1040,8 +1086,14 @@ def read() -> int:
             "arms C and P; Falcon3 differs on exactly the 7 documents where the "
             "validator fired. A zero-step document whose arms differ means the "
             "decoder's own accounting is wrong, and that would be the result.",
+            # This string first said "PATH REPRODUCES on SmolLM2 and Granite. Qwen
+            # and Falcon3 unpredicted" -- which is not what the frozen protocol
+            # says. The protocol predicts SmolLM2 only and names Granite as NOT
+            # predicted. Never banked (X withheld); found and corrected
+            # 2026-09-23 while preparing the successor reading. The protocol wins.
             "X2: PATH DIVERGES on Phi-3 (V saw 32 of 50 bodies differ at bfloat16); "
-            "PATH REPRODUCES on SmolLM2 and Granite. Qwen and Falcon3 unpredicted.",
+            "PATH REPRODUCES on SmolLM2. Qwen, Falcon3 and Granite are not predicted "
+            "-- Granite because its arms are compared under a prompt V never used.",
         ],
         "how_to_recompute": "PYTHONPATH=src python3 scripts/cord_decoder_isolation.py --read",
     }

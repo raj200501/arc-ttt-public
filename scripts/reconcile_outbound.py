@@ -55,6 +55,15 @@ PACKAGE = REPO / "docs" / "strategy" / "SEND_PACKAGE_2026-08-20.md"
 APPLICATION = REPO / "docs" / "strategy" / "APPLICATION_DRAFT.md"
 EVIDENCE_PAGES = ["VERDICT.md", "EVIDENCE.md", "README.md", "CHALLENGES.md",
                   "CORRECTIONS.md"]
+# The outbound strategy documents beyond the emails and the application.
+# They sat outside this gate until simulated review round 9 (2026-09-23)
+# pointed out that the copy read first was the copy nobody checked, on the
+# day one of them carried a false sentence. Their names live in a private
+# list (the documents are not in the public tree); checked section by
+# section (`## ` headings).
+_LIST = REPO / "docs" / "strategy" / "OUTBOUND_DOCS.txt"
+OUTBOUND_STRATEGY_DOCS = ([REPO / "docs" / "strategy" / n for n in _LIST.read_text().split()]
+                 if _LIST.exists() else [])
 
 # Number shapes that carry a claim. Bare integers are excluded on purpose:
 # see the module docstring.
@@ -84,7 +93,10 @@ PATTERNS = {
     # pattern match nothing at all in the paragraph it was written for,
     # which is a gate that reports OK because it looked for the wrong
     # thing -- the exact failure this file's docstring is about.
-    "counted": r"\b\d[\d,]*(?:\s+[a-z]+){0,2}\s+"
+    # Thousands separators only: "1,950 outputs" is one count, but "§1-2,
+    # artifacts named there" is not the count "2," -- which `[\d,]*`
+    # matched until the strategy documents came under this gate (2026-09-23).
+    "counted": r"\b\d+(?:,\d{3})*(?:\s+[a-z]+){0,2}\s+"
                r"(?:tests?|artifacts?|corrections?|documents?|entries"
                r"|receipts?|tenants?|demonstrations?|design partners?"
                r"|packages?|sites?|instances?|candidates?|rejections?|commits?)\b",
@@ -118,6 +130,12 @@ APPLICATION_EXEMPT = {
           "unverified in the text",
     "18%": "arithmetic on a banked figure (33 of 179 artifacts), not an "
            "independent claim; the fraction it rounds is checked",
+}
+# Third-party results quoted in the outbound documents, cited as theirs.
+OUTBOUND_STRATEGY_EXEMPT = {
+    "27.64%": "NVIDIA's (NVARC) published ARC Prize 2025 public score, cited "
+              "as theirs on the slide; not a claim about this project",
+    "24.03%": "same -- NVARC's published private score, cited as theirs",
 }
 
 
@@ -321,6 +339,28 @@ def main() -> int:
                 "unreconciled": missing,
             }
 
+    strategy_docs: dict[str, dict] = {}
+    for doc in OUTBOUND_STRATEGY_DOCS:
+        if not doc.exists():
+            continue
+        text = _dash_normalise(doc.read_text(encoding="utf-8"))
+        for part in re.split(r"\n## ", "\n" + text):
+            heading = part.split("\n", 1)[0].strip()[:60] or "(preamble)"
+            reconciled, missing = [], []
+            for kind, token in _claims(part, OUTBOUND_STRATEGY_EXEMPT):
+                if _reconciles(kind, token, haystack, numbers):
+                    reconciled.append(token)
+                else:
+                    missing.append({"kind": kind, "token": token})
+            if not reconciled and not missing:
+                continue
+            unreconciled_total += len(missing)
+            strategy_docs[f"{doc.name} / {heading}"] = {
+                "claims_checked": len(reconciled) + len(missing),
+                "reconciled": len(reconciled),
+                "unreconciled": missing,
+            }
+
     record = {
         "what": "Every distinctive number in the outbound copy, checked "
                 "against the banked artifacts and the evidence pages.",
@@ -336,6 +376,8 @@ def main() -> int:
         "application_answers": application,
         "application_source": str(APPLICATION.relative_to(REPO))
                               if APPLICATION.exists() else None,
+        "outbound_strategy_exempt": OUTBOUND_STRATEGY_EXEMPT,
+        "outbound_strategy_documents": strategy_docs,
         "unreconciled_total": unreconciled_total,
     }
     pathlib.Path(args.out).write_text(json.dumps(record, indent=2) + "\n",
@@ -350,6 +392,14 @@ def main() -> int:
     if application:
         print(f"\n-- {APPLICATION.name}")
         for name, block in application.items():
+            status = "OK" if not block["unreconciled"] else "UNRECONCILED"
+            print(f"{block['reconciled']:3d}/{block['claims_checked']:3d} "
+                  f"[{status:12s}] {name}")
+            for item in block["unreconciled"]:
+                print(f"    {item['kind']:11s} {item['token']}")
+    if strategy_docs:
+        print("\n-- outbound strategy documents")
+        for name, block in strategy_docs.items():
             status = "OK" if not block["unreconciled"] else "UNRECONCILED"
             print(f"{block['reconciled']:3d}/{block['claims_checked']:3d} "
                   f"[{status:12s}] {name}")

@@ -110,3 +110,22 @@ def test_a_range_is_not_read_as_a_signed_number(
                         and item["token"].startswith("-")), (
                 f"{name}: {item['token']} looks like the right half of a "
                 "range being read as a negative number")
+
+
+def test_the_outbound_strategy_documents_are_inside_the_gate():
+    """Round 9 (2026-09-23): the outbound strategy documents were outside
+    every mechanical check while the emails and the application were
+    inside it. Their names are a private list, absent from the public
+    tree, so the membership check runs only where the list exists."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("ro", SCRIPT)
+    ro = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ro)
+    listing = REPO / "docs" / "strategy" / "OUTBOUND_DOCS.txt"
+    if listing.exists():
+        assert len(ro.OUTBOUND_STRATEGY_DOCS) == 3
+    # a section reference is not a count; a thousands-separated count still is
+    tokens = [t for k, t in ro._claims("see section 1-2, artifacts named there") if k == "counted"]
+    assert tokens == []
+    tokens = [t for k, t in ro._claims("across 1,950 documents banked") if k == "counted"]
+    assert tokens == ["1,950 documents"]

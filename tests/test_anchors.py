@@ -61,3 +61,24 @@ def test_anchor_files_are_real_ots_blobs():
         assert p.read_bytes().startswith(magic), p.name
     assert re.search(r"ADDENDUM_Y_PROTOCOL\.md\.\d{4}-\d{2}-\d{2}T\d{4}Z\.ots",
                      " ".join(q.name for q in RESEARCH.glob("*.ots")))
+
+
+BITCOIN_TAG = bytes.fromhex("0588960d73d71901")  # BitcoinBlockHeaderAttestation
+
+
+def test_every_row_that_names_a_block_has_a_bitcoin_attestation():
+    """A calendar promise is not a timestamp. Until 2026-09-23 ten proofs
+    here were PendingAttestation-only; a row that states a block height
+    must be backed by a proof that actually carries one."""
+    text = (RESEARCH / "ANCHORS.md").read_text()
+    proofs = list(RESEARCH.glob("*.ots")) + list((REPO / "experiments").glob("*.ots"))
+    for row in text.splitlines():
+        if not row.startswith("| `") or not re.search(r"\| \**\d{6} \(", row):
+            continue
+        names = re.findall(r"`([^`]+)`", row.split("|")[1])
+        for name in names:
+            base = name.split("/")[-1]
+            matches = [p for p in proofs if p.name.startswith(base.rstrip("`"))]
+            assert matches, (base, "no proof on disk for a row naming a block")
+            for proof in matches:
+                assert BITCOIN_TAG in proof.read_bytes(), proof.name
