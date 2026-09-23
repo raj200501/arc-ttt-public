@@ -65,3 +65,28 @@ def test_the_syncer_can_no_longer_touch_frozen_files():
     swept = {p.name for p in sync.documents()}
     assert "ENTERPRISE_EVAL_SPEC.md" not in swept
     assert not any(name.endswith("_PROTOCOL.md") for name in swept)
+
+
+def test_every_anchored_protocol_matches_its_proof_or_begins_with_its_snapshot():
+    """The spec's rule, for every preregistration: frozen text changes only
+    by appending. A protocol either still hashes to what its proof commits
+    to, or begins byte for byte with a committed snapshot that does."""
+    for proof in sorted(RESEARCH.glob("ADDENDUM_*_PROTOCOL.md.*.ots")):
+        protocol = RESEARCH / proof.name.split(".md.")[0].__add__(".md")
+        stamp = proof.name.split(".md.")[1].removesuffix(".ots")
+        digest = _anchored_digest(proof)
+        current = protocol.read_bytes()
+        if hashlib.sha256(current).hexdigest() == digest:
+            continue
+        snap = RESEARCH / f"snapshots_{protocol.stem}_{stamp}.md"
+        assert snap.exists(), f"{protocol.name} changed since {stamp} and no anchored snapshot exists"
+        assert hashlib.sha256(snap.read_bytes()).hexdigest() == digest, snap.name
+        assert current.startswith(snap.read_bytes()), f"{protocol.name} was edited in place"
+
+
+def test_anchored_files_are_never_line_ending_converted():
+    attributes = (REPO / ".gitattributes").read_text()
+    for rule in ("docs/research/*.md -text", "*.ots binary"):
+        assert rule in attributes, rule
+    for path in [SPEC, *RESEARCH.glob("ADDENDUM_*_PROTOCOL.md")]:
+        assert b"\r\n" not in path.read_bytes(), path.name

@@ -1,0 +1,6 @@
+# Anchored files are hashed byte for byte (OpenTimestamps). A CRLF checkout
+# would change their bytes and every anchor check would fail for that
+# reader, so git must never convert them.
+docs/research/*.md -text
+experiments/*.json -text
+*.ots binary
