@@ -1106,7 +1106,7 @@
       "artifact": "public_export_counts.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 1349
+      "bytes": 1350
     },
     {
       "artifact": "results_against_thesis_2026-09-03.json",
@@ -1439,7 +1439,7 @@
       "bytes": 5169
     }
   ],
-  "the_uncomfortable_one": "The +46.5 headline is the least verifiable number here, and this classifier is stricter about it than the prose first written beside it was. `novel_schema_summary_2026-08-12.json` is AGGREGATE -- a summary with no per-item data at all -- and its ARMS are ARITHMETIC: per-receipt scores, no predictions. So the step from model output to score cannot be re-checked by anyone, including us, at any level. It is the most cited number in this repository and the only headline that is neither primary-verifiable nor regenerable. Re-running those arms with predictions stored is the fix, it costs about nine CPU-hours, and it is not done.",
+  "the_uncomfortable_one": "The +46.5 headline is the least verifiable number here, and this classifier is stricter about it than the prose first written beside it was. `novel_schema_summary_2026-08-12.json` is AGGREGATE -- a summary with no per-item data at all -- and its ARMS are ARITHMETIC: per-receipt scores, no predictions. So the step from model output to score cannot be re-checked by anyone, including us, at any level. It is the most cited number in this repository and the only headline that is neither primary-verifiable nor regenerable. Re-running those arms with predictions stored is the fix. An earlier version of this sentence priced it at about nine CPU-hours; the measured figure is 40-60 wall-hours on four cores (CORRECTIONS.md, 2026-09-23). The re-run is preregistered as Addendum Z and launched after its anchor; until its six arms bank, the fix is not done.",
   "aggregate_but_regenerable": "AGGREGATE is not always as weak as it sounds, and the distinction matters. Addendum K's artifact (waybill_grounded_2026-08-22.json) stores no predictions because the writer excluded them -- but every INPUT it consumed is published (the banked adapted arm's predictions, the 30 documents, the gold) and the recipe is pinned to a named commit, so a reader regenerates it in seconds with the command in its VERDICT row. Contrast the +46.5 arms, whose model outputs were discarded at generation time and are gone for good. Both read AGGREGATE here; only one is recoverable, and this classifier deliberately does not upgrade either, because ambiguity downgrades.",
   "downgrade_rule": "Ambiguity downgrades. If stored predictions cannot be found this reports ARITHMETIC even where the artifact claims more, because the failure being guarded against is a page implying more checkability than it has."
 }

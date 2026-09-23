@@ -12,3 +12,6 @@ runs/
 .env
 .DS_Store
 kaggle.json
+
+# Addendum Z run state (journals, meta, pid, log); the artifacts land in experiments/
+work/z/

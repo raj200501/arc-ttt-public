@@ -28,9 +28,12 @@ That the file's bytes existed **by** the anchored time. Nothing more.
 ## Policy from Addendum Z onward
 
 A protocol is anchored **before its first arm runs**, and the anchor's
-stamp is quoted in the protocol's freeze line. An anchor made after the
-run is filed here with the run date beside it and never described as a
-pre-registration proof.
+stamp is quoted in the protocol's freeze line. Because the proof commits
+to the file's exact bytes, the order is fixed: choose the stamp string,
+write it into the freeze line and into this page, commit, and only then
+`ots stamp` those bytes — a stamp made before the string was written in
+would attest a draft. An anchor made after the run is filed here with
+the run date beside it and never described as a pre-registration proof.
 
 ## The anchors
 
@@ -45,11 +48,12 @@ pre-registration proof.
 | `ADDENDUM_W_PROTOCOL.md` | 2026-09-17T0750Z | 2026-09-08 | **no** |
 | `ADDENDUM_X_PROTOCOL.md` | 2026-09-17T0750Z | 2026-09-16 | **no** |
 | `ADDENDUM_Y_PROTOCOL.md` | 2026-09-17T0750Z | 2026-09-17 (earlier the same day) | **no** |
+| `ADDENDUM_Z_PROTOCOL.md` | 2026-09-23T0219Z | after the stamp, by the runner's own clocks (`started_utc` in every arm) | **yes**, to the extent an anchor can: the bytes predate the stamp; that the arms started after it is ours to report — the first under the policy above; the stamp is quoted in the protocol's freeze line |
 | `experiments/cord_decoder_isolation_2026-09-16.json` | 2026-09-17T0750Z | — | the reading existed by then |
 | `experiments/phi3_instability_2026-09-17.json` | 2026-09-17T0750Z | — | the reading existed by then |
 | `experiments/results_against_thesis_2026-09-17.json` | 2026-09-17T0750Z | — | the ledger existed by then |
 
 The protocols carry dated errata appended after their freeze lines; the
-anchored bytes are the files as they stood on 2026-09-17, errata
-included, so a later edit to any of them is detectable against the
-anchor.
+anchored bytes are the files as they stood at their stamp, errata to
+that date included, so a later edit to any of them is detectable against
+the anchor.

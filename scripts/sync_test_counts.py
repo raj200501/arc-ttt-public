@@ -201,7 +201,16 @@ def is_subset_claim(text: str, index: int) -> bool:
 ROOT_DOCS = ("README.md", "EVIDENCE.md", "ROADMAP.md", "paper/DRAFT.md")
 # Scratch notes and dated postmortems describe a past state.
 SKIP_SUBSTRINGS = ("AUDIT_RESPONSE", "MONDAY_BRIEF", "OVERNIGHT",
-                   "snapshots_", "POSTMORTEM")
+                   "snapshots_", "POSTMORTEM",
+                   # Frozen, anchored text is never rewritten by anything.
+                   # This syncer rewrote two numbers inside the frozen
+                   # spec on every sync from 2026-08-25 -- "10 tests" in
+                   # Addendum B's header and a "500 test input" TOKEN
+                   # count in a cost estimate -- until an audit diffed the
+                   # file against its anchored snapshots (CORRECTIONS
+                   # 2026-09-23). The protocols are frozen for the same
+                   # reason and are excluded with it.
+                   "ENTERPRISE_EVAL_SPEC", "_PROTOCOL")
 
 
 # A document that declares itself a RECORD is describing a past state on

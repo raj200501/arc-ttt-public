@@ -149,8 +149,12 @@ def main() -> int:
             "by anyone, including us, at any level. It is the most cited "
             "number in this repository and the only headline that is "
             "neither primary-verifiable nor regenerable. Re-running those "
-            "arms with predictions stored is the fix, it costs about nine "
-            "CPU-hours, and it is not done."),
+            "arms with predictions stored is the fix. An earlier version of "
+            "this sentence priced it at about nine CPU-hours; the measured "
+            "figure is 40-60 wall-hours on four cores (CORRECTIONS.md, "
+            "2026-09-23). The re-run is preregistered as Addendum Z and "
+            "launched after its anchor; until its six arms bank, the "
+            "fix is not done."),
         "aggregate_but_regenerable": (
             "AGGREGATE is not always as weak as it sounds, and the "
             "distinction matters. Addendum K's artifact "

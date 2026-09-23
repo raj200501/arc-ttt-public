@@ -1,4 +1,4 @@
-# Roadmap (updated 2026-09-03)
+# Roadmap (updated 2026-09-23)
 
 The company is the eval-integrity work: the fence tax, the shipped
 check, and the discipline that found them. The adaptation program that
@@ -9,6 +9,19 @@ lane's own generality claims, are enumerated in
 
 ## Now
 
+- **Addendum Z (preregistered 2026-09-23; launches after its anchor):**
+  the +46.5 gate run again on this box with every prediction stored,
+  under the Addendum B recipe unchanged and a protocol anchored before
+  the first arm — the first one here anchored before its run (the anchor
+  proves the bytes; the start time is the runner's clock, ours to
+  report). The unchanged reader
+  computes the verdict; four readings (gate word, agreement with the
+  banked +46.5 within 0.05, the largest per-arm spread across the two
+  environments, the over-cap exclusions) are applied by arithmetic and
+  withheld until all six arms exist. Whichever way it moves, the
+  primary-verifiable number replaces +46.5 on every page; if it is not
+  GO, the headline is withdrawn. ~40–60 wall-hours on four cores, not
+  the nine this repository had estimated (CORRECTIONS).
 - **Upstream filings — owner's action.** Final issue text exists for
   `openai/evals` (two sites) and Braintrust `autoevals` (`JSONDiff`,
   executed repro); nothing is filed as of this date. This is the single
@@ -139,7 +152,7 @@ lane's own generality claims, are enumerated in
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 438 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 459 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 
