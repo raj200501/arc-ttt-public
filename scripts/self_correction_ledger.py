@@ -26,9 +26,13 @@ import argparse
 import json
 import pathlib
 import re
+import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 LEDGER = REPO / "CORRECTIONS.md"
+
+sys.path.insert(0, str(REPO / "scripts"))
+from sync_test_counts import dated_spans, in_dated_section  # noqa: E402
 
 # A row counts only if its first cell opens with an ISO date. Header rows,
 # alignment rows and prose tables are excluded by construction rather than
@@ -41,6 +45,19 @@ SEPARATOR = re.compile(r"^\|[\s:\-|]+\|$")
 # so the classifier can be checked against the page by eye.
 OUTWARD_MARKERS = ("email", "deck", "one-pager", "outbound", "sent",
                    "public", "readme", "headline", "verdict", "press")
+# "sent" and "press" are matched as whole words. As plain substrings they
+# matched inside "sentence", "presentation" and "suppress", and four rows
+# counted as outward-facing for that reason alone (CORRECTIONS 2026-10-21).
+WHOLE_WORD_MARKERS = ("sent", "press")
+_OUTWARD = tuple(
+    re.compile(r"\b" + re.escape(m) + r"\b") if m in WHOLE_WORD_MARKERS
+    else re.compile(re.escape(m))
+    for m in OUTWARD_MARKERS)
+
+
+def is_outward_facing(text: str) -> bool:
+    """True if a row's lower-cased text carries an outward marker."""
+    return any(pattern.search(text) for pattern in _OUTWARD)
 
 
 def rows(ledger: pathlib.Path = LEDGER) -> list[dict]:
@@ -62,7 +79,7 @@ def rows(ledger: pathlib.Path = LEDGER) -> list[dict]:
         out.append({
             "date": match.group(1),
             "section": section,
-            "outward_facing": any(m in text for m in OUTWARD_MARKERS),
+            "outward_facing": is_outward_facing(text),
             "claim": cells[1][:200] if len(cells) > 1 else "",
         })
     return out
@@ -90,6 +107,12 @@ COPY_PATTERNS = (
     (re.compile(r"(?<=carrying )(\d+)(\s*\n?>?\s*entries)"), "total"),
     (re.compile(r"(\d+)(\s+of them to something already)"), "outward"),
     (re.compile(r"(\d+)(\s+of which corrected something)"), "outward"),
+    # The artifact's own definition, which the copy now quotes instead of
+    # "to something already published" (CORRECTIONS 2026-10-21). Blockquote
+    # markers are allowed between the words because the copy is wrapped.
+    (re.compile(r"(\d+)((?:\s|>)+of(?:\s|>)+them(?:\s|>)+reached,"
+                r"(?:\s|>)+or(?:\s|>)+would(?:\s|>)+have(?:\s|>)+reached)"),
+     "outward"),
 )
 
 
@@ -123,9 +146,15 @@ def sync_copy(total: int, outward: int) -> list[str]:
         original = text
         for pattern, which in COPY_PATTERNS:
             want = str(total if which == "total" else outward)
+            # A count under a dated heading ("## Update — YYYY-MM-DD") is
+            # what that section said on its date; it is never rewritten.
+            spans = dated_spans(text)
 
             def replace(match: re.Match, want: str = want,
-                        which: str = which, name: str = copy.name) -> str:
+                        which: str = which, name: str = copy.name,
+                        spans: list = spans, source: str = text) -> str:
+                if in_dated_section(source, match.start(), spans):
+                    return match.group(0)
                 if match.group(1) != want:
                     changed.append(f"{name} {which}: {match.group(1)} -> {want}")
                 return want + match.group(2)
@@ -133,9 +162,11 @@ def sync_copy(total: int, outward: int) -> list[str]:
             text = pattern.sub(replace, text)
         if text != original:
             copy.write_text(text, encoding="utf-8")
+        spans = dated_spans(text)
         escaped += [f"{copy.name}: " + " ".join(m.group(0).split())
                     for m in SUSPECT_COPY.finditer(text)
-                    if int(m.group(1)) not in (total, outward)]
+                    if int(m.group(1)) not in (total, outward)
+                    and not in_dated_section(text, m.start(), spans)]
     if escaped:
         raise SystemExit(
             "a correction count in the copy is in a shape this fixer does "
@@ -192,7 +223,10 @@ def main() -> int:
             "reached, or would have reached, someone outside this "
             "repository. A typo fixed in a private note is housekeeping; "
             "withdrawing a number already sent to a stranger is the part "
-            "that costs something, and it is the only part worth citing."),
+            "that costs something, and it is the only part worth citing. "
+            "'sent' and 'press' match as whole words only, since "
+            "2026-10-21; as substrings they had matched 'sentence', "
+            "'presentation' and 'suppress'."),
         "by_section": by_section,
         "by_month": by_month,
         "first": dates[0],

@@ -1,0 +1,220 @@
+{
+ "figure": "fence_census",
+ "generated_by": "scripts/make_figures.py",
+ "artifacts": [
+  {
+   "path": "experiments/fence_census_hand.json",
+   "sha256": "af746cc8f8d10e578e8b07995652e86bd80bb8135ef2d2778c3675eec65e2279"
+  },
+  {
+   "path": "experiments/fence_census_amendment_2026-08-25.json",
+   "sha256": "07c4d4db6f21dcbb1bc81412a721c5b1b96508f62f4a9de683a7bd3c2c0b7f73"
+  },
+  {
+   "path": "experiments/census_extension_live_2026-08-31.json",
+   "sha256": "c85cd90df1f77ec1aa9b7e5f6ffe33681ec53f9657847e47318dd8854301576d"
+  }
+ ],
+ "values": {
+  "census_1": {
+   "candidate_sites": 35,
+   "confirmed_by_amendment": 1,
+   "confirmed_by_hand": 6,
+   "confirmed_in_library_code": 3,
+   "confirmed_in_shipped_example_code": 3,
+   "packages_searched": 34,
+   "packages_with_no_candidate": 22,
+   "per_package": {
+    "crewai": {
+     "amendment": 0,
+     "confirmed": 0,
+     "rejected": 2
+    },
+    "crfm-helm": {
+     "amendment": 0,
+     "confirmed": 0,
+     "rejected": 1
+    },
+    "deepeval": {
+     "amendment": 0,
+     "confirmed": 0,
+     "rejected": 4
+    },
+    "dspy": {
+     "amendment": 0,
+     "confirmed": 0,
+     "rejected": 1
+    },
+    "evals": {
+     "amendment": 1,
+     "confirmed": 1,
+     "rejected": 0
+    },
+    "guardrails-ai": {
+     "amendment": 0,
+     "confirmed": 0,
+     "rejected": 1
+    },
+    "inspect-ai": {
+     "amendment": 0,
+     "confirmed": 0,
+     "rejected": 3
+    },
+    "instructor": {
+     "amendment": 0,
+     "confirmed": 2,
+     "rejected": 0
+    },
+    "langchain-core": {
+     "amendment": 0,
+     "confirmed": 0,
+     "rejected": 1
+    },
+    "litellm": {
+     "amendment": 0,
+     "confirmed": 0,
+     "rejected": 12
+    },
+    "opencompass": {
+     "amendment": 0,
+     "confirmed": 0,
+     "rejected": 4
+    },
+    "ragas": {
+     "amendment": 0,
+     "confirmed": 3,
+     "rejected": 0
+    }
+   },
+   "rejected_by_hand": 29
+  },
+  "census_2_maintained": {
+   "confirmed": 1,
+   "confirmed_then_rejected_on_reachability": [
+    "deepeval"
+   ],
+   "packages_in_frame": 7,
+   "per_package": {
+    "arize_phoenix_evals": {
+     "confirmed": 0,
+     "raw_findings": 0,
+     "rejected": 0
+    },
+    "autoevals": {
+     "confirmed": 1,
+     "raw_findings": 1,
+     "rejected": 0
+    },
+    "deepeval": {
+     "confirmed": 0,
+     "raw_findings": 24,
+     "rejected": 24
+    },
+    "inspect_ai": {
+     "confirmed": 0,
+     "raw_findings": 8,
+     "rejected": 8
+    },
+    "lm_eval": {
+     "confirmed": 0,
+     "raw_findings": 0,
+     "rejected": 0
+    },
+    "mlflow": {
+     "confirmed": 0,
+     "raw_findings": 31,
+     "rejected": 31
+    },
+    "openevals": {
+     "confirmed": 0,
+     "raw_findings": 0,
+     "rejected": 0
+    }
+   },
+   "raw_findings_total": 64,
+   "rejected": 63,
+   "released_range": [
+    "2026-04-07",
+    "2026-08-30"
+   ]
+  }
+ },
+ "prose_checked": [
+  {
+   "doc": "README.md",
+   "quote": "**7 confirmed instances across 34 published packages**",
+   "cited": [
+    [
+     "7",
+     "census 1 confirmed incl. amendment"
+    ],
+    [
+     "34",
+     "census 1 packages"
+    ]
+   ]
+  },
+  {
+   "doc": "README.md",
+   "quote": "6 of 35 candidate sites read by hand",
+   "cited": [
+    [
+     "6",
+     "census 1 confirmed by hand"
+    ],
+    [
+     "35",
+     "census 1 candidate sites"
+    ]
+   ]
+  },
+  {
+   "doc": "README.md",
+   "quote": "All 29 rejections are published",
+   "cited": [
+    [
+     "29",
+     "census 1 rejected"
+    ]
+   ]
+  },
+  {
+   "doc": "README.md",
+   "quote": "preregistered census over **7 actively-maintained packages**",
+   "cited": [
+    [
+     "7",
+     "census 2 packages"
+    ]
+   ]
+  },
+  {
+   "doc": "README.md",
+   "quote": "found **1 confirmed instance**",
+   "cited": [
+    [
+     "1",
+     "census 2 confirmed"
+    ]
+   ]
+  },
+  {
+   "doc": "VERDICT.md",
+   "quote": "every one of the **64 raw findings hand-adjudicated**",
+   "cited": [
+    [
+     "64",
+     "census 2 raw findings"
+    ]
+   ]
+  }
+ ],
+ "private_prose_quotes": {
+  "checked": 1,
+  "absent_from_this_tree": 0
+ },
+ "files": [
+  "figures/fence_census.svg",
+  "figures/fence_census.png"
+ ]
+}

@@ -212,3 +212,17 @@ exist.
    stranger on another box, and its between-arm Phi-3 divergence needs no
    cross-arm explanation. The `generate` comparator banked on 2026-09-03
    still differs today on 4 of 10 documents, cause unrecorded.
+
+## Erratum — 2026-10-21, found by a hostile numbers audit
+
+9. **A date and one unbanked figure in errata 7 and 8.** The Phi-3
+   `generate` comparator that errata 7 and 8 date 2026-09-03 is Addendum
+   T's `phi3-mini_schema.json` cell, first committed
+   2026-09-05T01:28:18Z (`41970c8`); Addendum T's cells ran from
+   2026-09-03 to 2026-09-05. Read "banked on 2026-09-05". Erratum 7's
+   isolation recheck ("a fresh process reproduces it twice") is prose
+   only: no artifact banks it. Nothing else in either erratum moves.
+
+   The bytes anchored at `2026-09-17T0750Z` are in
+   `snapshots_ADDENDUM_V_PROTOCOL_2026-09-17T0750Z.md`; this file begins
+   with them byte for byte.

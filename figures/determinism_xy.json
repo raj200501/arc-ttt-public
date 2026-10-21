@@ -1,0 +1,302 @@
+{
+ "figure": "determinism_xy",
+ "generated_by": "scripts/make_figures.py",
+ "artifacts": [
+  {
+   "path": "experiments/cord_decoder_isolation_2026-09-16.json",
+   "sha256": "f775f98cc0cb2572bfa7991279f2bbaf3fd40f72e4756731fe9ddb2af22d5fbc"
+  },
+  {
+   "path": "experiments/phi3_instability_2026-09-17.json",
+   "sha256": "a74d32b5e99262e2b3387eacb91db9136a98d215256de74774d90559e98e6e24"
+  },
+  {
+   "path": "docs/research/ADDENDUM_Y_PROTOCOL.md",
+   "sha256": "77c2f08e776b38edd9478e23ed2fb89b3a6ae5faa93c2a92cdaad14c7daf64da"
+  }
+ ],
+ "values": {
+  "x_date": "2026-09-16",
+  "x_gate": [
+   {
+    "comparisons": 10,
+    "differing": 0,
+    "differing_by_arm": {
+     "C": 0,
+     "G0": 0
+    },
+    "documents": 5,
+    "family": "qwen2.5-0.5b",
+    "passed": true
+   },
+   {
+    "comparisons": 10,
+    "differing": 0,
+    "differing_by_arm": {
+     "C": 0,
+     "G0": 0
+    },
+    "documents": 5,
+    "family": "smollm2-1.7b",
+    "passed": true
+   },
+   {
+    "comparisons": 0,
+    "differing": 0,
+    "differing_by_arm": {},
+    "documents": 0,
+    "family": "granite-2b",
+    "passed": true
+   },
+   {
+    "comparisons": 10,
+    "differing": 2,
+    "differing_by_arm": {
+     "C": 0,
+     "G0": 2
+    },
+    "documents": 5,
+    "family": "phi3-mini",
+    "passed": false
+   },
+   {
+    "comparisons": 10,
+    "differing": 0,
+    "differing_by_arm": {
+     "C": 0,
+     "G0": 0
+    },
+    "documents": 5,
+    "family": "falcon3-1b",
+    "passed": true
+   }
+  ],
+  "x_reading": "WITHHELD BY THE DETERMINISM GATE",
+  "y5_thread_count": {
+   "differing": 1,
+   "of": 2,
+   "reading": "THREAD-SENSITIVE"
+  },
+  "y_date": "2026-09-17",
+  "y_n_docs": 10,
+  "y_readings": {
+   "phi3-mini/bfloat16": "REPRODUCES",
+   "qwen2.5-0.5b/bfloat16": "REPRODUCES",
+   "qwen2.5-0.5b/float32": "REPRODUCES"
+  },
+  "y_rows": [
+   {
+    "check": "Y1_immediate_repeat_differs",
+    "differing": 0,
+    "of": 10,
+    "pair": "phi3-mini/bfloat16"
+   },
+   {
+    "check": "Y2_state_differs",
+    "differing": 0,
+    "of": 10,
+    "pair": "phi3-mini/bfloat16"
+   },
+   {
+    "check": "Y3_generate_state_differs",
+    "differing": 0,
+    "of": 10,
+    "pair": "phi3-mini/bfloat16"
+   },
+   {
+    "check": "then_vs_now.constrained_a1_vs_banked",
+    "differing": 0,
+    "of": 10,
+    "pair": "phi3-mini/bfloat16"
+   },
+   {
+    "check": "then_vs_now.generate_g1_vs_banked",
+    "differing": 4,
+    "of": 10,
+    "pair": "phi3-mini/bfloat16"
+   },
+   {
+    "check": "Y1_immediate_repeat_differs",
+    "differing": 0,
+    "of": 10,
+    "pair": "qwen2.5-0.5b/bfloat16"
+   },
+   {
+    "check": "Y2_state_differs",
+    "differing": 0,
+    "of": 10,
+    "pair": "qwen2.5-0.5b/bfloat16"
+   },
+   {
+    "check": "Y3_generate_state_differs",
+    "differing": 0,
+    "of": 10,
+    "pair": "qwen2.5-0.5b/bfloat16"
+   },
+   {
+    "check": "Y1_immediate_repeat_differs",
+    "differing": 0,
+    "of": 10,
+    "pair": "qwen2.5-0.5b/float32"
+   },
+   {
+    "check": "Y2_state_differs",
+    "differing": 0,
+    "of": 10,
+    "pair": "qwen2.5-0.5b/float32"
+   },
+   {
+    "check": "Y3_generate_state_differs",
+    "differing": 0,
+    "of": 10,
+    "pair": "qwen2.5-0.5b/float32"
+   },
+   {
+    "check": "then_vs_now.constrained_a1_vs_banked",
+    "differing": 0,
+    "of": 10,
+    "pair": "qwen2.5-0.5b/float32"
+   },
+   {
+    "check": "then_vs_now.generate_g1_vs_banked",
+    "differing": 0,
+    "of": 10,
+    "pair": "qwen2.5-0.5b/float32"
+   }
+  ]
+ },
+ "prose_checked": [
+  {
+   "doc": "EVIDENCE.md",
+   "quote": "Three families do, 0 mismatches of 10 comparisons each",
+   "cited": [
+    [
+     "Three",
+     "X families passing with comparisons"
+    ],
+    [
+     "0",
+     "X mismatches"
+    ],
+    [
+     "10",
+     "X comparisons per family"
+    ]
+   ]
+  },
+  {
+   "doc": "VERDICT.md",
+   "quote": "the second run **fails too** (2 mismatches)",
+   "cited": [
+    [
+     "2",
+     "X Phi-3 mismatches (the banked run)"
+    ]
+   ]
+  },
+  {
+   "doc": "VERDICT.md",
+   "quote": "Y1 = Y2 = Y3 = 0 of 10 on Phi-3/bfloat16",
+   "cited": [
+    [
+     "0 of 10",
+     "Y1-3"
+    ]
+   ]
+  },
+  {
+   "doc": "VERDICT.md",
+   "quote": "(Y5 = 1 of 2)",
+   "cited": [
+    [
+     "1 of 2",
+     "Y5"
+    ]
+   ]
+  },
+  {
+   "doc": "VERDICT.md",
+   "quote": "Phi-3's constrained pass also matches Addendum V's banked cell 10 of 10",
+   "cited": [
+    [
+     "10 of 10",
+     "Phi-3 constrained then-vs-now agreeing"
+    ]
+   ]
+  },
+  {
+   "doc": "VERDICT.md",
+   "quote": "on 4 of 10 documents",
+   "cited": [
+    [
+     "4 of 10",
+     "Phi-3 generate then-vs-now differing"
+    ]
+   ]
+  },
+  {
+   "doc": "paper/DRAFT.md",
+   "quote": "all 30 comparisons were byte-identical: five documents, two reused arms, three families",
+   "cited": [
+    [
+     "30",
+     "X comparisons, passing"
+    ],
+    [
+     "five",
+     "X documents per family"
+    ],
+    [
+     "two",
+     "X reused arms"
+    ],
+    [
+     "three",
+     "X passing families"
+    ]
+   ]
+  },
+  {
+   "doc": "paper/DRAFT.md",
+   "quote": "did not reproduce the text banked on 2026-09-03 for the same two of the five documents",
+   "cited": [
+    [
+     "two",
+     "X Phi-3 generate-comparator documents differing (banked run)"
+    ],
+    [
+     "five",
+     "X documents"
+    ]
+   ]
+  },
+  {
+   "doc": "paper/DRAFT.md",
+   "quote": "on 4 of 10 documents",
+   "cited": [
+    [
+     "4 of 10",
+     "Phi-3 generate then-vs-now differing"
+    ]
+   ]
+  },
+  {
+   "doc": "paper/DRAFT.md",
+   "quote": "It decoded the first ten documents",
+   "cited": [
+    [
+     "ten",
+     "Y documents"
+    ]
+   ]
+  }
+ ],
+ "private_prose_quotes": {
+  "checked": 0,
+  "absent_from_this_tree": 0
+ },
+ "files": [
+  "figures/determinism_xy.svg",
+  "figures/determinism_xy.png"
+ ]
+}

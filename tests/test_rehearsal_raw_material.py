@@ -114,3 +114,21 @@ def test_the_field_audit_page_regenerates_from_the_artifacts() -> None:
     # the losses and ties must still be in the page a reader is shown
     assert sum(1 for r in data if r["sa"] < r["sp"]) == 5
     assert sum(1 for r in data if r["sa"] == r["sp"]) == 17
+
+
+def test_a_clone_can_rebuild_the_field_audit_page_byte_for_byte(
+        tmp_path: Path) -> None:
+    """The README says the page regenerates from the artifacts. The banked
+    raw files are flat, and the builder used to want the live run
+    directory's nested layout, so a clone could not run it. It must take
+    the banked directory and reproduce the shipped page exactly."""
+    page = REPO / "demo" / "waybill_field_audit.html"
+    if not page.exists():
+        pytest.skip("field-audit page not in this tree")
+    out = tmp_path / "audit.html"
+    result = subprocess.run(
+        [sys.executable, str(REPO / "scripts" / "build_field_audit.py"),
+         "--run-dir", str(RAW), "--artifact", str(PAIRED), "--out", str(out)],
+        capture_output=True, text=True, cwd=REPO, check=False)
+    assert result.returncode == 0, result.stderr
+    assert out.read_bytes() == page.read_bytes()

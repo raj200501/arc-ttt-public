@@ -6,10 +6,12 @@
     PYTHONPATH=src python3 scripts/cord_decoder_isolation.py --constrained granite-2b
     PYTHONPATH=src python3 scripts/cord_decoder_isolation.py --cell qwen2.5-0.5b
     PYTHONPATH=src python3 scripts/cord_decoder_isolation.py --generate-neutral qwen2.5-0.5b
-    PYTHONPATH=src python3 scripts/cord_decoder_isolation.py --read
+    PYTHONPATH=src python3 scripts/cord_decoder_isolation.py --read --out /tmp/x.json
 
 Preregistration: docs/research/ADDENDUM_X_PROTOCOL.md (frozen 2026-09-16,
-before the plain arm ran on any family).
+before the plain arm ran on any family). X's artifact is banked and
+anchored; `--read` refuses to write over it (2026-10-21) and recomputes
+only into a new path given with `--out`.
 
 Addendum V compared a constrained arm against `model.generate` cells and
 so varied three things at once -- the constraint, the decoding path, and
@@ -33,6 +35,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import pathlib
 import re
 import sys
@@ -57,6 +60,27 @@ OUT = REPO / "experiments" / "cord_decoder_isolation_2026-09-16.json"
 CONFIGS = REPO / "experiments" / "generation_configs_2026-09-16.json"
 WORK = REPO / "work" / "x"
 V_ARTIFACT = REPO / "experiments" / "cord_constrained_families_2026-09-08.json"
+
+# The one id the plain loop stops on. `constrained_greedy_generate` reads
+# `eos = tokenizer.eos_token_id` and breaks on it without appending it
+# (src/arcttt/constrained_json.py). Neither X's cells nor its scope record
+# bank that id, so it is pinned here, for the families whose X2 runs on
+# token ids, from each checkpoint's tokenizer_config.json at the Hugging
+# Face revision that was current before X ran (fetched 2026-10-21):
+#   Qwen/Qwen2.5-0.5B-Instruct 7ae557604adf67be50417f59c2c2f167def9a775
+#     (last modified 2024-09-25; tokenizer_config.json sha256
+#     5b5d4f65d0acd3b2d56a35b56d374a36cbc1c8fa5cf3b3febbbfabf22f359583):
+#     eos_token "<|im_end|>" = 151645
+#   ibm-granite/granite-3.1-2b-instruct bbc2aed595bd38bd770263dc3ab831db9794441d
+#     (last modified 2025-04-16; tokenizer_config.json sha256
+#     ab17e0d532ecf47e9d8451939dd81f25dd98c5fba4b6742584549bbf9c1f06b9):
+#     eos_token "<|end_of_text|>" = 0
+# It is NOT generate's stop set. Qwen's generation_config.json at the same
+# revision lists two ids, [151645, 151643]; generate stops on either, our
+# loop only on the first. Addendum AA's reader re-derives the id from the
+# tokenizer at read time where transformers is present, and refuses on any
+# disagreement.
+PLAIN_LOOP_EOS_ID = {"qwen2.5-0.5b": 151645, "granite-2b": 0}
 
 # --------------------------------------------------------------------------
 # a prompt that does not depend on what day it is
@@ -700,14 +724,21 @@ def x1_combine(per_family: dict) -> str:
             f"Per-family: {json.dumps(per_family)}")
 
 
-def x2_reading(divergences: int, basis: str = "token ids") -> str:
+def x2_reading(divergences: int, basis: str = "token ids",
+               as_first_coded: int | None = None) -> str:
     """The frozen vocabulary stays the prefix of the string; where the test
     was run on decoded text rather than token ids the string says so, so a
-    weaker result can never be read as the stronger one."""
+    weaker result can never be read as the stronger one. On the token
+    basis, `as_first_coded` is the count before the 2026-09-23 EOS erratum
+    (see `read_families`); the erratum moves X2 the way that favours us, so
+    when it is given both counts are in the reading string itself."""
     verdict = ("PATH REPRODUCES" if divergences == 0
                else f"PATH DIVERGES ({divergences})")
     if basis == "token ids":
-        return verdict
+        if as_first_coded is None:
+            return verdict
+        return (verdict + f" (EOS erratum 2026-09-23: {divergences} documents diverge "
+                f"as corrected, {as_first_coded} as first coded)")
     return verdict + " (WEAKER TEST: decoded text, not token ids)"
 
 
@@ -753,11 +784,15 @@ def _prefix_divergence(a, b, a_stopped_on: str = "complete"):
     return None
 
 
-def _without_generate_stop(b, eos_ids):
-    """The generate arm's ids without its own trailing stop token, if any.
-    See the 2026-09-23 erratum in `read_families`."""
+def _without_generate_stop(b, plain_stop_id, a_stopped_on: str):
+    """The generate arm's ids without its trailing token, only where that
+    token is the one our loop stopped on: the plain arm stopped on EOS, and
+    generate's last id is the tokenizer's eos id (`PLAIN_LOOP_EOS_ID`).
+    Any other id in generate's own stop set is a different token at the
+    stop position, and stays a divergence. See the 2026-09-23 erratum in
+    `read_families`."""
     b = list(b)
-    if b and b[-1] in eos_ids:
+    if a_stopped_on == "eos" and b and b[-1] == plain_stop_id:
         return b[:-1]
     return b
 
@@ -774,16 +809,25 @@ def _arm_c_path(family: str, scope: dict) -> pathlib.Path:
             else OUT_DIR / f"{family}_constrained.json")
 
 
-def read_families(families, scope: dict) -> tuple:
-    """X1, X2 and X3 per family: the arithmetic of `read()`, moved here
-    unchanged (2026-09-23) so that a successor addendum reading the same
-    cells does so with this code rather than a copy of it. `read()` calls it
-    for every family once the gate has passed; nothing about X's own
-    reading changes. Returns (rows, x1_per_family, x2_per_family, x3,
-    prompt_mismatches)."""
+def read_families(families, scope: dict, fencecheck=None, plain_stop_ids=None) -> tuple:
+    """X1, X2 and X3 per family: the arithmetic of `read()`, moved here on
+    2026-09-23 so that a successor addendum reading the same cells does so
+    with this code rather than a copy of it. `read()` calls it for every
+    family once the gate has passed.
+
+    It is NOT unchanged. The move carried one correction, the EOS erratum
+    below (re-scoped 2026-10-21 to the one id our loop stops on), which
+    changes X2's token-basis count, and X2's reading string, for X's own
+    reading too: X withheld, so no banked number moves. Two parameters were
+    added on 2026-10-21. `fencecheck` is the module whose `strip_fence`
+    classifies every output; by default X's `cft._fc()` loads the live
+    tools/fencecheck.py, and Addendum AA passes the copy X ran with instead.
+    `plain_stop_ids` defaults to `PLAIN_LOOP_EOS_ID`. Returns (rows,
+    x1_per_family, x2_per_family, x3, prompt_mismatches)."""
     from arcttt.scoring import field_micro_f1, parse_json_object
     from arcttt.text_task import TextTaskFormatError
-    fc = cft._fc()
+    fc = fencecheck if fencecheck is not None else cft._fc()
+    stop_ids = PLAIN_LOOP_EOS_ID if plain_stop_ids is None else plain_stop_ids
 
     gold = {json.loads(l)["id"]: json.loads(l)["gold"] for l in
             (cft.SPLIT_DIR / "gold.jsonl").read_text().splitlines() if l.strip()}
@@ -872,16 +916,31 @@ def read_families(families, scope: dict) -> tuple:
             # generate arm's own stop token as a divergence -- but the frozen
             # protocol says the two "must end in the same place", and a stop
             # token is where generate ended, not a further token. The
-            # comparison now drops ONE trailing token from the generate arm if
-            # it is in that arm's own EOS set. The as-coded count is kept
-            # beside it, and both publish.
-            eos_ids = g.get("effective_generation_config", {}).get("eos_token_id")
-            eos_ids = set(eos_ids if isinstance(eos_ids, list) else
-                          ([] if eos_ids is None else [eos_ids]))
+            # comparison drops ONE trailing token from the generate arm, and
+            # only where the plain arm stopped on EOS and that token is the
+            # tokenizer's eos id, the one id our loop stops on
+            # (PLAIN_LOOP_EOS_ID). As first written (2026-09-23) it dropped
+            # any id in generate's own EOS set; a different stop id at the
+            # stop position is a real disagreement, and that version counted
+            # it as agreement, in our favour. Re-scoped 2026-10-21, before
+            # any cell was read. The as-coded count is kept beside it, and
+            # both publish, in the reading string itself.
+            if family not in stop_ids:
+                raise SystemExit(f"{family}: no plain-loop stop id pinned; X2 on the token "
+                                 "basis cannot apply the EOS erratum without it")
+            stop_id = stop_ids[family]
+            # the id dropped from each document, banked so a stranger can see
+            # that only our loop's own stop id was ever removed
+            stripped = {d: stop_id for d in ids
+                        if len(_without_generate_stop(
+                            g["per_document_token_ids"][d], stop_id,
+                            plain["per_document_decode"][d]["stopped_on"]))
+                        < len(g["per_document_token_ids"][d])}
             div = {d: at for d in ids
                    if (at := _prefix_divergence(
                        plain["per_document_token_ids"][d],
-                       _without_generate_stop(g["per_document_token_ids"][d], eos_ids),
+                       _without_generate_stop(g["per_document_token_ids"][d], stop_id,
+                                              plain["per_document_decode"][d]["stopped_on"]),
                        plain["per_document_decode"][d]["stopped_on"])) is not None}
             div_as_coded = {d: at for d in ids
                             if (at := _prefix_divergence(
@@ -898,8 +957,10 @@ def read_families(families, scope: dict) -> tuple:
                        plain["per_document_decode"][d]["stopped_on"])) is not None}
             comparison, basis = "P vs G0 (text prefix; G == G0, no modifiers)", "decoded text"
             div_as_coded = div  # decoded text carries no stop token; nothing to correct
+            stripped = {}
         i_other = sum(classify(other[d])[0] is None for d in ids)
-        x2 = x2_reading(len(div), basis)
+        x2 = x2_reading(len(div), basis,
+                        len(div_as_coded) if basis == "token ids" else None)
         x2_per_family[family] = x2
 
         mean_d = round(sum(deltas) / len(deltas), 4)
@@ -923,13 +984,14 @@ def read_families(families, scope: dict) -> tuple:
             "x2_divergent_documents": len(div), "x2_first_divergence_index": div,
             "x2_divergent_documents_as_first_coded": len(div_as_coded),
             "x2_documents_changed_by_the_eos_erratum": sorted(set(div_as_coded) ^ set(div)),
+            "x2_eos_erratum_stripped_ids": stripped,
             "x2_reading": x2,
             "score_mean_delta_constrained_minus_plain": mean_d,
             "score_wins_losses_ties": [wins, losses, ties],
             "score_sign_test_p": round(p, 4),
         })
         print(f"{family:14s} X1 invalid {i_p:2d} -> {i_c:2d} (identical {identical}/{len(ids)}, "
-              f"reg {regressions})  {x1:34s} | X2 {x2:18s} vs {other_name} "
+              f"reg {regressions})  {x1:34s} | X2 {x2} vs {other_name} "
               f"(invalid {i_other}) | accounting {'ok' if accounting_ok else 'INCONSISTENT'}")
 
         # ---- X3: the defaults, on the family that ships one
@@ -982,7 +1044,42 @@ def read_families(families, scope: dict) -> tuple:
     return rows, x1_per_family, x2_per_family, x3, prompt_mismatches
 
 
-def read() -> int:
+def write_new_file(path, text: str) -> None:
+    """Write `text` to `path` once: never over an existing file, never half.
+
+    The bytes go first to a temporary file in the same directory, opened
+    with O_EXCL and fsynced. It is then linked to `path`; a link fails if
+    `path` exists, where a rename would silently replace it. The temporary
+    name is then removed. A crash leaves at most a stray temporary file,
+    never a truncated file under the real name."""
+    path = pathlib.Path(path)
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(text)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.link(tmp, path)
+    finally:
+        try:
+            os.unlink(tmp)
+        except FileNotFoundError:
+            pass
+
+
+def read(out=None) -> int:
+    # X's artifact is banked and anchored (ANCHORS.md). Until 2026-10-21 this
+    # function wrote it unconditionally, so the recompute command the
+    # artifact itself names would have replaced the anchored bytes with a
+    # fresh environment record. It now never writes over an existing file,
+    # whatever the spelling of the path.
+    target = pathlib.Path(os.path.realpath(out if out is not None else OUT))
+    if target.exists():
+        print(f"REFUSED: {target} exists. X's artifact is banked and anchored, and "
+              "--read never writes over a file. Recompute into a new path: "
+              "--read --out <path>.")
+        return 2
     scope = _scope()
 
     # The gate is checked FIRST, and it is terminal. A failed gate voids the
@@ -1035,11 +1132,11 @@ def read() -> int:
                 "one, and this artifact deliberately does not compute their readings."),
             "how_to_recompute": "PYTHONPATH=src python3 scripts/cord_decoder_isolation.py --read",
         }
-        OUT.write_text(json.dumps(record, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+        write_new_file(target, json.dumps(record, indent=1, ensure_ascii=False) + "\n")
         print("WITHHELD BY THE DETERMINISM GATE: " + ", ".join(failed) +
               ". A reused arm does not reproduce, and that non-determinism is the "
               "result. See the banked gate cells.")
-        print(f"banked: {OUT.relative_to(REPO)}")
+        print(f"banked: {target}")
         return 1
 
     missing = []
@@ -1091,24 +1188,27 @@ def read() -> int:
             # says. The protocol predicts SmolLM2 only and names Granite as NOT
             # predicted. Never banked (X withheld); found and corrected
             # 2026-09-23 while preparing the successor reading. The protocol wins.
-            "X2: PATH DIVERGES on Phi-3 (V saw 32 of 50 bodies differ at bfloat16); "
+            # Since 2026-10-21 it is X's sentence word for word (ADDENDUM_X_PROTOCOL.md,
+            # "Two predictions, written before the run"); the first correction
+            # paraphrased it.
+            "X2: PATH DIVERGES on Phi-3 (V saw 32 of 50 bodies differ at bfloat16) and "
             "PATH REPRODUCES on SmolLM2. Qwen, Falcon3 and Granite are not predicted "
-            "-- Granite because its arms are compared under a prompt V never used.",
+            "\u2014 Granite because its arms are being compared under a prompt V never used.",
         ],
         "how_to_recompute": "PYTHONPATH=src python3 scripts/cord_decoder_isolation.py --read",
     }
-    OUT.write_text(json.dumps(record, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    write_new_file(target, json.dumps(record, indent=1, ensure_ascii=False) + "\n")
     print(f"\n{x1_finding}")
     if prompt_mismatches:
         print(f"\nPROMPT MISMATCH between compared arms: {prompt_mismatches[:5]} ...")
     if inconsistent:
         print(f"\nDECODER ACCOUNTING INCONSISTENT IN {', '.join(inconsistent)} -- a "
               "document with 0 constrained steps whose arms differ. This is the result.")
-    print(f"\nbanked: {OUT.relative_to(REPO)}")
+    print(f"\nbanked: {target}")
     return 0
 
 
-def main() -> int:
+def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--bank-configs", action="store_true")
     ap.add_argument("--force-configs", action="store_true")
@@ -1117,7 +1217,9 @@ def main() -> int:
     ap.add_argument("--generate-neutral", choices=sorted(CELLS))
     ap.add_argument("--determinism", choices=sorted(CELLS))
     ap.add_argument("--read", action="store_true")
-    args = ap.parse_args()
+    ap.add_argument("--out", default=None,
+                    help="with --read: recompute into this new path (never over an existing file)")
+    args = ap.parse_args(argv)
     if args.bank_configs or args.force_configs:
         return bank_configs(force=args.force_configs)
     if args.determinism:
@@ -1129,7 +1231,7 @@ def main() -> int:
     if args.generate_neutral:
         return run_generate_neutral(args.generate_neutral)
     if args.read:
-        return read()
+        return read(args.out)
     ap.print_help()
     return 2
 

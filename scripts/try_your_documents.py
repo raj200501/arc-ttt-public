@@ -60,7 +60,9 @@ def run(cmd: list[str], label: str) -> None:
 def score_arm(pred: pathlib.Path, gold: pathlib.Path) -> dict[str, float]:
     """Score one arm with the pinned scorer, returning per-document F1."""
     sys.path.insert(0, str(REPO / "src"))
-    from arcttt.text_ttt import score_text_output
+    # The same function arcttt.text_ttt re-exports, imported from the
+    # torch-free module so scoring runs without torch.
+    from arcttt.scoring import score_text_output
 
     gold_by_id = {}
     for line in gold.read_text(encoding="utf-8").splitlines():

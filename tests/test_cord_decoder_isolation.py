@@ -180,6 +180,11 @@ def test_x2_reading_and_prefix_divergence():
     m = _load_module()
     assert m.x2_reading(0) == "PATH REPRODUCES"
     assert m.x2_reading(1).startswith("PATH DIVERGES")
+    # on the token basis the EOS erratum's two counts sit in the string itself,
+    # after the frozen vocabulary, which stays its prefix
+    both = m.x2_reading(0, "token ids", 2)
+    assert both.startswith("PATH REPRODUCES (") and "0 documents diverge as corrected, 2 as first coded" in both
+    assert m.x2_reading(1, "decoded text", 1) == "PATH DIVERGES (1) (WEAKER TEST: decoded text, not token ids)"
     # ours stops as soon as the document parses, generate runs on: shorter
     # is agreement, and only where ours did NOT stop on eos.
     assert m._prefix_divergence([1, 2, 3], [1, 2, 3, 4]) is None
@@ -282,3 +287,53 @@ def test_both_gate_runs_are_kept_when_they_disagree():
     assert not a["passed"] and not b["passed"], "a re-run that passes must not replace one that failed"
     assert b.get("first_run") == first.name
     assert "the_two_runs_disagree" in b
+
+
+# ---------------------------------------------------------------------------
+# X's artifact is banked and anchored. Until 2026-10-21 `--read` wrote it
+# unconditionally, so the recompute command the artifact itself names would
+# have replaced the anchored bytes. It now never writes over a file.
+# ---------------------------------------------------------------------------
+
+def test_read_refuses_to_write_over_an_existing_artifact(tmp_path, monkeypatch, capsys):
+    m = _load_module()
+    banked = tmp_path / "experiments" / "cord_decoder_isolation_2026-09-16.json"
+    banked.parent.mkdir()
+    banked.write_text("anchored bytes\n")
+    monkeypatch.setattr(m, "OUT", banked)
+
+    def forbidden(*a, **k):
+        raise AssertionError("the reading ran although its target exists")
+
+    monkeypatch.setattr(m, "_scope", forbidden)
+    monkeypatch.setattr(m, "_environment", forbidden)
+    monkeypatch.chdir(tmp_path)
+    for spelling in (None, banked, pathlib.Path("experiments") / banked.name,
+                     pathlib.Path("./experiments/../experiments") / banked.name):
+        assert m.read(spelling) == 2, spelling
+    assert m.main(["--read"]) == 2
+    assert banked.read_text() == "anchored bytes\n"
+    assert "never writes over a file" in capsys.readouterr().out
+
+
+def test_read_out_recomputes_the_withholding_into_a_new_file(tmp_path, monkeypatch):
+    """The failed-gate branch, on synthetic gate cells, into --out."""
+    import json as _json
+    m = _load_module()
+    cells = tmp_path / "cells"
+    cells.mkdir()
+    for family in m.CELLS:
+        passed = family != "phi3-mini"
+        (cells / f"{family}_determinism.json").write_text(_json.dumps(
+            {"n": 5, "mismatches": 0 if passed else 2, "passed": passed, "documents": []}))
+    monkeypatch.setattr(m, "OUT_DIR", cells)
+    monkeypatch.setattr(m, "OUT", tmp_path / "banked.json")
+    monkeypatch.setattr(m, "_environment", lambda: {"synthetic": True})
+    monkeypatch.setattr(m, "_scope", lambda: {f: {"arm_G_runs": False} for f in m.CELLS})
+    out = tmp_path / "recomputed.json"
+    assert m.read(out) == 1
+    record = _json.loads(out.read_text())
+    assert record["reading"] == "WITHHELD BY THE DETERMINISM GATE"
+    assert record["failed_families"] == ["phi3-mini"]
+    assert not (tmp_path / "banked.json").exists()
+    assert m.read(out) == 2  # and never twice into the same file

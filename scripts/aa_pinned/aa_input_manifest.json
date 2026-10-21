@@ -1,0 +1,82 @@
+{
+ "what": "Addendum AA's input data, pinned by sha256 before the freeze. The bytes of each file were hashed and none was parsed. Every file is byte-identical to its blob at X's banking commit.",
+ "x_run_commit": "b4facacea71c144654b49eec7e393e79c1e0162f",
+ "files": {
+  "experiments/generation_configs_2026-09-16.json": {
+   "sha256": "9874667b9ba236e69306a922fb582b54b4e6c6b2d634d7acf184e6ce6d7e54af",
+   "git_blob": "108b73a942d1bb28fb928f1a55aabf2971cbf763"
+  },
+  "experiments/cord_decoder_isolation_2026-09-16.json": {
+   "sha256": "f775f98cc0cb2572bfa7991279f2bbaf3fd40f72e4756731fe9ddb2af22d5fbc",
+   "git_blob": "bcdef0fd006ff254cf012edf4c0c2a9745f20fa6"
+  },
+  "experiments/cord_constrained_families_2026-09-08.json": {
+   "sha256": "fc72070875c654f63b38d5e11a4060f1c8fbaa8865ab5e5b6cfc08e188578269",
+   "git_blob": "4563ecf3dc9a9560b7e267b70061c170069294cb"
+  },
+  "experiments/ladder_e6_cord_split/gold.jsonl": {
+   "sha256": "7073e77dcd315936ab94da603f75fff11953e2751adef49b08d2278c490fdc70",
+   "git_blob": "12dbf5e70039a0aa0542b97a3afd624aab467e5c"
+  },
+  "experiments/ladder_e6_cord_split/train.jsonl": {
+   "sha256": "431208ddfe21c80717c0e9dafc03cdd4b713db5352dca7e26a762ab490c862f1",
+   "git_blob": "ce23c63baeeca950f0404a07c43cd57d19bdb28a"
+  },
+  "experiments/cord_decoder_isolation_cells/qwen2.5-0.5b_plain.json": {
+   "sha256": "62176e3d44c117a30ea30087e2ce911d42eb5a17d35eda3ee26e37a643d27e2c",
+   "git_blob": "a6dcf87013118da669ce31ecaa25442d699339c6"
+  },
+  "experiments/cord_constrained_families_cells/qwen2.5-0.5b_schema_constrained.json": {
+   "sha256": "bd6c043221933fe8d30861d64fa80660e4a0eb4f0d4c83a3ee4e6975c3a537a5",
+   "git_blob": "bfdaba1768507585f4cd86be49f685141f710581"
+  },
+  "experiments/cord_fence_tax_cells/0.5b_schema.json": {
+   "sha256": "f28a207e440ded903d9a94e0437c29da0d51c75e6874936042ac865d263d830d",
+   "git_blob": "16bbb62b384c8a0f74321cea818571c1ffc00dc6"
+  },
+  "experiments/cord_decoder_isolation_cells/qwen2.5-0.5b_generate_neutral.json": {
+   "sha256": "5255954829ad64b502b61395ed5e0b7c606a563afd01e17fbaa024de8c8aa43d",
+   "git_blob": "65ac484b5ea5db8d28a2953c93abbb5beb85c85e"
+  },
+  "experiments/cord_decoder_isolation_cells/smollm2-1.7b_plain.json": {
+   "sha256": "36191ec62110ee63b6bc67002873cf04f8b00b6a48b4a25235db88400398b34c",
+   "git_blob": "ae8189149869f4a84cddac6310cb2d5b7b7ca689"
+  },
+  "experiments/cord_constrained_families_cells/smollm2-1.7b_schema_constrained.json": {
+   "sha256": "7d6cd5afb96a797ebd5abee53cb387f83aa11e83750bb4cba6b114fbb1432536",
+   "git_blob": "099cc60fe016fa81a62dbee1e342bf55ab5397a5"
+  },
+  "experiments/cord_fence_tax_families_cells/smollm2-1.7b_schema.json": {
+   "sha256": "810484e56220b46d138a2120ca0880e1c3f6c1758835c79c6a7b17579cfd76a4",
+   "git_blob": "de27fae555dcc97b337d5962f7b772bee5c5b642"
+  },
+  "experiments/cord_decoder_isolation_cells/granite-2b_plain.json": {
+   "sha256": "ed4acd47efa36586dbe694c55da4507bca46b749261f2876b37d4c2f87e15ca2",
+   "git_blob": "1685f079928d9a12cc2d1f822e7c0c367abb9e6a"
+  },
+  "experiments/cord_decoder_isolation_cells/granite-2b_constrained.json": {
+   "sha256": "3d55007bb8b0c7f8f80fa119ab1d5a4b33424ebab0362fc8969b5b7d0e23eebd",
+   "git_blob": "deece5c1fe4406a54625b6b06afc2f127b1ec02a"
+  },
+  "experiments/cord_fence_tax_families_cells/granite-2b_schema.json": {
+   "sha256": "90370d584aa3eec531e36e387bf7ba7baf777060f4cacb964476d75849919da2",
+   "git_blob": "68c6655f568b6f53b51176ce69bc3c3df6f26b24"
+  },
+  "experiments/cord_decoder_isolation_cells/granite-2b_generate_neutral.json": {
+   "sha256": "790f6522ce744e339162984eebaeb0db0f1996064372c0aa4b1b44edbba47d74",
+   "git_blob": "f4a853fe92734cff54b6c89d576baa45ecbb2aea"
+  },
+  "experiments/cord_decoder_isolation_cells/falcon3-1b_plain.json": {
+   "sha256": "7961192cf7a7b536d1d9d7052c5c8b3cb0e4fd01dbc98d83eb1d282c9b920453",
+   "git_blob": "c8c1e6aeb0f7cb807ab6ba6de9e9d19ebdb40d4c"
+  },
+  "experiments/cord_constrained_families_cells/falcon3-1b_schema_constrained.json": {
+   "sha256": "e70712844b7ca468dd8eb3b04ff59b248ac974af7e568d8b92449e2750d8e0c0",
+   "git_blob": "57b0f82e816f8c8fd6eec851e2385b345e62e8dd"
+  },
+  "experiments/cord_fence_tax_families_cells/falcon3-1b_schema.json": {
+   "sha256": "1b74d24612ca67be33c758ceaabb8dd8b26f8e98aa08beccb300f2a3462cca55",
+   "git_blob": "80afe7a03bc9f22fdb3f020cd9153c0ffe7c9f32"
+  }
+ }
+}

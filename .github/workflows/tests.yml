@@ -47,3 +47,31 @@ jobs:
         run: python3 scripts/read_addendum_d.py
       - name: Re-score stored predictions against regenerated gold
         run: python3 scripts/verify_from_primary.py experiments/novel_schema_f_0.5b_k30_seed1_docadapted_2026-08-19.json
+
+  fencecheck-action:
+    # The root action.yml, run through `uses:` the way a consumer runs it,
+    # so a broken action goes red here before an outside team finds it.
+    # A clean tree must pass, and a fail-open grader must fail the step.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: A clean tree passes
+        uses: ./
+        with:
+          path: tools
+      - name: Write a fail-open grader
+        run: |
+          mkdir -p "$RUNNER_TEMP/bait"
+          printf 'import json\ndef grade(completion):\n    try:\n        return json.loads(completion)["a"]\n    except ValueError:\n        return 0.0\n' > "$RUNNER_TEMP/bait/grade.py"
+      - name: A fail-open site fails the step
+        id: bait
+        continue-on-error: true
+        uses: ./
+        with:
+          path: ${{ runner.temp }}/bait
+      - name: Require that failure
+        if: steps.bait.outcome != 'failure'
+        run: |
+          echo "the action passed a tree with a fail-open site"
+          exit 1

@@ -12,6 +12,16 @@ PUB="${1:?usage: check_public_sync.sh <public-working-copy>}"
 
 fail=0
 
+# 0) the leak gate, the same one a fresh export runs. Added 2026-10-21:
+#    an audit found this script, the check for every INCREMENTAL push,
+#    never ran it, so only fresh exports were gated. Fail closed if the
+#    gate script is missing.
+if [ ! -x "$SRC/scripts/leak_gate.sh" ]; then
+  echo "leak gate script missing; refusing" >&2
+  exit 1
+fi
+"$SRC/scripts/leak_gate.sh" "$PUB" || fail=1
+
 # 1) library + scripts byte-identical.
 #    The exclusions must stay in lockstep with the same list in
 #    export_public.sh — test_render_send.py exercises the outbound-email
@@ -22,7 +32,8 @@ fail=0
 for d in src scripts tests; do
   if ! diff -rq "$SRC/$d" "$PUB/$d" \
       --exclude=__pycache__ --exclude=export_public.sh --exclude=fill_gate_slots.py \
-      --exclude=check_public_sync.sh --exclude=test_render_send.py; then
+      --exclude=check_public_sync.sh --exclude=test_render_send.py \
+      --exclude=leak_gate.sh --exclude=test_reconcile_application.py; then
     fail=1
   fi
 done
@@ -31,7 +42,8 @@ done
 #     private-only ON PURPOSE: still present in the source tree, and
 #     actually excluded by export_public.sh. An entry that silently
 #     disappeared from the source would otherwise never be noticed.
-for private_only in test_render_send.py export_public.sh fill_gate_slots.py; do
+for private_only in test_render_send.py export_public.sh fill_gate_slots.py leak_gate.sh \
+    test_reconcile_application.py; do
   if ! find "$SRC/src" "$SRC/scripts" "$SRC/tests" -name "$private_only" \
       | grep -q .; then
     echo "EXCLUDED-BUT-MISSING from the source tree: $private_only" >&2
@@ -40,7 +52,7 @@ for private_only in test_render_send.py export_public.sh fill_gate_slots.py; do
   # Match the stem as a FIXED string: export_public.sh writes the names
   # as regexes with escaped dots ("fill_gate_slots\.py"), so a pattern
   # built from the plain filename silently misses them.
-  if ! grep -qF "${private_only%.py}" "$SRC/scripts/export_public.sh"; then
+  if ! grep -qF "${private_only%.*}" "$SRC/scripts/export_public.sh"; then
     echo "excluded here but NOT by export_public.sh: $private_only" >&2
     fail=1
   fi
@@ -71,7 +83,15 @@ fi
 # 2) no experiment artifact present privately but missing publicly.
 #    *.journal.jsonl are resumable run-state, not artifacts — their
 #    rows are embedded in the finished artifact's per_doc field.
-missing=$(comm -23 <(ls "$SRC/experiments" | grep -v '\.journal\.jsonl$') \
+#    Two artifacts are private-only on purpose (export_public.sh drops
+#    them); each must still be named there, so an omission is deliberate.
+PRIVATE_ARTIFACTS="outbound_reconciliation.json review_simulation.json"
+for a in $PRIVATE_ARTIFACTS; do
+  grep -qF "experiments/${a%.json}" "$SRC/scripts/export_public.sh" \
+    || { echo "private artifact not excluded by export_public.sh: $a" >&2; fail=1; }
+done
+missing=$(comm -23 <(ls "$SRC/experiments" | grep -v '\.journal\.jsonl$' \
+                       | grep -vxF -e outbound_reconciliation.json -e review_simulation.json) \
                    <(ls "$PUB/experiments"))
 if [ -n "$missing" ]; then
   echo "MISSING public artifacts:" >&2

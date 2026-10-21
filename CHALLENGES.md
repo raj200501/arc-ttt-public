@@ -298,8 +298,9 @@ that summary. Sanity-check it against your own train gold before shipping
 python3 scripts/make_challenge.py score --pred <your-gold-as-predictions> --gold <your-gold>
 ```
 
-(`score` needs `pip install torch` and `pip install -e .`; `split` does
-not.)
+(`split` and `score` both run on the standard library alone. At a
+pinned commit older than 2026-10-21, `score` imported the scorer through
+`arcttt.text_ttt` and needs `pip install torch` and `pip install -e .`.)
 
 **4. What I run, and what comes back.** From a fresh clone of the public
 repo at the terms-pinned commit:
@@ -348,7 +349,8 @@ terms attached, under your name or an agreed anonymization.
 did not generate, whose labels it cannot see. Every gate in
 [`EVIDENCE.md`](EVIDENCE.md) runs on a synthetic corpus; the one real
 public dataset tried (CORD receipts) **failed** its preregistered gates at
-all three scales, −7.3 / −11.5 / −4.5 F1. That gap is precisely why this
+all three scales, −7.3 / −11.5 / −4.5 F1 (Qwen2.5-0.5B-Instruct,
+Qwen2.5-1.5B-Instruct and Qwen3-4B-Instruct-2507). That gap is precisely why this
 offer is open, and closing it is worth more than another synthetic rung.
 It would also put the rehearsal's named failure modes — unit arithmetic,
 role-order inversion, OCR-name confabulation — against real noise instead

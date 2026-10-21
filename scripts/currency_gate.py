@@ -56,7 +56,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "scripts"))
 
 from sync_test_counts import (  # noqa: E402  (one shared rule, not two)
-    documents, describes_the_export, is_subset_claim,
+    documents, describes_the_export, is_subset_claim, in_dated_section,
     _sentence_around as _shared_sentence_around)
 
 
@@ -79,6 +79,14 @@ def _context_of(text: str, index: int) -> str:
     # output. The narrower referent wins because a component phrase
     # inside an export sentence still names the component; the reverse
     # is never true.
+    #
+    # A dated section ("## Update — YYYY-MM-DD") is checked before either:
+    # it is a record of what was true on its date, so no entry owns it and
+    # --fix never rewrites it. This gate rewrote "236 banked artifacts" in
+    # a section dated 2026-09-17 to the 2026-09-23 count (CORRECTIONS
+    # 2026-10-21).
+    if in_dated_section(text, index):
+        return "dated"
     if is_subset_claim(text, index):
         return "subset"
     if describes_the_export(text, index):

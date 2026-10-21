@@ -213,6 +213,60 @@ def test_scanning_a_single_file_names_that_file(
     assert findings[0]["file"] != "."
 
 
+ONE_FUNCTION = '''import json
+
+
+def score_model_output(prediction_text, gold):
+    """Score one model completion against gold."""
+    try:
+        predicted = json.loads(prediction_text)
+    except json.JSONDecodeError:
+        return 0.0
+    return 1.0 if predicted == gold else 0.0
+'''
+
+TWO_FUNCTIONS = '''import json
+
+
+class FormatError(ValueError):
+    pass
+
+
+def parse_json_object(text):
+    """Fail-closed parse of a model output."""
+    try:
+        value = json.loads(text)
+    except json.JSONDecodeError as error:
+        raise FormatError(str(error)) from None
+    return value
+
+
+def score_model_output(prediction_text, gold):
+    """Score one model completion against gold."""
+    try:
+        predicted = parse_json_object(prediction_text)
+    except FormatError:
+        return 0.0
+    return 1.0 if predicted == gold else 0.0
+'''
+
+
+def test_the_documented_one_call_blind_spot_is_still_there(
+        tmp_path: pathlib.Path) -> None:
+    """tools/README.md says scan reads one function at a time, so a zero
+    applied one call up is not reported; src/arcttt/scoring.py has that
+    shape. Pin it: if scan learns to follow the call, this fails, and the
+    README sentence and the clean-run message must change with it."""
+    one = tmp_path / "one.py"
+    one.write_text(ONE_FUNCTION, encoding="utf-8")
+    two = tmp_path / "two.py"
+    two.write_text(TWO_FUNCTIONS, encoding="utf-8")
+    assert fc.scan_path(one)[0], "the single-function control was not found"
+    assert not fc.scan_path(two)[0], (
+        "scan now follows the call: update tools/README.md and the "
+        "clean-run message, then this test")
+
+
 # ---------------------------------------------------------------- score
 def test_score_reports_the_recovery(tmp_path: pathlib.Path) -> None:
     predictions = tmp_path / "predictions.jsonl"

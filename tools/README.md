@@ -19,11 +19,36 @@ is three backticks. Banked at
 
 ## Run it
 
-No installation. Python 3.9+. Standard library only.
+No installation. Python 3.9+. Standard library only. Run it from the
+repository root, or copy `tools/fencecheck.py` anywhere and drop the
+`tools/` prefix.
 
 ```
-python3 fencecheck.py scan  path/to/your/repo
-python3 fencecheck.py score path/to/predictions.jsonl
+python3 tools/fencecheck.py scan     path/to/your/repo
+python3 tools/fencecheck.py score    path/to/predictions.jsonl
+python3 tools/fencecheck.py template path/to/checkpoint/
+```
+
+Try `score` before you have a file of your own. This makes three outputs
+(one fenced, one bare, one fenced after prose), and `score` reports
+1 of 3 as valid JSON a strict scorer rejects, with exit status 1:
+
+~~~
+printf '%s\n' '{"prediction": "```json\n{\"a\": 1}\n```"}' \
+  '{"prediction": "{\"a\": 1}"}' \
+  '{"prediction": "Sure:\n```json\n{\"a\": 1}\n```"}' > /tmp/p.jsonl
+python3 tools/fencecheck.py score /tmp/p.jsonl
+python3 tools/fencecheck.py score --scope any /tmp/p.jsonl   # also credits the third
+~~~
+
+Try `scan` on a real finding: the README's `evals` example, from the
+pinned release. The download is 44 MB. The full archive unpacks to
+about 0.7 GB, so this extracts only the `.py` files (about 3 MB):
+
+```
+curl -sSLO https://files.pythonhosted.org/packages/source/e/evals/evals-3.0.1.post1.tar.gz
+python3 -c "import tarfile; t = tarfile.open('evals-3.0.1.post1.tar.gz'); t.extractall(members=[m for m in t if m.name.endswith('.py')])"
+python3 tools/fencecheck.py scan evals-3.0.1.post1    # 4 site(s) in 354 file(s), monitor.py:72 among them
 ```
 
 `scan` reads your code and reports every place that parses model output
@@ -34,10 +59,83 @@ you how many are valid JSON that your scorer would reject.
 Exit status is `1` when something is found, so it drops into CI:
 
 ```
-- run: python3 fencecheck.py scan src/
+- run: python3 tools/fencecheck.py scan src/
 ```
 
 Add `--json` to either command for machine-readable output.
+
+## Run it in your CI
+
+One `uses:` line in a GitHub workflow, after the checkout:
+
+```yaml
+name: fencecheck
+on: [push, pull_request]
+jobs:
+  fencecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: raj200501/arc-ttt-public@main
+        with:
+          path: .   # optional; narrow it to your scoring code
+```
+
+The action is [`action.yml`](../action.yml) at the root of this
+repository. It runs `python tools/fencecheck.py scan <path>` from its own
+copy of this repository, so you copy no file. It installs nothing from
+PyPI and pins no Python package, because the tool is standard library
+only. Its one dependency is `actions/setup-python@v5`, which provides the
+interpreter. The job fails when the scan finds a site, through the
+tool's own exit status. Inputs:
+
+- `path`: one file or directory to scan, relative to your checkout.
+  Default `"."`. Add a step per path to scan several.
+- `args`: extra arguments for `scan`, for example `--json`. Default `""`.
+- `python-version`: passed to `actions/setup-python`. Default `"3.11"`.
+
+`@main` follows this repository's main branch. Pin a full commit SHA if
+the gate must not change under you.
+
+As a [pre-commit](https://pre-commit.com/) hook, in
+`.pre-commit-config.yaml`:
+
+```yaml
+repos:
+  - repo: https://github.com/raj200501/arc-ttt-public
+    rev: main
+    hooks:
+      - id: fencecheck
+```
+
+Then run `pre-commit autoupdate` once. pre-commit warns that `main` is a
+moving reference. This repository has no release tags, so autoupdate
+replaces `main` with the current commit SHA. The hook runs
+[`fencecheck_hook.py`](fencecheck_hook.py), which applies the same
+`scan` to every staged Python file and reports them together, and a
+finding fails the commit. It uses pre-commit's `script` language: no
+virtualenv and nothing installed. The manifest is
+[`.pre-commit-hooks.yaml`](../.pre-commit-hooks.yaml).
+
+### What it will and will not catch
+
+Expect most findings on a large codebase to be false alarms. The least
+flattering measurement here: over seven actively maintained eval
+packages, `scan` surfaced **64** candidate sites and hand adjudication
+confirmed **1**. The other 63 were rejected, most of them telemetry and
+tracing code, file and config reads, or protocol transport
+([`experiments/census_extension_live_2026-08-31.json`](../experiments/census_extension_live_2026-08-31.json)).
+The detection rules have not changed since that run. So point `path` at
+your scoring code rather than the whole repository, read each finding,
+and mark the deliberate ones with `# fencecheck: ignore`. It will not
+catch: a file that does not end in `.py` (inside a directory); a module
+that never uses one of its model-output words (`completion`, `response`,
+`prediction`, `answer` and the rest of `MODEL_WORDS` in the source); a
+parse in a function that mentions fence handling anywhere, even for a
+different parse; a failure turned into anything other than `pass`,
+`continue`, or a literal zero, `False`, `None` or empty container; and a
+parse whose failure reaches the caller, which is loud and left out on
+purpose. How many real sites it misses has not been measured.
 
 ## What a finding means, and what it does not
 
@@ -51,10 +149,21 @@ So `scan` reports only the conjunction, and it prints the file and line
 for every finding so you can decide in ten seconds. It deliberately does
 **not** flag:
 
-- a parse that lets the failure reach the caller (you will see it);
+- a parse that lets the failure out of its own function;
 - a parse whose input is a config file or a saved artifact rather than
   model output;
 - anything in a module that never mentions model output at all.
+
+**What that first exemption misses.** `scan` reads one function at a
+time. If a helper parses strictly and raises its own exception, and the
+caller catches that exception and scores 0, the zero is one call away
+and `scan` does not report it. This repository's own scorer has exactly
+that shape: `parse_json_object` in `src/arcttt/scoring.py` raises
+`TextTaskFormatError`, and `score_text_output` catches it and returns
+`micro_f1=0.0`. There it is deliberate (fail-closed, the frozen rule the
+gates were scored under), and `scan` reports nothing on that file. The
+same logic written as one function is reported. Read any parse helper
+that raises, and its callers, by hand.
 
 ## Why this happens, and to whom
 
@@ -71,7 +180,7 @@ your repo, right now.*
 ## Example
 
 ```
-$ python3 fencecheck.py score predictions.jsonl
+$ python3 tools/fencecheck.py score predictions.jsonl
 fencecheck: 30 output(s)
   fenced                  30
   parse as written        0
@@ -161,6 +270,15 @@ PYTHONPATH=src python3 scripts/parser_robustness.py           # strict json.load
 PYTHONPATH=src python3 scripts/parser_robustness.py --panel ext   # instructor, smolagents, llama-index helpers
 ```
 
+The builder is standard library only. The runner is not: it imports
+each parser it measures. The banked readings record the versions they
+ran under (`versions` in each artifact): autoevals 0.3.0, langchain-core
+1.6.2 and json-repair 0.63.4 for the first panel
+(`experiments/parser_robustness_2026-09-05.json`); instructor 1.16.0,
+smolagents 1.26.0 and llama-index-core 0.14.24 for the second
+(`experiments/parser_robustness_ext_2026-09-05.json`). Install those in
+a fresh virtual environment before running it.
+
 The builder refuses artifacts whose "prediction" is already a parsed
 object, refuses a registry that contradicts an artifact's own labels,
 and names absent artifacts rather than dropping them. The runner
@@ -177,6 +295,8 @@ the top-k candidate tokens are tried in logit order and the first that
 keeps the output a valid JSON prefix is emitted; if none does, the
 top-1 token goes out anyway and the fallback is counted, so it never
 stalls and never invents text. Schema-blind by design.
+
+This one is not standard library only: it needs torch and transformers.
 
 ```
 python3 tools/jsongreedy.py --model Qwen/Qwen2.5-0.5B-Instruct --prompt "..."

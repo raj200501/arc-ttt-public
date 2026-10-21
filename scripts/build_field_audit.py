@@ -18,6 +18,18 @@ Inputs, all produced by the run itself:
   <run-dir>/baseline-kshot-greedy/predictions.jsonl
   <run-dir>/baseline-adapted-greedy/predictions.jsonl
 
+The same four files are banked flat in this repository, and a clone can
+rebuild the page from them and compare it byte for byte:
+
+    python3 scripts/build_field_audit.py \
+        --run-dir experiments/blind_rehearsal_2026-08-20_raw \
+        --artifact experiments/blind_rehearsal_baseline_2026-08-21.json \
+        --out /tmp/waybill_field_audit.html
+    cmp /tmp/waybill_field_audit.html demo/waybill_field_audit.html
+
+A new `--out` path starts from the shipped page; an existing one has its
+data block swapped in place.
+
 The template lives beside this script so the prose and the data cannot
 drift apart in a copy-paste.
 """
@@ -61,12 +73,27 @@ def main() -> int:
     args = parser.parse_args()
 
     run = pathlib.Path(args.run_dir)
-    texts = read_jsonl(run / "package" / "holdout.jsonl", "text")
-    gold = read_jsonl(run / "package" / "gold_holdout.jsonl", "gold")
-    prompted = read_jsonl(
-        run / "baseline-kshot-greedy" / "predictions.jsonl", "prediction")
-    adapted = read_jsonl(
-        run / "baseline-adapted-greedy" / "predictions.jsonl", "prediction")
+    if (run / "package").is_dir():
+        # the live run directory, as the challenge runner writes it
+        paths = (run / "package" / "holdout.jsonl",
+                 run / "package" / "gold_holdout.jsonl",
+                 run / "baseline-kshot-greedy" / "predictions.jsonl",
+                 run / "baseline-adapted-greedy" / "predictions.jsonl")
+    else:
+        # the flat copy banked in this repository, so a reader can rebuild
+        # the page from a clone:
+        #   --run-dir experiments/blind_rehearsal_2026-08-20_raw
+        paths = (run / "holdout.jsonl",
+                 run / "gold_holdout.jsonl",
+                 run / "predictions_prompted_greedy.jsonl",
+                 run / "predictions_adapted_greedy.jsonl")
+    missing_inputs = [str(p) for p in paths if not p.is_file()]
+    if missing_inputs:
+        sys.exit(f"missing inputs under {run}: {missing_inputs}")
+    texts = read_jsonl(paths[0], "text")
+    gold = read_jsonl(paths[1], "gold")
+    prompted = read_jsonl(paths[2], "prediction")
+    adapted = read_jsonl(paths[3], "prediction")
     scores = json.loads(pathlib.Path(args.artifact).read_text())["per_doc"]
 
     missing = set(scores) - set(texts)
@@ -85,7 +112,10 @@ def main() -> int:
     } for doc_id in sorted(texts)]
 
     out = pathlib.Path(args.out)
-    page = out.read_text(encoding="utf-8") if out.exists() else None
+    # A new --out path starts from the shipped page, so a reader can rebuild
+    # into /tmp and compare without overwriting the published copy.
+    source = out if out.exists() else TEMPLATE
+    page = source.read_text(encoding="utf-8") if source.exists() else None
     if page is None or MARKER not in page:
         sys.exit(f"{out} is missing the '{MARKER}' data marker — the template "
                  "must exist and carry it; this script only swaps the data.")

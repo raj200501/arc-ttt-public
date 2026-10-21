@@ -1,0 +1,18 @@
+# pre-commit hook manifest. Schema: https://pre-commit.com/#new-hooks
+#
+# language `script` runs `entry` as a path relative to this repository,
+# with no virtualenv and nothing installed: the tool is standard library
+# only. pre-commit 4.4.0 renamed `script` to `unsupported_script` and
+# still accepts the old name; it is kept so older pre-commit versions
+# can read this file. The entry must be executable (mode 100755).
+# pre-commit appends the staged Python files; tools/fencecheck_hook.py
+# runs `fencecheck scan` over all of them. Exit status 1 on a finding
+# fails the commit.
+-   id: fencecheck
+    name: fencecheck scan
+    description: >-
+      Report code that parses model output as JSON with no markdown-fence
+      handling and turns the failure into a zero or a silent skip.
+    entry: tools/fencecheck_hook.py
+    language: script
+    types: [python]

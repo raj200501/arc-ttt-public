@@ -9,22 +9,25 @@ lane's own generality claims, are enumerated in
 
 ## Now
 
-- **Addendum Z (preregistered and anchored 2026-09-23T0219Z; PAUSED
-  06:08Z with no arm banked — three seed-1 adaptations were cut short, two
-  by container reboots and one stopped by the owner's compute cutoff; every
-  restart is counted and resumes from the run log):**
+- **Addendum Z (preregistered and anchored 2026-09-23T0219Z; running again
+  since 2026-10-21 20:25Z as restart 3, no arm banked; every interruption
+  is in `experiments/addendum_z_operator_log.jsonl`):**
   the +46.5 gate run again on this box with every prediction stored,
   under the Addendum B recipe unchanged and a protocol anchored before
-  the first arm — the first one here anchored before its run (the anchor
-  proves the bytes; the start time is the runner's clock, ours to
-  report). The unchanged reader
+  the first arm by our own clocks — the first addendum protocol anchored
+  before its first arm under the `docs/research/ANCHORS.md` policy (the
+  spec's 2026-08-19 and 2026-08-20 anchors also preceded the gates they
+  froze). Its block came 17 minutes after the first process started and
+  before any document was decoded; the anchor proves the bytes, and the
+  start time is the runner's clock, ours to report. The unchanged reader
   computes the verdict; four readings (gate word, agreement with the
   banked +46.5 within 0.05, the largest per-arm spread across the two
   environments, the over-cap exclusions) are applied by arithmetic and
   withheld until all six arms exist. Whichever way it moves, the
   primary-verifiable number replaces +46.5 on every page; if it is not
-  GO, the headline is withdrawn. ~40–60 wall-hours on four cores, not
-  the nine this repository had estimated (CORRECTIONS).
+  GO, the headline is withdrawn. ~35–57 wall-hours on four cores by the
+  protocol's arithmetic (quoted there as 40–60), not the nine this
+  repository had estimated (CORRECTIONS).
 - **Upstream filings — owner's action.** Final issue text exists for
   `openai/evals` (two sites) and Braintrust `autoevals` (`JSONDiff`,
   executed repro); nothing is filed as of this date. This is the single
@@ -37,7 +40,9 @@ lane's own generality claims, are enumerated in
   smolagents and llama-index helpers — instructor's last-span rule hands
   back a piece of the receipt as the answer (post-hoc substance check,
   disclosed); smolagents harmless. Next: the Phi-3 cells into
-  the corpus; the fourteen census packages still not attempted.
+  the corpus; the fourteen census packages U's panel has not run (all
+  fourteen were downloaded and classified by the census, so they are not
+  held out for a precision test).
 - **Addendum V (banked 2026-09-09):** the JSON-constrained decoder on
   five families' schema-only prompts: NO EFFECT in all five by the
   frozen thresholds (Falcon3 14 → 8, one short; its six recoveries are
@@ -68,7 +73,7 @@ lane's own generality claims, are enumerated in
   What fired is the mechanism: the document that flaked in X's gate
   decodes differently at 4 threads and at 1 (reduction order at eight
   mantissa bits), while Qwen reproduces in bfloat16 too, so the dtype
-  alone is not sufficient. Phi-3's 2026-09-03 `generate` cell still
+  alone is not sufficient. Phi-3's `generate` cell banked 2026-09-05 still
   differs today on 4 of 10 for reasons the unrecorded environment cannot
   name. The 09-16 sentence "every Phi-3 number is not byte-reproducible"
   was too strong and is narrowed (CORRECTIONS). X stays withheld.
@@ -81,15 +86,16 @@ lane's own generality claims, are enumerated in
   re-run, not reused); `Phi-3-mini`, the one bfloat16 family, does
   not, so nothing is read about the decoder at all. Two failures: the
   `model.generate` comparator no longer reproduces the text banked on
-  2026-09-03 (same two documents in both of today's runs), and the
+  2026-09-05 (same two documents in both of today's runs), and the
   constrained arm differed on one document in one gate run and matched
   in the next. The sentence first written here — *every Phi-3 number
   in Addenda S, T, U and V is not byte-reproducible* — was too strong
   and is narrowed by Addendum Y above (errata beside T and V, rows in
   `CORRECTIONS.md` dated 2026-09-16 and 2026-09-17). It does settle one thing V left open: V attributed
   Phi-3's 32-of-50 between-arm divergence to bfloat16 numerics and
-  called it untested; it is tested now, and the family does not
-  reproduce against itself. The Phi-3 instability has since been
+  called it untested; it is tested now (Addendum Y): Phi-3's cells are
+  not guaranteed to reproduce across a change of reduction order, so the
+  divergence needs no cross-arm explanation. The Phi-3 instability has since been
   measured directly (Addendum Y). Still next: a successor addendum,
   under its own preregistration, that reads the four banked-and-unread
   families — drafted and audited 2026-09-23 as Addendum AA
@@ -158,7 +164,7 @@ lane's own generality claims, are enumerated in
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 495 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 612 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 

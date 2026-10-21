@@ -1,0 +1,280 @@
+{
+ "figure": "fence_rate",
+ "generated_by": "scripts/make_figures.py",
+ "artifacts": [
+  {
+   "path": "experiments/fence_impact_table.json",
+   "sha256": "99fb3c4685ef022c165d6f343869080839c2cb675b8258f170ce691c89eea2d4"
+  },
+  {
+   "path": "experiments/cord_fence_tax_2026-08-25.json",
+   "sha256": "bcb59d1df8e6001870419218f35e3c31e702fd7ecc30921a3849b25714455c63"
+  },
+  {
+   "path": "experiments/cord_fence_tax_families_2026-09-03.json",
+   "sha256": "f09867f7c78c3c471451b493cf990e362e1d610b4512c3e27199791bbb1fa051"
+  }
+ ],
+ "values": {
+  "cord": [
+   {
+    "addendum": "S",
+    "fenced": 0,
+    "model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n": 80,
+    "regime": "kshot",
+    "regime_as_banked": "kshot"
+   },
+   {
+    "addendum": "S",
+    "fenced": 100,
+    "model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n": 100,
+    "regime": "schema",
+    "regime_as_banked": "schema"
+   },
+   {
+    "addendum": "S",
+    "fenced": 0,
+    "model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "n": 80,
+    "regime": "kshot",
+    "regime_as_banked": "kshot"
+   },
+   {
+    "addendum": "S",
+    "fenced": 100,
+    "model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "n": 100,
+    "regime": "schema",
+    "regime_as_banked": "schema"
+   },
+   {
+    "addendum": "T",
+    "fenced": 0,
+    "model": "tiiuae/Falcon3-1B-Instruct",
+    "n": 80,
+    "regime": "kshot",
+    "regime_as_banked": "kshot"
+   },
+   {
+    "addendum": "T",
+    "fenced": 92,
+    "model": "tiiuae/Falcon3-1B-Instruct",
+    "n": 100,
+    "regime": "schema",
+    "regime_as_banked": "schema"
+   },
+   {
+    "addendum": "T",
+    "fenced": 0,
+    "model": "ibm-granite/granite-3.1-2b-instruct",
+    "n": 80,
+    "regime": "kshot",
+    "regime_as_banked": "kshot"
+   },
+   {
+    "addendum": "T",
+    "fenced": 0,
+    "model": "ibm-granite/granite-3.1-2b-instruct",
+    "n": 100,
+    "regime": "schema",
+    "regime_as_banked": "schema"
+   },
+   {
+    "addendum": "T",
+    "fenced": 0,
+    "model": "microsoft/Phi-3-mini-4k-instruct",
+    "n": 80,
+    "regime": "kshot",
+    "regime_as_banked": "kshot"
+   },
+   {
+    "addendum": "T",
+    "fenced": 0,
+    "model": "microsoft/Phi-3-mini-4k-instruct",
+    "n": 100,
+    "regime": "schema",
+    "regime_as_banked": "schema"
+   },
+   {
+    "addendum": "T",
+    "fenced": 0,
+    "model": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+    "n": 80,
+    "regime": "kshot",
+    "regime_as_banked": "kshot"
+   },
+   {
+    "addendum": "T",
+    "fenced": 0,
+    "model": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+    "n": 100,
+    "regime": "schema",
+    "regime_as_banked": "schema"
+   }
+  ],
+  "waybills": [
+   {
+    "addendum": null,
+    "fenced": 30,
+    "model": "Qwen2.5-0.5B-Instruct",
+    "n": 30,
+    "regime": "schema",
+    "regime_as_banked": "schema"
+   },
+   {
+    "addendum": null,
+    "fenced": 0,
+    "model": "Qwen2.5-0.5B-Instruct",
+    "n": 30,
+    "regime": "kshot",
+    "regime_as_banked": "k-shot (20)"
+   },
+   {
+    "addendum": null,
+    "fenced": 30,
+    "model": "Qwen2.5-1.5B-Instruct",
+    "n": 30,
+    "regime": "schema",
+    "regime_as_banked": "schema"
+   },
+   {
+    "addendum": null,
+    "fenced": 0,
+    "model": "Qwen2.5-1.5B-Instruct",
+    "n": 30,
+    "regime": "kshot",
+    "regime_as_banked": "k-shot (20)"
+   },
+   {
+    "addendum": null,
+    "fenced": 30,
+    "model": "Qwen2.5-3B-Instruct",
+    "n": 30,
+    "regime": "schema",
+    "regime_as_banked": "schema"
+   },
+   {
+    "addendum": null,
+    "fenced": 0,
+    "model": "Qwen2.5-3B-Instruct",
+    "n": 30,
+    "regime": "kshot",
+    "regime_as_banked": "k-shot (20)"
+   }
+  ]
+ },
+ "prose_checked": [
+  {
+   "doc": "README.md",
+   "quote": "the tax has been measured on **2 of 5 families**",
+   "cited": [
+    [
+     "2 of 5",
+     "families with any schema-only fence / families measured"
+    ]
+   ]
+  },
+  {
+   "doc": "VERDICT.md",
+   "quote": "Schema-only fence rates: **Falcon3-1B 92/100; SmolLM2-1.7B 0/100; Granite-3.1-2B 0/100; Phi-3-mini 0/100.**",
+   "cited": [
+    [
+     "92/100",
+     "Falcon3 schema"
+    ],
+    [
+     "SmolLM2-1.7B 0/100",
+     "SmolLM2 schema"
+    ],
+    [
+     "Granite-3.1-2B 0/100",
+     "Granite schema"
+    ],
+    [
+     "Phi-3-mini 0/100",
+     "Phi-3 schema"
+    ]
+   ]
+  },
+  {
+   "doc": "VERDICT.md",
+   "quote": "K-shot fence rates: 0/80, 0/80, 0/80, 0/80",
+   "cited": [
+    [
+     "0/80",
+     "Falcon3 k-shot"
+    ],
+    [
+     "0/80",
+     "SmolLM2 k-shot"
+    ],
+    [
+     "0/80",
+     "granite k-shot"
+    ],
+    [
+     "0/80",
+     "Phi-3 k-shot"
+    ]
+   ]
+  },
+  {
+   "doc": "VERDICT.md",
+   "quote": "schema-only prompts are fenced 100/100 at 0.5B and 100/100 at 1.5B; k-shot prompts are fenced 0/80 at both sizes",
+   "cited": [
+    [
+     "100/100 at 0.5B",
+     "Qwen 0.5B schema (CORD)"
+    ],
+    [
+     "100/100 at 1.5B",
+     "Qwen 1.5B schema (CORD)"
+    ],
+    [
+     "0/80",
+     "Qwen 0.5B k-shot (CORD)"
+    ],
+    [
+     "0/80",
+     "Qwen 1.5B k-shot (CORD)"
+    ]
+   ]
+  },
+  {
+   "doc": "VERDICT.md",
+   "quote": "**30 of 30 documents fenced in the schema regime at 0.5B, 1.5B and 3B; 0 of 30 fenced in the k-shot regime at 0.5B and 1.5B.**",
+   "cited": [
+    [
+     "30 of 30",
+     "waybill 0.5B schema"
+    ],
+    [
+     "30 of 30",
+     "waybill 1.5B schema"
+    ],
+    [
+     "30 of 30",
+     "waybill 3B schema"
+    ],
+    [
+     "0 of 30",
+     "waybill 0.5B k-shot"
+    ],
+    [
+     "0 of 30",
+     "waybill 1.5B k-shot"
+    ]
+   ]
+  }
+ ],
+ "private_prose_quotes": {
+  "checked": 0,
+  "absent_from_this_tree": 0
+ },
+ "files": [
+  "figures/fence_rate.svg",
+  "figures/fence_rate.png"
+ ]
+}

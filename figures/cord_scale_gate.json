@@ -1,0 +1,387 @@
+{
+ "figure": "cord_scale_gate",
+ "generated_by": "scripts/make_figures.py",
+ "artifacts": [
+  {
+   "path": "experiments/cord_paired_power_2026-08-11.json",
+   "sha256": "5d3ce12e496b9efc9250f0e638a8cdb940a1dcb1e90962479d6fc1c43efa8bec"
+  },
+  {
+   "path": "experiments/ge2_0.5b_result_2026-08-11.json",
+   "sha256": "11de1351a27a917adc0104c5c9e00768f6d1943e95420249cb45a6b59fe4a2ef"
+  },
+  {
+   "path": "experiments/ge2_1.5b_result_2026-08-14.json",
+   "sha256": "f2f02f5f413f6dbc4ab4cf5bf32c6cdaefc94c7f9e1c5308b14b9cffc31cf019"
+  },
+  {
+   "path": "experiments/ge2_4b_result_2026-08-11.json",
+   "sha256": "b5e738817ad6c2b3507ae5be3c2514508aea29628e2172e04d2a1417c1ab0904"
+  },
+  {
+   "path": "experiments/cord_scale_summary_2026-08-11.json",
+   "sha256": "9ce90f6cef96156469c4fa1a17d8d6d930af8c1a0ca8f04b70d5eab5d1558c66"
+  },
+  {
+   "path": "experiments/cord_scale_0.5b_k10_seed1_adapted_2026-08-11.json",
+   "sha256": "049683239317675b8a1b3665da365006b12478967f3dbca6674f272a6699ad4d"
+  },
+  {
+   "path": "experiments/cord_scale_0.5b_k10_seed1_kshot_2026-08-11.json",
+   "sha256": "b5c896dbcffc236548a77026e09b6cb9b74a4a5537269ef3ca0d5c77878b537c"
+  },
+  {
+   "path": "experiments/cord_scale_0.5b_k10_seed2_adapted_2026-08-11.json",
+   "sha256": "e9e2e31d5a007fc3178618724e4bcccb6e608fca279f73326a4cca37b2fef0ec"
+  },
+  {
+   "path": "experiments/cord_scale_0.5b_k10_seed2_kshot_2026-08-11.json",
+   "sha256": "da8f54b9facc476d9c5b5c184944ce604bfade908b1630ed12ffb02e8bac746f"
+  },
+  {
+   "path": "experiments/cord_scale_0.5b_k10_seed3_adapted_2026-08-11.json",
+   "sha256": "5aafbed272893979291f51018cb4e7a1221c8a85e14f76c119bf82f2df9c76e3"
+  },
+  {
+   "path": "experiments/cord_scale_0.5b_k10_seed3_kshot_2026-08-11.json",
+   "sha256": "d10397a75b29e08c52daff11ac3d828ad6ec80b918236296c052ae1ef0a0e433"
+  },
+  {
+   "path": "experiments/cord_scale_1.5b_k10_seed1_adapted_2026-08-11.json",
+   "sha256": "8370bc202a6d9829ce95428540815087226e338a39c9b143c44ab57befb744d0"
+  },
+  {
+   "path": "experiments/cord_scale_1.5b_k10_seed1_kshot_2026-08-11.json",
+   "sha256": "7b6818fac6688a47ab89ee3fa0b416efa28f7a6618f672b9af786ae08ce8a1c0"
+  },
+  {
+   "path": "experiments/cord_scale_1.5b_k10_seed2_adapted_2026-08-11.json",
+   "sha256": "9bf634e9bb42362a63557edb0ee2ead2fa89ba476bb29b5676081cb5e945751e"
+  },
+  {
+   "path": "experiments/cord_scale_1.5b_k10_seed2_kshot_2026-08-11.json",
+   "sha256": "454c078bc2c7b2cb0096805f89234525a4d1216bea9ed367dc952bf1f8ce5e58"
+  },
+  {
+   "path": "experiments/cord_scale_1.5b_k10_seed3_adapted_2026-08-11.json",
+   "sha256": "5983b1ac0ae137f111b8e959a8c6e6a950af208614a18e6f9deb9a740195ff46"
+  },
+  {
+   "path": "experiments/cord_scale_1.5b_k10_seed3_kshot_2026-08-11.json",
+   "sha256": "ac158c4f0a85aa32cbc712af341fd1bc726e091b211d3e10a48c6cd70312eba6"
+  },
+  {
+   "path": "experiments/cord_scale_4b_k10_seed1_adapted_2026-08-11.json",
+   "sha256": "6edac92d36cc6b3d5024a8b899d010204f31a0a064ab133108c1b4dd02423b15"
+  },
+  {
+   "path": "experiments/cord_scale_4b_k10_seed1_kshot_2026-08-11.json",
+   "sha256": "fa338e57c44ac0f6170118e6911bf10166b41a5af2d16866322d131113dfc999"
+  },
+  {
+   "path": "experiments/cord_scale_4b_k10_seed2_adapted_2026-08-11.json",
+   "sha256": "01ff7fcd8b564eb32fa5f0a2651102d504b6f6fba4499dac66cf34b024961c0c"
+  },
+  {
+   "path": "experiments/cord_scale_4b_k10_seed2_kshot_2026-08-11.json",
+   "sha256": "b8905a090f31a00f10aaa8c5ce2080274e7bf6148c2bc5cf28e4ec6e88caa149"
+  },
+  {
+   "path": "experiments/cord_scale_4b_k10_seed3_adapted_2026-08-11.json",
+   "sha256": "8c1d44bd8ec6aa4163dcda21df226f0f82c4cedd410a0011d20805dbe0651107"
+  },
+  {
+   "path": "experiments/cord_scale_4b_k10_seed3_kshot_2026-08-11.json",
+   "sha256": "177132a39992fd5455ebb24de13507a52a8499fdac9efea0e9f3d467369e0dc6"
+  }
+ ],
+ "values": {
+  "gate_threshold": 0.05,
+  "not_plotted": [
+   "0.5b k=5",
+   "4b k=5"
+  ],
+  "rungs": [
+   {
+    "ci95_receipt_level": [
+     -0.1659,
+     0.0205
+    ],
+    "environment": "CPU/fp32",
+    "gate_statistic_mean_of_seed_means": -0.0727,
+    "label": "0.5B",
+    "mde_80pct": 0.1305,
+    "model": "Qwen/Qwen2.5-0.5B-Instruct",
+    "n_paired_receipts": 60,
+    "receipts_needed_for_gate": 409,
+    "receipts_per_seed": [
+     20,
+     20,
+     20
+    ],
+    "rung": "0.5b",
+    "seed_deltas": [
+     -0.0117,
+     -0.155,
+     -0.0514
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "sign_test": {
+     "losses": 32,
+     "p_value": 0.6029,
+     "ties": 1,
+     "wins": 27
+    }
+   },
+   {
+    "ci95_receipt_level": [
+     -0.2,
+     -0.0306
+    ],
+    "environment": "CPU/fp32",
+    "gate_statistic_mean_of_seed_means": -0.1153,
+    "label": "1.5B",
+    "mde_80pct": 0.1186,
+    "model": "Qwen/Qwen2.5-1.5B-Instruct",
+    "n_paired_receipts": 60,
+    "receipts_needed_for_gate": 338,
+    "receipts_per_seed": [
+     20,
+     20,
+     20
+    ],
+    "rung": "1.5b",
+    "seed_deltas": [
+     0.0112,
+     -0.1975,
+     -0.1596
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "sign_test": {
+     "losses": 22,
+     "p_value": 0.4177,
+     "ties": 22,
+     "wins": 16
+    }
+   },
+   {
+    "ci95_receipt_level": [
+     -0.125,
+     0.0358
+    ],
+    "environment": "T4/bf16",
+    "gate_statistic_mean_of_seed_means": -0.0446,
+    "label": "4B",
+    "mde_80pct": 0.1125,
+    "model": "Qwen/Qwen3-4B-Instruct-2507",
+    "n_paired_receipts": 60,
+    "receipts_needed_for_gate": 304,
+    "receipts_per_seed": [
+     20,
+     20,
+     20
+    ],
+    "rung": "4b",
+    "seed_deltas": [
+     0.0326,
+     -0.0847,
+     -0.0816
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "sign_test": {
+     "losses": 29,
+     "p_value": 0.1038,
+     "ties": 14,
+     "wins": 17
+    }
+   }
+  ],
+  "unit": "micro-F1 (0-1); drawn as points (x100)"
+ },
+ "prose_checked": [
+  {
+   "doc": "paper/DRAFT.md",
+   "quote": "| 0.5B | −1.2 | −15.5 | −5.1 | **−7.3** | fail |",
+   "cited": [
+    [
+     "−1.2",
+     "0.5b seed 1 delta (F1 points)"
+    ],
+    [
+     "−15.5",
+     "0.5b seed 2 delta (F1 points)"
+    ],
+    [
+     "−5.1",
+     "0.5b seed 3 delta (F1 points)"
+    ],
+    [
+     "−7.3",
+     "0.5b mean delta (F1 points)"
+    ]
+   ]
+  },
+  {
+   "doc": "paper/DRAFT.md",
+   "quote": "| 1.5B | +1.1 | −19.8 | −16.0 | **−11.5** | fail |",
+   "cited": [
+    [
+     "+1.1",
+     "1.5b seed 1 delta (F1 points)"
+    ],
+    [
+     "−19.8",
+     "1.5b seed 2 delta (F1 points)"
+    ],
+    [
+     "−16.0",
+     "1.5b seed 3 delta (F1 points)"
+    ],
+    [
+     "−11.5",
+     "1.5b mean delta (F1 points)"
+    ]
+   ]
+  },
+  {
+   "doc": "paper/DRAFT.md",
+   "quote": "| 4B | +3.3 | −8.5 | −8.2 | **−4.5** | fail |",
+   "cited": [
+    [
+     "+3.3",
+     "4b seed 1 delta (F1 points)"
+    ],
+    [
+     "−8.5",
+     "4b seed 2 delta (F1 points)"
+    ],
+    [
+     "−8.2",
+     "4b seed 3 delta (F1 points)"
+    ],
+    [
+     "−4.5",
+     "4b mean delta (F1 points)"
+    ]
+   ]
+  },
+  {
+   "doc": "paper/DRAFT.md",
+   "quote": "27W/32L/1T (p=0.60) at 0.5B, 16W/22L/22T (p=0.42) at 1.5B and 17W/29L/14T (p=0.10) at 4B",
+   "cited": [
+    [
+     "27W/32L/1T",
+     "0.5b sign test"
+    ],
+    [
+     "0.60",
+     "0.5b p"
+    ],
+    [
+     "16W/22L/22T",
+     "1.5b sign test"
+    ],
+    [
+     "0.42",
+     "1.5b p"
+    ],
+    [
+     "17W/29L/14T",
+     "4b sign test"
+    ],
+    [
+     "0.10",
+     "4b p"
+    ]
+   ]
+  },
+  {
+   "doc": "paper/DRAFT.md",
+   "quote": "receipt-level interval, [−20.0, −3.1] F1, excludes zero",
+   "cited": [
+    [
+     "−20.0",
+     "1.5b CI low"
+    ],
+    [
+     "−3.1",
+     "1.5b CI high"
+    ]
+   ]
+  },
+  {
+   "doc": "paper/DRAFT.md",
+   "quote": "13.1 F1 at 0.5B, 11.9 F1 at 1.5B and 11.3 F1 at 4B",
+   "cited": [
+    [
+     "13.1",
+     "0.5b MDE"
+    ],
+    [
+     "11.9",
+     "1.5b MDE"
+    ],
+    [
+     "11.3",
+     "4b MDE"
+    ]
+   ]
+  },
+  {
+   "doc": "paper/DRAFT.md",
+   "quote": "(p=0.60 at 0.5B, p=0.42 at 1.5B, p=0.10 at 4B by sign test)",
+   "cited": [
+    [
+     "0.60",
+     "0.5b p"
+    ],
+    [
+     "0.42",
+     "1.5b p"
+    ],
+    [
+     "0.10",
+     "4b p"
+    ]
+   ]
+  },
+  {
+   "doc": "EVIDENCE.md",
+   "quote": "**−7.3 / −11.5 / −4.5 F1** at 0.5B / 1.5B / 4B",
+   "cited": [
+    [
+     "−7.3",
+     "0.5b mean"
+    ],
+    [
+     "−11.5",
+     "1.5b mean"
+    ],
+    [
+     "−4.5",
+     "4b mean"
+    ]
+   ]
+  }
+ ],
+ "private_prose_quotes": {
+  "checked": 3,
+  "absent_from_this_tree": 0
+ },
+ "files": [
+  "figures/cord_scale_gate.svg",
+  "figures/cord_scale_gate.png"
+ ]
+}

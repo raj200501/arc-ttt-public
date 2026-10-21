@@ -150,9 +150,11 @@ def main() -> int:
             "number in this repository and the only headline that is "
             "neither primary-verifiable nor regenerable. Re-running those "
             "arms with predictions stored is the fix. An earlier version of "
-            "this sentence priced it at about nine CPU-hours; the measured "
-            "figure is 40-60 wall-hours on four cores (CORRECTIONS.md, "
-            "2026-09-23). The re-run is preregistered as Addendum Z and "
+            "this sentence priced it at about nine CPU-hours; the Addendum "
+            "Z protocol's estimate is ~35-57 wall-hours on four cores, "
+            "quoted there as 40-60 and built from one pre-freeze document "
+            "whose timings are prose only (CORRECTIONS.md, 2026-09-23 and "
+            "2026-10-21). The re-run is preregistered as Addendum Z and "
             "launched after its anchor; until its six arms bank, the "
             "fix is not done."),
         "aggregate_but_regenerable": (

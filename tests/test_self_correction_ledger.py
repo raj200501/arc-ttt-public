@@ -155,3 +155,35 @@ def test_the_refusal_does_not_fire_on_current_copy() -> None:
     total = len(entries)
     outward = sum(1 for e in entries if e["outward_facing"])
     module.sync_copy(total, outward)   # must not raise
+
+
+def test_sent_and_press_are_matched_as_whole_words() -> None:
+    """As substrings, "sent" matched "sentence" and "presentation" and
+    "press" matched "suppress", and four rows counted as outward-facing
+    for that alone (CORRECTIONS 2026-10-21)."""
+    module = _load()
+    assert not module.is_outward_facing(
+        "a sentence in a presentation, to suppress a fence")
+    assert module.is_outward_facing("the email body was sent on monday")
+    assert module.is_outward_facing("a press release")
+    assert module.is_outward_facing("the verdict row said so")
+
+
+def test_the_outward_count_matches_a_hand_count(ledger: dict) -> None:
+    """Re-derive the outward subset independently of the parser."""
+    import re
+    words = ("sent", "press")
+    plain = ("email", "deck", "one-pager", "outbound", "public", "readme",
+             "headline", "verdict")
+    hand = 0
+    for line in LEDGER.read_text(encoding="utf-8").split("\n"):
+        cells = line.split("|")
+        if not line.startswith("|") or len(cells) < 3:
+            continue
+        if not re.match(r"^\*{0,2}\d{4}-\d{2}-\d{2}", cells[1].strip()):
+            continue
+        text = " ".join(c.strip() for c in cells[1:-1]).lower()
+        if any(p in text for p in plain) or any(
+                re.search(rf"\b{w}\b", text) for w in words):
+            hand += 1
+    assert ledger["outward_facing"] == hand

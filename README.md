@@ -22,6 +22,19 @@ That prompt does say *"do not generate any other text"*, so a fenced
 answer disobeyed it. The finding is about which way the default falls
 when a model disobeys, not that the package is wrong.
 
+The line number is for the release the census read, `evals` 3.0.1.post1.
+Check it with the shipped tool (a 44 MB download; this extracts only the
+`.py` files):
+
+```
+curl -sSLO https://files.pythonhosted.org/packages/source/e/evals/evals-3.0.1.post1.tar.gz
+python3 -c "import tarfile; t = tarfile.open('evals-3.0.1.post1.tar.gz'); t.extractall(members=[m for m in t if m.name.endswith('.py')])"
+python3 tools/fencecheck.py scan evals-3.0.1.post1
+```
+
+It prints `4 site(s) in 354 file(s)`, with `monitor.py:72` and the
+`json_match.py:80` scoring path among them.
+
 ## What one fence is worth
 
 Same 30 held-out documents, same model, same prompt, same scorer. The
@@ -34,6 +47,20 @@ only difference between the columns is three backticks.
 | 3B    | 30/30 | `0.0000` | **0.8958** |
 | 0.5B, with 20 demonstrations | **0/30** | 0.7836 | 0.7836 |
 | 1.5B, with 20 demonstrations | **0/30** | 0.8804 | 0.8804 |
+| 3B, with 20 demonstrations (bfloat16) | **0/30** | 0.9747 | 0.9747 |
+
+The 3B k-shot arm ran in bfloat16 because its float32 run was killed
+for memory; every other row is float32. At 1.5B the two dtypes differ
+by 0.0031 mean F1 (0.8804 against 0.8773), and a bfloat16 3B
+schema-only control is also 30/30 fenced, 0.9000 once stripped.
+Every cell comes from the stored model outputs, in
+[`experiments/fence_rescore.json`](experiments/fence_rescore.json).
+Rebuild it with the standard library and compare it byte for byte:
+
+```
+python3 scripts/fence_rescore.py experiments/waybill_scale_rung_*.json --out /tmp/fence_rescore.json
+cmp /tmp/fence_rescore.json experiments/fence_rescore.json && echo identical
+```
 
 Two things fall out, and the second is why this survives in shipped code.
 
@@ -49,7 +76,9 @@ you reach for to make a small model economical — and is invisible in the
 expensive regime most harnesses run.
 
 **And it is family-specific, not a property of small models as a
-class.** Addendum T ran the same two regimes on four other families
+class.** (An *addendum* is one of this repository's preregistered
+experiments, named by letter; `VERDICT.md` holds their results.) Addendum T
+ran the same two regimes on four other families
 (`VERDICT.md`, thresholds frozen first): Falcon3-1B fences 92/100
 schema-only outputs and 0/80 k-shot — the pattern replicates — while
 SmolLM2-1.7B, Granite-3.1-2B and Phi-3-mini fence **0/100** under the
@@ -60,9 +89,16 @@ Falcon3-1B). What about a family produces the wrap was not tested. This
 repository says "1 of 4" and "2 of 5", never "across model families".
 
 That second claim compares two prompts differing in three ways at once
-(examples, ~4,300 tokens vs ~196, many turns vs one). **Addendum R** in
-[`VERDICT.md`](VERDICT.md) is preregistered to find out which one is
-doing the work, and will withdraw the sentence if it is not the examples.
+(examples, 4,142 prompt tokens vs 196, many turns vs one). **Addendum R**
+in [`VERDICT.md`](VERDICT.md) was preregistered to separate them, and it
+has been read: reading (b), *it is the demonstrations, and it is a dose*.
+On Qwen2.5-0.5B the fence rate falls from 30/30 with no demonstration to
+8/30 with one, 2/30 with three and 0/30 with twenty. One cell outside the
+frozen menu does not fit and is published at hypothesis status only: the
+field list plus one demonstration still fenced 30/30. One model, one
+corpus, one seed. Rebuild the table:
+`python3 scripts/addendum_r_table.py --out /tmp/r.json`, then
+`cmp /tmp/r.json experiments/addendum_r_fence_dose.json`.
 
 ## Is your evaluation doing this?
 
@@ -76,7 +112,11 @@ python3 tools/fencecheck.py template path/to/checkpoint/
 
 `scan` reports code that parses model JSON with no fence handling **and**
 turns the failure into a zero or a silent skip — only the conjunction,
-because parsing strictly is not a defect on its own. `score` reads your
+because parsing strictly is not a defect on its own. It reads one
+function at a time, so a strict helper that raises and a caller that
+scores the exception as 0 is not reported; this repository's own scorer
+has that shape ([`tools/README.md`](tools/README.md) says where).
+`score` reads your
 saved outputs and tells you how many are valid JSON your scorer rejects.
 `template` reports chat templates that put the **current date** into the
 system message they build, so that outputs banked on different days were
@@ -116,6 +156,22 @@ the dataset it ships against (its JSON branch tests an id the data
 never carries and falls through to pass) —
 [`CORRECTIONS.md`](CORRECTIONS.md) 2026-09-01, with the reachability
 check banked.
+
+Re-execute the `JSONDiff` pair. The artifact records the expected object
+but not the exact output strings; this pair reproduces both numbers
+(a fenced body indented by two spaces scores 0.1978 instead):
+
+~~~
+pip install autoevals==0.3.0
+python3 - <<'EOF'
+import json
+from autoevals import JSONDiff
+expected = {"name": "John Smith", "age": 30, "city": "Portland"}
+bare = json.dumps(expected)
+print(JSONDiff().json_diff(bare, expected))                          # 1.0
+print(JSONDiff().json_diff("```json\n" + bare + "\n```", expected))  # 0.2151898...
+EOF
+~~~
 
 **Quote 7 of 34 and 1 of 7, never a rate over the ecosystem.** This is a lower bound
 among the packages searched, and it is not a claim that any package is
@@ -272,11 +328,13 @@ beside the passes.**
 Five preregistered gates, two of them FAIL. Every headline number
 reconciles to a machine-readable artifact; [`VERDICT.md`](VERDICT.md) is
 the map and [`EVIDENCE.md`](EVIDENCE.md) is the whole ladder on one
-page. Two commands check the arithmetic against the raw records, with
-nothing installed:
+page. Three commands check the arithmetic against the raw records, with
+nothing installed. The scripts print fractions; the prose quotes F1
+points (+0.4035 is +40.4):
 
-    python3 scripts/verify_verdict.py
-    python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json
+    python3 scripts/verify_verdict.py                                          # gate 1: prints GO, seed mean +46.5
+    python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json   # gate 4: re-scores stored predictions, PRIMARY-VERIFIED per arm
+    python3 scripts/addendum_e_summary.py                                      # gate 5: prints PASS, seed-mean +0.4035
 
 **What this measured, and it is the strongest thing here (gate 5, Addendum E).**
 On **six tenant schemas the base model has never seen**, per-tenant weight
@@ -367,8 +425,14 @@ Mutation tests (`tests/test_verify_scripts.py`) pin that the check can
 actually fail.
 
 **Preregistration ordering, stated precisely rather than implied.** The
-spec's later gates (Addenda D/E/F onward) are chain-anchored
-(OpenTimestamps, Bitcoin) before their data existed. The original gate's
+spec's later gates (Addenda D, E and F) are chain-anchored
+(OpenTimestamps, Bitcoin) before their data existed. The fence-lane
+protocols S to Y were anchored on 2026-09-17, after their runs, so their
+anchors say nothing about freeze order. Addendum Z's protocol
+(2026-09-23) sits in a block mined before any document of its run was
+decoded, though 17 minutes after its first process started
+([`docs/research/ANCHORS.md`](docs/research/ANCHORS.md) has every anchor
+and what it proves). The original gate's
 2026-08-12 freeze predates the first anchor and rests on git history we
 control. One further precision: Addendum E's +5 bar and decision rule
 are in the chain-anchored snapshot, while its E-r2 measurability
@@ -406,7 +470,8 @@ withdraws it (`docs/research/ADDENDUM_Z_PROTOCOL.md`). Stated per the
 spec's claim rule, always beside the CORD negative: on CORD receipts —
 a domain the base model already knows — the same adaptation recipe
 FAILED its preregistered gates at all three scales tested (Addendum A:
-−7.3 / −11.5 / −4.5 F1). Adaptation buys novelty, not general quality,
+−7.3 / −11.5 / −4.5 F1 on Qwen2.5-0.5B-Instruct, Qwen2.5-1.5B-Instruct and
+Qwen3-4B-Instruct-2507). Adaptation buys novelty, not general quality,
 and we publish our negatives. Replication: 7 fresh tenants at k=10, pooled with
 the 3 gate tenants: +41.5 pooled, 569W/1L/30T over 600 (cuda/bf16 per B.8). The k=30 gate pairs ran
 CPU/fp32 on free Kaggle kernels; artifacts carry full receipt trails,
@@ -478,7 +543,10 @@ showing all 30 held-out documents field by field: the source document,
 what each arm returned, and which of the tenant's eight fields each one
 got. Every value in it is the real recorded prediction; the page is
 regenerated from the artifacts by `scripts/build_field_audit.py`, so it
-is a view of the evidence rather than a drawing of it. The ties and the
+is a view of the evidence rather than a drawing of it. Rebuild it from
+the banked raw files and compare:
+`python3 scripts/build_field_audit.py --run-dir experiments/blind_rehearsal_2026-08-20_raw --artifact experiments/blind_rehearsal_baseline_2026-08-21.json --out /tmp/audit.html`,
+then `cmp /tmp/audit.html demo/waybill_field_audit.html`. The ties and the
 five losses are in the same rail as the wins, and it opens on the FAIL
 verdict. Start with document `m-2201`: the prompted model reads the
 waybill correctly and then answers in a schema it invented, while the
@@ -491,11 +559,17 @@ of what this actually buys, and of what it does not.
 SHA-256 is anchored to the Bitcoin blockchain via OpenTimestamps —
 proofs committed beside byte-exact snapshots of the revisions they
 stamp (`docs/research/snapshots_ENTERPRISE_EVAL_SPEC_*.md` +
-matching `.ots`). Verify with
-`ots verify docs/research/ENTERPRISE_EVAL_SPEC.md.2026-08-19T0119Z.ots -f docs/research/snapshots_ENTERPRISE_EVAL_SPEC_2026-08-19T0119Z.md`
-(attestations complete once the Bitcoin confirmation lands). The
+matching `.ots`). With a local Bitcoin node, verify with
+`ots verify docs/research/ENTERPRISE_EVAL_SPEC.md.2026-08-19T0119Z.ots -f docs/research/snapshots_ENTERPRISE_EVAL_SPEC_2026-08-19T0119Z.md`.
+Without one, that command exits 1 with "Could not connect to Bitcoin
+node". Put `--no-bitcoin` before `verify` and it prints the block and the
+merkle root to check by hand on any block explorer: block 963117, mined
+2026-08-19 02:22 UTC. The proofs have been complete Bitcoin attestations
+since 2026-09-23. The
 Addendum D and E/F freezes therefore have independently checkable
-ordering: bars first, data second.
+ordering: bars first, data second. Which anchors were made before their
+run and which after is in
+[`docs/research/ANCHORS.md`](docs/research/ANCHORS.md).
 
 ## Verify the headline in 60 seconds
 
@@ -511,7 +585,9 @@ cluster-level CIs, validity windows, attrition) and cross-checks the
 published summary, exiting nonzero on any mismatch.
 
 The corpus generator itself is a public entry point — regenerate any
-tenant's documents + gold deterministically and inspect them:
+tenant's documents + gold deterministically and inspect them. Unlike the
+command above, this one needs torch installed: the prompt builder it
+imports lives in `arcttt.text_ttt`, which imports torch when it loads.
 
 ```
 python3 scripts/export_novel_prompts.py --seed 1 --k 10 --limit 3 \
@@ -571,8 +647,9 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 495 offline tests
-pass. The full pipeline — augmentation sweep → per-task LoRA TTT →
+v10 verdict in favor of the enterprise gates and the paper track. 612 offline tests
+run in CI on every push (with torch installed; a few skip, and the log
+says how many). The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
 GPU-validated end-to-end with the 2025 champion's public 4B checkpoint.
 Teacher-forced diagnostics show the checkpoint assigns per-token
@@ -597,6 +674,10 @@ sharpening. No claims beyond the artifacts in `experiments/`.
   degradation on non-bf16 GPUs.
 
 ## The plan (short version)
+
+*Superseded.* This was the adaptation program's plan. Its own gates
+closed the product thesis in items 3 and 4 (see the top of this page).
+The current plan is [`ROADMAP.md`](ROADMAP.md).
 
 1. **Done:** Build the adaptation + eval harness and prove the loop
    end-to-end on subsidized compute (ARC track: first nonzero scored
@@ -677,7 +758,7 @@ authored as the work it is.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 495 offline tests (tiny in-test models; no downloads).
+- `tests/` — 612 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

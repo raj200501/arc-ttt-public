@@ -6,8 +6,6 @@ import pathlib
 import subprocess
 import sys
 
-import pytest
-
 SCRIPT = pathlib.Path(__file__).resolve().parents[1] / "scripts" / "make_challenge.py"
 
 
@@ -77,7 +75,8 @@ def test_split_rejects_duplicate_ids_and_missing_fields(tmp_path):
 
 
 def test_score_matches_protocol_aggregation(tmp_path):
-    pytest.importorskip("torch")
+    # No importorskip: `score` imports the scorer from arcttt.scoring, so it
+    # must work on a challenger's machine without torch.
     gold = tmp_path / "gold.jsonl"
     pred = tmp_path / "pred.jsonl"
     gold.write_text(

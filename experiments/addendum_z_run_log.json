@@ -186,6 +186,71 @@
      "banked": false
     }
    ]
+  },
+  {
+   "utc": "2026-10-21T20:44:29Z",
+   "arms": [
+    {
+     "arm": "novel_schema_0.5b_k30_seed1_adapted_2026-09-23.json",
+     "started_utc": "2026-09-23T02:19:54Z",
+     "restarts": 3,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed1_kshot_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed2_adapted_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed2_kshot_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed3_adapted_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    },
+    {
+     "arm": "novel_schema_0.5b_k30_seed3_kshot_2026-09-23.json",
+     "started_utc": null,
+     "restarts": null,
+     "adapter_sha256": null,
+     "documents_decoded": 0,
+     "prefix_documents": 0,
+     "prefix_sha256": null,
+     "banked": false
+    }
+   ]
   }
  ]
 }

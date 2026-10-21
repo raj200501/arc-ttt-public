@@ -4,3 +4,17 @@
 docs/research/*.md -text
 experiments/*.json -text
 *.ots binary
+# Addendum AA pins these by sha256 in its freeze line (PINNED in
+# scripts/decoder_isolation_read.py), and its input manifest pins the data
+# below by sha256 too. A converted checkout would fail the reader's check.
+scripts/decoder_isolation_read.py -text
+scripts/cord_decoder_isolation.py -text
+scripts/cord_fence_tax.py -text
+scripts/cord_constrained_families.py -text
+scripts/aa_pinned/* -text
+src/arcttt/__init__.py -text
+src/arcttt/scoring.py -text
+src/arcttt/text_task.py -text
+src/arcttt/tasks.py -text
+experiments/**/*.json -text
+experiments/**/*.jsonl -text

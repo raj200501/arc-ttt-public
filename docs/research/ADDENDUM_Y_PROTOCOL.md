@@ -120,3 +120,33 @@ Artifacts: `experiments/phi3_instability_cells/<family>_<dtype>_sequence.json`,
 `experiments/phi3_instability_2026-09-17.json` (the reading). Runner:
 `scripts/phi3_instability.py`; the reader withholds until every
 preregistered cell exists.
+
+## Erratum — 2026-10-21, found by a hostile numbers audit
+
+**"The other four families were decoded in float32 and re-decode
+byte-identically" (second paragraph) was wrong when it was frozen.** All
+four were decoded in float32. Only three of them were compared in
+Addendum X's determinism gate: Qwen2.5-0.5B, SmolLM2-1.7B and Falcon3-1B,
+0 mismatches of 10 each. Granite's gate did not apply, because its banked
+prompt carries the date it was run, so its arm was re-run rather than
+reused and nothing was compared
+(`experiments/cord_decoder_isolation_2026-09-16.json`, `determinism_gate`,
+`granite-2b`: n = 0). Read: "three of the other four re-decode
+byte-identically; Granite was not compared". This protocol was frozen at
+03:52Z on 2026-09-17; `CORRECTIONS.md` said "three" at 07:41Z the same
+day, and the anchor was made eight minutes later without this erratum.
+The frozen reading NOT A DTYPE STORY names "four families reproduce" as
+the sentence it would narrow. That reading did not fire, and the
+sentence is "three families reproduce".
+
+**Two smaller notes.** The `generate` cell this protocol dates
+2026-09-03 (first paragraph and "What this cannot show") is Addendum T's
+`phi3-mini_schema.json`, first committed 2026-09-05T01:28:18Z (`41970c8`);
+Addendum T's cells ran from 2026-09-03 to 2026-09-05. The first
+paragraph's isolation recheck of the third document (twice out of two,
+and again after one intervening `generate` call) is prose only: no
+artifact banks it.
+
+The bytes anchored at `2026-09-17T0750Z` are in
+`snapshots_ADDENDUM_Y_PROTOCOL_2026-09-17T0750Z.md`; this file begins
+with them byte for byte.

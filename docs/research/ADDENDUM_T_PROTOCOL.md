@@ -125,3 +125,28 @@ families in this addendum re-decode byte-identically.
 documents (`cord-001/002/007/008`). The banked cell carries no environment
 record, so what changed between 2026-09-03 and now cannot be named. Every
 cell banked since Addendum X carries one. The fence rates stand.
+
+## Erratum — 2026-10-21, found by a hostile numbers audit
+
+**The last sentence of the 2026-09-16 gate erratum, "The other four
+families in this addendum re-decode byte-identically", is wrong.** This
+addendum has three other families, not four. In Addendum X's
+determinism gate, SmolLM2 and Falcon3 re-decoded with 0 mismatches of 10
+each. Granite's gate did not apply: its banked prompt carries the date it
+was run, so its arm was re-run rather than reused, and nothing was
+compared (`experiments/cord_decoder_isolation_2026-09-16.json`,
+`determinism_gate`, `granite-2b`: n = 0). The third family that passed
+X's gate, Qwen2.5-0.5B, is Addendum S's, not this addendum's.
+`CORRECTIONS.md` said "three" on 2026-09-17.
+
+**Dates and IDs.** The Phi-3 comparator cell that the 2026-09-16 erratum
+and the 2026-09-17 note call "banked on 2026-09-03" is
+`phi3-mini_schema.json`, first committed 2026-09-05T01:28:18Z
+(`41970c8`); this addendum's cells ran from 2026-09-03 to 2026-09-05
+(the `run_date_note` in `experiments/cord_fence_tax_families_2026-09-03.json`).
+The four document IDs in the 2026-09-17 note (`cord-001/002/007/008`)
+are prose only: Addendum Y's artifact banks the count, 4, not the IDs.
+
+The bytes anchored at `2026-09-17T0750Z` are in
+`snapshots_ADDENDUM_T_PROTOCOL_2026-09-17T0750Z.md`; this file begins
+with them byte for byte.

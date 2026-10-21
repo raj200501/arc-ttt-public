@@ -15,9 +15,10 @@ Two subcommands:
            stamp command so the challenger can anchor their gold before
            anything ships (protocol item 8).
 
-  score  — one-time scoring pass with the pinned scorer
-           (arcttt.text_ttt.score_text_output at the commit named in the
-           terms; needs `pip install torch` + `pip install -e .`).
+  score  — stdlib-only. One-time scoring pass with the pinned scorer
+           (score_text_output at the commit named in the terms; it lives
+           in arcttt.scoring, which arcttt.text_ttt re-exports, so the
+           function is the same object either way and no torch is needed).
            Aggregation per the protocol: mean per-document micro-F1,
            invalid or missing JSON scores 0, every holdout id counted
            exactly once.
@@ -169,7 +170,10 @@ def cmd_score(args: argparse.Namespace) -> int:
     repo_src = pathlib.Path(__file__).resolve().parents[1] / "src"
     if repo_src.is_dir() and str(repo_src) not in sys.path:
         sys.path.insert(0, str(repo_src))
-    from arcttt.text_ttt import score_text_output  # the pinned scorer
+    # The pinned scorer. Imported from arcttt.scoring (stdlib) rather than
+    # arcttt.text_ttt, which re-exports the same function but imports torch
+    # at load: a challenger should not need a 2 GB install to score.
+    from arcttt.scoring import score_text_output
 
     gold = {}
     with open(args.gold, encoding="utf-8") as f:

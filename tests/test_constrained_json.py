@@ -56,7 +56,10 @@ def test_complete_detection() -> None:
 
 def _model_cached() -> bool:
     home = pathlib.Path(os.environ.get("HF_HOME", pathlib.Path.home() / ".cache" / "huggingface"))
-    return any(home.rglob("models--Qwen--Qwen2.5-0.5B-Instruct"))
+    # The ref, not just the folder: a snapshot fetched at a pinned revision
+    # (Addendum Z's) leaves no refs/main, and from_pretrained(local_files_only)
+    # then fails instead of skipping.
+    return any(home.rglob("models--Qwen--Qwen2.5-0.5B-Instruct/refs/main"))
 
 
 @pytest.mark.skipif(not _model_cached(), reason="Qwen2.5-0.5B-Instruct not in the local HF cache")

@@ -186,6 +186,83 @@ def _claims(body: str, exempt: dict[str, str] | None = None
     return found
 
 
+# A counted claim whose own clause cites a banked artifact -- "237 banked
+# artifacts in 48 days (`experiments/project_timeline.json`)" -- is checked
+# against THAT artifact, not against every number in the evidence. Slide
+# copy said 236 while the artifact it cited said 237, and the gate passed
+# it because an unrelated 236 (the public export's count) existed
+# elsewhere: the "matched an unrelated number" class booked on 2026-08-25,
+# again (CORRECTIONS 2026-10-21). The citation is the first backticked
+# `experiments/<name>.json` after the claim, before the clause ends and
+# before the next counted claim starts, so a claim without its own
+# citation never borrows a neighbour's. No citation, or a cited file that
+# is not on disk: the claim is checked against all the evidence, as before.
+CITATION = re.compile(r"`experiments/([A-Za-z0-9_.\-]+\.json)`")
+CLAUSE_END = re.compile(r"\.(?:\s|$)|;\s|\n\n")
+CITATION_REACH = 240
+# Sections headed "## Update — YYYY-MM-DD" are dated records: their counts
+# are what the cited artifact said on that date, and the artifact has
+# moved since. They are checked against all the evidence, as before.
+DATED_PART = re.compile(r"^Update [—–-] \d{4}-\d{2}-\d{2}\b")
+
+
+def _cited_claims(body: str, exempt: dict[str, str] | None = None
+                  ) -> list[tuple[str, str, str | None]]:
+    """`_claims`, plus the artifact each counted claim's own clause cites."""
+    body = _unwrap(body)
+    exempt = {**EXEMPT, **(exempt or {})}
+    counted_starts = [m.start() for m in re.finditer(PATTERNS["counted"], body)]
+    found: list[tuple[str, str, str | None]] = []
+    seen: set[tuple[str, str | None]] = set()
+    for kind, pattern in PATTERNS.items():
+        for match in re.finditer(pattern, body):
+            token = match.group(0)
+            if token in exempt:
+                continue
+            cited = None
+            if kind == "counted":
+                limit = min([s for s in counted_starts if s > match.start()]
+                            + [len(body), match.end() + CITATION_REACH])
+                stop = CLAUSE_END.search(body, match.end())
+                if stop:
+                    limit = min(limit, stop.start())
+                cite = CITATION.search(body, match.end(), limit)
+                cited = cite.group(1) if cite else None
+            if (token, cited) in seen or (cited is None and any(
+                    token == t for t, _ in seen)):
+                continue
+            seen.add((token, cited))
+            found.append((kind, token, cited))
+    return found
+
+
+def _cited_numbers(name: str | None, cache: dict) -> list[float] | None:
+    """Every number in the cited artifact, or None to fall back."""
+    if name is None or name == "outbound_reconciliation.json":
+        return None
+    if name not in cache:
+        path = REPO / "experiments" / name
+        cache[name] = (_haystack_numbers(_dash_normalise(
+            path.read_text(encoding="utf-8"))) if path.is_file() else None)
+    return cache[name]
+
+
+def _check(body: str, exempt: dict[str, str] | None, haystack: str,
+           numbers: list[float], cache: dict, use_citations: bool = True
+           ) -> tuple[list[str], list[dict]]:
+    reconciled, missing = [], []
+    for kind, token, cited in _cited_claims(body, exempt):
+        own = _cited_numbers(cited, cache) if use_citations else None
+        if _reconciles(kind, token, haystack, numbers, own):
+            reconciled.append(token)
+        else:
+            item = {"kind": kind, "token": token}
+            if own is not None:
+                item["checked_against"] = f"experiments/{cited}"
+            missing.append(item)
+    return reconciled, missing
+
+
 def _application_sections(text: str) -> dict[str, str]:
     """Every `###` block of the application, keyed by its question.
 
@@ -251,7 +328,8 @@ def _haystack_numbers(haystack: str) -> list[float]:
 
 
 def _reconciles(kind: str, token: str, haystack: str,
-                numbers: list[float]) -> bool:
+                numbers: list[float],
+                cited_numbers: list[float] | None = None) -> bool:
     """Does this claim trace to a figure in the evidence?
 
     Matching is NUMERIC and precision-aware, not string-rounded. The first
@@ -285,6 +363,9 @@ def _reconciles(kind: str, token: str, haystack: str,
     # shape a reader is most likely to check by hand. Counts must match
     # exactly, at their own scale.
     scales = (1.0,) if kind == "counted" else (1.0, 100.0, 0.01)
+    if kind == "counted" and cited_numbers is not None:
+        # the artifact the claim's own sentence names, and only that one
+        numbers = cited_numbers
     for candidate in numbers:
         for scale in scales:
             if abs(candidate * scale - value) <= tolerance:
@@ -305,16 +386,12 @@ def main() -> int:
         PACKAGE.read_text(encoding="utf-8")))
     haystack = _haystack()
     numbers = _haystack_numbers(haystack)
+    cache: dict = {}
 
     report: dict[str, dict] = {}
     unreconciled_total = 0
     for name, body in bodies.items():
-        reconciled, missing = [], []
-        for kind, token in _claims(body):
-            if _reconciles(kind, token, haystack, numbers):
-                reconciled.append(token)
-            else:
-                missing.append({"kind": kind, "token": token})
+        reconciled, missing = _check(body, None, haystack, numbers, cache)
         unreconciled_total += len(missing)
         report[name] = {
             "claims_checked": len(reconciled) + len(missing),
@@ -326,12 +403,8 @@ def main() -> int:
     if APPLICATION.exists():
         for name, body in _application_sections(_dash_normalise(
                 APPLICATION.read_text(encoding="utf-8"))).items():
-            reconciled, missing = [], []
-            for kind, token in _claims(body, APPLICATION_EXEMPT):
-                if _reconciles(kind, token, haystack, numbers):
-                    reconciled.append(token)
-                else:
-                    missing.append({"kind": kind, "token": token})
+            reconciled, missing = _check(body, APPLICATION_EXEMPT, haystack,
+                                         numbers, cache)
             unreconciled_total += len(missing)
             application[name] = {
                 "claims_checked": len(reconciled) + len(missing),
@@ -346,12 +419,9 @@ def main() -> int:
         text = _dash_normalise(doc.read_text(encoding="utf-8"))
         for part in re.split(r"\n## ", "\n" + text):
             heading = part.split("\n", 1)[0].strip()[:60] or "(preamble)"
-            reconciled, missing = [], []
-            for kind, token in _claims(part, OUTBOUND_STRATEGY_EXEMPT):
-                if _reconciles(kind, token, haystack, numbers):
-                    reconciled.append(token)
-                else:
-                    missing.append({"kind": kind, "token": token})
+            reconciled, missing = _check(
+                part, OUTBOUND_STRATEGY_EXEMPT, haystack, numbers, cache,
+                use_citations=not DATED_PART.match(heading))
             if not reconciled and not missing:
                 continue
             unreconciled_total += len(missing)

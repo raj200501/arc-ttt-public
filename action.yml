@@ -1,0 +1,49 @@
+# fencecheck as a GitHub Action: one `uses:` line in a consumer workflow.
+#
+# It runs tools/fencecheck.py from this action's own checkout, so the
+# consumer copies no file. The tool is standard library only: the action
+# installs nothing from PyPI and pins no Python package. Its one
+# dependency is actions/setup-python, which provides the interpreter.
+#
+# The job fails on findings through the tool's own exit status: 1 when a
+# site is found, 2 when a path does not exist, 0 when the scan is clean.
+name: fencecheck
+description: >-
+  Fail the job when evaluation code parses model output as JSON with no
+  markdown-fence handling and turns the failure into a zero or a silent
+  skip. Standard library only.
+inputs:
+  path:
+    description: >-
+      One file or directory to scan, relative to the workspace. Use one
+      step per path to scan several.
+    required: false
+    default: "."
+  args:
+    description: >-
+      Extra arguments for `fencecheck scan`, for example `--json`.
+    required: false
+    default: ""
+  python-version:
+    description: Python version passed to actions/setup-python.
+    required: false
+    default: "3.11"
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: fencecheck scan
+      shell: bash
+      # Inputs reach the script through env, never pasted into it, so a
+      # quote or `$(...)` in an input cannot run as shell. `read -a`
+      # splits args on spaces without glob expansion; the path stays one
+      # argument, spaces included.
+      env:
+        FENCECHECK_TOOL: ${{ github.action_path }}/tools/fencecheck.py
+        FENCECHECK_PATH: ${{ inputs.path }}
+        FENCECHECK_ARGS: ${{ inputs.args }}
+      run: |
+        read -r -a extra <<< "$FENCECHECK_ARGS"
+        python "$FENCECHECK_TOOL" scan "${extra[@]}" "$FENCECHECK_PATH"

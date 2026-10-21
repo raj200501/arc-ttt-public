@@ -237,6 +237,39 @@ def is_superseded(text: str) -> bool:
     return any(marker in head for marker in RECORD_MARKERS)
 
 
+# A SECTION can be a record too. A heading such as
+# "## Update — 2026-09-17: ..." dates everything under it, and what such a
+# section said on its date must not change afterwards: later corrections
+# go in a dated bracket beside it. The artifact-count syncer rewrote
+# "236 banked artifacts" in one of these to 237 on 2026-09-23, so a
+# section dated 2026-09-17 carried a count that did not exist until six
+# days later (CORRECTIONS 2026-10-21). Every syncer that rewrites counts
+# skips text under such a heading, up to the next heading of the same or
+# a higher level.
+DATED_HEADING = re.compile(
+    r"^(#{1,3}) Update [—–-] \d{4}-\d{2}-\d{2}\b.*$", re.MULTILINE)
+
+
+def dated_spans(text: str) -> list[tuple[int, int]]:
+    """(start, end) offsets of every section that sits under a dated heading."""
+    spans = []
+    for match in DATED_HEADING.finditer(text):
+        level = len(match.group(1))
+        nxt = re.compile(r"^#{1,%d} " % level, re.MULTILINE)
+        following = nxt.search(text, match.end())
+        spans.append((match.start(), following.start() if following else len(text)))
+    return spans
+
+
+def in_dated_section(text: str, index: int,
+                     spans: list[tuple[int, int]] | None = None) -> bool:
+    """True if `index` falls inside a section with a dated heading."""
+    for start, end in (dated_spans(text) if spans is None else spans):
+        if start <= index < end:
+            return True
+    return False
+
+
 def documents() -> list[Path]:
     """Every doc a reader is invited to check.
 
@@ -268,11 +301,13 @@ def collected_test_count() -> int:
 def stale_claims(path: Path, actual: int) -> list[tuple[int, int]]:
     """(line number, claimed count) for every claim that disagrees."""
     text = path.read_text(encoding="utf-8")
+    spans = dated_spans(text)
     found = []
     for pattern in CLAIM_PATTERNS:
         for match in pattern.finditer(text):
             claimed = int(match.group(1))
             if claimed != actual \
+                    and not in_dated_section(text, match.start(), spans) \
                     and not describes_the_export(text, match.start()) \
                     and not is_subset_claim(text, match.start()):
                 found.append((text[:match.start()].count("\n") + 1, claimed))
@@ -301,6 +336,7 @@ def uncovered_claims(path: Path, actual: int) -> list[tuple[int, str]]:
     next escaped phrasing gets noticed in one run instead of three.
     """
     text = path.read_text(encoding="utf-8")
+    spans = dated_spans(text)
     covered = set()
     for pattern in CLAIM_PATTERNS:
         for match in pattern.finditer(text):
@@ -309,6 +345,8 @@ def uncovered_claims(path: Path, actual: int) -> list[tuple[int, str]]:
     for match in SUSPECT.finditer(text):
         if int(match.group(1)) == actual:
             continue          # already correct, whatever shape it is in
+        if in_dated_section(text, match.start(), spans):
+            continue          # a dated record; it is meant to disagree
         if any(i in covered for i in range(match.start(), match.end())):
             continue          # a known shape; stale_claims owns it
         if describes_the_export(text, match.start()):
@@ -320,6 +358,21 @@ def uncovered_claims(path: Path, actual: int) -> list[tuple[int, str]]:
         line = text[:match.start()].count("\n") + 1
         out.append((line, " ".join(match.group(0).split())))
     return out
+
+
+def rewrite(text: str, actual: int) -> str:
+    """Every claim this module owns, set to `actual`. Claims about the
+    export, a component's own count, and anything under a dated heading
+    are left exactly as written."""
+    for pattern in CLAIM_PATTERNS:
+        spans = dated_spans(text)
+        text = pattern.sub(
+            lambda m: m.group(0)
+            if in_dated_section(text, m.start(), spans)
+            or describes_the_export(text, m.start())
+            or is_subset_claim(text, m.start())
+            else m.group(0).replace(m.group(1), str(actual), 1), text)
+    return text
 
 
 def main() -> int:
@@ -348,14 +401,8 @@ def main() -> int:
             print(f"  {name}:{line} claims {claimed}")
         if args.check:
             continue
-        text = path.read_text(encoding="utf-8")
-        for pattern in CLAIM_PATTERNS:
-            text = pattern.sub(
-                lambda m: m.group(0)
-                if describes_the_export(text, m.start())
-                or is_subset_claim(text, m.start())
-                else m.group(0).replace(m.group(1), str(actual), 1), text)
-        path.write_text(text, encoding="utf-8")
+        path.write_text(rewrite(path.read_text(encoding="utf-8"), actual),
+                        encoding="utf-8")
 
     if uncovered:
         # Re-check after rewriting: a shape that only looked uncovered

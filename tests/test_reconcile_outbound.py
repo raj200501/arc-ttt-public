@@ -129,3 +129,57 @@ def test_the_outbound_strategy_documents_are_inside_the_gate():
     assert tokens == []
     tokens = [t for k, t in ro._claims("across 1,950 documents banked") if k == "counted"]
     assert tokens == ["1,950 documents"]
+
+
+def _module():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("ro_cited", SCRIPT)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_a_counted_claim_is_tied_to_the_artifact_its_own_clause_cites():
+    """Slide copy said 236 banked artifacts while the artifact it cited
+    said 237, and the gate passed it because an unrelated 236 existed
+    elsewhere in the evidence (CORRECTIONS 2026-10-21). A claim takes the
+    citation in its own clause, never a neighbour's."""
+    ro = _module()
+    text = ("fourteen results (`experiments/results_against_thesis_2026-09-17.json`), "
+            "107 dated corrections (`experiments/self_correction_ledger.json`), "
+            "236 banked artifacts in 48 days (`experiments/project_timeline.json`), "
+            "a public repository whose CI re-derives the numbers. "
+            "312 tests green, 236 banked artifacts (`experiments/project_timeline.json`).")
+    counted = [(token, cited) for kind, token, cited in ro._cited_claims(text)
+               if kind == "counted"]
+    assert counted == [("107 dated corrections", "self_correction_ledger.json"),
+                       ("236 banked artifacts", "project_timeline.json"),
+                       ("312 tests", None)], counted
+    # the cited artifact decides; the rest of the evidence does not rescue it
+    assert not ro._reconciles("counted", "236 banked artifacts", "", [236.0],
+                              cited_numbers=[237.0, 48.0])
+    assert ro._reconciles("counted", "237 banked artifacts", "", [236.0],
+                          cited_numbers=[237.0, 48.0])
+    # no citation: any figure of that value in the evidence, as before
+    assert ro._reconciles("counted", "236 banked artifacts", "", [236.0])
+
+
+def test_the_gate_catches_a_count_that_disagrees_with_its_cited_artifact():
+    """MUTATION TEST on the real artifacts: plant the public export's
+    artifact count beside a citation of the source timeline. The value
+    exists in the evidence, so only the citation check can catch it."""
+    ro = _module()
+    timeline = json.loads((REPO / "experiments" / "project_timeline.json").read_text())
+    export = json.loads((REPO / "experiments" / "public_export_counts.json").read_text())
+    planted = export["public_export_artifacts"]
+    if planted == timeline["banked_artifacts"]:
+        pytest.skip("the two counts agree today, so the plant would be true")
+    haystack = ro._haystack()
+    numbers = ro._haystack_numbers(haystack)
+    body = f"{planted} banked artifacts in 48 days (`experiments/project_timeline.json`)."
+    reconciled, missing = ro._check(body, None, haystack, numbers, {})
+    assert [m["token"] for m in missing] == [f"{planted} banked artifacts"], (reconciled, missing)
+    assert missing[0]["checked_against"] == "experiments/project_timeline.json"
+    # and the true count passes
+    body = f"{timeline['banked_artifacts']} banked artifacts (`experiments/project_timeline.json`)."
+    assert ro._check(body, None, haystack, numbers, {})[1] == []

@@ -1,0 +1,260 @@
+{
+ "figure": "fence_tax_waybills",
+ "generated_by": "scripts/make_figures.py",
+ "artifacts": [
+  {
+   "path": "experiments/fence_impact_table.json",
+   "sha256": "99fb3c4685ef022c165d6f343869080839c2cb675b8258f170ce691c89eea2d4"
+  },
+  {
+   "path": "experiments/waybill_scale_rung_0.5b_schema_2026-08-25.json",
+   "sha256": "e5e6758a71f134e97a67b93b3d9aa7a06dc0670f6a84d10f1604c0bdb25276ee"
+  },
+  {
+   "path": "experiments/waybill_scale_rung_0.5b_kshot_2026-08-25.json",
+   "sha256": "43366ceba954fd09458cea0d5b198e89b0c25284cfd70c856372d59b25035763"
+  },
+  {
+   "path": "experiments/waybill_scale_rung_1.5b_schema_REPRO_2026-08-25.json",
+   "sha256": "50ae3bc0fa88dc4a23c6a42dcdfe73f6e1ce5ee745285963ac43396bf2372365"
+  },
+  {
+   "path": "experiments/waybill_scale_rung_1.5b_kshot_RAW_2026-08-25.json",
+   "sha256": "543b5d5749b8211bced445bf51d3d81bc9ee1ccc1c10a26744ae881ac5151bf4"
+  },
+  {
+   "path": "experiments/waybill_scale_rung_3b_schema_2026-08-25.json",
+   "sha256": "34b1a3a1ed5f93825f0d180ede05b21f3c596220462bc820d2cdd6f54f4d9883"
+  },
+  {
+   "path": "experiments/waybill_scale_rung_3b_kshot_bf16_2026-08-25.json",
+   "sha256": "d4249b862ce7395153bf4cb8d1e826bf210a36aa7692369f9d98768a7b21753b"
+  }
+ ],
+ "values": {
+  "arms": [
+   {
+    "arm_artifact": "experiments/waybill_scale_rung_0.5b_schema_2026-08-25.json",
+    "dtype": "float32",
+    "fence_tax": 0.635,
+    "fenced": 30,
+    "invalid_as_emitted": 30,
+    "invalid_fence_stripped": 0,
+    "mean_as_emitted": 0.0,
+    "mean_fence_stripped": 0.635,
+    "model": "Qwen2.5-0.5B-Instruct",
+    "n": 30,
+    "regime": "schema",
+    "regime_as_banked": "schema"
+   },
+   {
+    "arm_artifact": "experiments/waybill_scale_rung_0.5b_kshot_2026-08-25.json",
+    "dtype": "float32",
+    "fence_tax": 0.0,
+    "fenced": 0,
+    "invalid_as_emitted": 3,
+    "invalid_fence_stripped": 3,
+    "mean_as_emitted": 0.7836,
+    "mean_fence_stripped": 0.7836,
+    "model": "Qwen2.5-0.5B-Instruct",
+    "n": 30,
+    "regime": "kshot",
+    "regime_as_banked": "k-shot (20)"
+   },
+   {
+    "arm_artifact": "experiments/waybill_scale_rung_1.5b_schema_REPRO_2026-08-25.json",
+    "dtype": "float32",
+    "fence_tax": 0.7375,
+    "fenced": 30,
+    "invalid_as_emitted": 30,
+    "invalid_fence_stripped": 0,
+    "mean_as_emitted": 0.0,
+    "mean_fence_stripped": 0.7375,
+    "model": "Qwen2.5-1.5B-Instruct",
+    "n": 30,
+    "regime": "schema",
+    "regime_as_banked": "schema"
+   },
+   {
+    "arm_artifact": "experiments/waybill_scale_rung_1.5b_kshot_RAW_2026-08-25.json",
+    "dtype": "float32",
+    "fence_tax": 0.0,
+    "fenced": 0,
+    "invalid_as_emitted": 0,
+    "invalid_fence_stripped": 0,
+    "mean_as_emitted": 0.8804,
+    "mean_fence_stripped": 0.8804,
+    "model": "Qwen2.5-1.5B-Instruct",
+    "n": 30,
+    "regime": "kshot",
+    "regime_as_banked": "k-shot (20)"
+   },
+   {
+    "arm_artifact": "experiments/waybill_scale_rung_3b_schema_2026-08-25.json",
+    "dtype": "float32",
+    "fence_tax": 0.8958,
+    "fenced": 30,
+    "invalid_as_emitted": 30,
+    "invalid_fence_stripped": 0,
+    "mean_as_emitted": 0.0,
+    "mean_fence_stripped": 0.8958,
+    "model": "Qwen2.5-3B-Instruct",
+    "n": 30,
+    "regime": "schema",
+    "regime_as_banked": "schema"
+   },
+   {
+    "arm_artifact": "experiments/waybill_scale_rung_3b_kshot_bf16_2026-08-25.json",
+    "dtype": "bfloat16",
+    "fence_tax": 0.0,
+    "fenced": 0,
+    "invalid_as_emitted": 0,
+    "invalid_fence_stripped": 0,
+    "mean_as_emitted": 0.9747,
+    "mean_fence_stripped": 0.9747,
+    "model": "Qwen2.5-3B-Instruct",
+    "n": 30,
+    "regime": "kshot",
+    "regime_as_banked": "k-shot (20)"
+   }
+  ]
+ },
+ "prose_checked": [
+  {
+   "doc": "README.md",
+   "quote": "| 0.5B | 30/30 | `0.0000` | **0.6350** |",
+   "cited": [
+    [
+     "30/30",
+     "0.5B schema fenced"
+    ],
+    [
+     "0.0000",
+     "0.5B schema as emitted"
+    ],
+    [
+     "0.6350",
+     "0.5B schema stripped"
+    ]
+   ]
+  },
+  {
+   "doc": "README.md",
+   "quote": "| 1.5B | 30/30 | `0.0000` | **0.7375** |",
+   "cited": [
+    [
+     "30/30",
+     "1.5B schema fenced"
+    ],
+    [
+     "0.0000",
+     "1.5B schema as emitted"
+    ],
+    [
+     "0.7375",
+     "1.5B schema stripped"
+    ]
+   ]
+  },
+  {
+   "doc": "README.md",
+   "quote": "| 3B | 30/30 | `0.0000` | **0.8958** |",
+   "cited": [
+    [
+     "30/30",
+     "3B schema fenced"
+    ],
+    [
+     "0.0000",
+     "3B schema as emitted"
+    ],
+    [
+     "0.8958",
+     "3B schema stripped"
+    ]
+   ]
+  },
+  {
+   "doc": "README.md",
+   "quote": "| 0.5B, with 20 demonstrations | **0/30** | 0.7836 | 0.7836 |",
+   "cited": [
+    [
+     "0/30",
+     "0.5B k-shot fenced"
+    ],
+    [
+     "0.7836",
+     "0.5B k-shot as emitted"
+    ],
+    [
+     "0.7836",
+     "0.5B k-shot stripped"
+    ]
+   ]
+  },
+  {
+   "doc": "README.md",
+   "quote": "| 1.5B, with 20 demonstrations | **0/30** | 0.8804 | 0.8804 |",
+   "cited": [
+    [
+     "0/30",
+     "1.5B k-shot fenced"
+    ],
+    [
+     "0.8804",
+     "1.5B k-shot as emitted"
+    ],
+    [
+     "0.8804",
+     "1.5B k-shot stripped"
+    ]
+   ]
+  },
+  {
+   "doc": "EVIDENCE.md",
+   "quote": "Fence-stripped: **0.7375, zero invalid.**",
+   "cited": [
+    [
+     "0.7375",
+     "1.5B schema stripped"
+    ]
+   ]
+  },
+  {
+   "doc": "VERDICT.md",
+   "quote": "re-scored with one fence removed they are **0.7375 with 0 of 30 invalid**",
+   "cited": [
+    [
+     "0.7375",
+     "1.5B schema stripped"
+    ],
+    [
+     "0 of 30",
+     "1.5B invalid after strip"
+    ]
+   ]
+  },
+  {
+   "doc": "EVIDENCE.md",
+   "quote": "scores **0.8958 with 0 of 30 invalid**",
+   "cited": [
+    [
+     "0.8958",
+     "3B schema stripped"
+    ],
+    [
+     "0 of 30",
+     "3B invalid after strip"
+    ]
+   ]
+  }
+ ],
+ "private_prose_quotes": {
+  "checked": 0,
+  "absent_from_this_tree": 0
+ },
+ "files": [
+  "figures/fence_tax_waybills.svg",
+  "figures/fence_tax_waybills.png"
+ ]
+}

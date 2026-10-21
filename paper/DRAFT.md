@@ -1,11 +1,14 @@
 # A Clean-Room Reproduction Harness for Test-Time Training on ARC-AGI-2: What Transfers, What Breaks, and What It Costs
 
 **Draft — sections 1–3 and 5–7 in prose; the section 4 ablation grid has
-5 of 8 rows filled from the experiment registry. Every number in this
+6 of 8 rows filled from the experiment registry (rows 4.1 and 4.5 are
+open). Every number in this
 document either comes from a
 machine-readable artifact in `experiments/` or is explicitly attributed to the
 NVARC team's published results. TODO markers flag claims we cannot yet
-support with an artifact.**
+support with an artifact. The prose was last reconciled against
+`VERDICT.md`, `CORRECTIONS.md` and `docs/research/ANCHORS.md` as they
+stood at commit `e49bcb2` (2026-10-21).**
 
 ## 1. Introduction
 
@@ -50,7 +53,7 @@ We contribute:
   (serialization, per-task LoRA TTT, constrained DFS decoding, augmentation
   voting), written from the team's public descriptions and never from their
   code (section 2), released under MIT.
-- **A test harness** of 495 offline tests that runs without a GPU, network
+- **A test harness** of 612 offline tests that runs without a GPU, network
   access, or model downloads, including an oracle test that verifies the
   tree search token-exactly against a cache-free reference implementation —
   a test that caught a KV-cache aliasing bug which would otherwise have
@@ -61,8 +64,9 @@ We contribute:
 - **Bug postmortems** for every failure mode we hit that a reader
   reproducing this recipe would otherwise re-hit (sections 3 and 6).
 
-On claims: this work is an active entry in the ARC Prize 2026 ARC-AGI-2
-Kaggle track. Scored history as of 2026-08-17: v6 0.00 (wrong-architecture
+On claims: this work is an entry in the ARC Prize 2026 ARC-AGI-2
+Kaggle track. Scored history (no scored submission after v10 is banked in
+`experiments/`): v6 0.00 (wrong-architecture
 GPU; the scored file was the safety fallback — incident 6.7), v7 0.00 at
 40/240-task coverage (library API drift between dev and scoring images —
 incident 6.8), then 1.67 public three times running (v8 on 08-10 at
@@ -70,7 +74,9 @@ incident 6.8), then 1.67 public three times running (v8 on 08-10 at
 preregistered nulls, on the recall-bound and time-budget levers
 respectively). The stable 1.67 across three coverage/lever configurations
 cleanly isolates candidate quality (~2.7% per-attempt hit rate) as the
-binding constraint.
+binding constraint. After the v10 null, the leaderboard climb was formally
+deprioritized on 2026-08-15 and GPU quota moved to other work
+(`experiments/kaggle_v10_scored_2026-08-15.json`).
 Local results so far are small-scale pipeline validations (a
 handful of evaluation tasks on a single T4), reported in full in section 4.
 We state this plainly because the paper's value does not depend on
@@ -199,15 +205,20 @@ in this stage poisons the vote silently.
 
 ## 3. Harness
 
-The harness (`src/arcttt/`, MIT-licensed) is small — roughly 1,650 lines
-across eight core modules — and is designed around one principle: every
+The harness (`src/arcttt/`, MIT-licensed) is small — 1,941 lines across
+eight core modules (`augment`, `decode`, `lora`, `model`, `serialize`,
+`solve`, `tasks`, `vote`; `wc -l` at commit `e49bcb2`) — and is designed
+around one principle: every
 property the pipeline depends on is either enforced by construction or
-pinned by an offline test. The test suite (495 tests) runs on CPU with tiny in-test
+pinned by an offline test. The test suite (612 tests) runs on CPU with tiny in-test
 models — a few-layer Qwen2-architecture model and a hand-built 13-token
 tokenizer constructed inside the test — so correctness never depends on
 network access, model downloads, or GPU availability. Scale comes from
 swapping the base model and device, not from changing code paths, which is
-what makes the local tests evidence about the Kaggle run.
+what makes the local tests evidence about the Kaggle run. That is evidence
+about code paths, not about bytes. Section 6.11 records a measured case
+where one code path gives different text when only the CPU thread count
+changes.
 
 ### 3.1 Invariants
 
@@ -237,7 +248,7 @@ Our third Kaggle submission (kernel v3) produced a valid 240-task submission
 in which every task had fallen back: `peft`, the standard adapter library,
 is not installed on the offline competition scoring image, and every
 per-task adaptation raised ImportError (registry: `kaggle-v3`). The fix was
-to remove the dependency: `arcttt/lora.py` is a ~115-line pure-torch LoRA —
+to remove the dependency: `arcttt/lora.py` is a ~120-line pure-torch LoRA —
 inject rank-decomposed trainable deltas into a frozen model's linear layers,
 with rslora scaling, and remove them cleanly between tasks. Injection,
 identity-at-initialization, learning, removal, and re-injection are each
@@ -361,8 +372,9 @@ the champion-4B DFS validation ran 72–282 s/task on a T4 with no crashes
 116–365 s/task with one OOM, faa9f03d).
 The teacher-forced diagnostic (`t4_champ_diag_2026-08-08.json`) measured
 format fit directly: with no TTT at all, mean per-token log-probability of
-the true solutions ranged −0.063 to −0.120 across the eight-task slice,
-and a greedy generation emitted a syntactically perfect grid — the
+the true solutions ranged −0.063 to −0.120 across the seven tasks of the
+eight-task slice that completed in that arm (3dc255db ran out of memory
+even without TTT), and a greedy generation emitted a syntactically perfect grid — the
 checkpoint is squarely on-distribution under our serialization. One epoch
 of 8-augmentation TTT sharpened lp(true) on three of five comparable tasks
 — five of seven test pairs — (best: −0.120 → −0.029), degraded it on two
@@ -451,9 +463,12 @@ what this section documents.
 This section is the incident log a reader reproducing this recipe should
 tape to their monitor. Sections 3.2–3.6 give the deep engineering
 treatments; entries here are compressed to symptom, root cause, and rule,
-except for the newest incidents (6.7, 6.8), which are reported in full.
+except for incidents 6.7 and 6.8, which are reported in full.
 Entry 6.9 is not an incident at all but a preregistered negative result
-about the method, and is reported in full for the same reason.
+about the method, and is reported in full for the same reason. Entries
+6.11 and 6.12 are about the measurement itself: whether a decoder gives
+the same text twice, and what evidence shows that a decision rule was
+written before its data.
 
 **6.1 Kaggle mount paths (kernels v1/v2).** Competition data and attached
 models mount under paths that differ between environments. Both runs died
@@ -502,13 +517,16 @@ accelerator (kernel v6).** Our v6 submission scored 0.00 (leaderboard
 submission 55338854; registry: `kaggle-v6`). The kernel's interactive run
 had landed on a default-resolved non-bf16 GPU (P100-class), where bf16
 compute hard-fails: every task raised an accelerator error in about a
-millisecond (observed in the run log; measured but not yet artifacted —
-TODO(artifact)), and the run produced its valid all-fallback submission file
+millisecond (observed in the run log; recorded in
+`kaggle_v6_scored_2026-08-07.json`, which was reconstructed on 2026-08-19
+from the leaderboard history and the session record, not from a
+timestamped log), and the run produced its valid all-fallback submission file
 exactly as designed. We believed this was survivable, because we believed
 scoring re-runs the kernel on the competition's upgraded hardware. It does
 not. The score was resolved from the submission.json produced by the
 kernel version's *own* interactive run — resolution took ~30 minutes
-(measured but not yet artifacted — TODO(artifact)), far
+(per the session record, in the same reconstructed artifact; the exact
+timestamps are not recorded there), far
 too fast for any rerun — and the hardware notes we had carried from the
 2025 competition (an L4x4 scoring VM) turned out to be stale for this
 track, which offers T4/P100 notebook accelerators. Two lessons, both now
@@ -556,7 +574,7 @@ produced valid-looking output. The harness's response in every case was
 the same — convert the assumption into either a construction-time
 guarantee or a loud failure.
 
-**6.9 The preregistered adaptation gate, and its failure at two scales.**
+**6.9 The preregistered adaptation gate, and its failure at three scales.**
 Sections 6.1–6.8 are engineering incidents: assumptions about
 environments that produced valid-looking output. This one is different in
 kind. It is a negative result about the method itself, obtained the only
@@ -570,11 +588,15 @@ paired delta at k=10 over seeds {1,2,3}, with the adapted and prompted
 arms sharing a split, a scorer, and an environment. All three rungs
 have now completed it. All fail:
 
-| rung | seed 1 | seed 2 | seed 3 | mean | gate |
+| rung (model) | seed 1 | seed 2 | seed 3 | mean | gate |
 |---|---|---|---|---|---|
-| 0.5B | −1.2 | −15.5 | −5.1 | **−7.3** | fail |
-| 1.5B | +1.1 | −19.8 | −16.0 | **−11.5** | fail |
-| 4B | +3.3 | −8.5 | −8.2 | **−4.5** | fail |
+| 0.5B (Qwen2.5-0.5B-Instruct) | −1.2 | −15.5 | −5.1 | **−7.3** | fail |
+| 1.5B (Qwen2.5-1.5B-Instruct) | +1.1 | −19.8 | −16.0 | **−11.5** | fail |
+| 4B (Qwen3-4B-Instruct-2507) | +3.3 | −8.5 | −8.2 | **−4.5** | fail |
+
+The top rung is a different model generation, not a larger Qwen2.5:
+Qwen2.5-3B-Instruct's license disqualified it, so the frozen design
+names Qwen3-4B-Instruct-2507 (ENTERPRISE_EVAL_SPEC.md A.1 and A.2).
 
 Model scale was the lever we preregistered to rescue the 0.5B result, on
 the strength of two indirect signals: a teacher-forced log-probability
@@ -586,17 +608,23 @@ direct test is the result; the proxies become an object lesson in why the
 direct test was preregistered.
 
 Three qualifications, all of which cut against overstating the negative.
-First, neither failure is significant on a distribution-free basis: the
-sign test over pooled receipts gives 27W/32L (p=0.60) at 0.5B and
-17W/29L (p=0.10) at 4B. Second, the gate is underpowered against its own
+First, no rung's failure is significant on a distribution-free basis: the
+sign test over pooled receipts gives 27W/32L/1T (p=0.60) at 0.5B,
+16W/22L/22T (p=0.42) at 1.5B and 17W/29L/14T (p=0.10) at 4B. At 1.5B the
+receipt-level interval, [−20.0, −3.1] F1, excludes zero on the negative
+side; the sign test does not corroborate it, so the artifact reads a
+reliably negative mean, not demonstrated harm
+(`ge2_1.5b_result_2026-08-14.json`). Second, the gate is underpowered against its own
 threshold — the minimum detectable effect at 80% power is 13.1 F1 at
-0.5B and 11.3 F1 at 4B, against a 5 F1 bar. Third, that underpowering is
+0.5B, 11.9 F1 at 1.5B and 11.3 F1 at 4B, against a 5 F1 bar
+(`cord_paired_power_2026-08-11.json`). Third, that underpowering is
 structural rather than incidental: CORD's validation split is 100
 receipts, per-seed evaluation slices overlap, and the observed
-per-receipt spread implies roughly 115 distinct paired receipts are
-needed to resolve a 5-point effect — more than the split can supply at
-any eval_n. The honest statement is therefore that adaptation has *not
-been shown to help* at the decision point at either completed scale, not
+per-receipt spread at k=10 implies that 409, 338 and 304 paired receipts
+are needed to resolve a 5-point effect at 0.5B, 1.5B and 4B (115 even at
+the quieter 0.5B k=5 curve point; `cord_paired_power_2026-08-11.json`)
+— more than the split can supply at any eval_n. The honest statement is therefore that adaptation has *not
+been shown to help* at the decision point at any of the three scales, not
 that it has been shown to hurt.
 
 We report one further discipline point, because it is the part most
@@ -620,7 +648,11 @@ that outliers cannot move.
 An infrastructure incident with a measurement lesson. The Addendum B
 novel-schema gate (spec frozen 2026-08-12) required training over
 ~5.4k-token sequences at k=30; every adapted arm OOMed on a T4 while the
-k=10 arms (~2.3k tokens) trained cleanly. Five instrumented runs
+k=10 arms (~2.3k tokens) trained cleanly. (TODO(artifact): the banked CPU
+postmortem of the same corpus records ~7.5k-token k=30 sequences and
+~2.5k at k=10, `novel_schema_cpu_oom_postmortem_2026-08-14.json`, as does
+spec B.7-r1. The ~5.4k figure and the per-layer memory figures below are
+in no artifact we could find, and they are unreconciled.) Five instrumented runs
 eliminated suspects in order, each with a positive signature rather than
 a plausible story: a wrong-architecture GPU draw (P100, no sm_60 kernel
 images — fixed by pinning the accelerator and adding a fail-fast
@@ -658,15 +690,204 @@ Epilogue to the incident, for completeness (2026-08-17): the gate this
 infrastructure ultimately served — on that CPU/fp32 path, with a
 checkpoint/resume layer added when an external canceller repeatedly
 killed 13-hour runs — decided GO on its
-preregistered terms: mean paired delta +46.5 micro-F1 over seeds
+preregistered terms: mean paired delta +46.5 micro-F1 at k=30 over seeds
 {1,2,3} against a +5 bar frozen before any data (receipt-level sign
-test 156W/0L/2T; two unplanned same-environment replications agreeing to
-0.002-0.010). The full novel-schema study is its own artifact
+test 156W/0L/2T over 158 scored receipts of 180 designed;
+`novel_schema_summary_2026-08-12.json`; section 6.12 says what does and
+does not prove that the bar came first). The full novel-schema study is its own artifact
 (ENTERPRISE_EVAL_SPEC.md Addendum B and the novel_schema_* records in
 experiments/), reported here only because this incident's repair — the
 chunked loss plus the CPU/fp32 migration — is what made it measurable. Per that spec's claim rule, the positive
 travels with its negative: the same adaptation recipe FAILED its
 preregistered gates on CORD at all three scales tested (Addendum A).
+
+Four later facts travel with that number too.
+(1) Scope. Both arms carried the full 30-demonstration prompt, so +46.5
+is adaptation added on top of the same 0.5B model's 30-shot prompt. It
+is not a measurement of serving without demonstrations (spec B.9.1).
+(2) Replication. An earlier version of this paragraph cited two
+same-environment replications agreeing to 0.002-0.010. The spec struck
+one of them the evening of the verdict: it shared a checkpoint journal
+with the arm it duplicated, so 37 of its 60 per-document scores were
+identical by construction. The only genuine duplicate differs by 0.0098
+(spec B.9.3 and erratum P6).
+(3) Verifiability. The six arms banked per-receipt scores and discarded
+the model outputs. The step from output to score cannot be re-checked by
+anyone, including us, and the coverage map classifies the summary as
+AGGREGATE and the arms as ARITHMETIC (`verification_coverage.json`).
+Addendum Z re-runs the gate with every output stored; it has no result
+yet (section 6.12).
+(4) Difficulty and relevance. A preregistered ablation at k=10
+(Addendum H) kept the documents byte-identical and made each JSON key
+the document's own label. The delta fell from +41.07 to +18.75
+(`novel_schema_h_summary_2026-08-22.json`). That is a different cell
+from the k=30 gate and does not re-measure it. On 30 realistic freight
+waybills, a hosted model scored 0.9708 to 1.0000 across four runs
+against the adapted 0.5B's 0.8833 (Addendum I), and an unadapted
+Qwen2.5-3B given only the field list scored 0.8958, a dead heat at
+8W/8L/14T (Addendum O; scored after stripping a markdown fence,
+`fence_rescore.json`). The gate is not withdrawn. It measures a real
+delta over a weak baseline, and the project no longer offers it as a
+reason to buy adaptation (`CORRECTIONS.md`, 2026-08-22 and 2026-08-25;
+`VERDICT.md`).
+
+**6.11 Does the decoder give the same text twice? A determinism gate
+that withheld its own addendum (Addenda X and Y).** Any comparison
+between runs made on different days assumes that the same model, prompt
+and decoder give the same output again. Later work in this repository
+tested that assumption directly. It did so on JSON extraction from CORD
+receipts with five small model families, not on ARC grids.
+
+Addendum X (`docs/research/ADDENDUM_X_PROTOCOL.md`, frozen 2026-09-16)
+was built to separate three things an earlier addendum could not: a
+JSON-constrained decoder, the decoding path (our own loop against
+`model.generate`), and a checkpoint's shipped generation defaults. That
+earlier addendum, V, had found no effect for the decoder in any of five
+families by its frozen thresholds, and the claim that the decoder is a
+drop-in for any causal language model was withdrawn (`CORRECTIONS.md`,
+2026-09-09). X reused two banked arms: V's constrained cells, and the
+`model.generate` comparator cells from Addenda S and T. Before reading
+anything, it re-decoded the first five documents of every family whose
+arms it reused and required the text to be byte-identical to what was
+banked. Its protocol made a failed gate terminal for the whole addendum.
+
+The gate failed on `microsoft/Phi-3-mini-4k-instruct`, the one family
+decoded in bfloat16. In both gate runs, the `model.generate` comparator
+did not reproduce the text banked on 2026-09-05 for the same two of the
+five documents. In the first gate run only, the constrained arm also
+differed on a third document; it matched in the second run. Both runs
+are banked because they disagree. Addendum X is therefore withheld,
+and none of its three contrasts was read
+(`experiments/cord_decoder_isolation_2026-09-16.json`). On the three
+families whose banked cells could be re-decoded under the same prompt
+(Qwen2.5-0.5B, SmolLM2-1.7B, Falcon3-1B), all 30 comparisons were
+byte-identical: five documents, two reused arms, three families. The
+constrained decoder accounts for 15 of them and `model.generate` for the
+other 15. That is the first test of the assumption this repository ever ran. Granite's gate
+is not applicable, and it is not counted as a pass. Its chat template
+writes the current date into the system message, so its banked cells
+carry a prompt no later run can reproduce, and X re-ran its arm instead
+of reusing it. The published row first counted Granite as a fourth
+reproducing family; that was corrected to three the next day
+(`CORRECTIONS.md`, 2026-09-17).
+
+Addendum Y (`docs/research/ADDENDUM_Y_PROTOCOL.md`, frozen 2026-09-17)
+measured the failure directly. It decoded the first ten documents in one
+unbroken process for three (family, dtype) pairs: Phi-3 in bfloat16,
+Qwen2.5-0.5B in bfloat16, and Qwen2.5-0.5B in float32. Each document was
+decoded twice back to back, again after twenty other decodes, and twice
+through `model.generate`. Every comparison in every pair matched after
+the shipped fence strip, so all three pairs read REPRODUCES
+(`experiments/phi3_instability_2026-09-17.json`). Phi-3's constrained
+pass also matched V's banked cell on all ten documents. The prediction
+that Phi-3 would read STATE-DEPENDENT failed, and it is published as
+written. What did fire was the thread count. The document that flaked in
+X's gate, `cord-004`, decodes to different text at four threads and at
+one thread in the same process; `cord-000` does not. A different thread
+count changes the order of floating-point reductions, and at bfloat16's
+eight mantissa bits that can flip a token. A check made after the
+reading found that the text X's first gate run flaked to is
+byte-identical to Y's one-thread decode. bfloat16 alone is not the
+cause: Qwen2.5-0.5B reproduces in bfloat16 too. Y does not explain
+everything. Phi-3's `generate` pass still differs from the cell banked
+on 2026-09-05 on 4 of 10 documents. That cell carries no environment
+record, so the cause cannot be named.
+
+What this narrows. The sentence written the day X withheld, that every
+Phi-3 number in the repository is not byte-reproducible, was too strong.
+The corrected sentence is narrower: Phi-3's cells reproduce within one
+process at a fixed thread count, and are not guaranteed to reproduce
+across a change of floating-point reduction order (`CORRECTIONS.md`,
+2026-09-17). The sentence *this repository's cells reproduce* may be
+said only of the three pairs Y names, on ten documents, never
+unqualified. Addendum X stays withheld. Y explains its gate's flake; it
+does not reverse it. A successor protocol that would read X's banked
+cells for the four families whose gates did not fail (Addendum AA,
+`docs/research/ADDENDUM_AA_PROTOCOL.md`) was drafted on 2026-09-23. It
+is not frozen, no cell has been read, and nothing in this paper depends
+on it.
+
+What it means for this paper. The harness tests in section 3 pin code
+paths, not bytes, and Y shows one code path producing different text
+when only the thread count changes. That was measured on CPU, on ten
+receipts, for two small families. We did not measure it on the T4 runs
+in sections 4 to 6, and no number in this paper is claimed to be
+byte-reproducible. Rule: bank the environment and the thread count with
+every output, and name the pairs that have been shown to reproduce
+rather than calling a repository reproducible.
+
+**6.12 Preregistration before data, and what a timestamp proves.**
+Sections 6.9 and 6.10 rest on decision rules written down before the
+data. The evidence for that order matters as much as the rule. This
+repository uses OpenTimestamps: a proof file beside a protocol commits
+to the file's exact bytes and is folded into a Bitcoin block
+(`docs/research/ANCHORS.md`).
+
+What an anchor proves: that the file's bytes existed by the time of the
+block the proof is attested in. Nothing more. It does not prove that a
+protocol was frozen before its data unless the block time also precedes
+the run. It does not prove that the run happened or that its numbers are
+right; that is the reader's own recomputation.
+
+Measured against that standard, the two gates this paper reports are not
+proven by an anchor. The spec's first anchor has the stamp
+2026-08-19T0119Z and is attested in block 963117. Addendum A (frozen
+2026-08-08, section 6.9) and Addendum B (frozen 2026-08-12, section 6.10)
+had both run by then, so for both the freeze order rests on git history
+the project controls (`README.md`, "Preregistration ordering", says this
+of Addendum B). The same page says the spec's later gates, from Addenda
+D, E and F on, were anchored before their data, with one amendment
+(E-r2) committed before its data and anchored the following day. The
+protocols for Addenda S through Y were anchored on 2026-09-17 (block
+967383), after their arms had run between 2026-09-01 and 2026-09-17, and
+`ANCHORS.md` says plainly that those anchors do not prove
+freeze-before-run.
+
+Addendum Z (`docs/research/ADDENDUM_Z_PROTOCOL.md`, frozen 2026-09-23) is
+the first addendum protocol anchored before its first arm under the
+policy in `ANCHORS.md`; the spec's anchors also preceded the gates they
+froze, as the paragraph above says. It re-runs the Addendum B k=30 gate from section 6.10 with the
+recipe unchanged, and this time it stores every model output, so a
+stranger could re-score it. Its proof is stamped 2026-09-23T0219Z and
+attested in block 968216 at 02:36:37 UTC. By the runner's own clock, the
+first process started at 02:19:54, 17 minutes before the block, and was still
+training its first adapter at the attested time; a container restart
+killed it before it saved anything. No document of the run had been
+decoded by the block time. The block time is checkable by a stranger.
+The start clock, and the record that nothing had been decoded by then,
+are ours to report.
+
+Z's readings are arithmetic and were frozen with its predictions. Z1 is
+the gate word on the new arms. Z2 reads AGREES only if the gate word is
+the same and the new mean is within 0.05 of the banked +0.4648. Z3 is
+the largest per-arm difference between the two runs, an upper bound on
+run-to-run plus environment spread that this design cannot separate. Z4 asks whether the same documents fall
+over the token cap. The citation rule binds either way: the day the
+reading lands, its number replaces +46.5 on every unfrozen page with the
+banked number beside it as history, and if Z1 is not GO the headline is
+withdrawn. The protocol's arithmetic gives about 35 to 57 wall-hours on
+four cores, which it quotes as 40 to 60. An earlier estimate of about nine CPU-hours was wrong and
+was corrected the day Z froze (`CORRECTIONS.md`, 2026-09-23). The run
+has not gone smoothly. Three seed-1 adaptations were cut short on
+2026-09-23, two by container reboots and one by the owner's compute
+cutoff, and the run was paused. A container rebuild on 2026-10-21
+deleted the uncommitted checkpoint folder before anything had been
+saved. As `VERDICT.md` stood on 2026-10-21, the run was going again
+since 20:25 UTC as restart 3 of the seed-1 adapted arm, with no arm
+banked; every restart is counted (`VERDICT.md`, Addendum Z row). No Z
+result exists, and this paper quotes none. Even a completed Z
+would be a replication by the same operator on a second box. It makes a
+stranger's replication possible; it is not one.
+
+Anchors also make later edits visible. Diffing the spec against its
+anchored snapshot found three lines of frozen text changed in place
+after the anchor. Two of them were rewritten by the same tool that keeps
+this paper's test count current (`CORRECTIONS.md`, 2026-09-23; spec
+erratum P15). The lines are restored, the tool no longer touches frozen
+files, and `tests/test_spec_matches_anchor.py` now fails if the spec
+stops beginning with its last anchored snapshot byte for byte. Rule:
+anchor before the first arm, quote the stamp in the freeze line, and say
+in the same place what the anchor does not prove.
 
 ## 7. Limitations and what we'd scale next
 
@@ -677,9 +898,10 @@ preregistered gates on CORD at all three scales tested (Addendum A).
 1.67 public three times running (v8 2026-08-10, v9 08-12, v10 08-15) —
 the v9/v10 flats are preregistered nulls on the recall-bound and
 time-budget levers respectively, leaving candidate quality as the
-measured binding constraint (~2.7% per-attempt hit rate). Every accuracy number in this paper is a
+measured binding constraint (~2.7% per-attempt hit rate). Every ARC accuracy number in this paper is a
 small-slice local validation (at most 22 scored test pairs per run), and we
-report them as pipeline evidence, not capability evidence.
+report them as pipeline evidence, not capability evidence. The climb has
+been formally deprioritized since 2026-08-15 (section 1).
 
 **The offline half of the recipe is consumed, not reproduced.** We use the
 NVARC team's public fine-tuned 4B checkpoint and reproduce only the
@@ -712,6 +934,10 @@ TTT sharpening as an explicit ablation axis — and the section 4.4 row
 quantifies the effect (sharpening on 3/5 comparable tasks, not uniform).
 
 ### 7.2 What we'd scale next
+
+The ARC levers below are the next steps if the leaderboard climb
+resumes. Since 2026-08-15 it is formally deprioritized and GPU quota
+goes to other work (`experiments/kaggle_v10_scored_2026-08-15.json`).
 
 **Spend the search budget the multi-frame DFS freed up.** Since section 3
 was drafted, the harness gained a lockstep-batched multi-frame DFS
@@ -789,7 +1015,8 @@ from net-neutral toward uniformly positive; if they stay net-neutral, the
 negative result attaches to the recipe, not to the 0.5B model.
 
 **Resolution (updated 2026-08-14): all three rungs complete, all fail.**
-−7.3 F1 at 0.5B, −11.5 F1 at 1.5B, −4.5 F1 at 4B (§6.9). The 0.5B→1.5B
+−7.3 F1 at 0.5B, −11.5 F1 at 1.5B, −4.5 F1 at 4B (§6.9; the models are
+Qwen2.5-0.5B-Instruct, Qwen2.5-1.5B-Instruct and Qwen3-4B-Instruct-2507). The 0.5B→1.5B
 pair shares device and dtype (CPU/fp32), so that comparison carries no
 environment confound — and tripling the model made the paired delta
 worse, not better. The deltas did not move toward uniformly
@@ -813,8 +1040,9 @@ individually significant (p=0.60 at 0.5B, p=0.42 at 1.5B, p=0.10 at 4B by
 sign test) against a gate whose minimum detectable effect exceeds its own
 threshold, so what the evidence supports is the absence of a demonstrated
 benefit, not a demonstrated harm. The confound named above is also only partly retired:
-0.5B and 4B differ in domain-specific SFT as well as in scale, so the
-recipe-level reading is the most parsimonious explanation of these
+the CORD 0.5B and 4B rungs differ in model generation (Qwen2.5 against
+Qwen3-4B-Instruct-2507) and in device and dtype as well as in scale, so
+the recipe-level reading is the most parsimonious explanation of these
 artifacts rather than the only one they permit.
 
 **What we would *not* scale next: the TRM ensemble.** The 2025 recipe
