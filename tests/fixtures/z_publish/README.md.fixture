@@ -1,0 +1,22 @@
+page. Three commands check the arithmetic against the raw records, with
+nothing installed. The scripts print fractions; the prose quotes F1
+points (+0.4035 is +40.4):
+
+    python3 scripts/verify_verdict.py                                          # gate 1: prints GO, seed mean +46.5
+[...]
+**Status (2026-08-17): the preregistered k=30 adaptation gate decided GO —
+mean +46.5 micro-F1 over 30-shot prompting across three novel-schema
+seeds (+36.0 / +49.0 / +54.4 vs a +5 bar frozen 2026-08-12 before any
+data; receipt-level sign test 156W/0L/2T over 158 scored of 180 designed (p < 1e-15); CI excludes zero;
+`experiments/novel_schema_summary_2026-08-12.json`).** **Re-run pending:** Addendum Z, preregistered and
+anchored 2026-09-23, re-runs this gate with every model output stored;
+its number replaces this one whichever way it moves, and a non-GO
+withdraws it (`docs/research/ADDENDUM_Z_PROTOCOL.md`). Stated per the
+spec's claim rule, always beside the CORD negative: on CORD receipts —
+a domain the base model already knows — the same adaptation recipe
+FAILED its preregistered gates at all three scales tested (Addendum A:
+−7.3 / −11.5 / −4.5 F1 on Qwen2.5-0.5B-Instruct, Qwen2.5-1.5B-Instruct and
+Qwen3-4B-Instruct-2507). Adaptation buys novelty, not general quality,
+and we publish our negatives. Replication: 7 fresh tenants at k=10, pooled with
+[...]
+nothing: +46.5 → +46.5, +40.4 → +40.4, +24.0 → +24.5. Valid JSON is not

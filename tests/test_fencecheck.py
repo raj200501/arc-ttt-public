@@ -251,19 +251,34 @@ def score_model_output(prediction_text, gold):
 '''
 
 
-def test_the_documented_one_call_blind_spot_is_still_there(
+def test_one_call_up_is_followed_and_two_calls_up_is_not(
         tmp_path: pathlib.Path) -> None:
-    """tools/README.md says scan reads one function at a time, so a zero
-    applied one call up is not reported; src/arcttt/scoring.py has that
-    shape. Pin it: if scan learns to follow the call, this fails, and the
-    README sentence and the clean-run message must change with it."""
+    """tools/README.md used to say scan reads one function at a time, so a
+    zero applied one call up was not reported; src/arcttt/scoring.py has
+    that shape. scan now follows a parse failure one call up inside the
+    same file and reports the parse line, with the caller's line as
+    `zeroed_at`. A zero two calls up is still not followed, which is what
+    tools/README.md and the clean-run message now say. Pin both halves."""
     one = tmp_path / "one.py"
     one.write_text(ONE_FUNCTION, encoding="utf-8")
     two = tmp_path / "two.py"
     two.write_text(TWO_FUNCTIONS, encoding="utf-8")
     assert fc.scan_path(one)[0], "the single-function control was not found"
-    assert not fc.scan_path(two)[0], (
-        "scan now follows the call: update tools/README.md and the "
+    found = fc.scan_path(two)[0]
+    assert [(f["line"], f.get("zeroed_at")) for f in found] == [(11, 20)], (
+        "the one-call shape is no longer reported: update tools/README.md "
+        "and the clean-run message, then this test")
+    two_hops = TWO_FUNCTIONS.replace(
+        "def score_model_output(prediction_text, gold):",
+        "def _parse_prediction(prediction_text):\n"
+        "    return parse_json_object(prediction_text)\n\n\n"
+        "def score_model_output(prediction_text, gold):").replace(
+        "predicted = parse_json_object(prediction_text)",
+        "predicted = _parse_prediction(prediction_text)")
+    three = tmp_path / "three.py"
+    three.write_text(two_hops, encoding="utf-8")
+    assert not fc.scan_path(three)[0], (
+        "scan now follows two calls: update tools/README.md and the "
         "clean-run message, then this test")
 
 

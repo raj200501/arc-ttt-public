@@ -15,3 +15,8 @@ kaggle.json
 
 # Addendum Z run state (journals, meta, pid, log); the artifacts land in experiments/
 work/z/
+
+# fencecheck packaging: what `python3 -m build tools/` leaves behind
+tools/build/
+tools/dist/
+tools/*.egg-info/

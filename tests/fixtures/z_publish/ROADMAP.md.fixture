@@ -1,0 +1,19 @@
+- **Addendum Z (preregistered and anchored 2026-09-23T0219Z; running again
+  since 2026-10-21 20:25Z as restart 3, no arm banked; every interruption
+  is in `experiments/addendum_z_operator_log.jsonl`):**
+  the +46.5 gate run again on this box with every prediction stored,
+  under the Addendum B recipe unchanged and a protocol anchored before
+  the first arm by our own clocks — the first addendum protocol anchored
+  before its first arm under the `docs/research/ANCHORS.md` policy (the
+  spec's 2026-08-19 and 2026-08-20 anchors also preceded the gates they
+  froze). Its block came 17 minutes after the first process started and
+  before any document was decoded; the anchor proves the bytes, and the
+  start time is the runner's clock, ours to report. The unchanged reader
+  computes the verdict; four readings (gate word, agreement with the
+  banked +46.5 within 0.05, the largest per-arm spread across the two
+  environments, the over-cap exclusions) are applied by arithmetic and
+  withheld until all six arms exist. Whichever way it moves, the
+  primary-verifiable number replaces +46.5 on every page; if it is not
+  GO, the headline is withdrawn. ~35–57 wall-hours on four cores by the
+  protocol's arithmetic (quoted there as 40–60), not the nine this
+  repository had estimated (CORRECTIONS).

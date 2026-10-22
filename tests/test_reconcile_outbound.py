@@ -123,7 +123,9 @@ def test_the_outbound_strategy_documents_are_inside_the_gate():
     spec.loader.exec_module(ro)
     listing = REPO / "docs" / "strategy" / "OUTBOUND_DOCS.txt"
     if listing.exists():
-        assert len(ro.OUTBOUND_STRATEGY_DOCS) == 3
+        assert len(ro.OUTBOUND_STRATEGY_DOCS) == 4
+        assert listing.parent / "DECK_V2.md" in ro.OUTBOUND_STRATEGY_DOCS, (
+            "the successor slide document is outside the gate")
     # a section reference is not a count; a thousands-separated count still is
     tokens = [t for k, t in ro._claims("see section 1-2, artifacts named there") if k == "counted"]
     assert tokens == []
@@ -183,3 +185,64 @@ def test_the_gate_catches_a_count_that_disagrees_with_its_cited_artifact():
     # and the true count passes
     body = f"{timeline['banked_artifacts']} banked artifacts (`experiments/project_timeline.json`)."
     assert ro._check(body, None, haystack, numbers, {})[1] == []
+
+
+DECK_V2 = REPO / "docs" / "strategy" / "DECK_V2.md"
+# Floors per slide: the slides whose claims are written in shapes the gate
+# reads. A rewrite that moves a slide's figures out of those shapes, or a
+# heading change that stops a slide parsing, drops it under its floor.
+DECK_V2_FLOORS = {"Slide 2:": 6, "Slide 3:": 1, "Slide 5:": 4,
+                  "Slide 7:": 1, "Slide 8:": 6, "Slide 9:": 1,
+                  "Slide 11:": 2}
+
+
+@pytest.mark.skipif(not DECK_V2.exists(),
+                    reason="DECK_V2.md is internal and not in this cut")
+def test_deck_v2_reconciles_slide_by_slide(tmp_path: pathlib.Path) -> None:
+    """Round 9 named outbound copy outside mechanical checks as a reason to
+    pass. DECK_V2.md is checked like the emails: every distinctive figure
+    on every slide traces to an artifact, and the slides that make
+    numerical claims are actually read, not passed over."""
+    out = tmp_path / "reconciliation.json"
+    result = _run(out)
+    docs = json.loads(out.read_text(encoding="utf-8"))[
+        "outbound_strategy_documents"]
+    sections = {name: block for name, block in docs.items()
+                if name.startswith("DECK_V2.md / ")}
+    missing = {name: block["unreconciled"]
+               for name, block in sections.items() if block["unreconciled"]}
+    assert not missing, f"DECK_V2.md carries untraced figures: {missing}"
+    assert result.returncode == 0
+    for needle, floor in DECK_V2_FLOORS.items():
+        matches = [b for n, b in sections.items() if needle in n]
+        assert len(matches) == 1, f"{needle} did not parse as one section"
+        assert matches[0]["claims_checked"] >= floor, (
+            f"{needle} offers {matches[0]['claims_checked']} checkable "
+            f"figures, under its floor of {floor}")
+
+
+@pytest.mark.skipif(not DECK_V2.exists(),
+                    reason="DECK_V2.md is internal and not in this cut")
+def test_deck_v2_catches_an_invented_figure(tmp_path: pathlib.Path) -> None:
+    """MUTATION TEST: a figure planted on a slide must fail the gate."""
+    original = DECK_V2.read_text(encoding="utf-8")
+    marker = "0.7391"  # not a figure this project has ever produced
+    assert marker not in original
+    anchor = "## Slide 5: "
+    assert anchor in original
+    head, tail = original.split(anchor, 1)
+    mutated = (head + anchor + tail.replace(
+        "\n\n- ", f"\n\n- Recall on a held-out set is {marker}.\n- ", 1))
+    out = tmp_path / "reconciliation.json"
+    try:
+        DECK_V2.write_text(mutated, encoding="utf-8")
+        result = _run(out)
+        record = json.loads(out.read_text(encoding="utf-8"))
+    finally:
+        DECK_V2.write_text(original, encoding="utf-8")
+    assert result.returncode != 0, "the gate passed a slide with an invented figure"
+    tokens = [item["token"]
+              for name, block in record["outbound_strategy_documents"].items()
+              if name.startswith("DECK_V2.md / Slide 5")
+              for item in block["unreconciled"]]
+    assert marker in tokens, f"caught something, but not the plant: {tokens}"

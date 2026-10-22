@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>fencecheck</title>
+<meta name="description" content="fencecheck finds evaluation code that scores a correct-but-fenced JSON answer as zero. One Python file, standard library only.">
+<!--
+  Every number on this page is quoted from tools/README.md, README.md,
+  VERDICT.md or CORRECTIONS.md (data-quote) and links to the file that
+  holds it (an <a> into the public repository, or data-src beside a link
+  to the same file). tests/test_site_numbers.py enforces both. Blocks
+  marked data-verbatim must match their document character for character.
+  No scripts, fonts, images or other external requests.
+-->
+<style>
+  :root {
+    --bg: #faf9f6;
+    --surface: #ffffff;
+    --ink: #1c1e22;
+    --ink-2: #464b53;
+    --muted: #6a7079;
+    --line: #dddad2;
+    --code-bg: #f1eee8;
+    --link: #1f55a8;
+    --bad: #a3231b;
+    --bad-bg: #fbeceb;
+    --bad-line: #e3aaa5;
+    --good: #1b6638;
+    --good-bg: #e8f3eb;
+    --good-line: #9fcdb0;
+    --mark-bg: #f6d4d1;
+    --shade: rgba(0, 0, 0, .22);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141619;
+      --surface: #1b1e22;
+      --ink: #e8e6e1;
+      --ink-2: #c4c7cc;
+      --muted: #9da3ab;
+      --line: #32363c;
+      --code-bg: #22262b;
+      --link: #8db4ff;
+      --bad: #ff9a90;
+      --bad-bg: #2a1a19;
+      --bad-line: #6e3530;
+      --good: #84d4a0;
+      --good-bg: #15251b;
+      --good-line: #2f5e40;
+      --mark-bg: #5a2723;
+      --shade: rgba(0, 0, 0, .7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141619;
+    --surface: #1b1e22;
+    --ink: #e8e6e1;
+    --ink-2: #c4c7cc;
+    --muted: #9da3ab;
+    --line: #32363c;
+    --code-bg: #22262b;
+    --link: #8db4ff;
+    --bad: #ff9a90;
+    --bad-bg: #2a1a19;
+    --bad-line: #6e3530;
+    --good: #84d4a0;
+    --good-bg: #15251b;
+    --good-line: #2f5e40;
+    --mark-bg: #5a2723;
+    --shade: rgba(0, 0, 0, .7);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  main { max-width: 46rem; margin: 0 auto; padding: 2.5rem 16px 3rem; }
+  a { color: var(--link); text-underline-offset: 2px; }
+  a.n { font-weight: 600; text-decoration-style: dotted; }
+  h1 { font-size: clamp(1.6rem, 4.6vw, 2.25rem); line-height: 1.2; margin: .25rem 0 .75rem; letter-spacing: -.01em; }
+  h2 { font-size: 1.3rem; line-height: 1.3; margin: 2.75rem 0 .6rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+  h3 { font-size: 1.02rem; margin: 1.6rem 0 .35rem; }
+  p, ul { margin: 0 0 .9rem; }
+  ul { padding-left: 1.2rem; }
+  li { margin: .25rem 0; }
+  code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+  code { font-size: .9em; background: var(--code-bg); padding: .05em .3em; border-radius: 4px; overflow-wrap: anywhere; }
+  pre {
+    margin: 0; padding: .75rem .9rem; background: var(--code-bg); border-radius: 8px;
+    font-size: 13px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  /* Long YAML lines scroll inside the block; the edge shadows (CSS only) show there is more. */
+  pre.yaml {
+    white-space: pre; overflow-x: auto; overflow-wrap: normal;
+    background:
+      linear-gradient(to right, var(--code-bg) 30%, transparent) left center / 40px 100% no-repeat local,
+      linear-gradient(to left, var(--code-bg) 30%, transparent) right center / 40px 100% no-repeat local,
+      radial-gradient(farthest-side at 0 50%, var(--shade), transparent) left center / 12px 100% no-repeat scroll,
+      radial-gradient(farthest-side at 100% 50%, var(--shade), transparent) right center / 12px 100% no-repeat scroll,
+      var(--code-bg);
+  }
+  pre a { color: var(--link); }
+  .code { margin: 0 0 1rem; }
+  .src { margin: .3rem 0 0; font-size: .82rem; color: var(--muted); }
+  .src a { color: var(--muted); }
+  .kicker { font: 600 .95rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--ink-2); margin: 0; }
+  .lede { font-size: 1.08rem; color: var(--ink-2); }
+  .meta { font-size: .9rem; color: var(--muted); }
+  nav { display: flex; flex-wrap: wrap; gap: .35rem 1rem; font-size: .92rem; margin: 1.2rem 0 0; }
+
+  /* the one picture */
+  .flow { margin: 1.1rem 0 1rem; padding: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+  .lane { display: grid; grid-template-columns: minmax(0, 1.05fr) auto minmax(0, 1fr) auto minmax(0, .9fr); gap: .5rem; align-items: stretch; }
+  .lane + .lane { margin-top: .9rem; }
+  .lane-name { grid-column: 1 / -1; font-size: .82rem; font-weight: 650; letter-spacing: .02em; text-transform: uppercase; margin: 0 0 -.1rem; }
+  .bad .lane-name { color: var(--bad); }
+  .good .lane-name { color: var(--good); }
+  .step { min-width: 0; padding: .6rem .7rem; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); display: flex; flex-direction: column; gap: .3rem; }
+  .lbl { font-size: .75rem; color: var(--muted); }
+  .step pre { padding: .35rem .5rem; font-size: 13px; background: var(--code-bg); white-space: pre; }
+  .step mark { background: var(--mark-bg); color: var(--bad); border-radius: 3px; padding: 0 .1em; }
+  .verdict { font-size: .88rem; color: var(--ink-2); }
+  .bad .result { background: var(--bad-bg); border-color: var(--bad-line); }
+  .good .result { background: var(--good-bg); border-color: var(--good-line); }
+  .result .big { font-size: 2rem; line-height: 1.1; font-weight: 650; color: var(--ink); text-decoration: none; }
+  .result .big:hover { text-decoration: underline; }
+  .arrow { align-self: center; justify-self: center; width: 22px; height: 22px; color: var(--muted); }
+  figcaption { margin-top: .9rem; font-size: .88rem; color: var(--ink-2); }
+
+  .caveats { list-style: none; padding: 0; margin: 0 0 1rem; }
+  .caveats li { border-left: 3px solid var(--line); padding: .1rem 0 .1rem .8rem; margin: 0 0 .7rem; color: var(--ink-2); }
+
+  /* census: three stat tiles */
+  .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; margin: .4rem 0 .8rem; }
+  .tile { padding: .7rem .8rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+  .tile .v { display: block; font-size: 1.9rem; line-height: 1.15; font-weight: 650; }
+  .tile .v a { color: var(--ink); text-decoration: none; }
+  .tile .v a:hover { text-decoration: underline; }
+  .tile .l { font-size: .85rem; color: var(--muted); }
+
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: .88rem; color: var(--muted); }
+  footer a { color: var(--muted); }
+
+  @media (max-width: 640px) {
+    main { padding-top: 1.6rem; }
+    .lane { grid-template-columns: minmax(0, 1fr); gap: .35rem; }
+    .arrow { transform: rotate(90deg); width: 18px; height: 18px; }
+    .tiles { gap: .4rem; }
+    .tile { padding: .55rem .6rem; }
+    .tile .v { font-size: 1.5rem; }
+    pre { font-size: 12.5px; }
+  }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <p class="kicker">fencecheck</p>
+  <h1>Is your evaluation scoring a correct answer as zero?</h1>
+  <p class="lede" data-quote="README.md">One file, standard library, no install. <code>scan</code> finds evaluation code that scores a correct-but-fenced answer as zero.</p>
+  <p class="meta" data-quote="tools/README.md"><a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/tools/fencecheck.py">Python 3.9+</a>. MIT.</p>
+  <nav aria-label="Sections">
+    <a href="#failure">The failure</a>
+    <a href="#try">Try it</a>
+    <a href="#ci">In CI</a>
+    <a href="#limits">What it misses</a>
+    <a href="#checks">How the numbers are checked</a>
+  </nav>
+</header>
+
+<section id="failure" aria-labelledby="h-failure">
+  <h2 id="h-failure">The failure in one picture</h2>
+  <p data-quote="tools/README.md">When a language model returns a JSON object wrapped in a markdown code fence, code that calls <code>json.loads</code> on it gets a parse failure. If that failure becomes a score, a correct answer becomes a zero.</p>
+
+  <figure class="flow" data-quote="tools/README.md" data-src="experiments/fence_rescore.json">
+    <div class="lane bad">
+      <p class="lane-name">Scored as the model emitted it</p>
+      <div class="step">
+        <span class="lbl">model output</span>
+<pre aria-label="a JSON object inside a markdown json fence, fields elided"><mark>```json</mark>
+{ … }
+<mark>```</mark></pre>
+      </div>
+      <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="step">
+        <span class="lbl">scorer</span>
+        <code>json.loads(output)</code>
+        <span class="verdict">parse failure, counted as invalid</span>
+      </div>
+      <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="step result">
+        <span class="lbl">micro-F1</span>
+        <a class="big" href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/fence_rescore.json">0.0000</a>
+        <span class="verdict"><a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/fence_rescore.json">30 / 30</a> invalid</span>
+      </div>
+    </div>
+    <div class="lane good">
+      <p class="lane-name">Identical outputs, one fence removed</p>
+      <div class="step">
+        <span class="lbl">model output</span>
+<pre aria-label="the same JSON object with no fence, fields elided">{ … }</pre>
+      </div>
+      <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="step">
+        <span class="lbl">same scorer</span>
+        <code>json.loads(output)</code>
+        <span class="verdict">parses, then the fields are scored</span>
+      </div>
+      <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="step result">
+        <span class="lbl">micro-F1</span>
+        <a class="big" href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/fence_rescore.json">0.8958</a>
+        <span class="verdict"><a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/fence_rescore.json">0 / 30</a> invalid</span>
+      </div>
+    </div>
+    <figcaption>Qwen2.5-3B-Instruct, <a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/fence_rescore.json">30</a> held-out documents, field list only. Same model, same prompt, same documents, same scorer. The only difference is three backticks. Banked at <a href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/fence_rescore.json">experiments/fence_rescore.json</a>.</figcaption>
+  </figure>
+
+  <ul class="caveats">
+    <li data-quote="CORRECTIONS.md" data-src="CORRECTIONS.md"><strong>It is a mean, not thirty right answers.</strong> Once stripped, all <a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/CORRECTIONS.md">30</a> outputs are well-formed JSON, but in the words of <a href="https://github.com/raj200501/arc-ttt-public/blob/main/CORRECTIONS.md">CORRECTIONS.md</a> (<a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/CORRECTIONS.md">2026-08-25</a>), “a <a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/CORRECTIONS.md">0.8958</a> mean cannot be thirty perfect extractions.”</li>
+    <li data-quote="README.md" data-src="VERDICT.md"><strong>It is family-specific.</strong> The tax has been measured on <a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/VERDICT.md">2 of 5</a> families (Qwen2.5 at three sizes; Falcon3-1B). Given twenty examples of bare JSON the same checkpoints wrap nothing; given a bare field list they wrap everything. Results in <a href="https://github.com/raj200501/arc-ttt-public/blob/main/VERDICT.md">VERDICT.md</a>.</li>
+  </ul>
+</section>
+
+<section id="try" aria-labelledby="h-try">
+  <h2 id="h-try">Try it</h2>
+  <p data-quote="tools/README.md">Copy the one file and point <code>scan</code> at your scoring code. <code>scan</code> reads your code and reports every place that parses model output as JSON without handling a fence <em>and</em> turns the failure into a zero or a silent skip. <code>score</code> reads your saved model outputs and tells you how many are valid JSON that your scorer would reject.</p>
+  <div class="code" data-quote="tools/README.md" data-src="tools/README.md">
+<pre>curl -sSLO https://raw.githubusercontent.com/raj200501/arc-ttt-public/main/tools/fencecheck.py
+python3 fencecheck.py scan  path/to/your/repo
+python3 fencecheck.py score path/to/predictions.jsonl</pre>
+    <p class="src">Commands from <a href="https://github.com/raj200501/arc-ttt-public/blob/main/tools/README.md">tools/README.md</a>, with the <code>tools/</code> prefix dropped for a copied file.</p>
+  </div>
+  <p data-quote="tools/README.md">Exit status is <a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/action.yml">1</a> when something is found, so it drops into CI. Add <code>--json</code> for machine-readable output. To silence a deliberate one, put <code># fencecheck: ignore</code> on the parse line or anywhere in the enclosing function.</p>
+
+  <h3>See it find a real site</h3>
+  <p data-quote="README.md">A markdown code fence makes OpenAI's <code>evals</code> steganography monitor report that it detected nothing: <a href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/fence_census_amendment_2026-08-25.json"><code>evals/<wbr>elsuite/<wbr>steganography/<wbr>monitor.py:72</code></a>. That prompt does say “do not generate any other text”, so a fenced answer disobeyed it. The finding is about which way the default falls when a model disobeys, not that the package is wrong.</p>
+  <div class="code" data-quote="tools/README.md" data-src="tools/README.md">
+    <p>The download is <a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/tools/README.md">44 MB</a>. The full archive unpacks to about <a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/tools/README.md">0.7 GB</a>, so this extracts only the <code>.py</code> files (about <a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/tools/README.md">3 MB</a>):</p>
+<pre>curl -sSLO https://files.pythonhosted.org/packages/source/e/evals/evals-3.0.1.post1.tar.gz
+python3 -c "import tarfile; t = tarfile.open('evals-3.0.1.post1.tar.gz'); t.extractall(members=[m for m in t if m.name.endswith('.py')])"
+python3 fencecheck.py scan evals-3.0.1.post1    <a href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/fence_census_amendment_2026-08-25.json"># monitor.py:72 is among the sites it reports</a></pre>
+    <p class="src">From <a href="https://github.com/raj200501/arc-ttt-public/blob/main/tools/README.md">tools/README.md</a>. The expected output is banked in <a href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/fence_census_amendment_2026-08-25.json">experiments/fence_census_amendment_2026-08-25.json</a>.</p>
+  </div>
+</section>
+
+<section id="ci" aria-labelledby="h-ci">
+  <h2 id="h-ci">In CI</h2>
+  <p data-quote="tools/README.md">One <code>uses:</code> line in a GitHub workflow, after the checkout:</p>
+  <div class="code" data-quote="tools/README.md" data-src="tools/README.md">
+<pre class="yaml" data-verbatim="tools/README.md">name: fencecheck
+on: [push, pull_request]
+jobs:
+  fencecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: raj200501/arc-ttt-public@main
+        with:
+          path: .   # optional; narrow it to your scoring code</pre>
+    <p class="src">Exactly as <a href="https://github.com/raj200501/arc-ttt-public/blob/main/tools/README.md">tools/README.md</a> gives it. The action is <a href="https://github.com/raj200501/arc-ttt-public/blob/main/action.yml">action.yml</a>.</p>
+  </div>
+  <p data-quote="tools/README.md">It installs nothing from PyPI and pins no Python package, because the tool is standard library only. The job fails when the scan finds a site, through the tool's own exit status. <code>@main</code> follows this repository's main branch. Pin a full commit SHA if the gate must not change under you.</p>
+
+  <p data-quote="tools/README.md">As a pre-commit hook, in <code>.pre-commit-config.yaml</code>:</p>
+  <div class="code" data-quote="tools/README.md" data-src="tools/README.md">
+<pre class="yaml" data-verbatim="tools/README.md">repos:
+  - repo: https://github.com/raj200501/arc-ttt-public
+    rev: main
+    hooks:
+      - id: fencecheck</pre>
+    <p class="src">Exactly as <a href="https://github.com/raj200501/arc-ttt-public/blob/main/tools/README.md">tools/README.md</a> gives it. The manifest is <a href="https://github.com/raj200501/arc-ttt-public/blob/main/.pre-commit-hooks.yaml">.pre-commit-hooks.yaml</a>.</p>
+  </div>
+  <p data-quote="tools/README.md">Then run <code>pre-commit autoupdate</code> once. pre-commit warns that <code>main</code> is a moving reference. This repository has no release tags, so autoupdate replaces <code>main</code> with the current commit SHA. The hook applies the same <code>scan</code> to every staged Python file, and a finding fails the commit.</p>
+</section>
+
+<section id="limits" aria-labelledby="h-limits">
+  <h2 id="h-limits">What it does not catch</h2>
+  <p data-quote="tools/README.md"><strong>Expect most findings on a large codebase to be false alarms.</strong> The least flattering measurement, over seven actively maintained eval packages:</p>
+  <div class="tiles" data-quote="tools/README.md" data-src="experiments/census_extension_live_2026-08-31.json">
+    <div class="tile"><span class="v"><a href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/census_extension_live_2026-08-31.json">64</a></span><span class="l">candidate sites <code>scan</code> surfaced</span></div>
+    <div class="tile"><span class="v"><a href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/census_extension_live_2026-08-31.json">1</a></span><span class="l">confirmed by hand adjudication</span></div>
+    <div class="tile"><span class="v"><a href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/census_extension_live_2026-08-31.json">63</a></span><span class="l">rejected</span></div>
+  </div>
+  <p data-quote="tools/README.md" data-src="experiments/census_extension_live_2026-08-31.json">Most of the rejected sites were telemetry and tracing code, file and config reads, or protocol transport (<a href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/census_extension_live_2026-08-31.json">experiments/census_extension_live_2026-08-31.json</a>). The detection rules have changed since that run (<a href="https://github.com/raj200501/arc-ttt-public/blob/main/tools/README.md">tools/README.md</a> says how); a held-out census will measure the new rules.</p>
+  <p data-quote="README.md" data-src="experiments/census_extension_live_2026-08-31.json">The one confirmed instance is Braintrust <code>autoevals</code> <code>JSONDiff</code>, where the identical correct answer scores <a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/census_extension_live_2026-08-31.json">1.0000</a> bare vs <a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/census_extension_live_2026-08-31.json">0.2152</a> fenced, executed (<a href="https://github.com/raj200501/arc-ttt-public/blob/main/experiments/census_extension_live_2026-08-31.json">same artifact</a>).</p>
+  <p data-quote="tools/README.md">So point <code>path</code> at your scoring code rather than the whole repository, read each finding, and mark the deliberate ones with <code># fencecheck: ignore</code>. <strong>A finding is not a bug report.</strong> The defect is parsing without fence handling <em>and then</em> converting the failure into a score.</p>
+
+  <h3>It reads one function at a time</h3>
+  <div data-quote="tools/README.md" data-src="tools/README.md">
+    <p>If a helper parses strictly and raises its own exception, and the caller catches that exception and scores <a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/tools/README.md">0</a>, the zero is one call away and <code>scan</code> does not report it. This repository's own scorer has exactly that shape, and <code>scan</code> reports nothing on that file. Read any parse helper that raises, and its callers, by hand. (<a href="https://github.com/raj200501/arc-ttt-public/blob/main/tools/README.md">tools/README.md</a>)</p>
+  </div>
+
+  <h3>How many real sites it misses has not been measured</h3>
+  <p data-quote="tools/README.md">Recall is unmeasured. It will not catch:</p>
+  <ul data-quote="tools/README.md">
+    <li>a file that does not end in <code>.py</code> (inside a directory);</li>
+    <li>a module that never uses one of its model-output words (<code>completion</code>, <code>response</code>, <code>prediction</code>, <code>answer</code> and the rest of <code>MODEL_WORDS</code> in the source);</li>
+    <li>a parse in a function that mentions fence handling anywhere, even for a different parse;</li>
+    <li>a failure turned into anything other than <code>pass</code>, <code>continue</code>, or a literal zero, <code>False</code>, <code>None</code> or empty container;</li>
+    <li>a parse whose failure reaches the caller, which is loud and left out on purpose.</li>
+  </ul>
+</section>
+
+<section id="checks" aria-labelledby="h-checks">
+  <h2 id="h-checks">How every number here is checked</h2>
+  <p>Every number on this page is quoted from <a href="https://github.com/raj200501/arc-ttt-public/blob/main/tools/README.md">tools/README.md</a>, <a href="https://github.com/raj200501/arc-ttt-public/blob/main/README.md">README.md</a>, <a href="https://github.com/raj200501/arc-ttt-public/blob/main/VERDICT.md">VERDICT.md</a> or <a href="https://github.com/raj200501/arc-ttt-public/blob/main/CORRECTIONS.md">CORRECTIONS.md</a>, and links to the file that holds it.</p>
+  <p><a href="https://github.com/raj200501/arc-ttt-public/blob/main/tests/test_site_numbers.py"><code>tests/test_site_numbers.py</code></a> reads this page, finds every token that contains a digit, and fails unless it appears both in the file it links to and in the document it is quoted from. The two CI snippets are checked character for character against tools/README.md. The test checks presence, not meaning: it cannot tell whether a number in a file is the one the sentence is about, and a small number appears in almost any file. The quoted sentence and the link are there so you can check that part by eye.</p>
+  <p data-quote="README.md">The numbers in the picture come from the stored model outputs. Rebuild the artifact with the standard library and compare it byte for byte:</p>
+  <div class="code" data-quote="README.md" data-src="README.md">
+<pre data-verbatim="README.md">python3 scripts/fence_rescore.py experiments/waybill_scale_rung_*.json --out /tmp/fence_rescore.json
+cmp /tmp/fence_rescore.json experiments/fence_rescore.json &amp;&amp; echo identical</pre>
+    <p class="src">From <a href="https://github.com/raj200501/arc-ttt-public/blob/main/README.md">README.md</a>.</p>
+  </div>
+  <p data-quote="README.md" data-src="CORRECTIONS.md">Corrections are dated and kept. The census count above was published as <a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/CORRECTIONS.md">2</a> for one day: deepeval's IFEval verifier was confirmed on its instruction text and then found unreachable on the dataset it ships against (<a href="https://github.com/raj200501/arc-ttt-public/blob/main/CORRECTIONS.md">CORRECTIONS.md 2026-09-01</a>).</p>
+  <p data-quote="CORRECTIONS.md" data-src="CORRECTIONS.md">Unless a person is named, the reviewers credited on that page are agents the project ran against its own repository. In its words: “No external human has reviewed this repository as of <a class="n" href="https://github.com/raj200501/arc-ttt-public/blob/main/CORRECTIONS.md">2026-09-01</a>.” (<a href="https://github.com/raj200501/arc-ttt-public/blob/main/CORRECTIONS.md">CORRECTIONS.md</a>)</p>
+</section>
+
+<footer>
+  <p><a href="https://github.com/raj200501/arc-ttt-public">Source repository</a> · <a href="https://github.com/raj200501/arc-ttt-public/blob/main/tools/README.md">tools/README.md</a> · <a href="https://github.com/raj200501/arc-ttt-public/blob/main/VERDICT.md">VERDICT.md</a> · <a href="https://github.com/raj200501/arc-ttt-public/blob/main/CORRECTIONS.md">CORRECTIONS.md</a></p>
+  <p data-quote="tools/README.md">MIT. Copy the single file into your repo if that is easier than depending on it.</p>
+</footer>
+
+</main>
+</body>
+</html>

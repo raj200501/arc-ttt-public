@@ -1,0 +1,2 @@
+    assert "not done" in text, (
+        "the outstanding fix must be named as outstanding")

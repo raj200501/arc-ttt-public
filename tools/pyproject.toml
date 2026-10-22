@@ -1,0 +1,75 @@
+# fencecheck as its own distribution, so `pip install fencecheck` works
+# the day it is published. Nothing is published yet.
+#
+# The root pyproject.toml packages src/ and depends on transformers. This
+# one ships two standard-library modules from this directory and depends
+# on nothing:
+#
+#   fencecheck.py       the tool (console script `fencecheck`)
+#   fencecheck_hook.py  the pre-commit wrapper (console script
+#                       `fencecheck-hook`); it loads fencecheck.py from
+#                       its own directory, which in an install is
+#                       site-packages, where the wheel puts both files
+#
+# Setuptools copies both files into the wheel unchanged, so the installed
+# fencecheck.py is byte-identical to tools/fencecheck.py, whose sha256 the
+# held-out census pins. Build from the repository root:
+#
+#   python3 -m build tools/
+#
+# tests/test_fencecheck_packaging.py checks this file without building.
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fencecheck"
+dynamic = ["version"]
+description = "Find evaluation code that scores a fenced JSON answer as zero."
+readme = { file = "README_PYPI.md", content-type = "text/markdown" }
+# fencecheck.py calls ast.unparse, which Python 3.9 added. On 3.8 the
+# call raises AttributeError inside a broad except, the file-read
+# exemption reads the whole line instead of the parsed argument, and a
+# site 3.9 reports can scan clean with exit 0. So 3.8 is excluded rather
+# than half-supported.
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Raj Kashikar" }]
+dependencies = []
+keywords = ["evaluation", "llm", "json", "markdown", "fence", "lint",
+            "ci", "pre-commit"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Testing",
+]
+
+[project.urls]
+Homepage = "https://github.com/raj200501/arc-ttt-public"
+Documentation = "https://github.com/raj200501/arc-ttt-public/blob/main/tools/README.md"
+Source = "https://github.com/raj200501/arc-ttt-public/tree/main/tools"
+Corrections = "https://github.com/raj200501/arc-ttt-public/blob/main/CORRECTIONS.md"
+
+[project.scripts]
+fencecheck = "fencecheck:main"
+fencecheck-hook = "fencecheck_hook:main"
+
+[tool.setuptools]
+py-modules = ["fencecheck", "fencecheck_hook"]
+
+[tool.setuptools.dynamic]
+version = { attr = "fencecheck.__version__" }

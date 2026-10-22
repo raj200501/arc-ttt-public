@@ -1,30 +1,25 @@
 # Addendum AA — Addendum X's decoder isolation, read on the four families whose determinism gates did not fail (preregistration)
 
-<!-- DRAFT-HEADER-START -->
-**DRAFT, NOT FROZEN: nothing here has been stamped and no cell has been
-read. `scripts/freeze_protocol.py prepare` removes this paragraph and
-fills the placeholders below; nothing else changes at the freeze.**
-<!-- DRAFT-HEADER-END -->
 **Frozen at the stamp below, before the reader ran on any cell — not
 before the data existed, and not before any of it was seen (below).
-Anchored as `ADDENDUM_AA_PROTOCOL.md.STAMP_PLACEHOLDER.ots`; the anchored
+Anchored as `ADDENDUM_AA_PROTOCOL.md.2026-10-22T0114Z.ots`; the anchored
 bytes are kept beside it as
-`snapshots_ADDENDUM_AA_PROTOCOL_STAMP_PLACEHOLDER.md`, so errata appended
+`snapshots_ADDENDUM_AA_PROTOCOL_2026-10-22T0114Z.md`, so errata appended
 to this file later never break the check.**
 
 **What the anchor pins.** Every code file the reading imports or runs,
 and one manifest that pins its input data, each by sha256:
 
-- `scripts/decoder_isolation_read.py` sha256 `READER_SHA_PLACEHOLDER`: the reader.
-- `scripts/cord_decoder_isolation.py` sha256 `XMODULE_SHA_PLACEHOLDER`: X's arithmetic (`read_families`) and the plain loop's stop id per family.
-- `scripts/aa_pinned/fencecheck_x.py` sha256 `FENCECHECK_SHA_PLACEHOLDER`: `strip_fence`, which decides every fenced count and feeds every invalid count. Byte-identical to `tools/fencecheck.py` at X's banking commit (below).
-- `scripts/cord_fence_tax.py` sha256 `CFT_SHA_PLACEHOLDER`: the gold split's location and reader, and the S/T cell folders.
-- `scripts/cord_constrained_families.py` sha256 `VMODULE_SHA_PLACEHOLDER`: each family's model and comparator cell, V's cell folder, and the sign test.
-- `src/arcttt/__init__.py` sha256 `ARCTTT_INIT_SHA_PLACEHOLDER`: the package the scorer is imported from.
-- `src/arcttt/scoring.py` sha256 `SCORING_SHA_PLACEHOLDER`: `parse_json_object` and `field_micro_f1`.
-- `src/arcttt/text_task.py` sha256 `TEXTTASK_SHA_PLACEHOLDER`: the parse error the classifier catches.
-- `src/arcttt/tasks.py` sha256 `TASKS_SHA_PLACEHOLDER`: imported by the one above.
-- `scripts/aa_pinned/aa_input_manifest.json` sha256 `INPUTS_SHA_PLACEHOLDER`: the sha256 of each of the nineteen input files the reading opens: for each of the four families, arm P, arm C (V's reused cell for three, X's own for Granite) and the G₀ comparator cell; arm G for Qwen2.5-0.5B and Granite; V's artifact; X's artifact (for the gate status); the scope record; and the gold split's two files. The manifest was written by hashing those files' bytes, none of them parsed, and only after checking that each is byte-identical to its blob at X's banking commit `b4facac`.
+- `scripts/decoder_isolation_read.py` sha256 `ca21f8fc28fc4cb8edccb28a2f5a555ef35d77bf7cd105f0eae7c5881b158532`: the reader.
+- `scripts/cord_decoder_isolation.py` sha256 `7315fa0bfd04bef4c5167fc4cbe5f22a21effaa82b0501049515e3ceefcbe98a`: X's arithmetic (`read_families`) and the plain loop's stop id per family.
+- `scripts/aa_pinned/fencecheck_x.py` sha256 `a8de3a21dd91ed36a314afc922cf1ddc8f732f51c3b6d59e726188bbea3c0c35`: `strip_fence`, which decides every fenced count and feeds every invalid count. Byte-identical to `tools/fencecheck.py` at X's banking commit (below).
+- `scripts/cord_fence_tax.py` sha256 `c0f3ce7c359d69b42efbf50c1379050173437a89053fde52a6043ad64e7887d3`: the gold split's location and reader, and the S/T cell folders.
+- `scripts/cord_constrained_families.py` sha256 `6f596cfb7ddeb3abf28cee5b677a58d15e76c257ee7aa18a1c9775b834ad2e1f`: each family's model and comparator cell, V's cell folder, and the sign test.
+- `src/arcttt/__init__.py` sha256 `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`: the package the scorer is imported from.
+- `src/arcttt/scoring.py` sha256 `f3ba871ffa595542e1ddf4152e676fb3836909c736ba043511c11b47933bef22`: `parse_json_object` and `field_micro_f1`.
+- `src/arcttt/text_task.py` sha256 `1811b2eff7603289c58e8eb700a83f70bdf8b25c693e86ceec35d2d9f7c887b4`: the parse error the classifier catches.
+- `src/arcttt/tasks.py` sha256 `43ee9e3ad8f6fcfdbbb3454f1e4b2c14ef32bb2de10191bd6fadce13d5e21452`: imported by the one above.
+- `scripts/aa_pinned/aa_input_manifest.json` sha256 `c2fa3277a6a3bc7a1bfe8e9105fe840b5a50fe04e2bf444f0c2418692391d94e`: the sha256 of each of the nineteen input files the reading opens: for each of the four families, arm P, arm C (V's reused cell for three, X's own for Granite) and the G₀ comparator cell; arm G for Qwen2.5-0.5B and Granite; V's artifact; X's artifact (for the gate status); the scope record; and the gold split's two files. The manifest was written by hashing those files' bytes, none of them parsed, and only after checking that each is byte-identical to its blob at X's banking commit `b4facac`.
 
 The reading refuses unless the proof commits to the snapshot, this file
 begins with the snapshot, every digest above matches, every pinned file

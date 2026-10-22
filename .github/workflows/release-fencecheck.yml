@@ -1,0 +1,148 @@
+# Release fencecheck to PyPI. Manual only, and the upload is switched off.
+#
+# Nothing here runs on push, pull request, tag or schedule. The only
+# trigger is a person pressing "Run workflow" and typing the version.
+#
+#   build    builds the sdist and wheel from tools/ (tools/pyproject.toml),
+#            runs twine check, checks the version, runs the fencecheck
+#            tests, and keeps dist/ as a workflow artifact
+#   smoke    installs the wheel into a clean venv on the oldest and newest
+#            supported Python and checks the exit codes the tests pin:
+#            1 on a fail-open site, 0 on a clean file, 2 on a missing path
+#   publish  uploads dist/ with PyPI trusted publishing (OIDC). No API
+#            token is stored anywhere. Its upload step is behind `if: false`.
+#
+# THE OWNER FLIPS IT. Change `if: false` on the "Publish to PyPI" step to
+# `if: true` only after PyPI has a (pending) trusted publisher for owner
+# raj200501, repository arc-ttt-public, workflow release-fencecheck.yml,
+# environment pypi. Keep the repository check on the job: it stops a fork
+# or any other copy of this file from publishing.
+name: release-fencecheck
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to release. Must equal __version__ in tools/fencecheck.py.
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-fencecheck
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build the sdist and wheel
+        # SOURCE_DATE_EPOCH makes the wheel byte-reproducible for a given
+        # commit and setuptools version. The sdist is not: setuptools
+        # stamps it with file and build times.
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build twine
+          export SOURCE_DATE_EPOCH="$(git log -1 --format=%ct)"
+          python -m build --outdir dist tools/
+          twine check --strict dist/*
+      - name: The built version is the one asked for
+        # The input reaches the script through env, never pasted into it.
+        env:
+          EXPECTED_VERSION: ${{ inputs.version }}
+        run: |
+          test "$(python tools/fencecheck.py --version)" = "fencecheck $EXPECTED_VERSION"
+          test -f "dist/fencecheck-$EXPECTED_VERSION-py3-none-any.whl"
+          test -f "dist/fencecheck-$EXPECTED_VERSION.tar.gz"
+          test "$(ls dist | wc -l)" -eq 2
+      - name: The fencecheck tests pass
+        run: |
+          python -m pip install pytest
+          python -m pytest -q tests/test_fencecheck_packaging.py \
+            tests/test_fencecheck.py tests/test_fencecheck_adoption.py
+      - name: Record the artifact hashes
+        run: sha256sum dist/* | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  smoke:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Install the wheel in a clean venv and check exit codes
+        run: |
+          python -m venv "$RUNNER_TEMP/smoke"
+          bin="$RUNNER_TEMP/smoke/bin"
+          "$bin/python" -m pip install --quiet --no-index dist/*.whl
+          cd "$RUNNER_TEMP"
+          "$bin/fencecheck" --version
+          mkdir -p bait clean
+          printf 'import json\ndef grade(completion):\n    try:\n        return json.loads(completion)["a"]\n    except ValueError:\n        return 0.0\n' > bait/grade.py
+          printf 'def grade(completion):\n    return completion.strip() == "yes"\n' > clean/clean.py
+          expect() {
+            want="$1"; shift
+            set +e; "$@"; got="$?"; set -e
+            if [ "$got" != "$want" ]; then
+              echo "expected exit $want, got $got: $*"; exit 1
+            fi
+          }
+          expect 1 "$bin/fencecheck" scan bait/grade.py
+          expect 0 "$bin/fencecheck" scan clean/clean.py
+          expect 2 "$bin/fencecheck" scan missing.py
+          expect 1 "$bin/fencecheck-hook" bait/grade.py clean/clean.py
+          expect 0 "$bin/fencecheck-hook" clean/clean.py
+          # The README's own `score` example: 1 of 3, exit status 1.
+          printf '%s\n' '{"prediction": "```json\n{\"a\": 1}\n```"}' \
+            '{"prediction": "{\"a\": 1}"}' \
+            '{"prediction": "Sure:\n```json\n{\"a\": 1}\n```"}' > p.jsonl
+          expect 1 "$bin/fencecheck" score p.jsonl
+          { "$bin/fencecheck" score p.jsonl || true; } > score.txt
+          grep -q "1 of 3 outputs are VALID JSON" score.txt
+          # The installed tool is the repository file, byte for byte, and
+          # the hook loads that installed file.
+          installed="$("$bin/python" -c 'import fencecheck; print(fencecheck.__file__)')"
+          cmp "$GITHUB_WORKSPACE/tools/fencecheck.py" "$installed"
+          "$bin/python" -c 'import pathlib, fencecheck, fencecheck_hook; assert fencecheck_hook.TOOL == pathlib.Path(fencecheck.__file__).resolve()'
+
+  publish:
+    needs: [build, smoke]
+    if: github.repository == 'raj200501/arc-ttt-public'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: pypi
+      url: https://pypi.org/project/fencecheck/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Publish to PyPI
+        # OFF until the owner flips it: `if: false` -> `if: true`, after the
+        # PyPI trusted publisher exists. Nothing above this line uploads.
+        if: false
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086  # v1.14.3

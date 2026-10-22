@@ -29,6 +29,11 @@ python3 tools/fencecheck.py score    path/to/predictions.jsonl
 python3 tools/fencecheck.py template path/to/checkpoint/
 ```
 
+Once published, `pip install fencecheck` will install this same file
+as a `fencecheck` command (`fencecheck scan path/to/your/repo`), plus
+the pre-commit wrapper below as `fencecheck-hook`. It is not on PyPI
+yet. Until it is, copy the file.
+
 Try `score` before you have a file of your own. This makes three outputs
 (one fenced, one bare, one fenced after prose), and `score` reports
 1 of 3 as valid JSON a strict scorer rejects, with exit status 1:
@@ -48,7 +53,7 @@ about 0.7 GB, so this extracts only the `.py` files (about 3 MB):
 ```
 curl -sSLO https://files.pythonhosted.org/packages/source/e/evals/evals-3.0.1.post1.tar.gz
 python3 -c "import tarfile; t = tarfile.open('evals-3.0.1.post1.tar.gz'); t.extractall(members=[m for m in t if m.name.endswith('.py')])"
-python3 tools/fencecheck.py scan evals-3.0.1.post1    # 4 site(s) in 354 file(s), monitor.py:72 among them
+python3 tools/fencecheck.py scan evals-3.0.1.post1    # 7 site(s) in 328 file(s), monitor.py:72 among them
 ```
 
 `scan` reads your code and reports every place that parses model output
@@ -119,23 +124,40 @@ virtualenv and nothing installed. The manifest is
 
 ### What it will and will not catch
 
-Expect most findings on a large codebase to be false alarms. The least
-flattering measurement here: over seven actively maintained eval
-packages, `scan` surfaced **64** candidate sites and hand adjudication
-confirmed **1**. The other 63 were rejected, most of them telemetry and
-tracing code, file and config reads, or protocol transport
+Expect false alarms on a large codebase. The least flattering
+measurement here: over seven actively maintained eval packages, the
+scanner as it stood on 2026-08-31 surfaced **64** candidate sites and
+hand adjudication confirmed **1**. The other 63 were rejected, most of
+them telemetry and tracing code, file and config reads, or protocol
+transport
 ([`experiments/census_extension_live_2026-08-31.json`](../experiments/census_extension_live_2026-08-31.json)).
-The detection rules have not changed since that run. So point `path` at
-your scoring code rather than the whole repository, read each finding,
-and mark the deliberate ones with `# fencecheck: ignore`. It will not
-catch: a file that does not end in `.py` (inside a directory); a module
-that never uses one of its model-output words (`completion`, `response`,
-`prediction`, `answer` and the rest of `MODEL_WORDS` in the source); a
-parse in a function that mentions fence handling anywhere, even for a
-different parse; a failure turned into anything other than `pass`,
-`continue`, or a literal zero, `False`, `None` or empty container; and a
-parse whose failure reaches the caller, which is loud and left out on
-purpose. How many real sites it misses has not been measured.
+
+The detection rules changed on 2026-10-21, after that run. A finding now
+needs evidence that the parsed text is a model's output (see below). The
+changes were tuned on development sets only: synthetic probes, packages
+already scanned, and repositories already read by hand. That tuning is
+not evidence that precision or recall improved. The held-out census
+(Addendum AB, `scripts/heldout_census.py`) is the measurement. So point
+`path` at your scoring code rather than the whole repository, read each
+finding, and mark the deliberate ones with `# fencecheck: ignore`.
+
+It will not catch:
+
+- a file that does not end in `.py`, or a test file (`tests/`,
+  `test_*.py`, `*_test.py`, `conftest.py`) when it scans a directory;
+- a parse whose input it cannot trace to model output inside the same
+  file, for example a parameter called `text` that no caller in the file
+  fills with model output;
+- a zero made more than one call up, or in another file;
+- partial fence handling it cannot tell apart from full handling, for
+  example a regex for the `json` tag that misses `JSON`;
+- a wrong score with no exception at all, such as a validity check
+  followed by a string-against-dict comparison;
+- a parse whose failure reaches the top of its caller too, which is loud
+  and left out on purpose.
+
+How many real sites it misses on code nobody has looked at has not been
+measured.
 
 ## What a finding means, and what it does not
 
@@ -149,21 +171,39 @@ So `scan` reports only the conjunction, and it prints the file and line
 for every finding so you can decide in ten seconds. It deliberately does
 **not** flag:
 
-- a parse that lets the failure out of its own function;
-- a parse whose input is a config file or a saved artifact rather than
-  model output;
-- anything in a module that never mentions model output at all.
+- a parse that lets the failure out of its own function, unless a
+  caller in the same file catches it and makes a zero; then the parse
+  line is reported, with the caller's line as `zeroed_at` in `--json`;
+- a parse whose input traces to a file, an HTTP or socket exchange, a
+  process, a stream frame, a database row, a cache, configuration, the
+  environment, the command line, a telemetry record, an error message, a
+  gold answer or a prompt;
+- a parse with no evidence of model output. Evidence is a model call
+  (`generate`, `complete`, `invoke`, a judge), or a name or key such as
+  `completion`, `choices`, `prediction` or `model_output`, or, in a
+  module about models or evaluation, a name such as `response`, `output`,
+  `answer` or `reply`. `--json` gives the word under `evidence`;
+- a parse after fence handling: a fence helper, a regex that cuts a
+  `{...}` span out of the text, or a strip that removes the backticks and
+  the `json` tag. Removing ```` ```python ```` only, or the backticks
+  only, is not handling: a ```` ```json ```` fence still gets through;
+- a failure that falls back to the raw text or to another parser.
 
-**What that first exemption misses.** `scan` reads one function at a
-time. If a helper parses strictly and raises its own exception, and the
-caller catches that exception and scores 0, the zero is one call away
-and `scan` does not report it. This repository's own scorer has exactly
+A zero is a literal `0`, `False`, `None` or empty value, a skipped item,
+a `Score(value=0)` or `Score(value=INCORRECT)` style object, or a
+verdict string such as `"no"` or `"tie"`.
+
+**What that first exemption still misses.** `scan` follows a parse
+failure one call up, inside the same file. If a helper parses strictly
+and raises, and a caller in the same file catches that exception and
+scores 0, the parse line is reported. This repository's own scorer has
 that shape: `parse_json_object` in `src/arcttt/scoring.py` raises
 `TextTaskFormatError`, and `score_text_output` catches it and returns
 `micro_f1=0.0`. There it is deliberate (fail-closed, the frozen rule the
-gates were scored under), and `scan` reports nothing on that file. The
-same logic written as one function is reported. Read any parse helper
-that raises, and its callers, by hand.
+gates were scored under), and `scan` now reports it
+(`scoring.py:38`, zero made at line 131). A zero made two calls up, or
+by a caller in another file, is still not reported. Read any parse
+helper that raises, and its callers in other files, by hand.
 
 ## Why this happens, and to whom
 
@@ -198,8 +238,12 @@ line.
 
 ## Silencing a deliberate one
 
-Put `# fencecheck: ignore` on the parse line, or anywhere in the
-enclosing function:
+Put a `# fencecheck: ignore` comment on the parse line, or anywhere in
+the enclosing function. Only a comment counts; the same text inside a
+string or docstring does not. A silenced site is still counted: `scan`
+lists silenced sites before its verdict, and `--json` reports them under
+`suppressed`, so a CI job can audit them. The marker covers the whole
+function, including parses added to it later.
 
 ```python
 def parses(text):

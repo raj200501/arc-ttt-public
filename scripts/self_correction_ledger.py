@@ -90,8 +90,11 @@ APPLICATION = REPO / "docs" / "strategy" / "APPLICATION_DRAFT.md"
 # round 9: it sat outside every mechanical check). The narrative does
 # NOT: its sections are dated records, and rewriting "98 dated
 # corrections" in its 2026-09-17 section to today's count would falsify
-# what that section said on its date.
-SYNCED_COPIES = (APPLICATION, REPO / "docs" / "strategy" / ("DE" + "CK.md"))
+# what that section said on its date. The first slide document left this
+# list on 2026-10-21, when DECK_V2.md superseded it, for the same reason:
+# it is now the record of what was sent, and a record that a sync tool
+# rewrites is no longer a record. Its successor took its place.
+SYNCED_COPIES = (APPLICATION, REPO / "docs" / "strategy" / ("DE" + "CK_V2.md"))
 
 # Copy that quotes the count. Group 1 is the number; everything else is
 # matched so the surrounding sentence is preserved exactly.

@@ -32,7 +32,7 @@ python3 -c "import tarfile; t = tarfile.open('evals-3.0.1.post1.tar.gz'); t.extr
 python3 tools/fencecheck.py scan evals-3.0.1.post1
 ```
 
-It prints `4 site(s) in 354 file(s)`, with `monitor.py:72` and the
+It prints `7 site(s) in 328 file(s)`, with `monitor.py:72` and the
 `json_match.py:80` scoring path among them.
 
 ## What one fence is worth
@@ -647,7 +647,7 @@ incident, fixed with explicit API probes + regression tests, paper
 §6.8), v8 closed both and scored. Honest read: the pipeline is proven
 end-to-end; per-attempt hit rate (~2.7%) makes solver quality the
 binding constraint — a multi-week solver program, deprioritized per the
-v10 verdict in favor of the enterprise gates and the paper track. 612 offline tests
+v10 verdict in favor of the enterprise gates and the paper track. 767 offline tests
 run in CI on every push (with torch installed; a few skip, and the log
 says how many). The full pipeline — augmentation sweep → per-task LoRA TTT →
 constrained DFS decoding → invert → vote/rescore → submission — is
@@ -758,7 +758,7 @@ authored as the work it is.
 
 - `src/arcttt/` — the harness: tasks, augmentations, serialization,
   pure-torch LoRA, TTT loop, constrained DFS, voting, solver.
-- `tests/` — 612 offline tests (tiny in-test models; no downloads).
+- `tests/` — 767 offline tests (tiny in-test models; no downloads).
 - `experiments/` — machine-readable run records + the registry README.
 - `kaggle/` — bundle builder, kernel entries, kernel metadata.
 - `demo/` — the CORD-receipt adaptation demo: endpoint script, captured

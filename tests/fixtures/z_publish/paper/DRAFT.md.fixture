@@ -1,0 +1,27 @@
+Epilogue to the incident, for completeness (2026-08-17): the gate this
+infrastructure ultimately served — on that CPU/fp32 path, with a
+checkpoint/resume layer added when an external canceller repeatedly
+killed 13-hour runs — decided GO on its
+preregistered terms: mean paired delta +46.5 micro-F1 at k=30 over seeds
+{1,2,3} against a +5 bar frozen before any data (receipt-level sign
+test 156W/0L/2T over 158 scored receipts of 180 designed;
+`novel_schema_summary_2026-08-12.json`; section 6.12 says what does and
+does not prove that the bar came first). The full novel-schema study is its own artifact
+(ENTERPRISE_EVAL_SPEC.md Addendum B and the novel_schema_* records in
+experiments/), reported here only because this incident's repair — the
+chunked loss plus the CPU/fp32 migration — is what made it measurable. Per that spec's claim rule, the positive
+travels with its negative: the same adaptation recipe FAILED its
+preregistered gates on CORD at all three scales tested (Addendum A).
+[...]
+(1) Scope. Both arms carried the full 30-demonstration prompt, so +46.5
+is adaptation added on top of the same 0.5B model's 30-shot prompt. It
+[...]
+Addendum Z re-runs the gate with every output stored; it has no result
+yet (section 6.12).
+[...]
+`fence_rescore.json`). The gate is not withdrawn. It measures a real
+delta over a weak baseline, and the project no longer offers it as a
+[...]
+banked; every restart is counted (`VERDICT.md`, Addendum Z row). No Z
+result exists, and this paper quotes none. Even a completed Z
+would be a replication by the same operator on a second box. It makes a

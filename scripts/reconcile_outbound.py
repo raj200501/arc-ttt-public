@@ -136,6 +136,13 @@ OUTBOUND_STRATEGY_EXEMPT = {
     "27.64%": "NVIDIA's (NVARC) published ARC Prize 2025 public score, cited "
               "as theirs on the slide; not a claim about this project",
     "24.03%": "same -- NVARC's published private score, cited as theirs",
+    # The pattern reads "$40M" as "$40", which would otherwise reconcile
+    # against any unrelated 40 in an artifact: a pass that proves nothing.
+    # Listed here instead, so the record says what it is.
+    "$40": "the $40M round-size threshold in the comparison sample of "
+           "docs/strategy/FDM1_EVIDENCE_MEMO_2026-10-21.md (section 5), "
+           "quoted as that memo's finding about other companies' rounds; "
+           "not a claim about this project and not a valuation",
 }
 
 
