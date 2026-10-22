@@ -7,19 +7,19 @@
     "EXTERNAL": "third-party quote, labelled as such, not ours to verify."
   },
   "counts": {
-    "AGGREGATE": 93,
+    "AGGREGATE": 94,
     "ARITHMETIC": 81,
     "EXTERNAL": 7,
     "PRIMARY": 56
   },
-  "total_artifacts": 237,
+  "total_artifacts": 238,
   "excluded_as_gate_exhaust": [
     "verification_coverage.json",
     "outbound_reconciliation.json",
     "review_simulation.json"
   ],
   "primary_verifiable": 56,
-  "primary_verifiable_fraction": 0.2363,
+  "primary_verifiable_fraction": 0.2353,
   "why_the_total_is_banked": "Outbound copy cites this total ('179 banked artifacts') and the reconciliation gate had been matching it against an unrelated 179 in an unrelated artifact -- a figure that traced to nothing, passing because some number of that value happened to exist somewhere. A cited figure has to be a figure this map deliberately publishes.",
   "artifacts": [
     {
@@ -32,7 +32,7 @@
       "artifact": "addendum_z_run_log.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 6729
+      "bytes": 8382
     },
     {
       "artifact": "authorship_ledger_2026-09-02.json",
@@ -1115,6 +1115,12 @@
       "bytes": 1350
     },
     {
+      "artifact": "reconcile_false_pass_2026-10-22.json",
+      "level": "AGGREGATE",
+      "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
+      "bytes": 7877
+    },
+    {
       "artifact": "results_against_thesis_2026-09-03.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
@@ -1148,7 +1154,7 @@
       "artifact": "self_correction_ledger.json",
       "level": "AGGREGATE",
       "why": "only summary statistics survive; nothing here is re-derivable and the figure must be taken on trust",
-      "bytes": 1529
+      "bytes": 1686
     },
     {
       "artifact": "summary.json",

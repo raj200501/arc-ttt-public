@@ -155,6 +155,9 @@ It will not catch:
   followed by a string-against-dict comparison;
 - a parse whose failure reaches the top of its caller too, which is loud
   and left out on purpose.
+- a file nested too deeply for Python's parser to analyse (a very long
+  expression, for example); it is skipped, never cleared, and named on
+  stderr and under `unanalysed` in `--json`.
 
 How many real sites it misses on code nobody has looked at has not been
 measured.

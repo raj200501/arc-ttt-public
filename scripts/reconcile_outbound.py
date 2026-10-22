@@ -17,7 +17,19 @@ machine can check and a proofreader reliably will not.
 So this extracts every DISTINCTIVE number from each email body and looks
 for it in the evidence: the banked experiment artifacts first, then
 VERDICT.md and EVIDENCE.md. A number found nowhere is reported as
-UNRECONCILED and the script exits non-zero.
+UNRECONCILED and the script exits non-zero. A figure whose own clause
+cites an artifact is checked against that artifact only. A count smaller
+than every integer the evidence leaves out cannot fail, so it is reported
+UNCHECKABLE: the script exits zero on it but does not call it reconciled.
+
+How weak that is, measured (simulated review round 10,
+2026-10-22; `scripts/reconcile_false_pass_probe.py`, banked in
+`experiments/reconcile_false_pass_2026-10-22.json`): on 200 made-up
+figures per shape with no citation in the clause, the gate passes 178
+signed deltas, 24 four-place decimals and all 200 random counts between
+1 and 300
+(172 of them as uncheckable). With a citation in the clause it passes 1
+delta and no decimals. The evidence holds every integer from 1 to 247.
 
 What counts as distinctive, and why the filter is deliberately narrow:
 bare small integers ("20 demonstrations", "30 documents") match
@@ -100,6 +112,10 @@ PATTERNS = {
                r"(?:tests?|artifacts?|corrections?|documents?|entries"
                r"|receipts?|tenants?|demonstrations?|design partners?"
                r"|packages?|sites?|instances?|candidates?|rejections?|commits?)\b",
+    # "6 of 35": a share written as two counts. Never extracted until
+    # simulated review round 10 (2026-10-22), so every such figure passed
+    # by omission. Both counts must trace; see `_verdict`.
+    "fraction": r"\b\d+(?:,\d{3})* of \d+(?:,\d{3})*\b(?![.,]\d)",
 }
 # Everything after the number is stripped from a "counted" token before it
 # is matched numerically.
@@ -205,7 +221,9 @@ def _claims(body: str, exempt: dict[str, str] | None = None
 # citation never borrows a neighbour's. No citation, or a cited file that
 # is not on disk: the claim is checked against all the evidence, as before.
 CITATION = re.compile(r"`experiments/([A-Za-z0-9_.\-]+\.json)`")
-CLAUSE_END = re.compile(r"\.(?:\s|$)|;\s|\n\n")
+# A slide's "Sources:" line names several files for the whole slide, so it
+# is not any one claim's own citation; it ends the search like a clause end.
+CLAUSE_END = re.compile(r"\.(?:\s|$)|;\s|\n\n|\bSources?:")
 CITATION_REACH = 240
 # Sections headed "## Update — YYYY-MM-DD" are dated records: their counts
 # are what the cited artifact said on that date, and the artifact has
@@ -226,15 +244,15 @@ def _cited_claims(body: str, exempt: dict[str, str] | None = None
             token = match.group(0)
             if token in exempt:
                 continue
-            cited = None
-            if kind == "counted":
-                limit = min([s for s in counted_starts if s > match.start()]
-                            + [len(body), match.end() + CITATION_REACH])
-                stop = CLAUSE_END.search(body, match.end())
-                if stop:
-                    limit = min(limit, stop.start())
-                cite = CITATION.search(body, match.end(), limit)
-                cited = cite.group(1) if cite else None
+            # Every shape takes the citation in its own clause, not only
+            # counts (simulated review round 10, 2026-10-22).
+            limit = min([s for s in counted_starts if s > match.start()]
+                        + [len(body), match.end() + CITATION_REACH])
+            stop = CLAUSE_END.search(body, match.end())
+            if stop:
+                limit = min(limit, stop.start())
+            cite = CITATION.search(body, match.end(), limit)
+            cited = cite.group(1) if cite else None
             if (token, cited) in seen or (cited is None and any(
                     token == t for t, _ in seen)):
                 continue
@@ -243,25 +261,101 @@ def _cited_claims(body: str, exempt: dict[str, str] | None = None
     return found
 
 
+def _cited_text(name: str | None, cache: dict) -> str | None:
+    """The cited artifact's text, or None to fall back."""
+    if (name is None or name == "outbound_reconciliation.json"
+            or name.startswith("reconcile_false_pass")):
+        return None
+    key = "text:" + name
+    if key not in cache:
+        path = REPO / "experiments" / name
+        cache[key] = (_dash_normalise(path.read_text(encoding="utf-8"))
+                      if path.is_file() else None)
+    return cache[key]
+
+
 def _cited_numbers(name: str | None, cache: dict) -> list[float] | None:
     """Every number in the cited artifact, or None to fall back."""
     if name is None or name == "outbound_reconciliation.json":
         return None
     if name not in cache:
-        path = REPO / "experiments" / name
-        cache[name] = (_haystack_numbers(_dash_normalise(
-            path.read_text(encoding="utf-8"))) if path.is_file() else None)
+        text = _cited_text(name, cache)
+        cache[name] = _haystack_numbers(text) if text is not None else None
     return cache[name]
 
 
+_FLOORS: dict[tuple[int, int], int] = {}
+
+
+def _count_floor(numbers: list[float]) -> int:
+    """The smallest positive integer absent from `numbers`.
+
+    Every count below it is present, so a count below it CANNOT fail a
+    match against these numbers. Simulated review round 10 (2026-10-22)
+    found the whole evidence holds every integer from 1 to 247: the gate
+    could not fail on "12 design partners". Such a count is reported as
+    uncheckable, not reconciled.
+    """
+    key = (id(numbers), len(numbers))
+    if key not in _FLOORS:
+        present = {int(v) for v in numbers if v >= 1 and v == int(v)}
+        floor = 1
+        while floor in present:
+            floor += 1
+        _FLOORS[key] = floor
+    return _FLOORS[key]
+
+
+def _verdict(kind: str, token: str, haystack: str, numbers: list[float],
+             cited_numbers: list[float] | None = None,
+             cited_text: str | None = None) -> str:
+    """"reconciled", "uncheckable" or "missing".
+
+    A cited claim is checked against the cited artifact only, whatever its
+    shape. A count (or either side of "N of M") smaller than every integer
+    the reference set leaves out could not have failed, so it is
+    "uncheckable": the gate exits zero on it but does not vouch for it.
+    """
+    reference = cited_numbers if cited_numbers is not None else numbers
+    if kind in ("counted", "fraction"):
+        if kind == "counted":
+            parts = [COUNT_NOUNS.sub("", token)]
+        else:
+            parts = [p.strip() for p in token.split(" of ")]
+        floor = _count_floor(reference)
+        values = [float(p.replace(",", "")) for p in parts]
+        if not all(_reconciles("counted", p, haystack, numbers, cited_numbers)
+                   for p in parts):
+            return "missing"
+        if any(v < floor for v in values):
+            return "uncheckable"
+        return "reconciled"
+    if kind == "percent" and cited_numbers is not None:
+        text = cited_text or ""
+        literal = re.search(r"(?<![\d.])" + re.escape(token), text)
+        return ("reconciled" if literal or _reconciles(
+            "decimal", token.rstrip("%"), haystack, numbers, cited_numbers)
+                else "missing")
+    return ("reconciled" if _reconciles(kind, token, haystack, numbers,
+                                        cited_numbers) else "missing")
+
+
 def _check(body: str, exempt: dict[str, str] | None, haystack: str,
-           numbers: list[float], cache: dict, use_citations: bool = True
+           numbers: list[float], cache: dict, use_citations: bool = True,
+           uncheckable: list[str] | None = None
            ) -> tuple[list[str], list[dict]]:
+    """Reconciled tokens and missing items. Tokens the gate cannot test
+    go to `uncheckable` (when given), never to `reconciled`."""
     reconciled, missing = [], []
     for kind, token, cited in _cited_claims(body, exempt):
         own = _cited_numbers(cited, cache) if use_citations else None
-        if _reconciles(kind, token, haystack, numbers, own):
+        text = _cited_text(cited, cache) if use_citations else None
+        verdict = _verdict(kind, token, haystack, numbers, own, text)
+        if verdict == "reconciled":
             reconciled.append(token)
+        elif verdict == "uncheckable":
+            if uncheckable is not None:
+                uncheckable.append(token)
         else:
             item = {"kind": kind, "token": token}
             if own is not None:
@@ -361,6 +455,10 @@ def _haystack() -> str:
         # elsewhere.
         if path.name == "outbound_reconciliation.json":
             continue
+        # Nor the false-pass probe's output: it holds fabricated figures
+        # on purpose, and with it in the evidence they would reconcile.
+        if path.name.startswith("reconcile_false_pass"):
+            continue
         parts.append(path.read_text(encoding="utf-8"))
     return _dash_normalise("\n".join(parts))
 
@@ -395,7 +493,8 @@ def _reconciles(kind: str, token: str, haystack: str,
     points on the pages and as a fraction in the artifacts.
     """
     if kind in ("record", "pvalue", "percent"):
-        return token in haystack  # these are literal forms, not quantities
+        # literal forms, not quantities -- but "5%" is not inside "25%"
+        return re.search(r"(?<![\d.])" + re.escape(token), haystack) is not None
     if kind == "counted":
         token = COUNT_NOUNS.sub("", token)
     bare = token.lstrip("+").rstrip("x").replace("$", "").replace(",", "")
@@ -412,7 +511,7 @@ def _reconciles(kind: str, token: str, haystack: str,
     # shape a reader is most likely to check by hand. Counts must match
     # exactly, at their own scale.
     scales = (1.0,) if kind == "counted" else (1.0, 100.0, 0.01)
-    if kind == "counted" and cited_numbers is not None:
+    if cited_numbers is not None:
         # the artifact the claim's own sentence names, and only that one
         numbers = cited_numbers
     for candidate in numbers:
@@ -439,26 +538,34 @@ def main() -> int:
 
     report: dict[str, dict] = {}
     unreconciled_total = 0
+    uncheckable_total = 0
     for name, body in bodies.items():
-        reconciled, missing = _check(body, None, haystack, numbers, cache)
+        unsure: list[str] = []
+        reconciled, missing = _check(body, None, haystack, numbers, cache,
+                                     uncheckable=unsure)
         unreconciled_total += len(missing)
+        uncheckable_total += len(unsure)
         report[name] = {
             "claims_checked": len(reconciled) + len(missing),
             "reconciled": len(reconciled),
             "unreconciled": missing,
+            "uncheckable": unsure,
         }
 
     application: dict[str, dict] = {}
     if APPLICATION.exists():
         for name, body in _application_sections(_dash_normalise(
                 APPLICATION.read_text(encoding="utf-8"))).items():
+            unsure = []
             reconciled, missing = _check(body, APPLICATION_EXEMPT, haystack,
-                                         numbers, cache)
+                                         numbers, cache, uncheckable=unsure)
             unreconciled_total += len(missing)
+            uncheckable_total += len(unsure)
             application[name] = {
                 "claims_checked": len(reconciled) + len(missing),
                 "reconciled": len(reconciled),
                 "unreconciled": missing,
+                "uncheckable": unsure,
             }
 
     first_person: list[dict] = []
@@ -473,16 +580,20 @@ def main() -> int:
         text = _dash_normalise(doc.read_text(encoding="utf-8"))
         for part in re.split(r"\n## ", "\n" + text):
             heading = part.split("\n", 1)[0].strip()[:60] or "(preamble)"
+            unsure = []
             reconciled, missing = _check(
                 part, OUTBOUND_STRATEGY_EXEMPT, haystack, numbers, cache,
-                use_citations=not DATED_PART.match(heading))
-            if not reconciled and not missing:
+                use_citations=not DATED_PART.match(heading),
+                uncheckable=unsure)
+            if not reconciled and not missing and not unsure:
                 continue
             unreconciled_total += len(missing)
+            uncheckable_total += len(unsure)
             strategy_docs[f"{doc.name} / {heading}"] = {
                 "claims_checked": len(reconciled) + len(missing),
                 "reconciled": len(reconciled),
                 "unreconciled": missing,
+                "uncheckable": unsure,
             }
 
     record = {
@@ -492,7 +603,13 @@ def main() -> int:
                   "somewhere in the evidence. It does not prove the "
                   "sentence around it is true, that it describes the same "
                   "arm, or that the comparison is fair -- three failures "
-                  "this project has committed and corrected. Read the prose.",
+                  "this project has committed and corrected. Read the prose. "
+                  "Measured on random fabricated figures: see "
+                  "experiments/reconcile_false_pass_2026-10-22.json.",
+        "uncheckable_means": "a count, or a side of 'N of M', smaller than "
+                             "every integer its reference set leaves out. It "
+                             "could not fail a match, so the gate exits zero "
+                             "on it but does not count it as reconciled.",
         "pages_searched": EVIDENCE_PAGES + ["experiments/*.json"],
         "exempt": EXEMPT,
         "bodies": report,
@@ -504,6 +621,7 @@ def main() -> int:
         "outbound_strategy_exempt": OUTBOUND_STRATEGY_EXEMPT,
         "outbound_strategy_documents": strategy_docs,
         "unreconciled_total": unreconciled_total,
+        "uncheckable_total": uncheckable_total,
     }
     pathlib.Path(args.out).write_text(json.dumps(record, indent=2) + "\n",
                                       encoding="utf-8")
@@ -514,6 +632,8 @@ def main() -> int:
               f"reconciled  [{status}]")
         for item in block["unreconciled"]:
             print(f"    {item['kind']:11s} {item['token']}")
+        if block["uncheckable"]:
+            print(f"    uncheckable: {', '.join(block['uncheckable'])}")
     if application:
         print(f"\n-- {APPLICATION.name}")
         for name, block in application.items():
@@ -522,6 +642,8 @@ def main() -> int:
                   f"[{status:12s}] {name}")
             for item in block["unreconciled"]:
                 print(f"    {item['kind']:11s} {item['token']}")
+            if block["uncheckable"]:
+                print(f"    uncheckable: {', '.join(block['uncheckable'])}")
     if strategy_docs:
         print("\n-- outbound strategy documents")
         for name, block in strategy_docs.items():
@@ -530,10 +652,15 @@ def main() -> int:
                   f"[{status:12s}] {name}")
             for item in block["unreconciled"]:
                 print(f"    {item['kind']:11s} {item['token']}")
+            if block["uncheckable"]:
+                print(f"    uncheckable: {', '.join(block['uncheckable'])}")
     if first_person:
         print(f"\n-- {APPLICATION.name}: first-person claims of agent work")
         for item in first_person:
             print(f"    {item['phrase']!r}: ...{item['context']}...")
+    print(f"\n{uncheckable_total} figure(s) uncheckable: small counts that "
+          "every reference set contains, so no match could fail. Not "
+          "reconciled; check them by hand.")
     print(f"\nbanked: {args.out}")
     if first_person:
         print(f"\n{len(first_person)} first-person claim(s) of agent work in "

@@ -1,0 +1,262 @@
+{
+  "what": "How often scripts/reconcile_outbound.py passes a random fabricated figure, by claim shape.",
+  "method": "200 random figures per shape, seed 20261022, each in a one-sentence body run through the gate's own _check. '_cited' rows add a citation of `experiments/project_timeline.json` to the same clause. Figures are random, not checked for truth. *_2026-09-23.json files are excluded from the evidence (Addendum Z).",
+  "outcomes": {
+    "caught": "reported unreconciled; the gate exits non-zero",
+    "reconciled": "the gate says the figure traces to the evidence",
+    "uncheckable": "the gate cannot test it; exits zero, does not vouch for it",
+    "not_extracted": "the gate never reads it as a claim"
+  },
+  "gate_exits_zero_rate": "share of fabricated figures that do not fail the gate (1 - caught/n)",
+  "vouched_rate": "share the gate reports as reconciled",
+  "before": {
+    "gate_rev": "9ed86d1",
+    "shapes": {
+      "integer_count": {
+        "caught": 0,
+        "reconciled": 200,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 1.0,
+        "vouched_rate": 1.0,
+        "example": "We ran 145 tests."
+      },
+      "integer_count_cited": {
+        "caught": 191,
+        "reconciled": 9,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.045,
+        "vouched_rate": 0.045,
+        "example": "We ran 145 tests (`experiments/project_timeline.json`)."
+      },
+      "decimal": {
+        "caught": 176,
+        "reconciled": 24,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.12,
+        "vouched_rate": 0.12,
+        "example": "The score was 0.8745."
+      },
+      "decimal_cited": {
+        "caught": 176,
+        "reconciled": 24,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.12,
+        "vouched_rate": 0.12,
+        "example": "The score was 0.8745 (`experiments/project_timeline.json`)."
+      },
+      "signed_delta": {
+        "caught": 22,
+        "reconciled": 178,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.89,
+        "vouched_rate": 0.89,
+        "example": "F1 moved +17.4 points."
+      },
+      "signed_delta_cited": {
+        "caught": 22,
+        "reconciled": 178,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.89,
+        "vouched_rate": 0.89,
+        "example": "F1 moved +17.4 points (`experiments/project_timeline.json`)."
+      },
+      "percent_whole": {
+        "caught": 126,
+        "reconciled": 74,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.37,
+        "vouched_rate": 0.37,
+        "example": "Accuracy reached 94%."
+      },
+      "percent_whole_cited": {
+        "caught": 126,
+        "reconciled": 74,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.37,
+        "vouched_rate": 0.37,
+        "example": "Accuracy reached 94% (`experiments/project_timeline.json`)."
+      },
+      "percent_one_decimal": {
+        "caught": 200,
+        "reconciled": 0,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.0,
+        "vouched_rate": 0.0,
+        "example": "Accuracy reached 59.3%."
+      },
+      "percent_one_decimal_cited": {
+        "caught": 200,
+        "reconciled": 0,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.0,
+        "vouched_rate": 0.0,
+        "example": "Accuracy reached 59.3% (`experiments/project_timeline.json`)."
+      },
+      "n_of_m": {
+        "caught": 0,
+        "reconciled": 0,
+        "uncheckable": 0,
+        "not_extracted": 200,
+        "n": 200,
+        "gate_exits_zero_rate": 1.0,
+        "vouched_rate": 0.0,
+        "example": "148 of 283 runs passed."
+      },
+      "n_of_m_cited": {
+        "caught": 0,
+        "reconciled": 0,
+        "uncheckable": 0,
+        "not_extracted": 200,
+        "n": 200,
+        "gate_exits_zero_rate": 1.0,
+        "vouched_rate": 0.0,
+        "example": "148 of 283 runs passed (`experiments/project_timeline.json`)."
+      }
+    }
+  },
+  "after": {
+    "gate_rev": "working tree",
+    "shapes": {
+      "integer_count": {
+        "caught": 0,
+        "reconciled": 28,
+        "uncheckable": 172,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 1.0,
+        "vouched_rate": 0.14,
+        "example": "We ran 145 tests."
+      },
+      "integer_count_cited": {
+        "caught": 191,
+        "reconciled": 9,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.045,
+        "vouched_rate": 0.045,
+        "example": "We ran 145 tests (`experiments/project_timeline.json`)."
+      },
+      "decimal": {
+        "caught": 176,
+        "reconciled": 24,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.12,
+        "vouched_rate": 0.12,
+        "example": "The score was 0.8745."
+      },
+      "decimal_cited": {
+        "caught": 200,
+        "reconciled": 0,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.0,
+        "vouched_rate": 0.0,
+        "example": "The score was 0.8745 (`experiments/project_timeline.json`)."
+      },
+      "signed_delta": {
+        "caught": 22,
+        "reconciled": 178,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.89,
+        "vouched_rate": 0.89,
+        "example": "F1 moved +17.4 points."
+      },
+      "signed_delta_cited": {
+        "caught": 199,
+        "reconciled": 1,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.005,
+        "vouched_rate": 0.005,
+        "example": "F1 moved +17.4 points (`experiments/project_timeline.json`)."
+      },
+      "percent_whole": {
+        "caught": 146,
+        "reconciled": 54,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.27,
+        "vouched_rate": 0.27,
+        "example": "Accuracy reached 94%."
+      },
+      "percent_whole_cited": {
+        "caught": 188,
+        "reconciled": 12,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.06,
+        "vouched_rate": 0.06,
+        "example": "Accuracy reached 94% (`experiments/project_timeline.json`)."
+      },
+      "percent_one_decimal": {
+        "caught": 200,
+        "reconciled": 0,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.0,
+        "vouched_rate": 0.0,
+        "example": "Accuracy reached 59.3%."
+      },
+      "percent_one_decimal_cited": {
+        "caught": 198,
+        "reconciled": 2,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.01,
+        "vouched_rate": 0.01,
+        "example": "Accuracy reached 59.3% (`experiments/project_timeline.json`)."
+      },
+      "n_of_m": {
+        "caught": 0,
+        "reconciled": 7,
+        "uncheckable": 193,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 1.0,
+        "vouched_rate": 0.035,
+        "example": "148 of 283 runs passed."
+      },
+      "n_of_m_cited": {
+        "caught": 200,
+        "reconciled": 0,
+        "uncheckable": 0,
+        "not_extracted": 0,
+        "n": 200,
+        "gate_exits_zero_rate": 0.0,
+        "vouched_rate": 0.0,
+        "example": "148 of 283 runs passed (`experiments/project_timeline.json`)."
+      }
+    }
+  }
+}

@@ -53,7 +53,7 @@ We contribute:
   (serialization, per-task LoRA TTT, constrained DFS decoding, augmentation
   voting), written from the team's public descriptions and never from their
   code (section 2), released under MIT.
-- **A test harness** of 767 offline tests that runs without a GPU, network
+- **A test harness** of 776 offline tests that runs without a GPU, network
   access, or model downloads, including an oracle test that verifies the
   tree search token-exactly against a cache-free reference implementation —
   a test that caught a KV-cache aliasing bug which would otherwise have
@@ -210,7 +210,7 @@ eight core modules (`augment`, `decode`, `lora`, `model`, `serialize`,
 `solve`, `tasks`, `vote`; `wc -l` at commit `e49bcb2`) — and is designed
 around one principle: every
 property the pipeline depends on is either enforced by construction or
-pinned by an offline test. The test suite (767 tests) runs on CPU with tiny in-test
+pinned by an offline test. The test suite (776 tests) runs on CPU with tiny in-test
 models — a few-layer Qwen2-architecture model and a hand-built 13-token
 tokenizer constructed inside the test — so correctness never depends on
 network access, model downloads, or GPU availability. Scale comes from

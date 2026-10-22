@@ -385,7 +385,7 @@ It is **not** blind, it fixes **no** bar in advance, and it is one corpus — it
 All three verdict scripts are dependency-free. To go past arithmetic to primary evidence,
 `python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json` re-scores every
 stored prediction against gold regenerated from the deterministic corpus generator —
-it checks the *predictions*, not the summaries. 767 offline tests, no downloads:
+it checks the *predictions*, not the summaries. 776 offline tests, no downloads:
 `python3 -m pytest tests/ -q`. The suite needs torch and the dev extras,
 as the CI job installs them (`pip install torch --index-url
 https://download.pytorch.org/whl/cpu`, then `pip install -e .[dev]`);

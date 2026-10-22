@@ -1,17 +1,17 @@
 {
   "what": "Every dated row in CORRECTIONS.md, counted. The page says self-correction is only evidence if it is countable; this is the count.",
-  "total_dated_corrections": 150,
-  "outward_facing": 103,
+  "total_dated_corrections": 151,
+  "outward_facing": 104,
   "outward_facing_note": "Rows whose text refers to an email, deck, one-pager, README, public page, headline or VERDICT row -- corrections that reached, or would have reached, someone outside this repository. A typo fixed in a private note is housekeeping; withdrawing a number already sent to a stranger is the part that costs something, and it is the only part worth citing. 'sent' and 'press' match as whole words only, since 2026-10-21; as substrings they had matched 'sentence', 'presentation' and 'suppress'.",
   "by_section": {
     "Claims withdrawn": 32,
     "Numbers corrected": 23,
-    "Overstatements corrected": 71,
+    "Overstatements corrected": 72,
     "Defects found in our own verification path": 24
   },
   "by_month": {
     "2026-08": 89,
-    "2026-10": 45,
+    "2026-10": 46,
     "2026-09": 16
   },
   "first": "2026-08-19",

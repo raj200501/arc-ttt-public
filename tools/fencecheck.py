@@ -1338,27 +1338,44 @@ class _Visitor(ast.NodeVisitor):
 
 
 def scan_source(source: str, path: str,
-                suppressed: list | None = None) -> list[dict]:
+                suppressed: list | None = None,
+                unanalysed: list | None = None) -> list[dict]:
     """Findings for one file. Empty list if the file is not in scope.
     Findings silenced by `# fencecheck: ignore` are appended to
-    `suppressed` when a list is passed, so they can be counted."""
+    `suppressed` when a list is passed, so they can be counted. A file
+    nested too deeply for the parser or the visitor (RecursionError) is
+    appended to `unanalysed` instead of crashing the whole scan."""
     try:
         tree = ast.parse(source)
     except (SyntaxError, ValueError):
         return []
+    except RecursionError:
+        if unanalysed is not None:
+            unanalysed.append(path)
+        return []
     visitor = _Visitor(source, path, tree)
-    visitor.visit(tree)
+    try:
+        visitor.visit(tree)
+    except RecursionError:
+        if unanalysed is not None:
+            unanalysed.append(path)
+        return []
     if suppressed is not None:
         suppressed.extend(visitor.suppressed)
     return visitor.sites
 
 
 def scan_path(root: pathlib.Path,
-              suppressed: list | None = None) -> tuple[list[dict], int]:
+              suppressed: list | None = None,
+              unanalysed: list | None = None) -> tuple[list[dict], int]:
     findings, files = [], 0
     paths = [root] if root.is_file() else sorted(root.rglob("*.py"))
     for path in paths:
-        if any(part in SKIP_DIRS for part in path.parts):
+        # Only directories BELOW the scan root are skipped: a repository
+        # that itself sits under a directory named build/ or venv/ used to
+        # scan zero files and exit 0.
+        below = path.relative_to(root).parts[:-1] if path != root else ()
+        if any(part in SKIP_DIRS for part in below):
             continue
         # When `root` IS the file, `relative_to` returns `.` and every
         # finding is reported against a path that names nothing. Scanning
@@ -1376,11 +1393,13 @@ def scan_path(root: pathlib.Path,
             if _is_test_path(pathlib.PurePath(shown)):
                 continue
         try:
-            source = path.read_text(encoding="utf-8", errors="replace")
+            # utf-8-sig: a byte-order mark otherwise makes ast.parse refuse a
+            # valid file, which was then counted as scanned and silently empty.
+            source = path.read_text(encoding="utf-8-sig", errors="replace")
         except OSError:
             continue
         files += 1
-        findings.extend(scan_source(source, str(shown), suppressed))
+        findings.extend(scan_source(source, str(shown), suppressed, unanalysed))
     return findings, files
 
 
@@ -1717,11 +1736,17 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "scan":
         suppressed: list[dict] = []
-        findings, files = scan_path(target, suppressed)
+        unanalysed: list[str] = []
+        findings, files = scan_path(target, suppressed, unanalysed)
+        if unanalysed:
+            print(f"fencecheck: {len(unanalysed)} file(s) nested too deeply to "
+                  "analyse were skipped, not cleared: " + ", ".join(unanalysed),
+                  file=sys.stderr)
         if args.json:
             print(json.dumps({"findings": findings,
                               "files_scanned": files,
-                              "suppressed": suppressed}, indent=2))
+                              "suppressed": suppressed,
+                              "unanalysed": unanalysed}, indent=2))
             return 1 if findings else 0
         if suppressed:
             # A suppression CI cannot count is a suppression nobody audits.

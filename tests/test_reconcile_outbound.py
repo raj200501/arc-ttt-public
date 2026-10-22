@@ -216,9 +216,14 @@ def test_deck_v2_reconciles_slide_by_slide(tmp_path: pathlib.Path) -> None:
     for needle, floor in DECK_V2_FLOORS.items():
         matches = [b for n, b in sections.items() if needle in n]
         assert len(matches) == 1, f"{needle} did not parse as one section"
-        assert matches[0]["claims_checked"] >= floor, (
-            f"{needle} offers {matches[0]['claims_checked']} checkable "
-            f"figures, under its floor of {floor}")
+        # Floors count figures READ: reconciled, unreconciled, or reported
+        # uncheckable. Since 2026-10-22 small counts the evidence cannot
+        # fail on are uncheckable, and Slide 5's census counts are all of
+        # that kind: the gate reads them and cannot vouch for them.
+        read = matches[0]["claims_checked"] + len(matches[0]["uncheckable"])
+        assert read >= floor, (
+            f"{needle} offers {read} figures the gate reads, "
+            f"under its floor of {floor}")
 
 
 @pytest.mark.skipif(not DECK_V2.exists(),

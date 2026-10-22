@@ -673,3 +673,42 @@ def test_the_tool_does_not_flag_its_own_tree():
     findings, files = fc.scan_path(REPO / "tools")
     assert files >= 3
     assert findings == [], findings
+
+
+def test_a_deeply_nested_file_is_reported_unanalysed_not_a_crash(tmp_path):
+    # A real installed file (sympy) crashed the whole scan with RecursionError
+    # and exit 1, which CI reads as "found". It must be skipped and named.
+    deep = "x = " + "+".join(["completion"] * 20000) + "\n"
+    (tmp_path / "deep.py").write_text(deep)
+    (tmp_path / "ok.py").write_text("y = 1\n")
+    unanalysed = []
+    findings, files = fc.scan_path(tmp_path, [], unanalysed)
+    assert findings == [] and files == 2 and unanalysed == ["deep.py"]
+
+
+def test_a_root_under_a_build_directory_is_still_scanned(tmp_path):
+    root = tmp_path / "build" / "repo"
+    root.mkdir(parents=True)
+    (root / "grade.py").write_text(
+        "import json\n"
+        "def grade(completion):\n"
+        "    try:\n"
+        "        return json.loads(completion)['a']\n"
+        "    except ValueError:\n"
+        "        return 0.0\n")
+    (root / "venv").mkdir()
+    (root / "venv" / "lib.py").write_text((root / "grade.py").read_text())
+    findings, files = fc.scan_path(root)
+    assert files == 1 and len(findings) == 1
+
+
+def test_a_byte_order_mark_does_not_hide_a_file(tmp_path):
+    body = ("import json\n"
+            "def grade(completion):\n"
+            "    try:\n"
+            "        return json.loads(completion)['a']\n"
+            "    except ValueError:\n"
+            "        return 0.0\n")
+    (tmp_path / "bom.py").write_bytes(b"\xef\xbb\xbf" + body.encode())
+    findings, files = fc.scan_path(tmp_path)
+    assert files == 1 and len(findings) == 1
