@@ -10,7 +10,7 @@ lane's own generality claims, are enumerated in
 ## Now
 
 - **Addendum Z (preregistered and anchored 2026-09-23T0219Z; running again
-  since 2026-10-21 20:25Z as restart 3, no arm banked; every interruption
+  since 2026-10-22 01:12Z as restart 4, no arm banked; every interruption
   is in `experiments/addendum_z_operator_log.jsonl`):**
   the +46.5 gate run again on this box with every prediction stored,
   under the Addendum B recipe unchanged and a protocol anchored before

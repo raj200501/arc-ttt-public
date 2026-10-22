@@ -137,6 +137,10 @@ so it drops into CI. See [`tools/README.md`](tools/README.md).
 dropped (`evals/elsuite/basic/json_match.py:80`), published as a dated
 amendment
 ([`experiments/fence_census_amendment_2026-08-25.json`](experiments/fence_census_amendment_2026-08-25.json)).
+The amendment's text credits "an outside reviewer" with the find. That
+reviewer was a simulated reviewer, an agent run against this repository
+by its operator, not an external human (`CORRECTIONS.md`, disclosure
+of 2026-09-01). So is every unnamed outside reviewer on this page.
 All 29 rejections are published with reasons in
 [`experiments/fence_census_hand.json`](experiments/fence_census_hand.json):
 most candidates turned out to be protocol frames, telemetry, HTTP
@@ -394,7 +398,7 @@ segment and no other.
 
 **What is left, and it is all that is left:** matching our quality with an unadapted open model takes a 3B, about 6x the parameters, which on the same CPU box costs about **$2.97 per 1,000 documents against our $0.5143 at the same batch size (batch 1)**. Matched batching — the first thing a technical reader should ask — **was then measured, and it took the claim away rather than strengthening it**: at batch 16 the preregistered quality tolerance breaks (|Q| = 0.0125 against 0.01, Addendum P reading (d)), so the arms are not quality-matched there and **no cost ratio is citable at matched batch**. The batch-1 figure above is the entire surviving cost statement. See `VERDICT.md` Addenda N, O and P, `experiments/fence_rescore.json`, and `experiments/waybill_matched_batch_2026-08-25.json`.
 
-`experiments/waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_2026-08-22.json` is the citable run — its demonstrations mirror our own arm's turn structure exactly and it needed no output repair. The packed-turn run beside it reaches the same numbers only after stripping a markdown fence from four outputs, a repair our own arms never got; without it that run scores 0.8667, *below* our adapted arm. Both are banked, and the difference is stated because an outside reviewer found it.
+`experiments/waybill_market_baseline_gemini-3.5-flash-lite_matchedturns_2026-08-22.json` is the citable run — its demonstrations mirror our own arm's turn structure exactly and it needed no output repair. The packed-turn run beside it reaches the same numbers only after stripping a markdown fence from four outputs, a repair our own arms never got; without it that run scores 0.8667, *below* our adapted arm. Both are banked, and the difference is stated because an outside reviewer (a simulated reviewer: an agent run against this repository by its operator, not an external human) found it.
 
 **And the corpus's own difficulty is now priced (Addendum H, preregistered, decided 2026-08-22).** Making the JSON key the document's own label — what real tenant schemas look like — while changing nothing else takes the delta from **+41.1 to +18.75** (40W/2L/18T, p=2.1e-10). The effect **survives** the strongest cheap control proposed against it, and **the arbitrary mapping was worth +22.3 F1, more than half of it.** Removing the distractor lines costs another +12.3. Read with the waybills (+9.97, +4.14 granting nothing) and CORD (negative), the series says the same thing each time: the more a corpus looks like a customer's, the smaller the effect. Expect the bottom of that range, not the top.
 

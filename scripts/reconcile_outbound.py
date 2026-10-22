@@ -270,6 +270,48 @@ def _check(body: str, exempt: dict[str, str] | None, haystack: str,
     return reconciled, missing
 
 
+# First-person claims of agent work. The fence lane (the tool, all three
+# census runs, the hand-adjudication of 35 sites, the rescoring) is
+# agent-authored, so "I read", "I measured" or "hand-checked" beside it
+# is a claim `git log` disproves. The figures in such a sentence all
+# reconcile; only the subject is false, which is why the figure check
+# above passed it twice (CORRECTIONS 2026-08-25 and 2026-10-22).
+FIRST_PERSON_WORK = re.compile(
+    r"\bI\s+(?:read|measured|hand-checked|hand-verified|found|adjudicated)\b"
+    r"|\b[Hh]and-checked\b|\b[Mm]y\s+benchmark\b")
+# "Attached to fence-lane work": the verb counts when its paragraph is
+# about that work. "hand-checked" and "my benchmark" count anywhere.
+FENCE_LANE = re.compile(
+    r"fence|census|candidate site|packages|scorer|benchmark|fencecheck"
+    r"|\bevals\b|json|0\.0000|0\.8958", re.IGNORECASE)
+ALWAYS = re.compile(r"\b[Hh]and-checked\b|\b[Mm]y\s+benchmark\b")
+# The disclosure section quotes the withdrawn claim on purpose.
+DISCLOSURE_HEADING = "## HOW THE WORK IS MADE"
+
+
+def first_person_work(text: str) -> list[dict]:
+    """Every first-person work verb beside fence-lane work, with context.
+
+    Paragraphs are blank-line separated; blockquote markers and hard
+    wraps are removed first, so "I\\n> measured" is still seen.
+    """
+    out: list[dict] = []
+    in_disclosure = False
+    for paragraph in re.split(r"\n\s*\n", text):
+        stripped = paragraph.lstrip()
+        if stripped.startswith("## "):
+            in_disclosure = stripped.startswith(DISCLOSURE_HEADING)
+        if in_disclosure:
+            continue
+        flat = _unwrap(paragraph)
+        for match in FIRST_PERSON_WORK.finditer(flat):
+            if ALWAYS.fullmatch(match.group(0)) or FENCE_LANE.search(flat):
+                start = max(0, match.start() - 60)
+                out.append({"phrase": match.group(0),
+                            "context": flat[start:match.end() + 60].strip()})
+    return out
+
+
 def _application_sections(text: str) -> dict[str, str]:
     """Every `###` block of the application, keyed by its question.
 
@@ -419,6 +461,11 @@ def main() -> int:
                 "unreconciled": missing,
             }
 
+    first_person: list[dict] = []
+    if APPLICATION.exists():
+        first_person = first_person_work(
+            APPLICATION.read_text(encoding="utf-8"))
+
     strategy_docs: dict[str, dict] = {}
     for doc in OUTBOUND_STRATEGY_DOCS:
         if not doc.exists():
@@ -453,6 +500,7 @@ def main() -> int:
         "application_answers": application,
         "application_source": str(APPLICATION.relative_to(REPO))
                               if APPLICATION.exists() else None,
+        "application_first_person_work": first_person,
         "outbound_strategy_exempt": OUTBOUND_STRATEGY_EXEMPT,
         "outbound_strategy_documents": strategy_docs,
         "unreconciled_total": unreconciled_total,
@@ -482,7 +530,16 @@ def main() -> int:
                   f"[{status:12s}] {name}")
             for item in block["unreconciled"]:
                 print(f"    {item['kind']:11s} {item['token']}")
+    if first_person:
+        print(f"\n-- {APPLICATION.name}: first-person claims of agent work")
+        for item in first_person:
+            print(f"    {item['phrase']!r}: ...{item['context']}...")
     print(f"\nbanked: {args.out}")
+    if first_person:
+        print(f"\n{len(first_person)} first-person claim(s) of agent work in "
+              "the application. The fence lane is agent-authored; name the "
+              "agent organisation as the subject.", file=sys.stderr)
+        return 1
     if unreconciled_total:
         print(f"\n{unreconciled_total} figure(s) in the outbound copy trace to "
               "no artifact. Either bank the artifact or cut the number.",
