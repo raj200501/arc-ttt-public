@@ -96,10 +96,38 @@ lane's own generality claims, are enumerated in
   called it untested; it is tested now (Addendum Y): Phi-3's cells are
   not guaranteed to reproduce across a change of reduction order, so the
   divergence needs no cross-arm explanation. The Phi-3 instability has since been
-  measured directly (Addendum Y). Still next: a successor addendum,
-  under its own preregistration, that reads the four banked-and-unread
-  families — drafted and audited 2026-09-23 as Addendum AA
-  (`docs/research/ADDENDUM_AA_PROTOCOL.md`, not yet frozen, nothing read).
+  measured directly (Addendum Y). A successor addendum under its own
+  preregistration, Addendum AA, then read the four families X left
+  unread. It was frozen 2026-10-22 and banked once the same day. It was
+  not read blind: during X's run the operator computed X1 for these
+  families by hand; the record is silent on X2 and X3, so all three count
+  as possibly seen, and the decision to read and every choice in AA came
+  after that. A 2026-10-21 access read only the S/T comparator cells'
+  `per_document_seconds` field, which no reading takes as input. A first
+  attempt computed the readings in memory and was withheld unseen
+  (erratum 6). X's CONSTRAINT REMOVES bar (invalid outputs at least
+  halved, no regressions) was met in 0 of 5 families, Phi-3 unread and
+  counted against, no headline: inert in three; HELPS on Falcon3-1B, 14
+  to 8 invalid, one short of halving, where arm C is V's banked cell, so
+  the constraint and that cell not reproducing across processes cannot
+  be separated. With neither arm constrained and no generation defaults
+  in play, on these 50 documents, our loop reproduces `generate` token
+  for token on Qwen2.5-0.5B and Granite-3.1-2B (0 of 50 diverge under the
+  2026-09-23 EOS erratum, and 0 as first coded) and only its decoded text
+  (WEAKER TEST) on SmolLM2-1.7B and Falcon3-1B. It does not cover
+  `generate` with Qwen's shipped defaults: greedy `generate` with its
+  config untouched differs from the arm we matched on 47 of 50
+  documents. X3: V's attribution holds; all 5 of Qwen's regressions are
+  explained by the generation defaults rather than by the constraint.
+  Limits: fifty CORD receipts per family, one corpus, schema-only
+  prompts, CPU, float32, four small checkpoints, one box; the reused arms
+  (V's constrained cells and the S/T `generate` comparators) were gated
+  on five documents per family, on the families that reuse them; prompt
+  identity could be verified on only 3 of the 9 compared pairs. X2 has
+  no bfloat16 family: Phi-3, the one bfloat16 family and the one X
+  predicted would diverge, is unread. Everything X's protocol says it
+  cannot show also applies (`VERDICT.md`; AA protocol, "What this cannot
+  show").
 - **Addendum T (banked 2026-09-05):** the fence tax on four other
   families. Falcon3-1B replicates (92/100 schema-only fenced, 0/80
   k-shot); SmolLM2, Granite-3.1 and Phi-3 fence 0/100. Reading (c) in
@@ -164,7 +192,7 @@ lane's own generality claims, are enumerated in
   (kaggle_v10_scored_2026-08-15.json).
 - Micro-tier own-weights run prestaged in kaggle/micro/ (~4h T4 on the
   free interactive quota — now the primary compute vehicle).
-- Test suite: 776 green, pinned by tests/test_doc_counts_agree.py
+- Test suite: 1041 green, pinned by tests/test_doc_counts_agree.py
   (83/83 was the 08-11 count; the intermediate figures in this line were
   stale five times before the count was pinned — see CORRECTIONS.md).
 

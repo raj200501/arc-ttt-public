@@ -1,17 +1,17 @@
 {
   "what": "Every dated row in CORRECTIONS.md, counted. The page says self-correction is only evidence if it is countable; this is the count.",
-  "total_dated_corrections": 151,
-  "outward_facing": 104,
-  "outward_facing_note": "Rows whose text refers to an email, deck, one-pager, README, public page, headline or VERDICT row -- corrections that reached, or would have reached, someone outside this repository. A typo fixed in a private note is housekeeping; withdrawing a number already sent to a stranger is the part that costs something, and it is the only part worth citing. 'sent' and 'press' match as whole words only, since 2026-10-21; as substrings they had matched 'sentence', 'presentation' and 'suppress'.",
+  "total_dated_corrections": 169,
+  "outward_facing": 116,
+  "outward_facing_note": "Rows whose text refers to an email, deck, one-pager, README, public page, headline or VERDICT row -- corrections that reached, or would have reached, someone outside this repository. A typo fixed in a private note is housekeeping; withdrawing a number already sent to a stranger is the part that costs something, and it is the only part worth citing. Every marker matches as a whole word only: no letter may touch either end, though a plural 's' or an adverb 'ly' may follow, and 'email' and 'headline' keep their verb endings. 'sent' and 'press' became whole words on 2026-10-21, after matching 'sentence', 'presentation' and 'suppress'; the rest on 2026-10-22, after 'public' matched 'publication'.",
   "by_section": {
     "Claims withdrawn": 32,
-    "Numbers corrected": 23,
-    "Overstatements corrected": 72,
-    "Defects found in our own verification path": 24
+    "Numbers corrected": 25,
+    "Overstatements corrected": 82,
+    "Defects found in our own verification path": 30
   },
   "by_month": {
     "2026-08": 89,
-    "2026-10": 46,
+    "2026-10": 64,
     "2026-09": 16
   },
   "first": "2026-08-19",

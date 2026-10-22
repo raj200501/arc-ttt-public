@@ -40,14 +40,18 @@ from __future__ import annotations
 
 import argparse
 import ast
+import collections
+import functools
 import io
 import json
 import pathlib
 import re
 import sys
 import tokenize
+import warnings
 
 __version__ = "0.1.0"
+_PYTHON = ".".join(str(part) for part in sys.version_info[:3])
 
 PARSE_CALLS = {"loads", "decode", "literal_eval", "safe_load", "load"}
 PARSE_MODULES = {"json", "ast", "yaml", "json5", "demjson3", "dirtyjson",
@@ -91,6 +95,109 @@ _MODEL_CALLS = frozenset({
     "generate", "agenerate", "complete", "acomplete", "completion",
     "completions", "acompletion", "chat", "achat", "invoke", "ainvoke",
     "predict", "apredict", "llm", "judge"})
+# A model-call word decides only where the name puts it: at the end
+# (`generate`, `batch_generate`, `openai_generate`, `ask_judge`,
+# `send_to_judge`), or first, after modifiers, as the verb of what follows
+# (`generate_content`, `invoke_model`, `chat_json`, `judge_pair`,
+# `call_judge_with_retry`). In the middle of another name it is not a
+# model call (`store.get_chat_state`), and neither is a verb whose object
+# is not a model's text (`tokenize.generate_tokens`, `generate_report`,
+# `complete_task`, `chat_template`), nor a name ending in a model word
+# that only fetches or builds one (`get_judge`, `build_judge`). Review
+# 2026-10-22: the stdlib's pydoc.py was reported for reading a file; a
+# closed list of the words that may follow the verb then missed
+# `generate_json`, `invoke_model` and `consult_judge` (check of 9b41c99).
+_CALL_MODIFIERS = frozenset({
+    "a", "async", "batch", "safe", "do", "run", "call", "ask", "query",
+    "model", "llm", "stream", "sync", "raw", "single", "multi"})
+_NOT_MODEL_OBJECTS = frozenset({
+    "token", "tokens", "tokenizer", "report", "reports", "id", "ids", "uuid",
+    "uid", "key", "keys", "name", "names", "path", "paths", "file", "files",
+    "filename", "url", "urls", "state", "states", "history", "session",
+    "sessions", "template", "templates", "hash", "seed", "random", "unique",
+    "password", "salt", "slug", "signature", "html", "xml", "csv", "table",
+    "tables", "plot", "chart", "figure", "docs", "readme", "mask", "masks",
+    "cache", "task", "tasks", "step", "steps", "job", "jobs", "callback",
+    "callbacks", "hook", "hooks", "handler", "handlers", "command",
+    "commands", "cmd", "event", "events", "embedding", "embeddings", "mock",
+    "fake", "dummy", "stub", "test", "tests", "ui", "view", "page", "widget",
+    "button", "icon", "room"})
+_NOT_CALL_VERBS = frozenset({
+    "get", "load", "save", "build", "make", "init", "initialize", "create",
+    "setup", "set", "configure", "register", "format", "render", "print",
+    "log", "reset", "close", "validate", "is", "has", "to", "new", "default",
+    "read", "write", "dump", "update", "delete", "remove", "mock", "fake",
+    "dummy", "stub", "test", "check", "select", "choose", "pick", "wrap",
+    "patch", "use", "list", "show", "mark", "on", "wait", "should", "can",
+    "start", "end", "stop", "clear", "cancel", "open"})
+
+
+def _model_call(words: list) -> str | None:
+    """The model-call word of a call name split into words, or None."""
+    hits = [i for i, w in enumerate(words) if w in _MODEL_CALLS]
+    if not hits:
+        return None
+    last = len(words) - 1
+    if hits[-1] == last and (last == 0 or words[0] not in _NOT_CALL_VERBS):
+        return words[last]
+    lead = 0
+    while lead < last and words[lead] in _CALL_MODIFIERS \
+            and words[lead] not in _MODEL_CALLS:
+        lead += 1
+    if words[lead] in _MODEL_CALLS and not (
+            set(words[lead + 1:]) & _NOT_OBJECTS):
+        return words[lead]
+    return None
+
+
+# The provider SDKs' own calls: Anthropic `client.messages.create`, OpenAI
+# `client.responses.create` and `client.chat.completions.create`.
+_SDK_CALLS = frozenset({"create", "acreate", "stream", "parse"})
+_SDK_RESOURCES = frozenset({"messages", "responses", "completions"})
+
+
+def _calls_model(call) -> bool:
+    """Is this call a model call? By its verb (`llm.invoke`), by a strong
+    word in its own name or in an attribute on the way to it
+    (`client.chat.completions.create`), or as a provider SDK's call. The
+    variable it is called on does not count: `completion.strip()` is not
+    a model call (check of 9b41c99)."""
+    func = call.func
+    if isinstance(func, ast.Name):
+        words = _words(func.id)
+        return bool(_model_call(words) or set(words) & _STRONG)
+    if not isinstance(func, ast.Attribute):
+        return False
+    if _model_call(_words(func.attr)):
+        return True
+    if func.attr in _TEXT_METHODS:
+        # `resp.choices[0].message.content.strip()` works on the text a
+        # model call returned; it is not one
+        return False
+    attrs, cur = [], func
+    while True:
+        if isinstance(cur, ast.Attribute):
+            attrs.append(cur.attr)
+            cur = cur.value
+        elif isinstance(cur, ast.Call):
+            cur = cur.func
+        elif isinstance(cur, ast.Subscript):
+            cur = cur.value
+        else:
+            break
+    if {w for a in attrs for w in _words(a)} & _STRONG:
+        return True
+    return func.attr in _SDK_CALLS and len(attrs) > 1 \
+        and attrs[1] in _SDK_RESOURCES
+
+
+def _origin(dotted: str) -> list:
+    """The words of an imported module's name that say the text is not a
+    model's (`subprocess`, `requests`): a by-name import can clear a
+    trace, never add evidence to it."""
+    return [w for w in _words(dotted) if w in _CARRIER or w in _NOT_MODEL]
+
+
 # Words that usually name model output in evaluation code, but also name
 # HTTP responses, process output and protocol messages. Enough on their
 # own only in a module that is about models or evaluation, and never
@@ -116,11 +223,16 @@ _NOT_MODEL = _GOLD | frozenset({
     "tracer", "trace", "traces", "attributes", "attribute", "attrs",
     "metadata", "header", "headers", "error", "errors", "err", "exc",
     "exception", "exceptions", "traceback", "tool", "tools"})
+# What follows a model-call verb when the call does not return model text.
+_NOT_OBJECTS = _NOT_MODEL_OBJECTS | _NOT_MODEL
 # Carriers: the text came out of a file, a socket, an HTTP exchange, a
 # process, a stream frame, a database row, a cache, or a parse that
 # already succeeded. A carrier ends the trace as "not model output"
-# unless a key or attribute between the carrier and the parse names model
-# output (`resp.json()["choices"][0]["message"]["content"]`).
+# unless something between the carrier and the parse names model output:
+# a strong word in a name, key or attribute (`completion = fh.read()`, a
+# file of saved completions; `resp.json()["choices"][0]["message"]
+# ["content"]`). A weak word in a key or attribute there is weak evidence;
+# a weak word in a variable's name never overrides a carrier.
 _CARRIER = frozenset({
     "file", "files", "path", "paths", "fp", "fh", "fd", "f", "handle",
     "read", "readline", "readlines", "stdin", "stdout", "stderr",
@@ -168,16 +280,30 @@ _HTTP_ATTRS = frozenset({"status_code", "raise_for_status", "iter_lines",
 _FENCE_WORDS = frozenset({"fence", "fences", "fenced", "unfence",
                           "markdown", "codeblock", "backtick", "backticks",
                           "__span__"})
-# A module is "about models or evaluation" if it says so somewhere. Only
-# consulted for _WEAK evidence.
-_CONTEXT = _STRONG | frozenset({
-    "response", "responses", "answer", "answers", "output", "outputs",
-    "reply", "replies", "predict", "score",
+# A module is "about models or evaluation" if it says so somewhere: in its
+# code, its comments or its own file name. Only consulted for _WEAK
+# evidence. No _WEAK word is on this list: `response`, `output`, `answer`
+# and `reply` used to certify their own module, so a plain
+# `to_dict(output)` utility was flagged on the strength of the one word
+# being judged (review 2026-10-22).
+# The provider and model-library names are a fixed list: a module that
+# names another provider and nothing else on this list does not count.
+_PROVIDERS = frozenset({
+    "openai", "anthropic", "langchain", "transformers", "vllm", "ollama",
+    "gemini", "claude", "gpt", "mistral", "mistralai", "cohere", "groq",
+    "litellm", "bedrock", "vertexai", "deepseek", "huggingface", "llama",
+    "qwen"})
+_CONTEXT = _STRONG | _PROVIDERS | frozenset({
+    "predict", "score",
     "scores", "scorer", "scorers", "scoring", "grade", "grader", "graders",
     "grading", "judge", "judges", "metric", "metrics", "eval", "evals",
     "evaluate", "evaluation", "evaluator", "benchmark", "benchmarks",
-    "accuracy", "openai", "anthropic", "langchain", "transformers", "vllm",
-    "ollama", "gemini", "claude", "gpt"})
+    "accuracy"})
+assert not _CONTEXT & _WEAK
+# The scanner's own parse call and Python's `eval(` builtin say nothing
+# about the module: `ast.literal_eval(output)` used to certify its own
+# module as about evaluation (check of 9b41c99).
+_NOT_CONTEXT = re.compile(r"\bliteral_eval\b|(?<![\w.])eval(?=\s*\()")
 
 # Kept for callers that imported it: the old module-level vocabulary.
 MODEL_WORDS = re.compile(
@@ -186,10 +312,14 @@ MODEL_WORDS = re.compile(
     r"|llms?|predict|predictions?|answers?|assistant|choices)(?![A-Za-z0-9])",
     re.I)
 
-# Fence handling by name: a helper, a repair library, or a variable called
-# for the fence. Three backticks on their own are judged separately, below.
+# Fence handling in a function's TEXT: the old test, kept for callers of
+# `_fence_aware(text)`. The scan itself reads the syntax tree instead
+# (`_Flow.handles_fence`): a `# TODO: strip markdown fences` comment, a
+# `render_markdown=False` parameter, `st.markdown(...)` and a prompt that
+# asks for ```json all used to exempt the whole function (review and
+# check, 2026-10-22).
 FENCE_MARKERS = re.compile(
-    r"removeprefix\s*\(|extract_json|"
+    r"extract_json|"
     r"json_repair|dirtyjson|demjson|json5|repair_json|"
     r"_extract_(?:json|code)|strip_(?:code_)?(?:fence|block|markdown)|"
     r"fence(?!check)|markdown|code_?block",      # not this tool's own marker
@@ -211,16 +341,76 @@ _TAG_STRIP = re.compile(
     r"(?:removeprefix|strip|replace|startswith)\s*\(\s*[\"']json", re.I)
 
 
-def _fence_aware(text: str, node=None) -> bool:
-    """Does this code handle a fence around a JSON answer?"""
+_LINE_DROP_METHODS = frozenset({"split", "rsplit", "partition", "rpartition",
+                                "index", "rindex", "find", "rfind"})
+_STRIP_METHODS = frozenset({"strip", "lstrip", "rstrip"})
+_TAG_METHODS = _STRIP_METHODS | {"removeprefix", "replace", "startswith"}
+# String operations whose first argument is what they remove, split on or
+# look for: a fence literal there is code that handles the fence.
+_CUT_METHODS = _LINE_DROP_METHODS | _STRIP_METHODS | {
+    "replace", "removeprefix", "removesuffix"}
+# The `re` functions and compiled-pattern methods that take a pattern.
+_RE_FUNCS = frozenset({"sub", "subn", "search", "match", "fullmatch",
+                       "findall", "finditer", "split", "compile"})
+_PATTERN_METHODS = frozenset({"sub", "subn", "search", "match", "fullmatch",
+                              "findall", "finditer"})
+# Tests that only DETECT a fence: they count when the branch they guard
+# then cuts the text (`if text.startswith("```json"): text = text[7:]`),
+# not when it scores the reply (`... startswith("```json"): return 0`).
+_TEST_METHODS = frozenset({"startswith", "endswith"})
+_CUT_CALLS = _CUT_METHODS | _RE_FUNCS | {"splitlines"}
+
+# A function or module NAMED for fence handling: a noun for the fence and
+# a verb that removes or reads it, or the json target. `markdown` is also
+# what renderers are named for (`render_markdown`, `parse_markdown`), so
+# with it only a verb that removes something, or `json`, counts.
+_FENCE_NOUNS = frozenset({"fence", "fences", "fenced", "unfence",
+                          "unfenced", "codeblock", "codeblocks", "backtick",
+                          "backticks"})
+_REMOVE_VERBS = frozenset({
+    "strip", "stripped", "stripper", "remove", "removed", "rm", "extract",
+    "extracted", "extractor", "clean", "cleaned", "cleaner", "unwrap",
+    "unwrapped", "trim", "trimmed", "drop", "sanitize", "sanitise", "peel",
+    "cut", "without", "delete", "discard", "unfence"})
+_FENCE_VERBS = _REMOVE_VERBS | {"parse", "parsed", "parser", "find",
+                                "search", "match", "handle", "loads", "from"}
+_REPAIR_LIBS = re.compile(r"json_?repair|dirtyjson|demjson|json5", re.I)
+
+
+@functools.lru_cache(maxsize=8192)
+def _fence_helper(name: str) -> bool:
+    """Does this NAME say it handles a fence? `strip_markdown_fences`,
+    `remove_code_blocks`, `extract_json`, `parse_json_markdown` and
+    `json_repair.repair_json` do. `to_markdown`, `st.markdown`,
+    `write_markdown_report`, `markdown_rows` and `apply_defence` do not:
+    each used to exempt the function that called it (check of 9b41c99)."""
+    if _REPAIR_LIBS.search(name):
+        return True
+    words = _words(name)
+    found = set(words)
+    pairs = set(zip(words, words[1:]))
+    if pairs & {("extract", "json"), ("repair", "json"), ("extract", "code")}:
+        return True
+    noun = found & _FENCE_NOUNS or any(
+        a == "code" and b in ("block", "blocks")
+        for a, b in zip(words, words[1:]))
+    if noun and (found & _FENCE_VERBS or "json" in found):
+        return True
+    return "markdown" in found and bool(found & _REMOVE_VERBS
+                                        or "json" in found)
+
+
+def _fence_aware(text: str, node=None, aliases=None) -> bool:
+    """Does this code handle a fence around a JSON answer?
+
+    With `node`, read off the syntax tree (`_Flow.handles_fence`): the
+    calls it makes and what its string operations remove or match.
+    Without `node`, the old text test."""
+    if node is not None:
+        return _Flow(node, aliases or {}, []).handles_fence(node)
     if FENCE_MARKERS.search(text):
         return True
-    if node is not None:
-        literals = [n.value for n in ast.walk(node)
-                    if isinstance(n, ast.Constant) and isinstance(n.value, str)
-                    and _FENCE_LITERAL.search(n.value)]
-    else:
-        literals = [text] if _FENCE_LITERAL.search(text) else []
+    literals = [text] if _FENCE_LITERAL.search(text) else []
     if not literals:
         return bool(_BACKTICK_STRIP.search(text) and _TAG_STRIP.search(text))
     return bool(any(_ANY_TAG.search(s) for s in literals)
@@ -477,6 +667,7 @@ def _only_passes(body: list) -> bool:
 # ------------------------------------------------- provenance
 _MODEL, _WEAK_ONLY, _OTHER, _HANDLED, _UNKNOWN = (
     "model", "weak", "other", "fence-handled", "unknown")
+_CUT = "__cut__"            # marks a trace stopped by the depth or step cap
 _RANK = {_HANDLED: 4, _MODEL: 3, _WEAK_ONLY: 2, _OTHER: 1, _UNKNOWN: 0}
 _TRANSPARENT_FUNCS = {"str", "repr", "bytes", "StringIO", "BytesIO", "dedent",
                       "reversed", "sorted", "list", "tuple", "iter", "next",
@@ -486,6 +677,13 @@ _TRANSPARENT_METHODS = {"strip", "lstrip", "rstrip", "decode", "encode",
                         "removesuffix", "group", "groups", "pop",
                         "splitlines", "split", "copy", "format"}
 _KEY_METHODS = {"get", "pop", "setdefault"}
+# Methods of text (and of the dicts and matches it is read out of).
+_TEXT_METHODS = frozenset(_TRANSPARENT_METHODS | _KEY_METHODS | {
+    "join", "startswith", "endswith", "find", "rfind", "index", "rindex",
+    "partition", "rpartition", "rsplit", "count", "title", "casefold",
+    "isdigit", "isalpha", "isspace", "translate", "expandtabs", "zfill",
+    "ljust", "rjust", "center", "items", "keys", "values", "span", "start",
+    "end"})
 _REGEX_FUNCS = {"search", "match", "fullmatch", "findall", "finditer", "sub"}
 
 
@@ -513,11 +711,14 @@ def _classify_spine(tokens: list) -> tuple[str, str]:
     weak = weak_nav = None
     content_read = False
     for words, kind in tokens:
-        strong = _STRONG | _MODEL_CALLS if kind == "call" else _STRONG
+        if kind == "call":
+            verb = _model_call(words)
+            if verb:
+                return _MODEL, verb
         head = len(words) - 1
         for i in range(head, -1, -1):               # head word first
             w = words[i]
-            if w in strong:
+            if w in _STRONG:
                 return _MODEL, w
             if i > 0 and w in _STRONG_PAIRS.get(words[i - 1], ()):
                 return _MODEL, f"{words[i - 1]}_{w}"
@@ -547,6 +748,10 @@ def _classify_spine(tokens: list) -> tuple[str, str]:
                     weak_nav = weak_nav or w
         if kind == "nav" and {"content", "text"} & set(words):
             content_read = True
+    if weak and any(words == [_CUT] for words, _kind in tokens):
+        # The trace was cut short before it reached where the text came
+        # from; a carrier there would have cleared this weak name.
+        return _UNKNOWN, ""
     return (_WEAK_ONLY, weak) if weak else (_UNKNOWN, "")
 
 
@@ -574,6 +779,15 @@ class _Flow:
 
     MAX_SPINES = 48
     MAX_DEPTH = 10
+    # The work bound. The spine cap above bounds what is EMITTED; a path
+    # that dead-ends (a helper with no return, a tuple element that does
+    # not match) emits nothing, so a 60-line file of re-assigned names
+    # took 24 s (review 2026-10-22). Every step of one trace counts here;
+    # when the budget is spent the trace stops where it is, the same way
+    # the depth cap does. A trace cut short by either cap never reached
+    # where its text came from, so a weak name on it is not evidence: a
+    # carrier further on could have cleared it (check of 9b41c99).
+    MAX_STEPS = 600
 
     def __init__(self, tree: ast.AST, aliases: dict, lines: list) -> None:
         self.aliases = aliases
@@ -583,11 +797,23 @@ class _Flow:
         self.functions: dict = {}
         self.calls: dict = {}
         self.bases: dict = {}
+        self.methods: dict = {}
+        self.classdefs: dict = {}
+        self.imported: dict = {}
         self.via: dict = {}
         self.site = None
         self.http: set = set()
         self.returns: dict = {}
         self._scope: dict = {}
+        self._fence: dict = {}
+        self._mros: dict = {}
+        self._children: dict = {}
+        self._subs: dict = {}
+        self._resolved: dict = {}
+        self._target_cache: dict = {}
+        self._position: dict = {}
+        self._steps = 0
+        self._site_up: set = set()
         scopes = (ast.FunctionDef, ast.AsyncFunctionDef, ast.Module)
         for node in ast.walk(tree):            # parents before children
             inner = node if isinstance(node, scopes) else \
@@ -595,6 +821,11 @@ class _Flow:
             for child in ast.iter_child_nodes(node):
                 self.parent[child] = node
                 self._scope[child] = inner
+            for field in ("body", "orelse", "finalbody"):
+                block = getattr(node, field, None)
+                if isinstance(block, list):
+                    for i, stmt in enumerate(block):
+                        self._position[id(stmt)] = (block, i)
         self._index(tree)
 
     # ---- indexing
@@ -625,6 +856,10 @@ class _Flow:
             elif isinstance(node, ast.ClassDef):
                 self.bases[node.name] = [_dotted(b).rsplit(".", 1)[-1]
                                          for b in node.bases]
+                self.methods[node.name] = {
+                    s.name for s in node.body
+                    if isinstance(s, (ast.FunctionDef, ast.AsyncFunctionDef))}
+                self.classdefs.setdefault(node.name, []).append(node)
             elif isinstance(node, ast.Assign):
                 for target in node.targets:
                     self._bind_target(scope, target, "value", node.value)
@@ -642,6 +877,14 @@ class _Flow:
                                   node.context_expr)
             elif isinstance(node, ast.ExceptHandler) and node.name:
                 self._bind(scope, node.name, ("except", None, ()))
+            elif isinstance(node, ast.Import):
+                for a in node.names:
+                    bound = a.asname or a.name.split(".")[0]
+                    self.imported[bound] = a.name if a.asname else bound
+            elif isinstance(node, ast.ImportFrom):
+                base = "." * (node.level or 0) + (node.module or "")
+                for a in node.names:
+                    self.imported[a.asname or a.name] = f"{base}.{a.name}"
             elif isinstance(node, ast.Return) and node.value is not None:
                 self.returns.setdefault(scope, []).append(node.value)
             elif isinstance(node, ast.Call):
@@ -656,20 +899,376 @@ class _Flow:
 
     def call_sites(self, func) -> list:
         """In-module calls of `func`: `f(...)` for a function, and
-        `self.f(...)` / `cls.f(...)` / `Class.f(...)` for a method, so an
-        unrelated `client.parse(...)` is not mistaken for a caller."""
+        `Class.f(...)` for a method, or `self.f(...)` / `cls.f(...)` from
+        a class that can dispatch to it, so an unrelated
+        `client.parse(...)`, or another class's own `self.parse(...)`, is
+        not mistaken for a caller."""
         owner = self.parent.get(func)
         out = []
         for call in self.calls.get(func.name, []):
             f = call.func
             if isinstance(owner, ast.ClassDef):
-                if isinstance(f, ast.Attribute) and isinstance(
-                        f.value, ast.Name) and f.value.id in (
-                        "self", "cls", owner.name):
+                if not (isinstance(f, ast.Attribute)
+                        and isinstance(f.value, ast.Name)):
+                    continue
+                if f.value.id == owner.name or (
+                        f.value.id in ("self", "cls")
+                        and self._dispatches_to(call, owner, func.name)):
                     out.append(call)
             elif isinstance(f, ast.Name):
                 out.append(call)
         return out
+
+    def _enclosing_class(self, node):
+        cur = self.parent.get(node)
+        while cur is not None and not isinstance(cur, ast.ClassDef):
+            cur = self.parent.get(cur)
+        return cur
+
+    def _mro(self, name: str) -> list:
+        """The method resolution order over the classes defined in this
+        module: depth first, left to right, each class kept at its last
+        place, which is C3's order for a hierarchy without conflicts. A
+        base defined elsewhere is a leaf. Worked out without recursion and
+        once per class, so a long chain of classes costs no stack."""
+        todo = [name]
+        while todo:
+            cur = todo[-1]
+            if cur in self._mros:
+                todo.pop()
+                continue
+            bases = self.bases.get(cur, ())
+            pending = [b for b in bases if b not in self._mros and b not in todo]
+            if pending:
+                todo.extend(pending)
+                continue
+            todo.pop()
+            seq = [c for b in bases for c in self._mros.get(b, [b])]
+            seen, rest = {cur}, []
+            for c in reversed(seq):
+                if c not in seen:
+                    seen.add(c)
+                    rest.append(c)
+            self._mros[cur] = [cur] + rest[::-1]
+        return self._mros[name]
+
+    def _resolve(self, cls_name: str, method: str):
+        """The class whose `method` an instance of `cls_name` runs. Up a
+        chain of single bases the answer is the base's, so a long chain
+        is walked once, not once per class in it."""
+        path, seen, cur, found = [], set(), cls_name, None
+        while True:
+            key = (cur, method)
+            if key in self._resolved:
+                found = self._resolved[key]
+                break
+            path.append(key)
+            seen.add(cur)
+            if method in self.methods.get(cur, ()):
+                found = cur
+                break
+            bases = self.bases.get(cur, ())
+            if len(bases) > 1:
+                found = next((c for c in self._mro(cur)
+                              if method in self.methods.get(c, ())), None)
+                break
+            if not bases or bases[0] in seen:
+                break
+            cur = bases[0]
+        for key in path:
+            self._resolved[key] = found
+        return found
+
+    def _subclasses(self, cls_name: str) -> list:
+        """`cls_name` and every class in the module that inherits from it:
+        what `self` can be inside one of its methods."""
+        if cls_name not in self._subs:
+            if not self._children:
+                for c, bases in self.bases.items():
+                    for b in bases:
+                        self._children.setdefault(b, []).append(c)
+            out, seen, todo = [], {cls_name}, [cls_name]
+            while todo:
+                c = todo.pop()
+                out.append(c)
+                for k in self._children.get(c, ()):
+                    if k not in seen:
+                        seen.add(k)
+                        todo.append(k)
+            self._subs[cls_name] = out
+        return self._subs[cls_name]
+
+    def _targets(self, cls, name) -> list:
+        """The classes whose `name` method `self.name(...)` inside `cls`
+        can run: for `cls` and each subclass of it in the module, the
+        class its method resolution order finds `name` in. A class that
+        shares `cls`'s name elsewhere in the file is not `cls`."""
+        key = (id(cls), name)
+        if key in self._target_cache:
+            return self._target_cache[key]
+        found = {self._resolve(d, name) for d in self._subclasses(cls.name)}
+        found.discard(None)
+        out = [cls] if cls.name in found else []
+        for c in sorted(found - {cls.name}):
+            out += self.classdefs.get(c, [])
+        self._target_cache[key] = out
+        return out
+
+    def _dispatches_to(self, call, owner, name) -> bool:
+        """Can `self.name(...)` at `call` run `owner`'s method? Only if
+        some class `self` can be there, the calling class or a subclass of
+        it, resolves `name` to `owner`'s method: the calling class or a
+        subclass that does not override it, a base class calling it as a
+        template, a sibling mixin in a class that combines both. Not when
+        a class in between overrides it (check of 9b41c99)."""
+        cls = self._enclosing_class(call)
+        if cls is None:
+            return False
+        if self._resolve(cls.name, name) == owner.name and (
+                owner is cls or owner.name != cls.name):
+            return True             # what `self` runs in `cls` itself
+        return any(t is owner for t in self._targets(cls, name))
+
+    def methods_named(self, scope, name) -> list:
+        """The methods `self.name(...)` called from `scope` can run."""
+        cls = self._enclosing_class(scope) if scope is not None else None
+        if cls is None:
+            return []
+        targets = self._targets(cls, name)
+        return [f for f in self.functions.get(name, [])
+                if any(self.parent.get(f) is t for t in targets)]
+
+    def fence_aware(self, node) -> bool:
+        """`handles_fence` of a function or the module, worked out once per
+        node: re-walking the enclosing function for every parse and every
+        caller made a 4,000-line module take minutes (review 2026-10-22)."""
+        key = id(node)
+        if key not in self._fence:
+            self._fence[key] = self.handles_fence(node)
+        return self._fence[key]
+
+    def cleans(self, helper) -> bool:
+        """A helper whose return is fence-handled text: it handles a fence
+        and calls no model. A wrapper that calls a model and only mentions
+        ```json in its prompt is not a cleaning helper."""
+        key = ("cleans", id(helper))
+        if key not in self._fence:
+            self._fence[key] = self.fence_aware(helper) and not any(
+                _calls_model(n) for n in ast.walk(helper)
+                if isinstance(n, ast.Call))
+        return self._fence[key]
+
+    # ---- fence handling, read off the code
+    def handles_fence(self, node) -> bool:
+        """Does this code handle a fence around a JSON answer? It does
+        when it calls, or passes along, a function named for fence
+        handling or a repair library (`strip_markdown_fences(text)`,
+        `.apply(extract_json)`), or when a string or regex operation
+        removes, splits on or matches a fence (`.replace("```json", "")`,
+        `re.search(r"```json(.*?)```", text)`), or a test for a fence
+        guards a branch that cuts the text. The fence literal has to name
+        the `json` tag (or match any tag), or the code has to drop the
+        opening line or the tag as well.
+
+        A fence that is only mentioned handles nothing: in a comment, a
+        docstring, a prompt, a log line, an error message or a returned
+        reason, in a parameter's name, or in a call that renders markdown
+        (`st.markdown`, `df.to_markdown()`). Each of these used to exempt
+        the whole function (review and check, 2026-10-22)."""
+        literals: list = []
+        line_drop = backtick_strip = tag_strip = False
+        for n in ast.walk(node):
+            if isinstance(n, ast.Call):
+                if self._fence_call(n):
+                    return True
+                method = n.func.attr if isinstance(n.func, ast.Attribute) \
+                    else None
+                first = n.args[0] if n.args else None
+                lit = first.value if isinstance(first, ast.Constant) and \
+                    isinstance(first.value, str) else None
+                if method == "splitlines" or (
+                        method in _LINE_DROP_METHODS and lit is not None
+                        and lit.startswith("\n")):
+                    line_drop = True
+                if method in _STRIP_METHODS and lit is not None \
+                        and lit.startswith("`"):
+                    backtick_strip = True
+                if method in _TAG_METHODS and lit is not None \
+                        and lit.lower().startswith("json"):
+                    tag_strip = True
+                kind, pattern = self._pattern_of(n)
+                found = [] if pattern is None else \
+                    self._fence_literals(pattern, n)
+                if found:
+                    # In a condition even a cut or a regex only tests (`if
+                    # re.search(r"```json", text): return 0`); what counts
+                    # there is what the branch does.
+                    guarded = self._cuts_after(n)
+                    if guarded or (guarded is None and kind == "cut"):
+                        literals += found
+            elif isinstance(n, ast.Compare) and any(
+                    isinstance(op, (ast.In, ast.NotIn, ast.Eq, ast.NotEq))
+                    for op in n.ops):
+                found = []
+                for side in [n.left] + n.comparators:
+                    if isinstance(side, (ast.Constant, ast.Name)):
+                        found += self._fence_literals(side, n)
+                if found and self._cuts_after(n):
+                    literals += found
+            elif isinstance(n, (ast.Name, ast.Attribute)) and isinstance(
+                    n.ctx, ast.Load) and self._fence_reference(n):
+                return True
+        if not literals:
+            return backtick_strip and tag_strip
+        return any(_ANY_TAG.search(s) for s in literals) or line_drop \
+            or tag_strip
+
+    def _fence_call(self, call) -> bool:
+        """A call of a function named for fence handling, or of a repair
+        library: `strip_fences(t)`, `fences.strip(t)` after `from . import
+        fences`, `json_repair.loads(t)`, `fix(t)` after `from json_repair
+        import repair_json as fix`, `FENCE_RE.sub("", t)`. Only the name
+        of what is called counts, never the variable it is called on:
+        `markdown_rows.append(...)` is not fence handling."""
+        func = call.func
+        if isinstance(func, ast.Name):
+            return _fence_helper(func.id) or any(
+                _fence_helper(table[func.id])
+                for table in (self.aliases, self.imported)
+                if func.id in table)
+        if not isinstance(func, ast.Attribute):
+            return False
+        if _fence_helper(func.attr):
+            return True
+        recv = func.value
+        if isinstance(recv, ast.Name) and recv.id in self.imported and \
+                _fence_helper(f"{self.imported[recv.id]}.{func.attr}"):
+            return True
+        if func.attr in _PATTERN_METHODS and not self._is_re(recv):
+            # a compiled pattern named for the fence: `FENCE.sub("", t)`
+            name = recv.attr if isinstance(recv, ast.Attribute) else (
+                recv.id if isinstance(recv, ast.Name) else "")
+            words = _words(name)
+            return bool(set(words) & (_FENCE_NOUNS | {"markdown"}) or any(
+                a == "code" and b in ("block", "blocks")
+                for a, b in zip(words, words[1:])))
+        return False
+
+    def _fence_reference(self, node) -> bool:
+        """A fence helper passed along rather than called:
+        `.apply(extract_json)`, `postprocess=strip_code_fence`,
+        `[self._strip_fence, str.strip]`. The name must be a function
+        defined in this file or an imported one, so a variable or a
+        parameter named for a fence does not count."""
+        if isinstance(node, ast.Name):
+            return _fence_helper(node.id) and (
+                node.id in self.functions or node.id in self.imported
+                or node.id in self.aliases)
+        root = node.value
+        while isinstance(root, ast.Attribute):
+            root = root.value
+        return _fence_helper(node.attr) and (
+            node.attr in self.functions
+            or (isinstance(root, ast.Name) and root.id in self.imported))
+
+    def _pattern_of(self, call):
+        """("cut", expr) when the call removes, splits on, finds or
+        matches `expr`; ("test", expr) when it only tests for it; else
+        (None, None)."""
+        func = call.func
+        first = call.args[0] if call.args else next(
+            (kw.value for kw in call.keywords if kw.arg == "pattern"), None)
+        if first is None:
+            return None, None
+        if isinstance(func, ast.Attribute):
+            if self._is_re(func.value) and func.attr in _RE_FUNCS:
+                return "cut", first
+            if func.attr in _CUT_METHODS:
+                return "cut", first
+            if func.attr in _TEST_METHODS:
+                return "test", first
+            if func.attr in _PATTERN_METHODS:
+                # `PATTERN.search(t)`, PATTERN = re.compile(r"```json...")
+                pattern = self._regex_receiver_pattern(
+                    func.value, self._scope_of(call))
+                if pattern is not None:
+                    return "cut", ast.Constant(value=pattern)
+            return None, None
+        if isinstance(func, ast.Name):
+            module, _, name = self.aliases.get(func.id, "").rpartition(".")
+            if module in ("re", "regex") and name in _RE_FUNCS:
+                return "cut", first
+        return None, None
+
+    def _is_re(self, expr) -> bool:
+        """`re` or `regex`, under any name it was imported as."""
+        return isinstance(expr, ast.Name) and self.aliases.get(
+            expr.id, expr.id) in ("re", "regex")
+
+    def _fence_literals(self, expr, at, depth: int = 0) -> list:
+        """The fence literals in `expr`, and in what a name in it was
+        assigned or loops over, three names deep (`FENCE = "```json"`;
+        `for prefix in ("```json", "```")`; `for f in FENCES`, FENCES a
+        module list of them or of such names)."""
+        out = []
+        for n in ast.walk(expr):
+            if isinstance(n, ast.Constant) and isinstance(n.value, str):
+                if _FENCE_LITERAL.search(n.value):
+                    out.append(n.value)
+            elif isinstance(n, ast.Name) and depth < 3:
+                owner, bindings = self._lookup(n.id, self._scope_of(at))
+                key = ("literals", id(owner), n.id, depth)
+                if key not in self._fence:     # once per name, not per use
+                    self._fence[key] = []      # a name bound to itself
+                    self._fence[key] = [
+                        lit for kind, bound, _ in bindings
+                        if kind in ("value", "iter") and bound is not None
+                        for lit in self._fence_literals(bound, bound,
+                                                        depth + 1)]
+                out += self._fence[key]
+        return out
+
+    def _cuts_after(self, test):
+        """For `test` inside the condition of a branch: does the branch
+        then cut or rewrite the text it tested (a slice, a strip or split,
+        a regex, a fence helper, a new value made from the tested name)?
+        `if text.startswith("```json"): text = text[7:]` handles the
+        fence; `... startswith("```json"): return 0` scores it. None when
+        `test` is not in a condition."""
+        child, cur = test, self.parent.get(test)
+        while cur is not None and not isinstance(cur, ast.stmt):
+            if isinstance(cur, ast.IfExp) and child is cur.test:
+                return self._cuts([cur.body], set())
+            if isinstance(cur, ast.comprehension) and any(
+                    child is cond for cond in cur.ifs):
+                return True      # `[l for l in lines if not l.startswith("```")]`
+            child, cur = cur, self.parent.get(cur)
+        if isinstance(cur, (ast.If, ast.While)) and child is cur.test:
+            tested = {n.id for n in ast.walk(cur.test)
+                      if isinstance(n, ast.Name)}
+            return self._cuts(cur.body, tested)
+        return None
+
+    def _cuts(self, body: list, tested: set) -> bool:
+        for stmt in body:
+            for n in ast.walk(stmt):
+                if isinstance(n, ast.Subscript) and isinstance(
+                        n.slice, ast.Slice):
+                    return True
+                if isinstance(n, ast.Call) and (
+                        self._fence_call(n) or (
+                            isinstance(n.func, ast.Attribute)
+                            and n.func.attr in _CUT_CALLS)):
+                    return True
+                if isinstance(n, (ast.Assign, ast.AugAssign, ast.AnnAssign)) \
+                        and n.value is not None and any(
+                            isinstance(x, ast.Name) and x.id in tested
+                            for x in ast.walk(n.value)) and any(
+                            isinstance(x, ast.Name) and x.id in tested
+                            for x in (n.targets if isinstance(n, ast.Assign)
+                                      else [n.target])):
+                    return True   # `text = clean(text)`, not `text = "BAD"`
+        return False
 
     def text_of(self, node) -> str:
         if isinstance(node, ast.Module) or node is None:
@@ -692,27 +1291,24 @@ class _Flow:
 
     def following(self, stmt) -> list:
         """Statements after `stmt` in the block that holds it."""
-        parent = self.parent.get(stmt)
-        for field in ("body", "orelse", "finalbody"):
-            block = getattr(parent, field, None)
-            if isinstance(block, list):
-                for i, s in enumerate(block):
-                    if s is stmt:
-                        return block[i + 1:]
-        return []
+        block, i = self._position.get(id(stmt), ((), -1))
+        return list(block[i + 1:]) if i >= 0 else []
 
-    def following_up(self, stmt) -> list:
+    def following_up(self, stmt):
         """Everything that runs after `stmt` falls through: the rest of its
-        block, then the rest of each enclosing block, up to the function."""
-        out, cur = [], stmt
+        block, then the rest of each enclosing block, up to the function.
+        Yielded lazily, so a reader that stops early does not pay for the
+        rest of the function."""
+        cur = stmt
         while cur is not None and not isinstance(
                 cur, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Module,
                       ast.ClassDef, ast.Lambda)):
-            out.extend(self.following(cur))
+            block, i = self._position.get(id(cur), ((), -1))
+            for j in range(i + 1, len(block)) if i >= 0 else ():
+                yield block[j]
             cur = self.parent.get(cur)
             if isinstance(cur, ast.ExceptHandler):
                 cur = self.parent.get(cur)
-        return out
 
     # ---- tracing
     def classify(self, expr, at, via=None) -> tuple[str, str]:
@@ -720,6 +1316,14 @@ class _Flow:
         call that matters (the one that turns the failure into a zero)."""
         self.via = via or {}
         self.site = at
+        self._steps = 0
+        # The site and everything above it: a binding whose value holds
+        # the site is the site's own result (`x = json.loads(x)`).
+        self._site_up = set()
+        cur = at
+        while cur is not None:
+            self._site_up.add(id(cur))
+            cur = self.parent.get(cur)
         spines: list = []
         self._walk(expr, self._scope_of(at), [], spines, 0, set())
         best, evidence = _UNKNOWN, ""
@@ -734,8 +1338,11 @@ class _Flow:
             spines.append(tokens)
 
     def _walk(self, expr, scope, tokens, spines, depth, seen) -> None:
-        if depth > self.MAX_DEPTH or len(spines) >= self.MAX_SPINES:
-            self._emit(spines, tokens)
+        self._steps += 1
+        if len(spines) >= self.MAX_SPINES:
+            return
+        if depth > self.MAX_DEPTH or self._steps > self.MAX_STEPS:
+            self._emit(spines, tokens + [([_CUT], "leaf")])
             return
         nxt = depth + 1
         if isinstance(expr, ast.Name):
@@ -803,13 +1410,17 @@ class _Flow:
             return
         key = (id(owner), name)
         if not bindings or key in seen:
-            self._emit(spines, tokens + [(words, "leaf")])
+            leaf = [(words, "leaf")]
+            origin = _origin(self.aliases.get(name, "")) if not bindings else []
+            if origin:
+                # `import subprocess as sp`: what the alias names, too
+                leaf.append((origin, "leaf"))
+            self._emit(spines, tokens + leaf)
             return
         seen = seen | {key}
         traced = tokens + [(words, "name")]
         for kind, expr, path in bindings:
-            if kind in ("value", "iter") and self.site is not None and any(
-                    n is self.site for n in ast.walk(expr)):
+            if kind in ("value", "iter") and id(expr) in self._site_up:
                 continue        # `x = json.loads(x)`: the site's own result
             if kind == "except":
                 self._emit(spines, traced + [(["exception"], "leaf")])
@@ -887,7 +1498,7 @@ class _Flow:
             if arg is None:
                 continue
             if not isinstance(caller, ast.Module) and \
-                    _fence_aware(self.text_of(caller), caller):
+                    self.fence_aware(caller):
                 self._emit(spines, traced + [(["fence"], "call")])
                 continue
             self._walk(arg, caller, traced, spines, depth, seen)
@@ -964,6 +1575,11 @@ class _Flow:
             elif method not in _TRANSPARENT_METHODS and \
                     method not in _KEY_METHODS:
                 tokens = tokens + [(_words(method), "call")]
+            if isinstance(recv, ast.Name) and recv.id in ("self", "cls") \
+                    and any(self.cleans(m)
+                            for m in self.methods_named(scope, method)):
+                # `self._clean(text)` strips the fence in a method
+                return self._emit(spines, tokens + [(["fence"], "call")])
             return self._walk(recv, scope, tokens, spines, depth, seen)
         if isinstance(func, ast.Name):
             fname = func.id
@@ -982,7 +1598,11 @@ class _Flow:
                 return self._emit(spines, tokens)
             words = _words(fname)
             tokens = tokens + [(words, "call")]
-            if set(words) & (_STRONG | _MODEL_CALLS):
+            module = _origin(self.aliases.get(fname, "").rpartition(".")[0])
+            if module:
+                # `from subprocess import check_output`: where it came from
+                tokens = tokens + [(module, "leaf")]
+            if set(words) & _STRONG or _model_call(words):
                 # `completion_fn(prompt)`: the call made the text; what it
                 # was given is the prompt, not the answer.
                 return self._emit(spines, tokens)
@@ -990,6 +1610,11 @@ class _Flow:
                        if ("ret", id(f)) not in seen]
             if helpers:
                 for helper in helpers:
+                    if self.cleans(helper):
+                        # `clean(text)`, a neutral name for a helper that
+                        # strips the fence: what it returns is handled.
+                        self._emit(spines, tokens + [(["fence"], "call")])
+                        continue
                     for value in self.returns.get(helper, [])[:6]:
                         if elt is not None:
                             if not isinstance(value, (ast.Tuple, ast.List)) \
@@ -1005,11 +1630,20 @@ class _Flow:
         self._emit(spines, tokens)
 
 
+_BLOCKS = frozenset({"body", "orelse", "finalbody", "handlers", "cases"})
+
+
 def _imports(tree) -> dict:
     """alias -> what it names: `import json as js` gives js -> json;
-    `from json import loads` gives loads -> json.loads."""
+    `from json import loads` gives loads -> json.loads. An import is a
+    statement, so only statement lists are walked, not every expression."""
     aliases: dict = {}
-    for node in ast.walk(tree):
+    queue = collections.deque([tree])          # the order ast.walk keeps
+    while queue:
+        node = queue.popleft()
+        for field in node._fields:
+            if field in _BLOCKS:
+                queue.extend(getattr(node, field, None) or ())
         if isinstance(node, ast.Import):
             for a in node.names:
                 if a.asname:
@@ -1043,19 +1677,97 @@ def _parse_call_name(node: ast.Call, aliases: dict) -> str | None:
     return None
 
 
-_RETRY_WORDS = re.compile(
-    r"pars|extract|repair|search|findall|match|load|decode", re.I)
+# A call that reads the raw text again: another parser, an extraction, a
+# regex. Matched word by word, so `upload_...` is not a `load` and
+# `report_mismatch` is not a `match`; a call that records or counts the
+# failure is not a reader, whatever else its name says
+# (`log_parse_failure`, `stats.count_parse_errors`; check of 9b41c99).
+_REREAD = re.compile(
+    r"pars|extract|repair|search|findall|finditer|fullmatch|match|load"
+    r"|decode")
+_NOT_REREAD = frozenset({
+    "fail", "fails", "failed", "failure", "failures", "error", "errors",
+    "err", "log", "logs", "logger", "logging", "record", "records", "save",
+    "count", "counts", "counter", "mark", "report", "upload", "store",
+    "write", "dump", "unparseable", "unparsable", "invalid", "warn",
+    "warning", "track", "emit", "notify", "raise", "stat", "stats",
+    "metric", "metrics", "print"})
+
+
+def _rereads(call) -> bool:
+    words = _words(_dotted(call.func))
+    return any(_REREAD.match(w) for w in words) and not (
+        set(words) & _NOT_REREAD)
+
+
+def _polarity(test, names) -> bool | None:
+    """True when `test` holds if a sentinel in `names` still holds its
+    failure value (`x is None`, `not x`, `x == {}`), False when it holds
+    if the parse succeeded (`x is not None`, `x`), None when it does not
+    say."""
+    if isinstance(test, ast.UnaryOp) and isinstance(test.op, ast.Not):
+        inner = _polarity(test.operand, names)
+        return None if inner is None else not inner
+    if isinstance(test, ast.Name):
+        return False if test.id in names else None
+    if isinstance(test, ast.Compare) and len(test.ops) == 1 and \
+            isinstance(test.left, ast.Name) and test.left.id in names and \
+            _falsy(test.comparators[0]):
+        op = test.ops[0]
+        if isinstance(op, (ast.Is, ast.Eq)):
+            return True
+        if isinstance(op, (ast.IsNot, ast.NotEq)):
+            return False
+        return None
+    if isinstance(test, ast.BoolOp):
+        parts = [_polarity(v, names) for v in test.values]
+        if isinstance(test.op, ast.Or) and True in parts:
+            return True
+        if isinstance(test.op, ast.And) and False in parts:
+            return False
+    return None
 _LOG_CALL = re.compile(
     r"(^|\.)(print|log|debug|info|warning|warn|error|exception|critical)$"
     r"|logger|logging", re.I)
 
 
+_IDENT = re.compile(r"[A-Za-z0-9_]+")
+# Every parse call this scanner recognises names one of these, at the call
+# or in the import that aliases it. A file with none of them holds no site;
+# it is still parsed, so a file Python cannot parse is still named.
+_PARSE_TOKEN = re.compile(
+    r"(?<![A-Za-z0-9_])(?:" + "|".join(sorted(PARSE_CALLS | PARSE_METHODS))
+    + r")(?![A-Za-z0-9_])")
+
+
+def _about_models(source: str, path: str) -> bool:
+    """Is this module about models or evaluation? Weak evidence counts
+    only if so. A context word in the source or in the file's own name
+    (`metrics.py`), or a strong compound name (`model_output`,
+    `output_text`) says yes; a weak word (`output`, `response`) cannot
+    vouch for itself, and a path under caching, tracing, transport or
+    configuration code says no."""
+    place = pathlib.PurePath(path)
+    if set(_words(str(place))) & _NON_EVAL_PATH:
+        return False
+    if (set(_words(_NOT_CONTEXT.sub(" ", source)))
+            | set(_words(place.stem))) & _CONTEXT:
+        return True
+    for ident in set(_IDENT.findall(source)):
+        words = _words(ident)
+        if any(b in _STRONG_PAIRS.get(a, ()) for a, b in zip(words, words[1:])):
+            return True
+    return False
+
+
 # ---------------------------------------------------------------- scan
 class _Visitor(ast.NodeVisitor):
-    def __init__(self, source: str, path: str, tree: ast.AST) -> None:
+    def __init__(self, source: str, path: str, tree: ast.AST,
+                 place: str | None = None) -> None:
         self.lines = source.split("\n")
         self.source = source
         self.path = path
+        self.place = place or path
         self.tree = tree
         self.sites: list[dict] = []
         self.suppressed: list[dict] = []
@@ -1063,12 +1775,18 @@ class _Visitor(ast.NodeVisitor):
         self._tries: list[list[ast.Try]] = [[]]
         self._funcs: list[ast.AST] = []
         self.aliases = _imports(tree)
-        words = set(_words(source))
-        place = set(_words(path))
-        self.context = (bool(words & _CONTEXT) or any(
-            words & seconds for first, seconds in _STRONG_PAIRS.items()
-            if first in words)) and not place & _NON_EVAL_PATH
+        self._context = None
         self._flow = None
+        self._assigns: dict = {}
+        self._after: dict = {}
+
+    @property
+    def context(self) -> bool:
+        """Is this module about models or evaluation? Worked out only when
+        weak evidence needs it."""
+        if self._context is None:
+            self._context = _about_models(self.source, self.place)
+        return self._context
 
     @property
     def flow(self) -> _Flow:
@@ -1130,34 +1848,129 @@ class _Visitor(ast.NodeVisitor):
                 root.value if not isinstance(root, ast.Call) else None)
         root = root.id if isinstance(root, ast.Name) else None
         targets = set()
-        for stmt in try_node.body:
-            for node in ast.walk(stmt):
-                if isinstance(node, ast.Assign) and node.value is call:
-                    names = {ast.unparse(t) for t in node.targets}
-                    if arg_text in names:
-                        return True          # `x = json.loads(x)` keeps x
-                    targets |= names
+        parent = self.flow.parent.get(call)
+        if isinstance(parent, ast.Assign) and parent.value is call:
+            names = {ast.unparse(t) for t in parent.targets}
+            if arg_text in names:
+                return True              # `x = json.loads(x)` keeps x
+            targets |= names
         # A default set before the try survives the failure:
         # `ans_list = [ans_str]` then `try: ans_list = literal_eval(...)`.
         func = self.flow._scope_of(try_node)
         if targets and not isinstance(func, ast.Module):
-            for node in ast.walk(func):
-                if isinstance(node, ast.Assign) and \
-                        node.lineno < try_node.lineno and \
-                        {ast.unparse(t) for t in node.targets} & targets \
-                        and not _zero_value(node.value):
-                    return True
-        for stmt in self.flow.following_up(try_node):
-            for node in ast.walk(stmt):
-                if isinstance(node, ast.Call) and (
-                        self._parse_call(node)
-                        or _RETRY_WORDS.search(_dotted(node.func))):
-                    return True
-                if isinstance(node, ast.Return) and node.value is not None \
-                        and arg is not None and self._uses(node.value, arg):
-                    return True
-            if root and self._keeps_using(stmt, root):
+            table = self._assignments(func)
+            if any(line < try_node.lineno and not zero
+                   for t in targets for line, zero in table.get(t, ())):
                 return True
+        for stmt in self.flow.following_up(try_node):
+            retry, returns, names = self._summary(stmt)
+            if retry:
+                return True
+            if arg is not None and any(self._uses(r, arg) for r in returns):
+                return True
+            if root and root in names:
+                return True
+        return False
+
+    def _assignments(self, func) -> dict:
+        """Target text -> [(line, assigns a zero)] for one function, built
+        once: walking the whole function again for every parse in it was
+        quadratic (review 2026-10-22)."""
+        key = id(func)
+        if key not in self._assigns:
+            table: dict = {}
+            for node in ast.walk(func):
+                if isinstance(node, ast.Assign):
+                    zero = _zero_value(node.value)
+                    for t in node.targets:
+                        table.setdefault(ast.unparse(t), []).append(
+                            (node.lineno, zero))
+            self._assigns[key] = table
+        return self._assigns[key]
+
+    def _summary(self, stmt):
+        """(calls another parser or an extraction, its return values, the
+        names it reads outside log calls), built once per statement; the
+        `if` statements in it and the names it assigns are kept beside."""
+        key = id(stmt)
+        if key not in self._after:
+            nodes = list(ast.walk(stmt))
+            retry, returns, logged, tests = False, [], set(), []
+            for node in nodes:
+                if isinstance(node, ast.Call):
+                    dotted = _dotted(node.func)
+                    if self._parse_call(node) or _rereads(node):
+                        retry = True
+                    if _LOG_CALL.search(dotted):
+                        logged |= {id(n) for n in ast.walk(node)}
+                elif isinstance(node, ast.Return) and node.value is not None:
+                    returns.append(node.value)
+                elif isinstance(node, ast.If):
+                    tests.append(({n.id for n in ast.walk(node.test)
+                                   if isinstance(n, ast.Name)}, node))
+            names = {n.id for n in nodes if isinstance(n, ast.Name)
+                     and isinstance(n.ctx, ast.Load) and id(n) not in logged}
+            stored = {n.id for n in nodes if isinstance(n, ast.Name)
+                      and isinstance(n.ctx, ast.Store)}
+            self._after[key] = (retry, returns, names, tests, stored)
+        return self._after[key][:3]
+
+    def _recovers(self, handler, call, try_node) -> bool:
+        """`except ValueError: data = None`, then `if data is None:` parses
+        the raw text another way, returns it, or keeps it. The None is a
+        marker the code recovers from, not a score; `except: pass` with
+        the same recovery was already a fallback (review 2026-10-22).
+
+        Only the branch that runs on the failure counts (`if data is
+        None:` or the `else` of `if data is not None:`), only a call that
+        reads the text again (not `log_parse_failure(completion)`), and
+        only a value that is not itself a zero (not `data = {"score": 0,
+        "raw": completion}`): each of these used to count (check of
+        9b41c99). The search stops where the marker is overwritten."""
+        names = set()
+        for stmt in handler.body:
+            if isinstance(stmt, (ast.Assign, ast.AnnAssign)) and \
+                    stmt.value is not None and _zero_value(stmt.value):
+                targets = stmt.targets if isinstance(stmt, ast.Assign) \
+                    else [stmt.target]
+                if not all(isinstance(t, ast.Name) for t in targets):
+                    return False
+                names |= {t.id for t in targets}
+            elif not (isinstance(stmt, ast.Pass) or (
+                    isinstance(stmt, ast.Expr)
+                    and isinstance(stmt.value, (ast.Call, ast.Constant)))):
+                return False
+        arg = call.args[0] if call.args else None
+        if not names or arg is None:
+            return False
+        root = self._root_name(arg)
+        for stmt in self.flow.following_up(try_node):
+            self._summary(stmt)
+            _, _, _, tests, stored = self._after[id(stmt)]
+            for tested, branch in tests:
+                if not tested & names:
+                    continue
+                polarity = _polarity(branch.test, names)
+                failure = branch.body if polarity is True else (
+                    branch.orelse if polarity is False else [])
+                for n in (n for s in failure for n in ast.walk(s)):
+                    if isinstance(n, ast.Call) and root and (
+                            self._parse_call(n) or _rereads(n)) and any(
+                            isinstance(m, ast.Name) and m.id == root
+                            for a in n.args for m in ast.walk(a)):
+                        return True
+                    value = n.value if isinstance(
+                        n, (ast.Return, ast.Assign, ast.AnnAssign)) else None
+                    if value is None or not self._uses(value, arg) or \
+                            _zero_value(value):
+                        continue
+                    if isinstance(n, ast.Return) or any(
+                            isinstance(t, ast.Name) and t.id in names
+                            for t in (n.targets if isinstance(n, ast.Assign)
+                                      else [n.target])):
+                        return True
+            if stored & names:
+                return False
         return False
 
     @staticmethod
@@ -1180,8 +1993,7 @@ class _Visitor(ast.NodeVisitor):
             return False
         for stmt in handler.body:
             for node in ast.walk(stmt):
-                if isinstance(node, ast.Call) and _RETRY_WORDS.search(
-                        _dotted(node.func)) and any(
+                if isinstance(node, ast.Call) and _rereads(node) and any(
                         isinstance(n, ast.Name) and n.id == root
                         for a in node.args for n in ast.walk(a)):
                     return True
@@ -1279,18 +2091,18 @@ class _Visitor(ast.NodeVisitor):
         marks = self.marker_lines
         if not marks:
             return False
-        lines = set(range(node.lineno, (node.end_lineno or node.lineno) + 1))
-        lines |= set(extra_lines)
+        spans = [(node.lineno, node.end_lineno or node.lineno)]
+        spans += [(line, line) for line in extra_lines]
         if func is not None:
-            lines |= set(range(func.lineno, (func.end_lineno or func.lineno)
-                               + 1))
-        return bool(lines & marks)
+            spans.append((func.lineno, func.end_lineno or func.lineno))
+        return any(lo <= mark <= hi for lo, hi in spans for mark in marks)
 
     def _consider(self, node: ast.Call, name: str) -> None:
         # A fence handled anywhere around the parse: this function, or a
         # function that encloses a nested helper.
-        if any(_fence_aware(self._segment(f), f) for f in self._funcs) \
-                or (not self._funcs and _fence_aware(self.source, self.tree)):
+        flow = self.flow
+        if any(flow.fence_aware(f) for f in self._funcs) \
+                or (not self._funcs and flow.fence_aware(self.tree)):
             return
         if _argument_is_a_file_read(node, self._segment(node)):
             return
@@ -1309,6 +2121,8 @@ class _Visitor(ast.NodeVisitor):
             return
         if _only_passes(handler.body) and self._falls_back(node, where):
             return
+        if self._recovers(handler, node, where):
+            return
         if self._gold_target(node):
             return
         kind, evidence = self.flow.classify(arg, node)
@@ -1321,8 +2135,7 @@ class _Visitor(ast.NodeVisitor):
         flow = self.flow
         for call in flow.call_sites(func):
             caller = flow._scope_of(call)
-            text = flow.text_of(caller)
-            if _fence_aware(text, caller):
+            if flow.fence_aware(caller):
                 continue
             tries = flow.tries_at(call)
             handler, where = _handling(tries, pending, flow.bases)
@@ -1330,6 +2143,8 @@ class _Visitor(ast.NodeVisitor):
                     self._retries(handler):
                 continue
             if _only_passes(handler.body) and self._falls_back(call, where):
+                continue
+            if self._recovers(handler, call, where):
                 continue
             kind, evidence = flow.classify(arg, node, via={id(func): call})
             if self._flags(kind):
@@ -1339,24 +2154,44 @@ class _Visitor(ast.NodeVisitor):
 
 def scan_source(source: str, path: str,
                 suppressed: list | None = None,
-                unanalysed: list | None = None) -> list[dict]:
+                unanalysed: list | None = None,
+                unparsed: list | None = None,
+                place: str | None = None) -> list[dict]:
     """Findings for one file. Empty list if the file is not in scope.
     Findings silenced by `# fencecheck: ignore` are appended to
     `suppressed` when a list is passed, so they can be counted. A file
     nested too deeply for the parser or the visitor (RecursionError) is
-    appended to `unanalysed` instead of crashing the whole scan."""
+    appended to `unanalysed` instead of crashing the whole scan. A file
+    the running Python cannot parse (a syntax error, Python 2, syntax
+    newer than this interpreter, a null byte) is appended to `unparsed`
+    as {"file", "error"}: it was not analysed, so it is not cleared.
+    `place` is the path whose directory and file names say what the
+    module is about (default: `path`)."""
     try:
-        tree = ast.parse(source)
-    except (SyntaxError, ValueError):
+        with warnings.catch_warnings():
+            # Python 3.12+ warns about escapes such as "\d" while parsing,
+            # on stderr and without the file's name, in among the list of
+            # files not analysed (check of 9b41c99). It is not this
+            # scanner's business.
+            warnings.simplefilter("ignore")
+            tree = ast.parse(source, filename=path)
+    except (SyntaxError, ValueError) as error:
+        if unparsed is not None:
+            line = getattr(error, "lineno", None)
+            message = getattr(error, "msg", None) or str(error)
+            unparsed.append({"file": path, "error": f"{type(error).__name__}: "
+                             f"{message}" + (f" (line {line})" if line else "")})
         return []
-    except RecursionError:
+    except (RecursionError, MemoryError):
         if unanalysed is not None:
             unanalysed.append(path)
         return []
-    visitor = _Visitor(source, path, tree)
+    if not _PARSE_TOKEN.search(source):
+        return []           # no parse call can be written without one
+    visitor = _Visitor(source, path, tree, place)
     try:
         visitor.visit(tree)
-    except RecursionError:
+    except (RecursionError, MemoryError):
         if unanalysed is not None:
             unanalysed.append(path)
         return []
@@ -1365,11 +2200,36 @@ def scan_source(source: str, path: str,
     return visitor.sites
 
 
+def _read_source(path: pathlib.Path) -> str:
+    """The file's text, decoded the way Python decodes it: a byte-order
+    mark or a PEP 263 coding cookie (`# -*- coding: latin-1 -*-`) is
+    honoured. Reading every file as UTF-8 made a valid latin-1 module
+    unparseable, and it was then counted as scanned and empty."""
+    data = path.read_bytes()
+    try:
+        encoding, _ = tokenize.detect_encoding(io.BytesIO(data).readline)
+        text = data.decode(encoding, errors="replace")
+    except (SyntaxError, LookupError, ValueError):
+        # A cookie naming a codec that cannot decode with errors=replace
+        # (`idna`, `undefined`) raises UnicodeError, a ValueError: one
+        # such file used to end the whole scan (check of 9b41c99).
+        text = data.decode("utf-8", errors="replace")
+    return text[1:] if text.startswith("\ufeff") else text
+
+
 def scan_path(root: pathlib.Path,
               suppressed: list | None = None,
-              unanalysed: list | None = None) -> tuple[list[dict], int]:
+              unanalysed: list | None = None,
+              unparsed: list | None = None) -> tuple[list[dict], int]:
+    """(findings, files read). A file counted here but listed in
+    `unanalysed` or `unparsed` was read and NOT analysed."""
     findings, files = [], 0
-    paths = [root] if root.is_file() else sorted(root.rglob("*.py"))
+    if root.is_file():
+        paths = [root]
+    elif root.is_dir():
+        paths = sorted(root.rglob("*.py"))
+    else:
+        paths = []          # a named pipe or a socket: nothing to read
     for path in paths:
         # Only directories BELOW the scan root are skipped: a repository
         # that itself sits under a directory named build/ or venv/ used to
@@ -1377,12 +2237,25 @@ def scan_path(root: pathlib.Path,
         below = path.relative_to(root).parts[:-1] if path != root else ()
         if any(part in SKIP_DIRS for part in below):
             continue
+        # A regular file only: opening a named pipe called x.py blocked
+        # the scan forever (review 2026-10-22).
+        if path != root and not path.is_file():
+            continue
         # When `root` IS the file, `relative_to` returns `.` and every
         # finding is reported against a path that names nothing. Scanning
         # a single file is the first thing anyone tries on a tool they
         # just downloaded, so this was the first output a reviewer saw.
+        place = None
         if path == root:
             shown = path.name
+            # What the module is about is still judged by the directories
+            # as given, so `scan proj/server/grader.py` and the pre-commit
+            # hook (which passes repository-relative paths) agree with a
+            # scan of the repository: the hook used to report a file the
+            # Action cleared (check of 9b41c99). An absolute path is not
+            # used, so where the checkout lives cannot decide.
+            if not root.is_absolute():
+                place = root.as_posix()
         else:
             try:
                 shown = path.relative_to(root)
@@ -1393,13 +2266,12 @@ def scan_path(root: pathlib.Path,
             if _is_test_path(pathlib.PurePath(shown)):
                 continue
         try:
-            # utf-8-sig: a byte-order mark otherwise makes ast.parse refuse a
-            # valid file, which was then counted as scanned and silently empty.
-            source = path.read_text(encoding="utf-8-sig", errors="replace")
+            source = _read_source(path)
         except OSError:
             continue
         files += 1
-        findings.extend(scan_source(source, str(shown), suppressed, unanalysed))
+        findings.extend(scan_source(source, str(shown), suppressed, unanalysed,
+                                    unparsed, place))
     return findings, files
 
 
@@ -1436,27 +2308,29 @@ def _bare_object_in_prose(text: str):
     surrounding text holds no other brace and no "key": pattern -- one
     complete object with prose around it (Addendum U's
     `exact_object_present` rule). None otherwise."""
-    for m in re.finditer(r"\{", text):
-        start = m.start()
-        for end in range(len(text), start, -1):
-            if text[end - 1] != "}":
-                continue
-            span = text[start:end]
-            # fencecheck: ignore -- probing a candidate span for the
-            # opt-in wider scope; the fail-closed parse is the point.
-            try:
-                value = json.loads(span)
-            except json.JSONDecodeError:
-                continue
-            if not isinstance(value, dict):
-                continue
-            rest = text[:start] + text[end:]
-            if not rest.strip():
-                return None  # the text IS the object; nothing to widen
-            if "{" in rest or "}" in rest or _KEY_PATTERN.search(rest):
-                return None
-            return span
-    return None
+    # One decode, at the first `{`. An object that starts at any later `{`
+    # leaves that first brace in the prose around it, which is refused
+    # below, so no later start can be the answer. Decoding at every `{`
+    # was quadratic on unclosed nesting: 24 KB of `{"a":[` took 1.3 s
+    # (check of 9b41c99; review 2026-10-22 for every later `}`).
+    start = text.find("{")
+    if start < 0:
+        return None
+    # fencecheck: ignore -- probing a candidate span for the
+    # opt-in wider scope; the fail-closed parse is the point.
+    try:
+        value, end = json.JSONDecoder().raw_decode(text, start)
+    except (json.JSONDecodeError, RecursionError):
+        return None
+    if not isinstance(value, dict):
+        return None
+    span = text[start:end]
+    rest = text[:start] + text[end:]
+    if not rest.strip():
+        return None  # the text IS the object; nothing to widen
+    if "{" in rest or "}" in rest or _KEY_PATTERN.search(rest):
+        return None
+    return span
 
 
 def extract_json(text: str, scope: str = "leading") -> tuple[str, str]:
@@ -1517,7 +2391,7 @@ def _whole_json(text: str):
     # document, to refuse it; not classifying model output.
     try:
         return json.loads(text)
-    except json.JSONDecodeError:
+    except (json.JSONDecodeError, RecursionError):
         return None
 
 
@@ -1525,10 +2399,13 @@ def score_file(path: pathlib.Path, scope: str = "leading") -> dict:
     raw = path.read_text(encoding="utf-8", errors="replace")
     records: list[object] = []
     stripped = raw.strip()
-    if stripped.startswith("["):
-        loaded = json.loads(stripped)
-        records = loaded if isinstance(loaded, list) else [loaded]
-    elif stripped.startswith("{") and (whole := _whole_json(stripped)) is not None:
+    # A file that starts with `[` is one JSON list only if it parses as
+    # one; JSONL whose lines are lists, or text whose first line starts
+    # with `[`, used to crash here with exit 1 (review 2026-10-22).
+    whole = _whole_json(stripped) if stripped[:1] in ("[", "{") else None
+    if isinstance(whole, list):
+        records = whole
+    elif stripped.startswith("{") and whole is not None:
         # The file is ONE JSON document. That is a legitimate input only
         # if it is itself an output record (it carries one of the keys
         # this tool reads model text from). Anything else -- an
@@ -1558,7 +2435,8 @@ def score_file(path: pathlib.Path, scope: str = "leading") -> dict:
             try:
                 records.append(json.loads(line))
                 parsed_lines += 1
-            except json.JSONDecodeError:
+            except (json.JSONDecodeError, RecursionError):
+                # too deeply nested to decode is not a record either
                 records.append(line)
                 unparsed_lines += 1
         if parsed_lines and unparsed_lines:
@@ -1619,7 +2497,9 @@ def _parses(text: str) -> bool:
     # is this function's entire job, so strictness here is deliberate.
     try:
         json.loads(text)
-    except (json.JSONDecodeError, TypeError, ValueError):
+    except (json.JSONDecodeError, TypeError, ValueError, RecursionError):
+        # Python 3.11 raises RecursionError on 1,200 `[` in one output; it
+        # used to end `score` with a traceback (check of 9b41c99).
         return False
     return True
 
@@ -1652,8 +2532,13 @@ def _template_sources(path: pathlib.Path):
     to walk. Kept to the standard library on purpose: this has to run in a
     repository that has no model libraries installed.
     """
+    # In a directory: the known file names, and any other .jinja or .j2
+    # file (`additional_chat_templates/tool_use.jinja`), which used to be
+    # skipped, so a clock-reading tool-use template passed as clean.
     files = ([path] if path.is_file()
-             else sorted(f for f in path.rglob("*") if f.name in _TEMPLATE_FILES))
+             else sorted(f for f in path.rglob("*") if f.is_file() and (
+                 f.name in _TEMPLATE_FILES
+                 or f.suffix.lower() in (".jinja", ".j2"))))
     for file in files:
         try:
             raw = file.read_text(encoding="utf-8", errors="replace")
@@ -1729,6 +2614,14 @@ def main(argv: list[str] | None = None) -> int:
     template.add_argument("--json", action="store_true")
 
     args = parser.parse_args(argv)
+    # A file name that is not valid UTF-8 (or a code line a strict stdout
+    # cannot encode) used to crash the plain-text report half way, with
+    # exit 1, the "found" code (review 2026-10-22). Print it escaped.
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(errors="backslashreplace")
+        except (AttributeError, ValueError, OSError):
+            pass
     target = pathlib.Path(args.path).expanduser()
     if not target.exists():
         print(f"fencecheck: no such path: {target}", file=sys.stderr)
@@ -1737,17 +2630,33 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "scan":
         suppressed: list[dict] = []
         unanalysed: list[str] = []
-        findings, files = scan_path(target, suppressed, unanalysed)
+        unparsed: list[dict] = []
+        findings, files = scan_path(target, suppressed, unanalysed, unparsed)
         if unanalysed:
             print(f"fencecheck: {len(unanalysed)} file(s) nested too deeply to "
                   "analyse were skipped, not cleared: " + ", ".join(unanalysed),
                   file=sys.stderr)
+        if unparsed:
+            # Python 3.11 cannot parse 3.12 syntax (`type X = ...`, PEP 701
+            # f-strings): such a file used to count as scanned and clean.
+            print(f"fencecheck: {len(unparsed)} file(s) could not be parsed by "
+                  f"Python {_PYTHON} and were not analysed, not cleared: "
+                  + ", ".join(f"{u['file']} ({u['error']})" for u in unparsed),
+                  file=sys.stderr)
+        skipped = len(unanalysed) + len(unparsed)
+        # Nothing found is a clean bill only if every file was analysed: a
+        # file that was not is never passed as clean, so the verdict is
+        # refused with 2 (it used to exit 0, check of 9b41c99).
+        status = 1 if findings else (2 if skipped else 0)
         if args.json:
             print(json.dumps({"findings": findings,
                               "files_scanned": files,
+                              "files_analysed": files - skipped,
                               "suppressed": suppressed,
-                              "unanalysed": unanalysed}, indent=2))
-            return 1 if findings else 0
+                              "unanalysed": unanalysed,
+                              "unparsed": unparsed,
+                              "python": _PYTHON}, indent=2))
+            return status
         if suppressed:
             # A suppression CI cannot count is a suppression nobody audits.
             print(f"fencecheck: {len(suppressed)} site(s) silenced by "
@@ -1755,7 +2664,14 @@ def main(argv: list[str] | None = None) -> int:
             for item in suppressed:
                 print(f"  {item['file']}:{item['line']}  {item['call']}")
             print()
-        if not findings:
+        if skipped:
+            print(f"fencecheck: {skipped} of the {files} file(s) read were "
+                  "not analysed (listed on stderr).")
+        if not findings and skipped:
+            print(f"fencecheck: no verdict. Nothing exposed in the "
+                  f"{files - skipped} file(s) analysed, but {skipped} "
+                  "file(s) were not analysed and are not cleared.")
+        elif not findings:
             print(f"fencecheck: {files} file(s) scanned, nothing exposed.")
             print("No site was found where model output is parsed with no "
                   "fence handling and the failure becomes a zero, in its "
@@ -1772,7 +2688,7 @@ def main(argv: list[str] | None = None) -> int:
             print("\nEach of these scores a correct-but-fenced answer as a "
                   "failure. That is only a defect if model output reaches "
                   "it — check the line and decide.")
-        return 1 if findings else 0
+        return status
 
     if args.command == "template":
         findings = scan_chat_templates(target)
@@ -1797,7 +2713,15 @@ def main(argv: list[str] | None = None) -> int:
                   "beside the outputs.")
         return 1 if findings else 0
 
-    report = score_file(target, scope=args.scope)
+    if not target.is_file():
+        print(f"fencecheck: score reads one file of saved outputs; {target} "
+              "is not a file.", file=sys.stderr)
+        return 2
+    try:
+        report = score_file(target, scope=args.scope)
+    except OSError as error:
+        print(f"fencecheck: cannot read {target}: {error}", file=sys.stderr)
+        return 2
     if report.get("refused"):
         if args.json:
             print(json.dumps(report, indent=2))
@@ -1805,34 +2729,43 @@ def main(argv: list[str] | None = None) -> int:
             print("fencecheck: REFUSING to score -- " + report["refused"])
         return 2
 
-    if args.json:
-        print(json.dumps(report, indent=2))
-        return 1 if report["recovered_by_stripping"] else 0
-
+    # The same three refusals in both modes: `--json` used to exit 0 on a
+    # file the text mode refused with 2 (review 2026-10-22).
     total = report["outputs"]
+    refusal = None
     if not total and report.get("already_parsed_records"):
-        print(f"fencecheck: REFUSING to score -- all "
-              f"{report['already_parsed_records']} record(s) carry an "
-              "output field that is already a parsed object (or null), "
-              "not model text. There is no fence to find in a parse "
-              "tree; point score at the file that stores the RAW text.")
-        return 2
-    if not total:
-        print("fencecheck: no model outputs found in that file.")
-        print("Expected JSONL or a JSON list, with the raw model text under "
-              "one of: prediction, output, completion, response, generation, "
-              "text, raw, answer, content.")
-        return 2
-    if not report["parse_after_stripping"]:
+        refusal = (
+            f"REFUSING to score -- all "
+            f"{report['already_parsed_records']} record(s) carry an "
+            "output field that is already a parsed object (or null), "
+            "not model text. There is no fence to find in a parse "
+            "tree; point score at the file that stores the RAW text.")
+    elif not total:
+        refusal = (
+            "no model outputs found in that file.\n"
+            "Expected JSONL or a JSON list, with the raw model text under "
+            "one of: prediction, output, completion, response, generation, "
+            "text, raw, answer, content.")
+    elif not report["parse_after_stripping"]:
         # Nothing parses even after stripping: a clean bill would be a
         # statement about a file that holds no JSON output at all (a
         # reviewer fed plain prose and got "nothing is being lost",
         # 2026-09-02). Say what was seen and refuse the verdict.
-        print(f"fencecheck: REFUSING a verdict -- none of the {total} "
-              "output(s) parse as JSON, fenced or not. Either this file "
-              "is not model JSON output, or the outputs are broken in a "
-              "way no fence explains; a fence-loss number about it would "
-              "be meaningless.")
+        refusal = (
+            f"REFUSING a verdict -- none of the {total} "
+            "output(s) parse as JSON, fenced or not. Either this file "
+            "is not model JSON output, or the outputs are broken in a "
+            "way no fence explains; a fence-loss number about it would "
+            "be meaningless.")
+    if args.json:
+        if refusal:
+            report["refused"] = refusal
+        print(json.dumps(report, indent=2))
+        if refusal:
+            return 2
+        return 1 if report["recovered_by_stripping"] else 0
+    if refusal:
+        print("fencecheck: " + refusal)
         return 2
     print(f"fencecheck: {total} output(s)")
     print(f"  fenced                  {report['fenced']}")

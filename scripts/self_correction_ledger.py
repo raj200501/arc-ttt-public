@@ -45,13 +45,25 @@ SEPARATOR = re.compile(r"^\|[\s:\-|]+\|$")
 # so the classifier can be checked against the page by eye.
 OUTWARD_MARKERS = ("email", "deck", "one-pager", "outbound", "sent",
                    "public", "readme", "headline", "verdict", "press")
-# "sent" and "press" are matched as whole words. As plain substrings they
-# matched inside "sentence", "presentation" and "suppress", and four rows
-# counted as outward-facing for that reason alone (CORRECTIONS 2026-10-21).
-WHOLE_WORD_MARKERS = ("sent", "press")
+# Every marker is matched as a whole word. A letter may not touch either
+# end, so a marker inside a longer word does not count. Only a plural "s"
+# or an adverb "ly" may follow ("emails", "publicly"), and on the two
+# markers that are also verbs, their verb endings ("emailed", "emailing",
+# "headlined"): those rows did reach someone. Anything that is
+# not a letter is a boundary, so "verdict.md", "deck_v2" and
+# "reconcile_outbound.py" still match.
+#
+# History. On 2026-10-21 "sent" and "press" became whole words: as plain
+# substrings they matched inside "sentence", "presentation" and
+# "suppress", and four rows counted as outward-facing for that alone. The
+# other eight stayed substrings, and on 2026-10-22 "public" was found
+# matching inside "publication": three rows counted as outward-facing for
+# that alone (CORRECTIONS 2026-10-22). Same defect, so the rule now
+# covers every marker, not only the ones that have already misfired.
+_SUFFIXES = {"email": r"(?:s|ed|ing)?", "headline": r"(?:s|d)?"}
 _OUTWARD = tuple(
-    re.compile(r"\b" + re.escape(m) + r"\b") if m in WHOLE_WORD_MARKERS
-    else re.compile(re.escape(m))
+    re.compile(r"(?<![a-z])" + re.escape(m)
+               + _SUFFIXES.get(m, r"(?:s|ly)?") + r"(?![a-z])")
     for m in OUTWARD_MARKERS)
 
 
@@ -227,9 +239,12 @@ def main() -> int:
             "repository. A typo fixed in a private note is housekeeping; "
             "withdrawing a number already sent to a stranger is the part "
             "that costs something, and it is the only part worth citing. "
-            "'sent' and 'press' match as whole words only, since "
-            "2026-10-21; as substrings they had matched 'sentence', "
-            "'presentation' and 'suppress'."),
+            "Every marker matches as a whole word only: no letter may "
+            "touch either end, though a plural 's' or an adverb 'ly' may "
+            "follow, and 'email' and 'headline' keep their verb endings. 'sent' and 'press' became whole words on 2026-10-21, "
+            "after matching 'sentence', 'presentation' and 'suppress'; "
+            "the rest on 2026-10-22, after 'public' matched "
+            "'publication'."),
         "by_section": by_section,
         "by_month": by_month,
         "first": dates[0],

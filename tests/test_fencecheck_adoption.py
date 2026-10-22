@@ -167,7 +167,10 @@ def test_the_action_declares_the_documented_inputs() -> None:
         assert re.search(r"^description:", text, re.MULTILINE)
         assert re.search(r"^runs:\n  using: composite$", text, re.MULTILINE)
         defaults = _line_input_defaults(text)
-    assert defaults == {"path": ".", "args": "", "python-version": "3.11"}
+    # 3.13, not 3.11: a file written in 3.12+ syntax (`type X = ...`, a
+    # PEP 701 f-string) cannot be parsed by 3.11, so the default runner
+    # could not read it (review 2026-10-22). scan names such files.
+    assert defaults == {"path": ".", "args": "", "python-version": "3.13"}
 
 
 def test_the_action_runs_the_tool_from_its_own_checkout() -> None:

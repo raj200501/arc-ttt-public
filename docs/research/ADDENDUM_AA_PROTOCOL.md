@@ -364,3 +364,71 @@ every pinned file as `--code`, this protocol's rows in `ANCHORS.md` and
 `VERDICT.md` quoting the stamp, a commit, `freeze_protocol.py stamp`, a
 commit of the proof, and after the block, `ots upgrade` and a commit of
 the upgraded proof. The reading runs once after that.
+
+## Erratum — 2026-10-22, found by a third audit after the freeze and before the reading
+
+Appended after the anchored bytes; the snapshot above is unchanged. It
+changes no reading rule, no threshold, no sentence the reader may emit
+and no pinned file. A third adversarial audit ran against the frozen
+state (nine findings survived independent verification; the record is
+kept with the operator's review notes). Every one is resolved here or
+outside this file, so the frozen reader runs as anchored.
+
+1. **The recompute recipe the reading banks is wrong as written.** The
+   artifact's `how_to_recompute` names the commit at which the reading
+   ran. At that commit the banked reading does not exist yet, and
+   `--out` refuses until it does, so the recipe fails as written. The
+   working recipe: check out the commit that adds
+   `experiments/cord_decoder_isolation_read_<date>.json`, or any later
+   commit whose pinned files still match the sha256 values in the freeze
+   line, and run `--out` there. The public mirror has fresh history, so
+   the private commit ids in the artifact do not exist there; use a
+   public commit whose pinned files match. Correcting the field itself
+   would need a reader change and a new freeze, which this erratum does
+   not make.
+2. **Install the dependencies outside the clone.** The reader refuses if
+   any module loaded from under the repository root is not pinned. A
+   virtual environment inside the clone (for example `.venv/`) puts
+   third-party modules there, and the reading is then withheld. Install
+   torch and transformers anywhere outside the repository tree.
+3. **The stop-id cross-check runs only where a tokenizer loads.** At
+   read time each family's tokenizer is loaded from the hub's current
+   revision to re-derive the plain loop's stop id. Where it cannot load,
+   the artifact records the family as not cross-checked, with the
+   error, and the pinned id stands. The operator ran the reading with
+   network access so that both families could be cross-checked; the
+   artifact shows whether they were.
+4. **What a stranger cannot check from the public tree.** The byte
+   identity of `scripts/aa_pinned/fencecheck_x.py` to the scanner X ran
+   with, the identity of the nineteen inputs to their blobs at X's
+   commit, and the diff showing that moving X's arithmetic into
+   `read_families` changed nothing, all rest on commit `b4facac` and
+   the private history around it. The public tree carries the files and
+   the sha256 values in the freeze line, which a stranger can check, and
+   nothing about `b4facac`.
+5. **The verify command.** `docs/research/ANCHORS.md` gave a verify
+   command that does not work for this protocol's `<file>.<stamp>.ots`
+   naming. The working form is
+   `ots verify -f snapshots_ADDENDUM_AA_PROTOCOL_2026-10-22T0114Z.md ADDENDUM_AA_PROTOCOL.md.2026-10-22T0114Z.ots`
+   (run in `docs/research/`); ANCHORS.md is corrected the same day.
+
+Operator steps done before the reading: the upgraded proof is committed
+(`fd6a387`, Bitcoin block 972551 at 2026-10-22 01:33:25 UTC) and clean
+in git, and `--check` reports that the preconditions hold.
+6. **The first attempt to read was withheld by the reader itself, and
+   wrote and printed nothing.** At 2026-10-22T05:57:19Z the reader ran
+   from the repository root and refused: "loaded but not pinned by the
+   anchor: _classes.py, _ops.py". Those are not repository files. torch
+   registers two pseudo-modules, `torch.ops` and `torch.classes`, whose
+   `__file__` is the relative name `_ops.py` and `_classes.py`; the
+   unpinned-module check resolves a relative name against the working
+   directory, so run from the repository root they look like repository
+   files (neither exists there). The check ran after the arithmetic, in
+   memory, and the reader then wrote no file and printed no reading, so
+   no result of any family was seen. The reading is run once more, from
+   a working directory outside the repository, with the same pinned code
+   and inputs; every path the reader opens is built from its own
+   location and its git calls run in the repository, so the working
+   directory changes nothing it computes. A stranger recomputing must
+   do the same. The reader is not changed; fixing the check would need
+   a new freeze.

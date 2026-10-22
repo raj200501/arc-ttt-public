@@ -317,6 +317,13 @@ text on every family measured, and the instrument's own undercount is
 both theses are enumerated in
 `experiments/results_against_thesis_2026-09-17.json`.
 
+Whether the fence failure moved a published number was asked once, of
+the one public leaderboard found with a fence-failing scorer and its
+stored answers both online (Addendum AD, preregistered, read 2026-10-22).
+It did not: re-scoring LiveBench's stored 2024 `tablejoin` answers with one fence strip moved no published number up by a question's worth (2.0 points), in 197 reproduced cells over 73 models. 197 of the 199 in-frame cells reproduced, and only those are read; 134 of the 333 table rows were not in frame. 3 reproduced cell(s) moved up by less than that (largest 0.44 points). No rank changed. The fence failure was real in the scorer. The prediction that most
+answers would open with a fence failed (30%); most fences were tagged
+`python`, which the scorer handled. `experiments/ad_reading_2026-10-21.json`.
+
 **The fourth of those is the one worth reading, because the instrument
 refused to report its own result.** Addendum X was built to do the thing
 Addendum V said had not been done — isolate the constrained decoder from
@@ -327,8 +334,9 @@ the first evidence this repository has ever had that any of its cells
 reproduce at all. `Phi-3-mini`, the one bfloat16 family, does not, and
 the frozen protocol makes that terminal, so **nothing is read about the
 decoder**. The banked cells for the other four families (three passed; Granite's
-gate did not apply) sit unread, and
-the reader is the thing that refuses to read them. What the failure buys
+gate did not apply) sat unread, and
+X's reader refused to read them, until Addendum AA read them on
+2026-10-22 (below). What the failure buys
 is a fact that was previously an assumption: Phi-3's cells did not
 reproduce across two runs (written that day as *every Phi-3 number is
 not byte-reproducible*, a sentence the next paragraph narrows), and V's guess that
@@ -351,6 +359,39 @@ byte-reproducible* was too strong and is narrowed in `CORRECTIONS.md`
 the day after it was written. Addendum X stays withheld; Y explains its
 gate's flake without reversing it.
 `experiments/phi3_instability_2026-09-17.json`.
+
+**One more followed: Addendum AA read what X left unread.** It was frozen
+and stamped before its reader touched a cell, and, once, on 2026-10-22,
+banked its reading of X's cells for the four families whose gates did
+not fail. It was not read blind: during X's run the operator computed X1
+for these families by hand. The record is silent on X2 and X3, so all
+three count as possibly seen, and the decision to read these cells and
+every choice in AA were made after the hand computation (protocol, "The
+disclosure this addendum owes"). On 2026-10-21 an agent read only the
+`per_document_seconds` field of the S/T comparator cells, which no
+reading takes as input. A first attempt, 61 seconds before the banked
+reading, was withheld by the reader itself and wrote and printed nothing
+(protocol erratum 6). X's CONSTRAINT
+REMOVES bar (invalid outputs at least halved, no regressions) was met in
+0 of 5 families, with Phi-3 unread and counted against, and there is no
+headline: the constraint never fired in three families, so their arms
+are identical, and on Falcon3-1B invalid outputs went from 14 to 8,
+where arm C is V's banked cell, so the constraint and that cell not
+reproducing across processes cannot be separated. With neither arm
+constrained and no generation defaults in play, on these 50 documents,
+the plain loop reproduces `generate` token for token on Qwen2.5-0.5B and
+Granite-3.1-2B (0 of 50 diverge under the 2026-09-23 EOS erratum, which
+moves X2 the way that favours us, and 0 as first coded) and only its
+decoded text (WEAKER TEST: decoded text, not token ids) on SmolLM2-1.7B
+and Falcon3-1B. This does not cover `generate` with Qwen's shipped
+defaults: greedy `generate` with Qwen's config untouched differs from
+the defaults-neutralised `generate` on 47 of 50 documents. X3 on
+Qwen2.5-0.5B reads V'S ATTRIBUTION HOLDS: all 5 of V's regressions
+(valid under greedy `generate`, `do_sample=False` with Qwen's config
+otherwise untouched, invalid under the constraint) are explained by the generation defaults rather than by the
+constraint. Every one of X's predictions that could be checked held,
+SmolLM2's on decoded text only. Limits, from the protocol: everything X's protocol says it cannot show, plus one family fewer, so the combined X1 claim is harder to reach and X2 has no bfloat16 family (all four families were read in float32; Phi-3, the one bfloat16 family and the one X predicted would diverge, is unread); fifty CORD receipts per family, one corpus, schema-only prompts, CPU, four small checkpoints, one box; the reused arms (V's constrained cells and the S/T `generate` comparator cells) were gated on five documents per family, on the three families that reuse them, and prompt identity could be verified on only 3 of the 9 compared pairs.
+`experiments/cord_decoder_isolation_read_2026-10-22.json`.
 
 Frozen protocols since Addendum S carry OpenTimestamps anchors beside
 them; `docs/research/ANCHORS.md` says exactly what each anchor proves
@@ -385,7 +426,7 @@ It is **not** blind, it fixes **no** bar in advance, and it is one corpus — it
 All three verdict scripts are dependency-free. To go past arithmetic to primary evidence,
 `python3 scripts/verify_from_primary.py experiments/novel_schema_f_*.json` re-scores every
 stored prediction against gold regenerated from the deterministic corpus generator —
-it checks the *predictions*, not the summaries. 776 offline tests, no downloads:
+it checks the *predictions*, not the summaries. 1041 offline tests, no downloads:
 `python3 -m pytest tests/ -q`. The suite needs torch and the dev extras,
 as the CI job installs them (`pip install torch --index-url
 https://download.pytorch.org/whl/cpu`, then `pip install -e .[dev]`);

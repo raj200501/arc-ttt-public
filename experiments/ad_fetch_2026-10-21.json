@@ -1,0 +1,2085 @@
+{
+ "what": "Addendum AD fetch: exactly the manifest, verified (G0)",
+ "protocol": "docs/research/ADDENDUM_AD_PROTOCOL.md",
+ "fetch_started_utc": "2026-10-22T19:20:07Z",
+ "git_head": "b006440392045fb550aa32b1b20b2296b3549677",
+ "anchor": {
+  "ok": true,
+  "protocol_sha256_now": "1d660d5a59fbcfd0ff4ac67565d10a9f28bb6f074209a3bab97400393728f6bb",
+  "stamp": "2026-10-22T1655Z",
+  "proof": "ADDENDUM_AD_PROTOCOL.md.2026-10-22T1655Z.ots",
+  "snapshot": "snapshots_ADDENDUM_AD_PROTOCOL_2026-10-22T1655Z.md",
+  "proof_sha256": "f093cb157b873046cba41d28d22d3a2e27db64722d55b2540800887abd3f6fe5",
+  "proof_parses": true,
+  "attestations": [
+   "bitcoin",
+   "pending"
+  ],
+  "bitcoin_block_heights": [
+   972636
+  ],
+  "anchored_sha256": "1d660d5a59fbcfd0ff4ac67565d10a9f28bb6f074209a3bab97400393728f6bb",
+  "snapshot_sha256": "1d660d5a59fbcfd0ff4ac67565d10a9f28bb6f074209a3bab97400393728f6bb",
+  "snapshot_committed_unchanged": true,
+  "proof_committed_unchanged": true,
+  "protocol_begins_with_the_snapshot": true,
+  "proof_commits_to_the_snapshot": true,
+  "code": {
+   "required": [
+    "experiments/ad_manifest_2026-10-21.json",
+    "experiments/ad_synthetic_scorer_check_2026-10-21.json",
+    "scripts/ad_pinned/gen_ground_truth_judgment_19c7757.py",
+    "scripts/ad_pinned/gen_ground_truth_judgment_905b71f.py",
+    "scripts/ad_pinned/gen_ground_truth_judgment_e647d72.py",
+    "scripts/ad_pinned/gen_ground_truth_judgment_f3501c7.py",
+    "scripts/ad_pinned/gen_ground_truth_judgment_f774d19.py",
+    "scripts/ad_pinned/gen_ground_truth_judgment_fa6a3c6.py",
+    "scripts/ad_pinned/tablejoin_utils_19c7757.py",
+    "scripts/ad_pinned/tablejoin_utils_905b71f.py",
+    "scripts/ad_pinned/tablejoin_utils_c5c293c.py",
+    "scripts/ad_pinned/tablejoin_utils_e647d72.py",
+    "scripts/ad_pinned/tablejoin_utils_f774d19.py",
+    "scripts/ad_pinned/util_19c7757.py",
+    "scripts/ad_pinned/util_f3501c7.py",
+    "scripts/published_number_audit.py",
+    "tools/fencecheck.py"
+   ],
+   "quoted_in_snapshot": {
+    "scripts/published_number_audit.py": "0631ce7b6bfa95863d1c298fe1d3e0f10201c430f018ee6d360f129603231af3",
+    "tools/fencecheck.py": "3bc8efff435273a471797e89f9bdb4f67cec5f59ee2f8f99af59a7e54fc05fe7",
+    "experiments/ad_manifest_2026-10-21.json": "ed5a027e24f8868c952f373d16cdbb33592738d92b279dea77ecaac317ab03f0",
+    "experiments/ad_synthetic_scorer_check_2026-10-21.json": "80d21f435f745c81dbd7963c17e6b6437583869721396b51426a486eba3ad79b",
+    "scripts/ad_pinned/tablejoin_utils_905b71f.py": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "scripts/ad_pinned/tablejoin_utils_f774d19.py": "8d7fa703061d4536ee9f07c1a3d103690a6a20c01d8ab2c284fcb43ce45724b9",
+    "scripts/ad_pinned/tablejoin_utils_19c7757.py": "b04aee527f1e38d8a2dad456d2bcf2b2af622d64cd01221a3f31a480bb54c0e8",
+    "scripts/ad_pinned/tablejoin_utils_c5c293c.py": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "scripts/ad_pinned/tablejoin_utils_e647d72.py": "1d8e56395b6ad033391503fe5914eb242f080eed5f07695c655e28d779dd213c",
+    "scripts/ad_pinned/util_19c7757.py": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "scripts/ad_pinned/util_f3501c7.py": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "scripts/ad_pinned/gen_ground_truth_judgment_905b71f.py": "b35746a0003db176914a5e3fa33496276c66ebc666156a5a57e2284c93dfa220",
+    "scripts/ad_pinned/gen_ground_truth_judgment_f774d19.py": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+    "scripts/ad_pinned/gen_ground_truth_judgment_19c7757.py": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+    "scripts/ad_pinned/gen_ground_truth_judgment_fa6a3c6.py": "ed7973d19360ccf3a4a58d3112918b4f561009cdbdd2c4df55a2c85525a3d137",
+    "scripts/ad_pinned/gen_ground_truth_judgment_f3501c7.py": "5d0b7a28d3b8f042d2eae7ee192e92d8c56c949c635a181441fb8f01ab22ccac",
+    "scripts/ad_pinned/gen_ground_truth_judgment_e647d72.py": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+    "experiments/ad_preexposure_2026-10-22.json": "ed9c4f931add63dc68e00ef4f8764327a2531b94983bf64eabc1b2185ec3aa2e"
+   },
+   "now": {
+    "experiments/ad_manifest_2026-10-21.json": "ed5a027e24f8868c952f373d16cdbb33592738d92b279dea77ecaac317ab03f0",
+    "experiments/ad_synthetic_scorer_check_2026-10-21.json": "80d21f435f745c81dbd7963c17e6b6437583869721396b51426a486eba3ad79b",
+    "scripts/ad_pinned/gen_ground_truth_judgment_19c7757.py": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+    "scripts/ad_pinned/gen_ground_truth_judgment_905b71f.py": "b35746a0003db176914a5e3fa33496276c66ebc666156a5a57e2284c93dfa220",
+    "scripts/ad_pinned/gen_ground_truth_judgment_e647d72.py": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+    "scripts/ad_pinned/gen_ground_truth_judgment_f3501c7.py": "5d0b7a28d3b8f042d2eae7ee192e92d8c56c949c635a181441fb8f01ab22ccac",
+    "scripts/ad_pinned/gen_ground_truth_judgment_f774d19.py": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+    "scripts/ad_pinned/gen_ground_truth_judgment_fa6a3c6.py": "ed7973d19360ccf3a4a58d3112918b4f561009cdbdd2c4df55a2c85525a3d137",
+    "scripts/ad_pinned/tablejoin_utils_19c7757.py": "b04aee527f1e38d8a2dad456d2bcf2b2af622d64cd01221a3f31a480bb54c0e8",
+    "scripts/ad_pinned/tablejoin_utils_905b71f.py": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "scripts/ad_pinned/tablejoin_utils_c5c293c.py": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "scripts/ad_pinned/tablejoin_utils_e647d72.py": "1d8e56395b6ad033391503fe5914eb242f080eed5f07695c655e28d779dd213c",
+    "scripts/ad_pinned/tablejoin_utils_f774d19.py": "8d7fa703061d4536ee9f07c1a3d103690a6a20c01d8ab2c284fcb43ce45724b9",
+    "scripts/ad_pinned/util_19c7757.py": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "scripts/ad_pinned/util_f3501c7.py": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "scripts/published_number_audit.py": "0631ce7b6bfa95863d1c298fe1d3e0f10201c430f018ee6d360f129603231af3",
+    "tools/fencecheck.py": "3bc8efff435273a471797e89f9bdb4f67cec5f59ee2f8f99af59a7e54fc05fe7"
+   },
+   "not_quoted": [],
+   "differ": [],
+   "matches": true
+  },
+  "bitcoin_attested": true
+ },
+ "manifest_sha256": "ed5a027e24f8868c952f373d16cdbb33592738d92b279dea77ecaac317ab03f0",
+ "data_dir": "data/ad",
+ "attempts": [
+  {
+   "data_dir": "data/ad",
+   "out": "experiments/ad_fetch_2026-10-21.json",
+   "pid": 489,
+   "stage": "fetch",
+   "started_utc": "2026-10-22T19:12:58Z"
+  },
+  {
+   "attempt_started_utc": "2026-10-22T19:12:58Z",
+   "outcome": "not received in full; nothing banked",
+   "outcome_utc": "2026-10-22T19:14:19Z",
+   "pid": 489,
+   "stage": "fetch",
+   "unreceived": {
+    "feasibility_page": "HTTPError: HTTP Error 504: Gateway Time-out"
+   }
+  },
+  {
+   "data_dir": "data/ad",
+   "out": "experiments/ad_fetch_2026-10-21.json",
+   "pid": 633,
+   "stage": "fetch",
+   "started_utc": "2026-10-22T19:14:25Z"
+  },
+  {
+   "attempt_started_utc": "2026-10-22T19:14:25Z",
+   "outcome": "not received in full; nothing banked",
+   "outcome_utc": "2026-10-22T19:15:11Z",
+   "pid": 633,
+   "stage": "fetch",
+   "unreceived": {
+    "feasibility_page": "HTTPError: HTTP Error 500: Internal Server Error"
+   }
+  },
+  {
+   "data_dir": "data/ad",
+   "out": "experiments/ad_fetch_2026-10-21.json",
+   "pid": 714,
+   "stage": "fetch",
+   "started_utc": "2026-10-22T19:15:11Z"
+  },
+  {
+   "attempt_started_utc": "2026-10-22T19:15:11Z",
+   "outcome": "not received in full; nothing banked",
+   "outcome_utc": "2026-10-22T19:15:47Z",
+   "pid": 714,
+   "stage": "fetch",
+   "unreceived": {
+    "feasibility_page": "HTTPError: HTTP Error 500: Internal Server Error"
+   }
+  },
+  {
+   "data_dir": "data/ad",
+   "out": "experiments/ad_fetch_2026-10-21.json",
+   "pid": 808,
+   "stage": "fetch",
+   "started_utc": "2026-10-22T19:15:47Z"
+  },
+  {
+   "attempt_started_utc": "2026-10-22T19:15:47Z",
+   "outcome": "not received in full; nothing banked",
+   "outcome_utc": "2026-10-22T19:16:22Z",
+   "pid": 808,
+   "stage": "fetch",
+   "unreceived": {
+    "feasibility_page": "HTTPError: HTTP Error 500: Internal Server Error"
+   }
+  },
+  {
+   "data_dir": "data/ad",
+   "out": "experiments/ad_fetch_2026-10-21.json",
+   "pid": 1429,
+   "stage": "fetch",
+   "started_utc": "2026-10-22T19:20:07Z"
+  }
+ ],
+ "remote": [
+  {
+   "id": "answers",
+   "url": "https://huggingface.co/datasets/livebench/model_answer/resolve/bc43a286b08243d6dcfa89ba2e906283e9adac9c/data/leaderboard-00000-of-00001.parquet",
+   "on_mismatch": "refuse",
+   "role": "answers",
+   "path": "data/ad/answers",
+   "received": {
+    "status": 200,
+    "bytes": 56430153,
+    "sha256": "1d4b5547c2ae2ea40280ae452885a39c7d395a7a0abac643868231cc5187a4a5",
+    "fetched_utc": "2026-10-22T19:20:08Z"
+   },
+   "got": {
+    "bytes": 56430153,
+    "sha256": "1d4b5547c2ae2ea40280ae452885a39c7d395a7a0abac643868231cc5187a4a5",
+    "git_blob_sha1": "62eb9678d59a341b730fbb30dff07df06edfc371"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true
+   },
+   "matches": true
+  },
+  {
+   "id": "questions",
+   "url": "https://huggingface.co/datasets/livebench/data_analysis/resolve/31b9661ff678df9958e2f7fa228427f4c858c1a1/data/test-00000-of-00001.parquet",
+   "on_mismatch": "refuse",
+   "role": "questions",
+   "path": "data/ad/questions",
+   "received": {
+    "status": 200,
+    "bytes": 144796,
+    "sha256": "fb86a7a02fa9eabf785d9e8af85955990cf6d228cc9d3f805a54f863bc8c4c52",
+    "fetched_utc": "2026-10-22T19:20:09Z"
+   },
+   "got": {
+    "bytes": 144796,
+    "sha256": "fb86a7a02fa9eabf785d9e8af85955990cf6d228cc9d3f805a54f863bc8c4c52",
+    "git_blob_sha1": "f24cba2f850e817683ef3be5f835fdd17a9df8fc"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true
+   },
+   "matches": true
+  },
+  {
+   "id": "table_2024_06_24_pinned",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/table_2024_06_24.csv",
+   "on_mismatch": "refuse",
+   "role": "table",
+   "path": "data/ad/table_2024_06_24_pinned",
+   "received": {
+    "status": 200,
+    "bytes": 8879,
+    "sha256": "df181166a5a670a5b7678ee02f96c6896d8a88a503aec20243234b698d25a8c0",
+    "fetched_utc": "2026-10-22T19:20:10Z"
+   },
+   "got": {
+    "bytes": 8879,
+    "sha256": "df181166a5a670a5b7678ee02f96c6896d8a88a503aec20243234b698d25a8c0",
+    "git_blob_sha1": "b22e753cba6b913323646d445f36de6a4f9b7fbd"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "table_2024_06_24_live",
+   "url": "https://livebench.ai/v1/table_2024_06_24.csv",
+   "on_mismatch": "record",
+   "role": "table_live",
+   "path": "data/ad/table_2024_06_24_live",
+   "received": {
+    "status": 200,
+    "bytes": 8879,
+    "sha256": "df181166a5a670a5b7678ee02f96c6896d8a88a503aec20243234b698d25a8c0",
+    "fetched_utc": "2026-10-22T19:20:10Z"
+   },
+   "got": {
+    "bytes": 8879,
+    "sha256": "df181166a5a670a5b7678ee02f96c6896d8a88a503aec20243234b698d25a8c0",
+    "git_blob_sha1": "b22e753cba6b913323646d445f36de6a4f9b7fbd"
+   },
+   "checks": {
+    "bytes": true
+   },
+   "matches": true,
+   "equal_to_pinned_twin": true
+  },
+  {
+   "id": "categories_2024_06_24",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/categories_2024_06_24.json",
+   "on_mismatch": "refuse",
+   "role": "categories",
+   "path": "data/ad/categories_2024_06_24",
+   "received": {
+    "status": 200,
+    "bytes": 536,
+    "sha256": "08fa233f92ca970a786f4ab8ea09639bce4c9dcbc88565254989e0bd34d08bfa",
+    "fetched_utc": "2026-10-22T19:20:10Z"
+   },
+   "got": {
+    "bytes": 536,
+    "sha256": "08fa233f92ca970a786f4ab8ea09639bce4c9dcbc88565254989e0bd34d08bfa",
+    "git_blob_sha1": "9fc9d407c10b7d9b3aa06dbab43e56baf1d1956c"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "table_2024_07_26_pinned",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/table_2024_07_26.csv",
+   "on_mismatch": "refuse",
+   "role": "table",
+   "path": "data/ad/table_2024_07_26_pinned",
+   "received": {
+    "status": 200,
+    "bytes": 9261,
+    "sha256": "670dc4af2497d2daca7b5179f9558854163d954a95939bc4a7d71d8fce298a85",
+    "fetched_utc": "2026-10-22T19:20:10Z"
+   },
+   "got": {
+    "bytes": 9261,
+    "sha256": "670dc4af2497d2daca7b5179f9558854163d954a95939bc4a7d71d8fce298a85",
+    "git_blob_sha1": "d042001693b2815d9e0c25582167507265b6c438"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "table_2024_07_26_live",
+   "url": "https://livebench.ai/v1/table_2024_07_26.csv",
+   "on_mismatch": "record",
+   "role": "table_live",
+   "path": "data/ad/table_2024_07_26_live",
+   "received": {
+    "status": 200,
+    "bytes": 9261,
+    "sha256": "670dc4af2497d2daca7b5179f9558854163d954a95939bc4a7d71d8fce298a85",
+    "fetched_utc": "2026-10-22T19:20:11Z"
+   },
+   "got": {
+    "bytes": 9261,
+    "sha256": "670dc4af2497d2daca7b5179f9558854163d954a95939bc4a7d71d8fce298a85",
+    "git_blob_sha1": "d042001693b2815d9e0c25582167507265b6c438"
+   },
+   "checks": {
+    "bytes": true
+   },
+   "matches": true,
+   "equal_to_pinned_twin": true
+  },
+  {
+   "id": "categories_2024_07_26",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/categories_2024_07_26.json",
+   "on_mismatch": "refuse",
+   "role": "categories",
+   "path": "data/ad/categories_2024_07_26",
+   "received": {
+    "status": 200,
+    "bytes": 555,
+    "sha256": "31382962c060909421a3f2d8fe9f2194daadc252f654647daa8f684efbbe674b",
+    "fetched_utc": "2026-10-22T19:20:11Z"
+   },
+   "got": {
+    "bytes": 555,
+    "sha256": "31382962c060909421a3f2d8fe9f2194daadc252f654647daa8f684efbbe674b",
+    "git_blob_sha1": "5237be153f44ea16ea0bf944959431ca6d03812a"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "table_2024_08_31_pinned",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/table_2024_08_31.csv",
+   "on_mismatch": "refuse",
+   "role": "table",
+   "path": "data/ad/table_2024_08_31_pinned",
+   "received": {
+    "status": 200,
+    "bytes": 7694,
+    "sha256": "8c66d248110076378f7eb58aaeef524c65bba6dff0b55f190fd9ac8e92d73b2a",
+    "fetched_utc": "2026-10-22T19:20:11Z"
+   },
+   "got": {
+    "bytes": 7694,
+    "sha256": "8c66d248110076378f7eb58aaeef524c65bba6dff0b55f190fd9ac8e92d73b2a",
+    "git_blob_sha1": "6ad8a189266263020fc9d4579125e9532c2e7abc"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "table_2024_08_31_live",
+   "url": "https://livebench.ai/v1/table_2024_08_31.csv",
+   "on_mismatch": "record",
+   "role": "table_live",
+   "path": "data/ad/table_2024_08_31_live",
+   "received": {
+    "status": 200,
+    "bytes": 7694,
+    "sha256": "8c66d248110076378f7eb58aaeef524c65bba6dff0b55f190fd9ac8e92d73b2a",
+    "fetched_utc": "2026-10-22T19:20:12Z"
+   },
+   "got": {
+    "bytes": 7694,
+    "sha256": "8c66d248110076378f7eb58aaeef524c65bba6dff0b55f190fd9ac8e92d73b2a",
+    "git_blob_sha1": "6ad8a189266263020fc9d4579125e9532c2e7abc"
+   },
+   "checks": {
+    "bytes": true
+   },
+   "matches": true,
+   "equal_to_pinned_twin": true
+  },
+  {
+   "id": "categories_2024_08_31",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/categories_2024_08_31.json",
+   "on_mismatch": "refuse",
+   "role": "categories",
+   "path": "data/ad/categories_2024_08_31",
+   "received": {
+    "status": 200,
+    "bytes": 555,
+    "sha256": "31382962c060909421a3f2d8fe9f2194daadc252f654647daa8f684efbbe674b",
+    "fetched_utc": "2026-10-22T19:20:12Z"
+   },
+   "got": {
+    "bytes": 555,
+    "sha256": "31382962c060909421a3f2d8fe9f2194daadc252f654647daa8f684efbbe674b",
+    "git_blob_sha1": "5237be153f44ea16ea0bf944959431ca6d03812a"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "table_2024_11_25_pinned",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/table_2024_11_25.csv",
+   "on_mismatch": "refuse",
+   "role": "table",
+   "path": "data/ad/table_2024_11_25_pinned",
+   "received": {
+    "status": 200,
+    "bytes": 8508,
+    "sha256": "17ca6b3d122921d24b591d0da52566c5552ed4f4001ae9d83a11b2712325aae4",
+    "fetched_utc": "2026-10-22T19:20:12Z"
+   },
+   "got": {
+    "bytes": 8508,
+    "sha256": "17ca6b3d122921d24b591d0da52566c5552ed4f4001ae9d83a11b2712325aae4",
+    "git_blob_sha1": "c2ab984a126c0c75b3b6eb527746cccd4a4d2291"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "table_2024_11_25_live",
+   "url": "https://livebench.ai/v1/table_2024_11_25.csv",
+   "on_mismatch": "record",
+   "role": "table_live",
+   "path": "data/ad/table_2024_11_25_live",
+   "received": {
+    "status": 200,
+    "bytes": 8508,
+    "sha256": "17ca6b3d122921d24b591d0da52566c5552ed4f4001ae9d83a11b2712325aae4",
+    "fetched_utc": "2026-10-22T19:20:12Z"
+   },
+   "got": {
+    "bytes": 8508,
+    "sha256": "17ca6b3d122921d24b591d0da52566c5552ed4f4001ae9d83a11b2712325aae4",
+    "git_blob_sha1": "c2ab984a126c0c75b3b6eb527746cccd4a4d2291"
+   },
+   "checks": {
+    "bytes": true
+   },
+   "matches": true,
+   "equal_to_pinned_twin": true
+  },
+  {
+   "id": "categories_2024_11_25",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/categories_2024_11_25.json",
+   "on_mismatch": "refuse",
+   "role": "categories",
+   "path": "data/ad/categories_2024_11_25",
+   "received": {
+    "status": 200,
+    "bytes": 555,
+    "sha256": "31382962c060909421a3f2d8fe9f2194daadc252f654647daa8f684efbbe674b",
+    "fetched_utc": "2026-10-22T19:20:13Z"
+   },
+   "got": {
+    "bytes": 555,
+    "sha256": "31382962c060909421a3f2d8fe9f2194daadc252f654647daa8f684efbbe674b",
+    "git_blob_sha1": "5237be153f44ea16ea0bf944959431ca6d03812a"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "table_2025_04_02_pinned",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/table_2025_04_02.csv",
+   "on_mismatch": "refuse",
+   "role": "table",
+   "path": "data/ad/table_2025_04_02_pinned",
+   "received": {
+    "status": 200,
+    "bytes": 8441,
+    "sha256": "d7fd6a3e461cff4f96569093553789115e87adeb9cd95dca043bafa51ff2acaa",
+    "fetched_utc": "2026-10-22T19:20:13Z"
+   },
+   "got": {
+    "bytes": 8441,
+    "sha256": "d7fd6a3e461cff4f96569093553789115e87adeb9cd95dca043bafa51ff2acaa",
+    "git_blob_sha1": "c99d92fe17d97f25e5fe57d3b0f9116adc46d57b"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "table_2025_04_02_live",
+   "url": "https://livebench.ai/v1/table_2025_04_02.csv",
+   "on_mismatch": "record",
+   "role": "table_live",
+   "path": "data/ad/table_2025_04_02_live",
+   "received": {
+    "status": 200,
+    "bytes": 8441,
+    "sha256": "d7fd6a3e461cff4f96569093553789115e87adeb9cd95dca043bafa51ff2acaa",
+    "fetched_utc": "2026-10-22T19:20:13Z"
+   },
+   "got": {
+    "bytes": 8441,
+    "sha256": "d7fd6a3e461cff4f96569093553789115e87adeb9cd95dca043bafa51ff2acaa",
+    "git_blob_sha1": "c99d92fe17d97f25e5fe57d3b0f9116adc46d57b"
+   },
+   "checks": {
+    "bytes": true
+   },
+   "matches": true,
+   "equal_to_pinned_twin": true
+  },
+  {
+   "id": "categories_2025_04_02",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/categories_2025_04_02.json",
+   "on_mismatch": "refuse",
+   "role": "categories",
+   "path": "data/ad/categories_2025_04_02",
+   "received": {
+    "status": 200,
+    "bytes": 555,
+    "sha256": "182ba3b11478a1f1768020fc79b6817b5698054333d768a8c6c800f65cd90cfa",
+    "fetched_utc": "2026-10-22T19:20:13Z"
+   },
+   "got": {
+    "bytes": 555,
+    "sha256": "182ba3b11478a1f1768020fc79b6817b5698054333d768a8c6c800f65cd90cfa",
+    "git_blob_sha1": "b67b2eff3d9ef192bb143cd95f90dc2572be9945"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "averaging_js",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/src/Table/Averaging.js",
+   "on_mismatch": "refuse",
+   "role": "site_code",
+   "path": "data/ad/averaging_js",
+   "received": {
+    "status": 200,
+    "bytes": 1264,
+    "sha256": "aba4395c7a32d3bf0fe40d2fb05abafa8d08a7d4190794ff8441b03b4e0f8b02",
+    "fetched_utc": "2026-10-22T19:20:14Z"
+   },
+   "got": {
+    "bytes": 1264,
+    "sha256": "aba4395c7a32d3bf0fe40d2fb05abafa8d08a7d4190794ff8441b03b4e0f8b02",
+    "git_blob_sha1": "569ac12661a79c996bb85fc2a05ed603b33c6445"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "table_2025_04_02_before_edit",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/a1d5b0b1a89ac1375bcfbca2447e36e0851884fc/public/table_2025_04_02.csv",
+   "on_mismatch": "refuse",
+   "role": "table_parent",
+   "path": "data/ad/table_2025_04_02_before_edit",
+   "received": {
+    "status": 200,
+    "bytes": 8299,
+    "sha256": "261511751aad9fbd23c52f0da684f611eb743d4a826560b56ca49cd58587a790",
+    "fetched_utc": "2026-10-22T19:20:14Z"
+   },
+   "got": {
+    "bytes": 8299,
+    "sha256": "261511751aad9fbd23c52f0da684f611eb743d4a826560b56ca49cd58587a790",
+    "git_blob_sha1": "b78dce2d2def38dff8ad7e2c337352ce521d2115"
+   },
+   "checks": {
+    "bytes": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "feasibility_page",
+   "url": "https://datasets-server.huggingface.co/filter?dataset=livebench/model_answer&config=default&split=leaderboard&where=%22task%22%3D%27tablejoin%27%20AND%20%22model_id%22%3D%27gpt-4o-2024-05-13%27&offset=0&length=100",
+   "on_mismatch": "record",
+   "role": "feasibility",
+   "path": "data/ad/feasibility_page",
+   "received": {
+    "status": 200,
+    "bytes": 28125,
+    "sha256": "2dc81677aa0f76acb1f20a1780866ad8bc7ca657a74131a224358c0498968015",
+    "fetched_utc": "2026-10-22T19:20:28Z"
+   },
+   "got": {
+    "bytes": 28125,
+    "sha256": "2dc81677aa0f76acb1f20a1780866ad8bc7ca657a74131a224358c0498968015",
+    "git_blob_sha1": "9da13f63d24a8fb3b361c9cbad71ed309a0d7c61"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_905b71f_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/905b71f2f525b169fa5eb36263e3292f14571dd0/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_905b71f_utils",
+   "received": {
+    "status": 200,
+    "bytes": 1177,
+    "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "fetched_utc": "2026-10-22T19:20:28Z"
+   },
+   "got": {
+    "bytes": 1177,
+    "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "git_blob_sha1": "686e4aa14040d474c6adc88adb2cc805813c8b64"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_905b71f_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/905b71f2f525b169fa5eb36263e3292f14571dd0/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_905b71f_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 11878,
+    "sha256": "b35746a0003db176914a5e3fa33496276c66ebc666156a5a57e2284c93dfa220",
+    "fetched_utc": "2026-10-22T19:20:29Z"
+   },
+   "got": {
+    "bytes": 11878,
+    "sha256": "b35746a0003db176914a5e3fa33496276c66ebc666156a5a57e2284c93dfa220",
+    "git_blob_sha1": "d14b6c356a50619ecf8a8823cdd622f9782ea9d2"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_1264bb0_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/1264bb0ebef808ca6b43eab5e375085103d12651/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_1264bb0_utils",
+   "received": {
+    "status": 200,
+    "bytes": 1177,
+    "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "fetched_utc": "2026-10-22T19:20:29Z"
+   },
+   "got": {
+    "bytes": 1177,
+    "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "git_blob_sha1": "686e4aa14040d474c6adc88adb2cc805813c8b64"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_1264bb0_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/1264bb0ebef808ca6b43eab5e375085103d12651/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_1264bb0_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 13388,
+    "sha256": "69a71d851282d9fde16347a39c0c0bfae95f30ddbebdac91aeafa58e9b7f37ab",
+    "fetched_utc": "2026-10-22T19:20:29Z"
+   },
+   "got": {
+    "bytes": 13388,
+    "sha256": "69a71d851282d9fde16347a39c0c0bfae95f30ddbebdac91aeafa58e9b7f37ab",
+    "git_blob_sha1": "dced814a7519c0c451b9b3d25532d79f16b2f14f"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_40c0805_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/40c0805655b84274f5861f81032171a1d40d7580/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_40c0805_utils",
+   "received": {
+    "status": 200,
+    "bytes": 1177,
+    "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "fetched_utc": "2026-10-22T19:20:29Z"
+   },
+   "got": {
+    "bytes": 1177,
+    "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "git_blob_sha1": "686e4aa14040d474c6adc88adb2cc805813c8b64"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_40c0805_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/40c0805655b84274f5861f81032171a1d40d7580/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_40c0805_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 13403,
+    "sha256": "0877b0defe6c7ad223fad10b7a38f7cd44eee9b5f5adee09a2f96084ad266a93",
+    "fetched_utc": "2026-10-22T19:20:29Z"
+   },
+   "got": {
+    "bytes": 13403,
+    "sha256": "0877b0defe6c7ad223fad10b7a38f7cd44eee9b5f5adee09a2f96084ad266a93",
+    "git_blob_sha1": "6359bda8f921c3c41126decaddd4b2563a608562"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_e424f7b_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/e424f7beadbc8defe96b55384df27bab22a54a76/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_e424f7b_utils",
+   "received": {
+    "status": 200,
+    "bytes": 1177,
+    "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "fetched_utc": "2026-10-22T19:20:30Z"
+   },
+   "got": {
+    "bytes": 1177,
+    "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "git_blob_sha1": "686e4aa14040d474c6adc88adb2cc805813c8b64"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_e424f7b_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/e424f7beadbc8defe96b55384df27bab22a54a76/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_e424f7b_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 13371,
+    "sha256": "be9bdb345552c1bb8b76f48c8e0769a053449675b3ee51123efca3f651dc05c6",
+    "fetched_utc": "2026-10-22T19:20:30Z"
+   },
+   "got": {
+    "bytes": 13371,
+    "sha256": "be9bdb345552c1bb8b76f48c8e0769a053449675b3ee51123efca3f651dc05c6",
+    "git_blob_sha1": "dff403a760175db69094ca3316919dca82c8c681"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_0ca7c40_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/0ca7c4090814a43b2d53976ebe3fc9e2cef24382/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_0ca7c40_utils",
+   "received": {
+    "status": 200,
+    "bytes": 1177,
+    "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "fetched_utc": "2026-10-22T19:20:30Z"
+   },
+   "got": {
+    "bytes": 1177,
+    "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "git_blob_sha1": "686e4aa14040d474c6adc88adb2cc805813c8b64"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_0ca7c40_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/0ca7c4090814a43b2d53976ebe3fc9e2cef24382/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_0ca7c40_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 14196,
+    "sha256": "1128e51458ff9e97118c491a860a5e3dea295ff8c39cf89b5e271c3d99ccb555",
+    "fetched_utc": "2026-10-22T19:20:30Z"
+   },
+   "got": {
+    "bytes": 14196,
+    "sha256": "1128e51458ff9e97118c491a860a5e3dea295ff8c39cf89b5e271c3d99ccb555",
+    "git_blob_sha1": "96dacb4f6b2ee0070f5eae3de83bd22007d7b5cf"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_4de3327_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/4de3327329bcf9a5d00d800b92796b78519798ec/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_4de3327_utils",
+   "received": {
+    "status": 200,
+    "bytes": 1177,
+    "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "fetched_utc": "2026-10-22T19:20:31Z"
+   },
+   "got": {
+    "bytes": 1177,
+    "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "git_blob_sha1": "686e4aa14040d474c6adc88adb2cc805813c8b64"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_4de3327_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/4de3327329bcf9a5d00d800b92796b78519798ec/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_4de3327_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 14782,
+    "sha256": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+    "fetched_utc": "2026-10-22T19:20:31Z"
+   },
+   "got": {
+    "bytes": 14782,
+    "sha256": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+    "git_blob_sha1": "99c21e5e214e6769cdc60b39824d543efc0e7528"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_f774d19_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/f774d190fef5525f1e2a6ebebdf54f31903432c0/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_f774d19_utils",
+   "received": {
+    "status": 200,
+    "bytes": 1294,
+    "sha256": "8d7fa703061d4536ee9f07c1a3d103690a6a20c01d8ab2c284fcb43ce45724b9",
+    "fetched_utc": "2026-10-22T19:20:31Z"
+   },
+   "got": {
+    "bytes": 1294,
+    "sha256": "8d7fa703061d4536ee9f07c1a3d103690a6a20c01d8ab2c284fcb43ce45724b9",
+    "git_blob_sha1": "6be335ecd20d4ee260243aebeea2447822b6d14a"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_f774d19_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/f774d190fef5525f1e2a6ebebdf54f31903432c0/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_f774d19_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 14782,
+    "sha256": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+    "fetched_utc": "2026-10-22T19:20:31Z"
+   },
+   "got": {
+    "bytes": 14782,
+    "sha256": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+    "git_blob_sha1": "99c21e5e214e6769cdc60b39824d543efc0e7528"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_19c7757_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/19c7757f6e2e00b6a3383e6b2d99fd0569971a97/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_19c7757_utils",
+   "received": {
+    "status": 200,
+    "bytes": 2099,
+    "sha256": "b04aee527f1e38d8a2dad456d2bcf2b2af622d64cd01221a3f31a480bb54c0e8",
+    "fetched_utc": "2026-10-22T19:20:32Z"
+   },
+   "got": {
+    "bytes": 2099,
+    "sha256": "b04aee527f1e38d8a2dad456d2bcf2b2af622d64cd01221a3f31a480bb54c0e8",
+    "git_blob_sha1": "573fa5231b8d32cbc95e0618d151f7a549b0cfb0"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_19c7757_util",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/19c7757f6e2e00b6a3383e6b2d99fd0569971a97/livebench/process_results/util.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_19c7757_util",
+   "received": {
+    "status": 200,
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "fetched_utc": "2026-10-22T19:20:32Z"
+   },
+   "got": {
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_19c7757_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/19c7757f6e2e00b6a3383e6b2d99fd0569971a97/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_19c7757_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 17458,
+    "sha256": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+    "fetched_utc": "2026-10-22T19:20:32Z"
+   },
+   "got": {
+    "bytes": 17458,
+    "sha256": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+    "git_blob_sha1": "d07d6fa9ca2518f211e45c393577aa45288f2bea"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_c5c293c_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/c5c293c10c515f78d681c655f9b6ddcfc7938c5f/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_c5c293c_utils",
+   "received": {
+    "status": 200,
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "fetched_utc": "2026-10-22T19:20:32Z"
+   },
+   "got": {
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_c5c293c_util",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/c5c293c10c515f78d681c655f9b6ddcfc7938c5f/livebench/process_results/util.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_c5c293c_util",
+   "received": {
+    "status": 200,
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "fetched_utc": "2026-10-22T19:20:33Z"
+   },
+   "got": {
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_c5c293c_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/c5c293c10c515f78d681c655f9b6ddcfc7938c5f/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_c5c293c_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 17458,
+    "sha256": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+    "fetched_utc": "2026-10-22T19:20:33Z"
+   },
+   "got": {
+    "bytes": 17458,
+    "sha256": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+    "git_blob_sha1": "d07d6fa9ca2518f211e45c393577aa45288f2bea"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_32c9744_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/32c97443b01913d348d1c118cd6e1e5d65280f9b/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_32c9744_utils",
+   "received": {
+    "status": 200,
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "fetched_utc": "2026-10-22T19:20:33Z"
+   },
+   "got": {
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_32c9744_util",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/32c97443b01913d348d1c118cd6e1e5d65280f9b/livebench/process_results/util.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_32c9744_util",
+   "received": {
+    "status": 200,
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "fetched_utc": "2026-10-22T19:20:33Z"
+   },
+   "got": {
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_32c9744_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/32c97443b01913d348d1c118cd6e1e5d65280f9b/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_32c9744_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 18028,
+    "sha256": "d4671453939f9ee679511ed8ce50e43f5d44bb1c8aab6fa8f186b666239a7a13",
+    "fetched_utc": "2026-10-22T19:20:33Z"
+   },
+   "got": {
+    "bytes": 18028,
+    "sha256": "d4671453939f9ee679511ed8ce50e43f5d44bb1c8aab6fa8f186b666239a7a13",
+    "git_blob_sha1": "a37322c575b6ed63873b25dff0e79831a3725f13"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_6802409_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/68024097843d964a15afb8a742ede92d03ed00f0/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_6802409_utils",
+   "received": {
+    "status": 200,
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "fetched_utc": "2026-10-22T19:20:34Z"
+   },
+   "got": {
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_6802409_util",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/68024097843d964a15afb8a742ede92d03ed00f0/livebench/process_results/util.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_6802409_util",
+   "received": {
+    "status": 200,
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "fetched_utc": "2026-10-22T19:20:34Z"
+   },
+   "got": {
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_6802409_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/68024097843d964a15afb8a742ede92d03ed00f0/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_6802409_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 18023,
+    "sha256": "8f85fa094e44a361081c07a72f24b05e290685560d8ab59ed9e72ccc9871b92f",
+    "fetched_utc": "2026-10-22T19:20:34Z"
+   },
+   "got": {
+    "bytes": 18023,
+    "sha256": "8f85fa094e44a361081c07a72f24b05e290685560d8ab59ed9e72ccc9871b92f",
+    "git_blob_sha1": "3d8b5022570d7570984c71890d79180e591dc180"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_bdce0f7_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/bdce0f7eed694e58df5a5a89345d2b0cf9507507/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_bdce0f7_utils",
+   "received": {
+    "status": 200,
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "fetched_utc": "2026-10-22T19:20:34Z"
+   },
+   "got": {
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_bdce0f7_util",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/bdce0f7eed694e58df5a5a89345d2b0cf9507507/livebench/process_results/util.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_bdce0f7_util",
+   "received": {
+    "status": 200,
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "fetched_utc": "2026-10-22T19:20:35Z"
+   },
+   "got": {
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_bdce0f7_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/bdce0f7eed694e58df5a5a89345d2b0cf9507507/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_bdce0f7_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 18013,
+    "sha256": "18c10f32fbeff8a46a72f16229bef06408098abe9fb324c6f2da64994fb2d157",
+    "fetched_utc": "2026-10-22T19:20:35Z"
+   },
+   "got": {
+    "bytes": 18013,
+    "sha256": "18c10f32fbeff8a46a72f16229bef06408098abe9fb324c6f2da64994fb2d157",
+    "git_blob_sha1": "ae6c534ce4859f1ebb5eecf8c95018db951faf77"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_7113c8d_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/7113c8db47c01c5d33999cf9daf3f221caccf0fd/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_7113c8d_utils",
+   "received": {
+    "status": 200,
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "fetched_utc": "2026-10-22T19:20:35Z"
+   },
+   "got": {
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_7113c8d_util",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/7113c8db47c01c5d33999cf9daf3f221caccf0fd/livebench/process_results/util.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_7113c8d_util",
+   "received": {
+    "status": 200,
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "fetched_utc": "2026-10-22T19:20:35Z"
+   },
+   "got": {
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_7113c8d_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/7113c8db47c01c5d33999cf9daf3f221caccf0fd/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_7113c8d_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 18035,
+    "sha256": "6d0121692fbb1f8a4de53a13be34a3c60aa79b5f33b4db7d967c31a56e73215f",
+    "fetched_utc": "2026-10-22T19:20:35Z"
+   },
+   "got": {
+    "bytes": 18035,
+    "sha256": "6d0121692fbb1f8a4de53a13be34a3c60aa79b5f33b4db7d967c31a56e73215f",
+    "git_blob_sha1": "cc803f3803fdbff87a7a08f3b498d4d69a55b6f8"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_fa6a3c6_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/fa6a3c6c4570292abe514233d364551ee11a2e71/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_fa6a3c6_utils",
+   "received": {
+    "status": 200,
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "fetched_utc": "2026-10-22T19:20:36Z"
+   },
+   "got": {
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_fa6a3c6_util",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/fa6a3c6c4570292abe514233d364551ee11a2e71/livebench/process_results/util.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_fa6a3c6_util",
+   "received": {
+    "status": 200,
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "fetched_utc": "2026-10-22T19:20:36Z"
+   },
+   "got": {
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_fa6a3c6_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/fa6a3c6c4570292abe514233d364551ee11a2e71/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_fa6a3c6_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 18132,
+    "sha256": "ed7973d19360ccf3a4a58d3112918b4f561009cdbdd2c4df55a2c85525a3d137",
+    "fetched_utc": "2026-10-22T19:20:36Z"
+   },
+   "got": {
+    "bytes": 18132,
+    "sha256": "ed7973d19360ccf3a4a58d3112918b4f561009cdbdd2c4df55a2c85525a3d137",
+    "git_blob_sha1": "6b8d81eee7564a708f658bacbc9c7646b92f0cc4"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_603c7d3_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/603c7d3aa8a75764d93db0c73fe1230e05acb9e4/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_603c7d3_utils",
+   "received": {
+    "status": 200,
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "fetched_utc": "2026-10-22T19:20:36Z"
+   },
+   "got": {
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_603c7d3_util",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/603c7d3aa8a75764d93db0c73fe1230e05acb9e4/livebench/process_results/util.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_603c7d3_util",
+   "received": {
+    "status": 200,
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "fetched_utc": "2026-10-22T19:20:37Z"
+   },
+   "got": {
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_603c7d3_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/603c7d3aa8a75764d93db0c73fe1230e05acb9e4/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_603c7d3_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 19042,
+    "sha256": "bb38171f2f150e8d38d2b84c32d9a36f93268b4ddf6cc7d0a3655edc3088aa7c",
+    "fetched_utc": "2026-10-22T19:20:37Z"
+   },
+   "got": {
+    "bytes": 19042,
+    "sha256": "bb38171f2f150e8d38d2b84c32d9a36f93268b4ddf6cc7d0a3655edc3088aa7c",
+    "git_blob_sha1": "3742bab878c0dd5ba76d4a496090b078f35535ad"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_6515fc8_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/6515fc884eafc4902ac9cb563be1c220bfc14415/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_6515fc8_utils",
+   "received": {
+    "status": 200,
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "fetched_utc": "2026-10-22T19:20:37Z"
+   },
+   "got": {
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_6515fc8_util",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/6515fc884eafc4902ac9cb563be1c220bfc14415/livebench/process_results/util.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_6515fc8_util",
+   "received": {
+    "status": 200,
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "fetched_utc": "2026-10-22T19:20:37Z"
+   },
+   "got": {
+    "bytes": 1107,
+    "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_6515fc8_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/6515fc884eafc4902ac9cb563be1c220bfc14415/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_6515fc8_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 19077,
+    "sha256": "968660eab3e80e9f428b5446b9d1258ac2cb5d52efb1adb1b3fc82ab0862d79f",
+    "fetched_utc": "2026-10-22T19:20:38Z"
+   },
+   "got": {
+    "bytes": 19077,
+    "sha256": "968660eab3e80e9f428b5446b9d1258ac2cb5d52efb1adb1b3fc82ab0862d79f",
+    "git_blob_sha1": "14d8c26c269ab0ca7747a54b1323032d69d621e3"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_f3501c7_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/f3501c71a24afdbaab9403f50dfa46e8faa0130f/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_f3501c7_utils",
+   "received": {
+    "status": 200,
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "fetched_utc": "2026-10-22T19:20:38Z"
+   },
+   "got": {
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_f3501c7_util",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/f3501c71a24afdbaab9403f50dfa46e8faa0130f/livebench/process_results/util.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_f3501c7_util",
+   "received": {
+    "status": 200,
+    "bytes": 1108,
+    "sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "fetched_utc": "2026-10-22T19:20:38Z"
+   },
+   "got": {
+    "bytes": 1108,
+    "sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "git_blob_sha1": "4a1be7c8410ecf16872df1f64a5c433a579edda6"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_f3501c7_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/f3501c71a24afdbaab9403f50dfa46e8faa0130f/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_f3501c7_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 19320,
+    "sha256": "5d0b7a28d3b8f042d2eae7ee192e92d8c56c949c635a181441fb8f01ab22ccac",
+    "fetched_utc": "2026-10-22T19:20:38Z"
+   },
+   "got": {
+    "bytes": 19320,
+    "sha256": "5d0b7a28d3b8f042d2eae7ee192e92d8c56c949c635a181441fb8f01ab22ccac",
+    "git_blob_sha1": "decc701e6b77a083ed2bbe259d3732062c447be5"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_a41783c_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/a41783c06f646697a96cc2ae2275a6b5c2646cb4/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_a41783c_utils",
+   "received": {
+    "status": 200,
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "fetched_utc": "2026-10-22T19:20:38Z"
+   },
+   "got": {
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_a41783c_util",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/a41783c06f646697a96cc2ae2275a6b5c2646cb4/livebench/process_results/util.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_a41783c_util",
+   "received": {
+    "status": 200,
+    "bytes": 1108,
+    "sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "fetched_utc": "2026-10-22T19:20:39Z"
+   },
+   "got": {
+    "bytes": 1108,
+    "sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "git_blob_sha1": "4a1be7c8410ecf16872df1f64a5c433a579edda6"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_a41783c_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/a41783c06f646697a96cc2ae2275a6b5c2646cb4/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_a41783c_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 22395,
+    "sha256": "b6ffc0fe14e334915c3eddc0026bd2c9760aaab1f1a6281f3617953a1d8b0bdf",
+    "fetched_utc": "2026-10-22T19:20:39Z"
+   },
+   "got": {
+    "bytes": 22395,
+    "sha256": "b6ffc0fe14e334915c3eddc0026bd2c9760aaab1f1a6281f3617953a1d8b0bdf",
+    "git_blob_sha1": "0876afdc3f1917f11cf03f62488c50d07d909eb0"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_bb4283b_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/bb4283ba76afa988e6614989b52854865cfe5577/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_bb4283b_utils",
+   "received": {
+    "status": 200,
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "fetched_utc": "2026-10-22T19:20:39Z"
+   },
+   "got": {
+    "bytes": 2397,
+    "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_bb4283b_util",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/bb4283ba76afa988e6614989b52854865cfe5577/livebench/process_results/util.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_bb4283b_util",
+   "received": {
+    "status": 200,
+    "bytes": 1108,
+    "sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "fetched_utc": "2026-10-22T19:20:39Z"
+   },
+   "got": {
+    "bytes": 1108,
+    "sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "git_blob_sha1": "4a1be7c8410ecf16872df1f64a5c433a579edda6"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_bb4283b_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/bb4283ba76afa988e6614989b52854865cfe5577/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_bb4283b_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 22466,
+    "sha256": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+    "fetched_utc": "2026-10-22T19:20:40Z"
+   },
+   "got": {
+    "bytes": 22466,
+    "sha256": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+    "git_blob_sha1": "bdcf774146b32fee2cb336c1df463a1d1bc33774"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_e647d72_utils",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/e647d72ba9f41e139521be8ec7c0e900d62763aa/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_e647d72_utils",
+   "received": {
+    "status": 200,
+    "bytes": 2527,
+    "sha256": "1d8e56395b6ad033391503fe5914eb242f080eed5f07695c655e28d779dd213c",
+    "fetched_utc": "2026-10-22T19:20:40Z"
+   },
+   "got": {
+    "bytes": 2527,
+    "sha256": "1d8e56395b6ad033391503fe5914eb242f080eed5f07695c655e28d779dd213c",
+    "git_blob_sha1": "0cd241443ab3939be2fea37f50b33c468e669cb5"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_e647d72_util",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/e647d72ba9f41e139521be8ec7c0e900d62763aa/livebench/process_results/util.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_e647d72_util",
+   "received": {
+    "status": 200,
+    "bytes": 1108,
+    "sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "fetched_utc": "2026-10-22T19:20:40Z"
+   },
+   "got": {
+    "bytes": 1108,
+    "sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "git_blob_sha1": "4a1be7c8410ecf16872df1f64a5c433a579edda6"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  },
+  {
+   "id": "lb_e647d72_gen_ground_truth_judgment",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/e647d72ba9f41e139521be8ec7c0e900d62763aa/livebench/gen_ground_truth_judgment.py",
+   "on_mismatch": "refuse",
+   "role": "scorer_source",
+   "path": "data/ad/lb_e647d72_gen_ground_truth_judgment",
+   "received": {
+    "status": 200,
+    "bytes": 22466,
+    "sha256": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+    "fetched_utc": "2026-10-22T19:20:40Z"
+   },
+   "got": {
+    "bytes": 22466,
+    "sha256": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+    "git_blob_sha1": "bdcf774146b32fee2cb336c1df463a1d1bc33774"
+   },
+   "checks": {
+    "bytes": true,
+    "sha256": true,
+    "git_blob_sha1": true
+   },
+   "matches": true
+  }
+ ],
+ "vendored": [
+  {
+   "file": "scripts/ad_pinned/gen_ground_truth_judgment_19c7757.py",
+   "manifest_sha256": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+   "local_sha256": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+   "remote_sha256": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+   "source": {
+    "commit": "19c7757f6e2e00b6a3383e6b2d99fd0569971a97",
+    "path": "livebench/gen_ground_truth_judgment.py"
+   },
+   "matches": true
+  },
+  {
+   "file": "scripts/ad_pinned/gen_ground_truth_judgment_905b71f.py",
+   "manifest_sha256": "b35746a0003db176914a5e3fa33496276c66ebc666156a5a57e2284c93dfa220",
+   "local_sha256": "b35746a0003db176914a5e3fa33496276c66ebc666156a5a57e2284c93dfa220",
+   "remote_sha256": "b35746a0003db176914a5e3fa33496276c66ebc666156a5a57e2284c93dfa220",
+   "source": {
+    "commit": "905b71f2f525b169fa5eb36263e3292f14571dd0",
+    "path": "livebench/gen_ground_truth_judgment.py"
+   },
+   "matches": true
+  },
+  {
+   "file": "scripts/ad_pinned/gen_ground_truth_judgment_e647d72.py",
+   "manifest_sha256": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+   "local_sha256": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+   "remote_sha256": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+   "source": {
+    "commit": "e647d72ba9f41e139521be8ec7c0e900d62763aa",
+    "path": "livebench/gen_ground_truth_judgment.py"
+   },
+   "matches": true
+  },
+  {
+   "file": "scripts/ad_pinned/gen_ground_truth_judgment_f3501c7.py",
+   "manifest_sha256": "5d0b7a28d3b8f042d2eae7ee192e92d8c56c949c635a181441fb8f01ab22ccac",
+   "local_sha256": "5d0b7a28d3b8f042d2eae7ee192e92d8c56c949c635a181441fb8f01ab22ccac",
+   "remote_sha256": "5d0b7a28d3b8f042d2eae7ee192e92d8c56c949c635a181441fb8f01ab22ccac",
+   "source": {
+    "commit": "f3501c71a24afdbaab9403f50dfa46e8faa0130f",
+    "path": "livebench/gen_ground_truth_judgment.py"
+   },
+   "matches": true
+  },
+  {
+   "file": "scripts/ad_pinned/gen_ground_truth_judgment_f774d19.py",
+   "manifest_sha256": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+   "local_sha256": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+   "remote_sha256": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+   "source": {
+    "commit": "f774d190fef5525f1e2a6ebebdf54f31903432c0",
+    "path": "livebench/gen_ground_truth_judgment.py"
+   },
+   "matches": true
+  },
+  {
+   "file": "scripts/ad_pinned/gen_ground_truth_judgment_fa6a3c6.py",
+   "manifest_sha256": "ed7973d19360ccf3a4a58d3112918b4f561009cdbdd2c4df55a2c85525a3d137",
+   "local_sha256": "ed7973d19360ccf3a4a58d3112918b4f561009cdbdd2c4df55a2c85525a3d137",
+   "remote_sha256": "ed7973d19360ccf3a4a58d3112918b4f561009cdbdd2c4df55a2c85525a3d137",
+   "source": {
+    "commit": "fa6a3c6c4570292abe514233d364551ee11a2e71",
+    "path": "livebench/gen_ground_truth_judgment.py"
+   },
+   "matches": true
+  },
+  {
+   "file": "scripts/ad_pinned/tablejoin_utils_19c7757.py",
+   "manifest_sha256": "b04aee527f1e38d8a2dad456d2bcf2b2af622d64cd01221a3f31a480bb54c0e8",
+   "local_sha256": "b04aee527f1e38d8a2dad456d2bcf2b2af622d64cd01221a3f31a480bb54c0e8",
+   "remote_sha256": "b04aee527f1e38d8a2dad456d2bcf2b2af622d64cd01221a3f31a480bb54c0e8",
+   "source": {
+    "commit": "19c7757f6e2e00b6a3383e6b2d99fd0569971a97",
+    "path": "livebench/process_results/data_analysis/tablejoin/utils.py"
+   },
+   "matches": true
+  },
+  {
+   "file": "scripts/ad_pinned/tablejoin_utils_905b71f.py",
+   "manifest_sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+   "local_sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+   "remote_sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+   "source": {
+    "commit": "905b71f2f525b169fa5eb36263e3292f14571dd0",
+    "path": "livebench/process_results/data_analysis/tablejoin/utils.py"
+   },
+   "matches": true
+  },
+  {
+   "file": "scripts/ad_pinned/tablejoin_utils_c5c293c.py",
+   "manifest_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "local_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "remote_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "source": {
+    "commit": "c5c293c10c515f78d681c655f9b6ddcfc7938c5f",
+    "path": "livebench/process_results/data_analysis/tablejoin/utils.py"
+   },
+   "matches": true
+  },
+  {
+   "file": "scripts/ad_pinned/tablejoin_utils_e647d72.py",
+   "manifest_sha256": "1d8e56395b6ad033391503fe5914eb242f080eed5f07695c655e28d779dd213c",
+   "local_sha256": "1d8e56395b6ad033391503fe5914eb242f080eed5f07695c655e28d779dd213c",
+   "remote_sha256": "1d8e56395b6ad033391503fe5914eb242f080eed5f07695c655e28d779dd213c",
+   "source": {
+    "commit": "e647d72ba9f41e139521be8ec7c0e900d62763aa",
+    "path": "livebench/process_results/data_analysis/tablejoin/utils.py"
+   },
+   "matches": true
+  },
+  {
+   "file": "scripts/ad_pinned/tablejoin_utils_f774d19.py",
+   "manifest_sha256": "8d7fa703061d4536ee9f07c1a3d103690a6a20c01d8ab2c284fcb43ce45724b9",
+   "local_sha256": "8d7fa703061d4536ee9f07c1a3d103690a6a20c01d8ab2c284fcb43ce45724b9",
+   "remote_sha256": "8d7fa703061d4536ee9f07c1a3d103690a6a20c01d8ab2c284fcb43ce45724b9",
+   "source": {
+    "commit": "f774d190fef5525f1e2a6ebebdf54f31903432c0",
+    "path": "livebench/process_results/data_analysis/tablejoin/utils.py"
+   },
+   "matches": true
+  },
+  {
+   "file": "scripts/ad_pinned/util_19c7757.py",
+   "manifest_sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+   "local_sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+   "remote_sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+   "source": {
+    "commit": "19c7757f6e2e00b6a3383e6b2d99fd0569971a97",
+    "path": "livebench/process_results/util.py"
+   },
+   "matches": true
+  },
+  {
+   "file": "scripts/ad_pinned/util_f3501c7.py",
+   "manifest_sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+   "local_sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+   "remote_sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+   "source": {
+    "commit": "f3501c71a24afdbaab9403f50dfa46e8faa0130f",
+    "path": "livebench/process_results/util.py"
+   },
+   "matches": true
+  }
+ ],
+ "g0": {
+  "passed": true,
+  "refused_entries": [],
+  "vendored_files_that_differ": [],
+  "first_parent_states": {
+   "checked": 20,
+   "problems": [],
+   "matches": true
+  },
+  "version_list_problems": [],
+  "recorded_differences_published_first": [],
+  "recorded_roles": {}
+ },
+ "unreceived": [],
+ "environment": {
+  "python": "3.11.17",
+  "platform": "linux",
+  "peak_rss_mb": 135.5,
+  "nice": 19,
+  "numpy": "2.4.6",
+  "pyarrow": null
+ },
+ "complete": true,
+ "fetch_finished_utc": "2026-10-22T19:20:41Z"
+}

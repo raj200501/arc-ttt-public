@@ -116,3 +116,120 @@ def test_no_dated_section_in_the_tree_is_touched_by_the_gate(monkeypatch):
     if not (REPO / "docs" / "strategy").is_dir():
         return    # the documents with dated sections are not in this cut
     assert checked, "no document with a dated section was found to check"
+
+
+# A quotation and an "As of YYYY-MM-DD" sentence are records as well. A
+# research memo's line, as it read before the gate rewrote it to 238 and
+# then 239 on 2026-10-22 (CORRECTIONS 2026-10-22), minus the page it named.
+MEMO_LINE = ('- As of 2026-09-23: "105 dated corrections" and '
+             '"237 banked artifacts over 48 days." The same page says the work '
+             '"does not make anything expensive to replicate."\n')
+
+
+def _far_targets() -> dict[str, int]:
+    return {"artifacts": 999, "primary_verifiable": 998, "export_tests": 997,
+            "export_artifacts": 996, "tool_tests": 995}
+
+
+def _untouched(monkeypatch, text: str) -> None:
+    monkeypatch.setattr(gate, "_targets", _far_targets)
+    fixed, changed = gate.fix(text)
+    assert fixed == text and changed == [], changed
+    found = gate.scan(text)
+    assert not found["stale"] and not found["unowned"], found
+
+
+def _rewritten(monkeypatch, text: str, expected: list[str]) -> None:
+    monkeypatch.setattr(gate, "_targets", _far_targets)
+    fixed, changed = gate.fix(text)
+    assert changed == expected, changed
+    assert gate.scan(text)["stale"], "a live figure was not checked"
+
+
+def test_the_memo_quotation_is_never_rewritten(monkeypatch):
+    assert gate._context_of(MEMO_LINE, MEMO_LINE.index("237")) == "dated"
+    _untouched(monkeypatch, MEMO_LINE)
+
+
+def test_a_quotation_is_a_record(monkeypatch):
+    """Straight or curly quotes, with no date anywhere in the sentence."""
+    _untouched(monkeypatch, 'The page said "237 banked artifacts over 48 days."\n')
+    _untouched(monkeypatch, "The page said “237 banked artifacts over 48 days.”\n")
+    _untouched(monkeypatch, '> The page said "237 banked\n> artifacts over 48 days."\n')
+    _untouched(monkeypatch, '| 2026-09-23 | "237 banked artifacts" | quoted |\n')
+
+
+def test_an_as_of_sentence_is_a_record(monkeypatch):
+    """No quote marks: the date alone makes it a record."""
+    _untouched(monkeypatch, "As of 2026-09-23 the map counted 237 banked artifacts.\n")
+    _untouched(monkeypatch, "The map counted 237 banked artifacts as of 2026-09-23.\n")
+    _untouched(monkeypatch, "> As of 2026-09-23 the map counted\n> 237 banked artifacts.\n")
+    _untouched(monkeypatch, "As of 2026-09-23 the page read:\n\n> 237 banked artifacts.\n")
+
+
+def test_live_copy_around_a_record_is_still_rewritten(monkeypatch):
+    """The skip must not grow into a skip of everything. A blockquote is
+    live copy unless an "As of" line introduces it (the application's
+    answers are hard-wrapped blockquotes). A quote mark elsewhere in the
+    paragraph, in another table row or inside backticks does not make a
+    figure a quotation. The sentence after an "As of" sentence is live."""
+    _rewritten(monkeypatch,
+               "> The coverage map reports 57 of 240 banked artifacts as\n"
+               "> primary-verifiable.\n",
+               ["artifacts: 240 -> 999", "primary_verifiable: 57 -> 998"])
+    _rewritten(monkeypatch, 'It "works", and it holds 240 banked artifacts.\n',
+               ["artifacts: 240 -> 999"])
+    _rewritten(monkeypatch,
+               'The parser reads `"` across 240 banked artifacts, and "works".\n',
+               ["artifacts: 240 -> 999"])
+    _rewritten(monkeypatch,
+               '| a | a 5" screen |\n| b | 240 banked artifacts |\n| c | a 7" one |\n',
+               ["artifacts: 240 -> 999"])
+    _rewritten(monkeypatch,
+               "As of 2026-09-23 it was 237. Today it holds 240 banked artifacts.\n",
+               ["artifacts: 240 -> 999"])
+    _rewritten(monkeypatch,
+               'The page said "237 banked artifacts." We hold 240 banked artifacts.\n',
+               ["artifacts: 240 -> 999"])
+
+
+def test_quoted_live_copy_in_the_application_is_still_checked(monkeypatch):
+    """The application drafts its short form-field answers in double
+    quotes, and they are our own live copy. In a LIVE_QUOTED_COPY
+    document the quotation rule is off: a stale quoted figure is flagged
+    and rewritten. "As of" stays a record there."""
+    assert "APPLICATION_DRAFT.md" in gate.LIVE_QUOTED_COPY
+    monkeypatch.setattr(gate, "_targets", _far_targets)
+    answer = ('- **Traction:** "No customers and no revenue. A public harness '
+              'with 240 banked artifacts and 155 dated corrections."\n')
+    fixed, changed = gate.fix(answer, quotes_are_records=False)
+    # "a public harness" makes it the export tree's count
+    assert changed == ["export_artifacts: 240 -> 996"], changed
+    assert gate.scan(answer, quotes_are_records=False)["stale"]
+    dated = "As of 2026-09-23 the map counted 237 banked artifacts.\n"
+    assert gate.fix(dated, quotes_are_records=False)[1] == []
+    # and the same quotation anywhere else is a record
+    assert gate.fix(answer)[1] == []
+
+
+def test_a_closing_quote_or_paren_ends_the_as_of_sentence(monkeypatch):
+    """'."' and '.)' end an "As of" sentence; the next sentence is live."""
+    _rewritten(monkeypatch,
+               'As of 2026-09-23 the page said "237 banked artifacts." '
+               'Today the repo holds 240 banked artifacts.\n',
+               ["artifacts: 240 -> 999"])
+    _rewritten(monkeypatch,
+               "(As of 2026-09-23 it was 237.) The repo holds 240 banked artifacts.\n",
+               ["artifacts: 240 -> 999"])
+
+
+def test_only_a_paragraph_introduces_a_blockquote(monkeypatch):
+    """An earlier blockquote's last line is not an introduction, and a
+    hard-wrapped introducing sentence is read whole."""
+    _rewritten(monkeypatch,
+               "> Q1: the count was 237 as of 2026-09-23.\n\n"
+               "> Q2: the repo holds 240 banked artifacts.\n",
+               ["artifacts: 240 -> 999"])
+    _untouched(monkeypatch,
+               "As of 2026-09-23, before the rebuild, the page\nread:\n\n"
+               "> 237 banked artifacts.\n")

@@ -195,8 +195,9 @@ Everything S and T froze is used as frozen except the following.
    **Found while measuring, about T:** by the same rendering, T's longest
    Phi-3 k=20 prompt on CORD is 3,628 tokens, so an output longer than
    468 tokens would pass 4,096 positions. Whether any banked T output did
-   is not checked here (the T cells are not read until Addendum AA
-   freezes). It is named so it is not discovered later.
+   is not checked here (written while the T cells were held back for
+   Addendum AA, which was read on 2026-10-22; it can be checked before
+   AC freezes). It is named so it is not discovered later.
 
 3. **The schema instruction's vocabulary.** Derived from SROIE gold by
    the S rule (keys and their types read from the gold, asserted at run

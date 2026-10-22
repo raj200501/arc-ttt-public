@@ -607,6 +607,14 @@ PROBES = [
 KNOWN_MISSES: dict[str, str] = {
     "D11": "the only evidence is a `message` key and the module names no "
            "model or evaluation word, so weak evidence is not enough",
+    # Lost on 2026-10-22, when a weak word stopped vouching for its own
+    # module (review: a plain `to_dict(output)` utility was flagged the
+    # same way). Nothing else in these modules or their file names says
+    # they are about models or evaluation.
+    "D02": "the only evidence is the weak parameter `responses`, and "
+           "nothing else in parse.py says it is about models or evaluation",
+    "D05": "the only evidence is the weak parameter `answer`, and nothing "
+           "else in check.py says it is about models or evaluation",
 }
 
 
@@ -822,7 +830,10 @@ def test_which_fence_strips_count(cleaning, reported):
 
 def test_an_anchored_brace_regex_does_not_tolerate_a_fence():
     fc = _load()
+    # The docstring gives the module its evaluation context: since
+    # 2026-10-22 the weak name `output` no longer vouches for itself.
     src = '''
+        """Field-accuracy scorer."""
         import json
         import re
 
@@ -837,7 +848,7 @@ def test_an_anchored_brace_regex_does_not_tolerate_a_fence():
             except json.JSONDecodeError:
                 return {}
     '''
-    assert [f["line"] for f in _scan(fc, src)] == [11]
+    assert [f["line"] for f in _scan(fc, src)] == [12]
     unanchored = src.replace("OBJECT.match", "OBJECT.search").replace(
         'r"^', 'r"')
     assert _scan(fc, unanchored) == []

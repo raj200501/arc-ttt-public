@@ -1,0 +1,129 @@
+{
+ "what": "Addendum AD, before its freeze: files in the shared scratch directory (not in git) that hold bytes the held-out rule covers, or bear on it. Metadata only: paths relative to that directory, sizes, git object ids from the clones' object listings, and digests. No digest here was computed from a held-out file: those are quoted as recorded when they were fetched.",
+ "listed_utc": "2026-10-22",
+ "deleted": false,
+ "files": [
+  {
+   "path": "ad_dl/livebench/site/.git",
+   "kind": "blobless git clone of LiveBench/livebench.github.io",
+   "made_by": "the scoping session (2026-10-21, packs written 20:43 to 21:00 UTC)",
+   "held_out": "published tablejoin values (the in-frame tables)",
+   "in_frame_table_blobs": {
+    "public/table_2024_06_24.csv": {
+     "git_blob": "b22e753cba6b913323646d445f36de6a4f9b7fbd",
+     "bytes": 8879
+    },
+    "public/table_2024_07_26.csv": {
+     "git_blob": "d042001693b2815d9e0c25582167507265b6c438",
+     "bytes": 9261
+    },
+    "public/table_2024_08_31.csv": {
+     "git_blob": "6ad8a189266263020fc9d4579125e9532c2e7abc",
+     "bytes": 7694
+    },
+    "public/table_2024_11_25.csv": {
+     "git_blob": "c2ab984a126c0c75b3b6eb527746cccd4a4d2291",
+     "bytes": 8508
+    },
+    "public/table_2025_04_02.csv": {
+     "git_blob": "c99d92fe17d97f25e5fe57d3b0f9116adc46d57b",
+     "bytes": 8441
+    }
+   },
+   "other_blobs": 5
+  },
+  {
+   "path": "adimpl-src/site/.git",
+   "kind": "blobless git clone of LiveBench/livebench.github.io",
+   "made_by": "the runner's build session (2026-10-21, packs written 21:17 to 21:22 UTC)",
+   "held_out": "published tablejoin values (the in-frame tables)",
+   "in_frame_table_blobs": {
+    "public/table_2024_06_24.csv": {
+     "git_blob": "b22e753cba6b913323646d445f36de6a4f9b7fbd",
+     "bytes": 8879
+    },
+    "public/table_2024_07_26.csv": {
+     "git_blob": "d042001693b2815d9e0c25582167507265b6c438",
+     "bytes": 9261
+    },
+    "public/table_2024_08_31.csv": {
+     "git_blob": "6ad8a189266263020fc9d4579125e9532c2e7abc",
+     "bytes": 7694
+    },
+    "public/table_2024_11_25.csv": {
+     "git_blob": "c2ab984a126c0c75b3b6eb527746cccd4a4d2291",
+     "bytes": 8508
+    },
+    "public/table_2025_04_02.csv": {
+     "git_blob": "c99d92fe17d97f25e5fe57d3b0f9116adc46d57b",
+     "bytes": 8441
+    },
+    "public/table_2025_04_02.csv at a1d5b0b (the parent of ad51514)": {
+     "git_blob": "b78dce2d2def38dff8ad7e2c337352ce521d2115",
+     "bytes": 8299,
+     "pack_written_utc": "2026-10-21T21:22:52Z",
+     "how": "fetched into this blobless clone by a git command that needed its content; which command is not recorded"
+    }
+   },
+   "other_blobs": 26
+  },
+  {
+   "path": "ad_dl/livebench/feas_tablejoin_gpt-4o-2024-05-13.json",
+   "bytes": 28125,
+   "sha256_as_recorded_at_scoping": "2dc81677aa0f76acb1f20a1780866ad8bc7ca657a74131a224358c0498968015",
+   "held_out": "stored answers of one in-frame model (50 tablejoin answers of gpt-4o-2024-05-13); disclosed: fence tags counted, nothing scored",
+   "made_by": "the scoping session (2026-10-21 20:54:27 UTC)"
+  },
+  {
+   "path": "ad_dl/livebench/da_rows_0.json",
+   "bytes": 204417,
+   "sha256": "814c3028a20ea1f3d0ef1f783f050b3a2f3759d822bdac528009168b554bbb82",
+   "holds": "data_analysis question rows with ground truth (150 rows across the two files); ground truth is not held out",
+   "made_by": "the scoping session (2026-10-21 20:46 UTC)"
+  },
+  {
+   "path": "ad_dl/livebench/da_rows_100.json",
+   "bytes": 140217,
+   "sha256": "0003c332b6ba442b08f20f1fbc37dea7217fc83b70704c424829b900e5ac0298",
+   "holds": "data_analysis question rows with ground truth (150 rows across the two files); ground truth is not held out",
+   "made_by": "the scoping session (2026-10-21 20:46 UTC)"
+  },
+  {
+   "path": "repro_data/livebench_hf/model_judgment/leaderboard-00000-of-00001.parquet",
+   "bytes": 737444,
+   "sha256_as_recorded_by_the_task_that_fetched_it": "35ad896970151776145c96b31c5ddb3a2749ea9a1d91e6b7f1a4c4c04735182a",
+   "held_out": "a LiveBench judgment file",
+   "made_by": "a different task (repro_packs.md), 2026-10-21 20:50 UTC; its notes say the file holds only the language, coding and instruction_following categories (not checked here: reading it would break the held-out rule)"
+  },
+  {
+   "path": "repro_data/livebench_hf/data_analysis/test-00000-of-00001.parquet",
+   "bytes": 144796,
+   "sha256": "fb86a7a02fa9eabf785d9e8af85955990cf6d228cc9d3f805a54f863bc8c4c52",
+   "holds": "the data_analysis questions parquet at one revision (questions and ground truth; not held out)"
+  },
+  {
+   "path": "adaudit-prose/qdl/q_31b9661ff6.parquet",
+   "bytes": 144796,
+   "sha256": "fb86a7a02fa9eabf785d9e8af85955990cf6d228cc9d3f805a54f863bc8c4c52",
+   "holds": "the data_analysis questions parquet at one revision (questions and ground truth; not held out)"
+  },
+  {
+   "path": "adaudit-prose/qdl/q_9b73ab8133.parquet",
+   "bytes": 149433,
+   "sha256": "f089c2260f8eb75a58a5021824c85c931e013950c7c130ef3ba005cf42d7418a",
+   "holds": "the data_analysis questions parquet at one revision (questions and ground truth; not held out)"
+  },
+  {
+   "path": "adaudit-prose/qdl/q_47fc858dab.parquet",
+   "bytes": 149329,
+   "sha256": "911bfd0e8c9c5acf1a2250bfef0dfe4176b54a92df1a6580dd1ed8795b5d92c9",
+   "holds": "the data_analysis questions parquet at one revision (questions and ground truth; not held out)"
+  },
+  {
+   "path": "adaudit-prose/qdl/q_4362c1a0be.parquet",
+   "bytes": 148700,
+   "sha256": "fca9fc0ed5eff3a7bcd94b95018b1aa41fac2a002e4fad323eeac4b228456eeb",
+   "holds": "the data_analysis questions parquet at one revision (questions and ground truth; not held out)"
+  }
+ ]
+}

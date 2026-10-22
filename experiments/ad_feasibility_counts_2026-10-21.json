@@ -1,0 +1,15 @@
+{
+ "file": "/tmp/claude-0/-home-user-safer-1/5579d3eb-52a6-5cb4-9d8f-41a2529382c4/scratchpad/ad_dl/livebench/feas_tablejoin_gpt-4o-2024-05-13.json",
+ "sha256": "2dc81677aa0f76acb1f20a1780866ad8bc7ca657a74131a224358c0498968015",
+ "bytes": 28125,
+ "num_rows_total_reported": 50,
+ "rows_in_page": 50,
+ "distinct_question_ids": 50,
+ "counts": {
+  "leading_fence": 50
+ },
+ "leading_fence_info_strings": {
+  "python": 50
+ },
+ "note": "prevalence only; no parse, no scorer, no ground truth read"
+}

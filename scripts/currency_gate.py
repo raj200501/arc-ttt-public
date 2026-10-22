@@ -60,7 +60,7 @@ from sync_test_counts import (  # noqa: E402  (one shared rule, not two)
     _sentence_around as _shared_sentence_around)
 
 
-def _context_of(text: str, index: int) -> str:
+def _context_of(text: str, index: int, quotes_are_records: bool = True) -> str:
     """Which tree or referent a count-claim describes.
 
     'export' and 'subset' both exist because this gate and its sibling
@@ -85,13 +85,139 @@ def _context_of(text: str, index: int) -> str:
     # --fix never rewrites it. This gate rewrote "236 banked artifacts" in
     # a section dated 2026-09-17 to the 2026-09-23 count (CORRECTIONS
     # 2026-10-21).
-    if in_dated_section(text, index):
+    #
+    # A quotation and an "As of YYYY-MM-DD" sentence are records too, and
+    # are classed "dated" for the same reason. See `is_quoted_or_dated`.
+    if in_dated_section(text, index) or is_quoted_or_dated(
+            text, index, quotes_are_records):
         return "dated"
     if is_subset_claim(text, index):
         return "subset"
     if describes_the_export(text, index):
         return "export"
     return "source"
+
+
+# A figure inside a quotation is what its source said, and a figure in a
+# sentence that says "As of YYYY-MM-DD" is what was true on that date.
+# Neither is a live count. A research memo quoted another page as saying
+# "237 banked artifacts over 48 days.", in a sentence that opened "As of
+# 2026-09-23:". This gate saw only "N banked artifacts" and rewrote the
+# quotation to 238 and then 239 on 2026-10-22 (CORRECTIONS 2026-10-22).
+#
+# What counts as a quotation: text between straight double quotes or
+# between curly double quotes, in the same paragraph, list item or table
+# row. Inline code is ignored, so a quote mark inside backticks does not
+# open one. A blockquote ("> ") is NOT a quotation by itself, because
+# the application answers are written as hard-wrapped blockquotes and are
+# live copy this gate exists to keep current. A blockquote counts only
+# when the line that introduces it says "As of YYYY-MM-DD".
+#
+# Live copy written inside double quotes is the exception. The
+# application's short form-field answers are drafted in quotes ("No
+# customers and no revenue. A public harness with N banked artifacts"),
+# and they are ours and live, so a stale figure there must still be
+# caught. Documents in LIVE_QUOTED_COPY keep the "As of" rules but not
+# the quotation rule.
+AS_OF_DATE = re.compile(r"\bas of \d{4}-\d{2}-\d{2}\b", re.IGNORECASE)
+_BLANK_LINE = re.compile(r"\n[ \t>]*\n")
+_ITEM_START = re.compile(r"\n[ \t>]*(?:[-*+]|\d+\.)[ \t]|\n[ \t>]*#")
+_CODE_SPAN = re.compile(r"`[^`\n]*`")
+_QUOTE_MARKS = re.compile(r"^[ \t]*>[ \t>]*", re.MULTILINE)
+# A stop followed by a closing quote or parenthesis ('."', '.”', '.)')
+# ends a sentence, but the shared window only ends one at '. '.
+_CLOSE_AFTER_STOP = re.compile(r"([.?!])([\"”’')\]]+[*_]*)(?=\s)")
+
+
+def _quote_scope(text: str, index: int) -> tuple[int, int]:
+    """The paragraph, list item or table row that holds `index`."""
+    line_start = text.rfind("\n", 0, index) + 1
+    line_end = text.find("\n", index)
+    line_end = len(text) if line_end == -1 else line_end
+    if text[line_start:index].lstrip(" \t>").startswith("|"):
+        return line_start, line_end          # quotes never span table rows
+    start = 0
+    for match in _BLANK_LINE.finditer(text, 0, index):
+        start = max(start, match.end())
+    for match in _ITEM_START.finditer(text, 0, index):
+        start = max(start, match.start() + 1)
+    ends = [m.start() for m in (_BLANK_LINE.search(text, index),
+                                _ITEM_START.search(text, index)) if m]
+    return start, min(ends) if ends else len(text)
+
+
+def in_quotation(text: str, index: int) -> bool:
+    """True if `index` sits between a pair of double quotes, straight or
+    curly, within its own paragraph, list item or table row.
+
+    Known limit (a review on 2026-10-22): straight quotes are paired by
+    parity, so an inch mark or an unbalanced mark earlier in the same
+    paragraph can make a later live figure read as quoted. On the swept
+    documents that day no figure changed class this way. Pairing marks
+    the way a reader does is the fix, not yet made."""
+    start, end = _quote_scope(text, index)
+    scope = _CODE_SPAN.sub(lambda m: " " * len(m.group(0)), text[start:end])
+    before, after = scope[:index - start], scope[index - start:]
+    if before.count('"') % 2 == 1 and '"' in after:
+        return True
+    return before.rfind("“") > before.rfind("”") and "”" in after
+
+
+def _blockquote_introduced_as_of(text: str, index: int) -> bool:
+    """True if `index` is in a blockquote whose introducing sentence (the
+    last sentence of the paragraph directly above the block, joined across
+    hard wraps) says "As of YYYY-MM-DD". An earlier blockquote is not an
+    introduction: the application's answers are consecutive blockquotes."""
+    lines = text[:index].split("\n")
+    if not lines[-1].lstrip().startswith(">"):
+        return False
+    row = len(lines) - 1
+    while row >= 0 and lines[row].lstrip().startswith(">"):
+        row -= 1
+    while row >= 0 and not lines[row].strip():
+        row -= 1
+    if row < 0 or lines[row].lstrip().startswith(">"):
+        return False    # an earlier blockquote does not introduce this one
+    first = row         # the introducing sentence may be hard-wrapped
+    while (first > 0 and lines[first - 1].strip()
+           and not lines[first - 1].lstrip().startswith(">")):
+        first -= 1
+    intro = " ".join(" ".join(lines[first:row + 1]).split())
+    return bool(AS_OF_DATE.search(_sentence_around(intro, len(intro) - 1)))
+
+
+def in_as_of_sentence(text: str, index: int) -> bool:
+    """True if the sentence holding `index` says "As of YYYY-MM-DD".
+
+    The shared sentence window starts a new window at every "\\n> ", so
+    in a hard-wrapped blockquote it would miss an "As of" on the line
+    above. The window is taken over a copy with the blockquote markers
+    blanked (same length, so offsets hold), clipped to the paragraph.
+    """
+    start, end = _quote_scope(text, index)
+    plain = _QUOTE_MARKS.sub(lambda m: " " * len(m.group(0)), text[start:end])
+    # '."', '.”' and '.)' end a sentence too: blank the closing marks
+    # (same length) so the shared window sees ". " there. A bare '.**' is
+    # left alone: "**As of YYYY-MM-DD.**" is a label that dates what
+    # follows it, and what follows is a record.
+    plain = _CLOSE_AFTER_STOP.sub(
+        lambda m: m.group(1) + " " * len(m.group(2)), plain)
+    return bool(AS_OF_DATE.search(
+        " ".join(_sentence_around(plain, index - start).split())))
+
+
+def is_quoted_or_dated(text: str, index: int,
+                       quotes_are_records: bool = True) -> bool:
+    """A quotation, an "As of YYYY-MM-DD" sentence, or a blockquote
+    introduced by one: a record of what was said or true then."""
+    return ((quotes_are_records and in_quotation(text, index))
+            or in_as_of_sentence(text, index)
+            or _blockquote_introduced_as_of(text, index))
+
+
+# Documents whose double-quoted text is our own live copy, not a record.
+LIVE_QUOTED_COPY = ("APPLICATION_DRAFT.md",)
+
 
 COVERAGE = REPO / "experiments" / "verification_coverage.json"
 EXPORT = REPO / "experiments" / "public_export_counts.json"
@@ -304,7 +430,7 @@ def _normalized(window: str) -> str:
 HISTORICAL = ("CORRECTIONS.md",)
 
 
-def scan(text: str) -> dict:
+def scan(text: str, quotes_are_records: bool = True) -> dict:
     """Everything this gate has an opinion about, for one document."""
     want = _targets()
 
@@ -317,7 +443,8 @@ def scan(text: str) -> dict:
         owned_spans = []
         for pattern in spec["patterns"]:
             for match in pattern.finditer(text):
-                if _context_of(text, match.start()) != wants:
+                if _context_of(text, match.start(),
+                               quotes_are_records) != wants:
                     continue
                 owned_spans.append(match.span(1))
                 if int(match.group(1)) != target:
@@ -327,7 +454,8 @@ def scan(text: str) -> dict:
         if suspect is None:
             continue
         for match in suspect.finditer(text):
-            if _context_of(text, match.start()) != wants:
+            if _context_of(text, match.start(),
+                           quotes_are_records) != wants:
                 continue
             if int(match.group(1)) == target:
                 continue
@@ -379,7 +507,7 @@ def _targets() -> dict[str, int]:
             "tool_tests": tool_test_count()}
 
 
-def fix(text: str) -> tuple[str, list[str]]:
+def fix(text: str, quotes_are_records: bool = True) -> tuple[str, list[str]]:
     want = _targets()
     changed: list[str] = []
     for name, spec in SYNCED.items():
@@ -394,7 +522,8 @@ def fix(text: str) -> tuple[str, list[str]]:
             # the scope test must run against the ORIGINAL document, so a
             # rewrite earlier in the same pass cannot shift the sentence
             # boundaries a later decision depends on.
-            if _context_of(text, match.start()) != wants:
+            if _context_of(text, match.start(),
+                           quotes_are_records) != wants:
                 return match.group(0)
             if match.group(1) != target:
                 changed.append(f"{name}: {match.group(1)} -> {target}")
@@ -426,15 +555,16 @@ def main() -> int:
         if path.name in HISTORICAL:
             continue
         text = path.read_text(encoding="utf-8")
+        quotes_are_records = path.name not in LIVE_QUOTED_COPY
         if args.fix:
-            new_text, changed = fix(text)
+            new_text, changed = fix(text, quotes_are_records)
             if changed:
                 path.write_text(new_text, encoding="utf-8")
                 for line in changed:
                     print(f"  fixed {path.relative_to(REPO)}: {line}")
                 text = new_text
 
-        found = scan(text)
+        found = scan(text, quotes_are_records)
         rel = path.relative_to(REPO)
         for name, claimed, target, line in found["stale"]:
             stale_total += 1

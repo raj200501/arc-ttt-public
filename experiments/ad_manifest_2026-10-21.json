@@ -1,0 +1,1488 @@
+{
+ "what": "Addendum AD manifest: every remote file the reading downloads (URL, size, digest), LiveBench's scorer states and versions, the vendored files, and the frame counts made at scoping. Written before the freeze; pinned by the protocol.",
+ "written_utc": "2026-10-21T21:33:00Z",
+ "held_out_rule": "Before the freeze nobody downloads or reads an answer file, a judgment file, or a published table value. Every digest of a table here was computed by the scoping agent or published by the host as a git blob id; this file was built from code, category maps, git tree and commit metadata, and Hugging Face API metadata only.",
+ "remote": [
+  {
+   "id": "answers",
+   "role": "answers",
+   "url": "https://huggingface.co/datasets/livebench/model_answer/resolve/bc43a286b08243d6dcfa89ba2e906283e9adac9c/data/leaderboard-00000-of-00001.parquet",
+   "bytes": 56430153,
+   "sha256": "1d4b5547c2ae2ea40280ae452885a39c7d395a7a0abac643868231cc5187a4a5",
+   "sha256_source": "Hugging Face LFS oid (API tree listing at the revision; x-linked-etag on HEAD), 2026-10-21",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "questions",
+   "role": "questions",
+   "url": "https://huggingface.co/datasets/livebench/data_analysis/resolve/31b9661ff678df9958e2f7fa228427f4c858c1a1/data/test-00000-of-00001.parquet",
+   "bytes": 144796,
+   "sha256": "fb86a7a02fa9eabf785d9e8af85955990cf6d228cc9d3f805a54f863bc8c4c52",
+   "sha256_source": "Hugging Face LFS oid (API tree listing at the revision; x-linked-etag on HEAD), 2026-10-21",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "table_2024_06_24_pinned",
+   "role": "table",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/table_2024_06_24.csv",
+   "git_blob_sha1": "b22e753cba6b913323646d445f36de6a4f9b7fbd",
+   "bytes": 8879,
+   "sha256": "df181166a5a670a5b7678ee02f96c6896d8a88a503aec20243234b698d25a8c0",
+   "sha256_source": "computed by the scoping agent from the site clone; the host publishes the git blob id, which is also checked",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "table_2024_06_24_live",
+   "role": "table_live",
+   "url": "https://livebench.ai/v1/table_2024_06_24.csv",
+   "bytes": 8879,
+   "sha256": null,
+   "sha256_source": "none published (nginx etag is mtime-size); HEAD size only",
+   "expect_equal_to": "table_2024_06_24_pinned",
+   "on_mismatch": "record"
+  },
+  {
+   "id": "categories_2024_06_24",
+   "role": "categories",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/categories_2024_06_24.json",
+   "git_blob_sha1": "9fc9d407c10b7d9b3aa06dbab43e56baf1d1956c",
+   "bytes": 536,
+   "sha256": "08fa233f92ca970a786f4ab8ea09639bce4c9dcbc88565254989e0bd34d08bfa",
+   "sha256_source": "computed from the site clone (a category map, not a value)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "table_2024_07_26_pinned",
+   "role": "table",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/table_2024_07_26.csv",
+   "git_blob_sha1": "d042001693b2815d9e0c25582167507265b6c438",
+   "bytes": 9261,
+   "sha256": "670dc4af2497d2daca7b5179f9558854163d954a95939bc4a7d71d8fce298a85",
+   "sha256_source": "computed by the scoping agent from the site clone; the host publishes the git blob id, which is also checked",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "table_2024_07_26_live",
+   "role": "table_live",
+   "url": "https://livebench.ai/v1/table_2024_07_26.csv",
+   "bytes": 9261,
+   "sha256": null,
+   "sha256_source": "none published (nginx etag is mtime-size); HEAD size only",
+   "expect_equal_to": "table_2024_07_26_pinned",
+   "on_mismatch": "record"
+  },
+  {
+   "id": "categories_2024_07_26",
+   "role": "categories",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/categories_2024_07_26.json",
+   "git_blob_sha1": "5237be153f44ea16ea0bf944959431ca6d03812a",
+   "bytes": 555,
+   "sha256": "31382962c060909421a3f2d8fe9f2194daadc252f654647daa8f684efbbe674b",
+   "sha256_source": "computed from the site clone (a category map, not a value)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "table_2024_08_31_pinned",
+   "role": "table",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/table_2024_08_31.csv",
+   "git_blob_sha1": "6ad8a189266263020fc9d4579125e9532c2e7abc",
+   "bytes": 7694,
+   "sha256": "8c66d248110076378f7eb58aaeef524c65bba6dff0b55f190fd9ac8e92d73b2a",
+   "sha256_source": "computed by the scoping agent from the site clone; the host publishes the git blob id, which is also checked",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "table_2024_08_31_live",
+   "role": "table_live",
+   "url": "https://livebench.ai/v1/table_2024_08_31.csv",
+   "bytes": 7694,
+   "sha256": null,
+   "sha256_source": "none published (nginx etag is mtime-size); HEAD size only",
+   "expect_equal_to": "table_2024_08_31_pinned",
+   "on_mismatch": "record"
+  },
+  {
+   "id": "categories_2024_08_31",
+   "role": "categories",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/categories_2024_08_31.json",
+   "git_blob_sha1": "5237be153f44ea16ea0bf944959431ca6d03812a",
+   "bytes": 555,
+   "sha256": "31382962c060909421a3f2d8fe9f2194daadc252f654647daa8f684efbbe674b",
+   "sha256_source": "computed from the site clone (a category map, not a value)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "table_2024_11_25_pinned",
+   "role": "table",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/table_2024_11_25.csv",
+   "git_blob_sha1": "c2ab984a126c0c75b3b6eb527746cccd4a4d2291",
+   "bytes": 8508,
+   "sha256": "17ca6b3d122921d24b591d0da52566c5552ed4f4001ae9d83a11b2712325aae4",
+   "sha256_source": "computed by the scoping agent from the site clone; the host publishes the git blob id, which is also checked",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "table_2024_11_25_live",
+   "role": "table_live",
+   "url": "https://livebench.ai/v1/table_2024_11_25.csv",
+   "bytes": 8508,
+   "sha256": null,
+   "sha256_source": "none published (nginx etag is mtime-size); HEAD size only",
+   "expect_equal_to": "table_2024_11_25_pinned",
+   "on_mismatch": "record"
+  },
+  {
+   "id": "categories_2024_11_25",
+   "role": "categories",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/categories_2024_11_25.json",
+   "git_blob_sha1": "5237be153f44ea16ea0bf944959431ca6d03812a",
+   "bytes": 555,
+   "sha256": "31382962c060909421a3f2d8fe9f2194daadc252f654647daa8f684efbbe674b",
+   "sha256_source": "computed from the site clone (a category map, not a value)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "table_2025_04_02_pinned",
+   "role": "table",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/table_2025_04_02.csv",
+   "git_blob_sha1": "c99d92fe17d97f25e5fe57d3b0f9116adc46d57b",
+   "bytes": 8441,
+   "sha256": "d7fd6a3e461cff4f96569093553789115e87adeb9cd95dca043bafa51ff2acaa",
+   "sha256_source": "computed by the scoping agent from the site clone; the host publishes the git blob id, which is also checked",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "table_2025_04_02_live",
+   "role": "table_live",
+   "url": "https://livebench.ai/v1/table_2025_04_02.csv",
+   "bytes": 8441,
+   "sha256": null,
+   "sha256_source": "none published (nginx etag is mtime-size); HEAD size only",
+   "expect_equal_to": "table_2025_04_02_pinned",
+   "on_mismatch": "record"
+  },
+  {
+   "id": "categories_2025_04_02",
+   "role": "categories",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/public/categories_2025_04_02.json",
+   "git_blob_sha1": "b67b2eff3d9ef192bb143cd95f90dc2572be9945",
+   "bytes": 555,
+   "sha256": "182ba3b11478a1f1768020fc79b6817b5698054333d768a8c6c800f65cd90cfa",
+   "sha256_source": "computed from the site clone (a category map, not a value)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "averaging_js",
+   "role": "site_code",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/19e766a5de4de07d672ed5bf9f0a69ceed1d39bf/src/Table/Averaging.js",
+   "git_blob_sha1": "569ac12661a79c996bb85fc2a05ed603b33c6445",
+   "bytes": 1264,
+   "sha256": "aba4395c7a32d3bf0fe40d2fb05abafa8d08a7d4190794ff8441b03b4e0f8b02",
+   "sha256_source": "computed from the site clone (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "table_2025_04_02_before_edit",
+   "role": "table_parent",
+   "url": "https://raw.githubusercontent.com/LiveBench/livebench.github.io/a1d5b0b1a89ac1375bcfbca2447e36e0851884fc/public/table_2025_04_02.csv",
+   "git_blob_sha1": "b78dce2d2def38dff8ad7e2c337352ce521d2115",
+   "bytes": 8299,
+   "sha256": null,
+   "sha256_source": "not computed before the freeze: that would read the table bytes; git blob id checked. The bytes do sit in a pre-freeze scratch clone (the protocol's 'What was seen' says where); no digest of them is recorded anywhere.",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "feasibility_page",
+   "role": "feasibility",
+   "url": "https://datasets-server.huggingface.co/filter?dataset=livebench/model_answer&config=default&split=leaderboard&where=%22task%22%3D%27tablejoin%27%20AND%20%22model_id%22%3D%27gpt-4o-2024-05-13%27&offset=0&length=100",
+   "bytes": 28125,
+   "sha256": "2dc81677aa0f76acb1f20a1780866ad8bc7ca657a74131a224358c0498968015",
+   "sha256_source": "the page as fetched during scoping (2026-10-21 20:54:27Z)",
+   "on_mismatch": "record"
+  },
+  {
+   "id": "lb_905b71f_utils",
+   "role": "scorer_source",
+   "commit": "905b71f2f525b169fa5eb36263e3292f14571dd0",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/905b71f2f525b169fa5eb36263e3292f14571dd0/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "686e4aa14040d474c6adc88adb2cc805813c8b64",
+   "bytes": 1177,
+   "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_905b71f_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "905b71f2f525b169fa5eb36263e3292f14571dd0",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/905b71f2f525b169fa5eb36263e3292f14571dd0/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "d14b6c356a50619ecf8a8823cdd622f9782ea9d2",
+   "bytes": 11878,
+   "sha256": "b35746a0003db176914a5e3fa33496276c66ebc666156a5a57e2284c93dfa220",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_1264bb0_utils",
+   "role": "scorer_source",
+   "commit": "1264bb0ebef808ca6b43eab5e375085103d12651",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/1264bb0ebef808ca6b43eab5e375085103d12651/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "686e4aa14040d474c6adc88adb2cc805813c8b64",
+   "bytes": 1177,
+   "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_1264bb0_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "1264bb0ebef808ca6b43eab5e375085103d12651",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/1264bb0ebef808ca6b43eab5e375085103d12651/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "dced814a7519c0c451b9b3d25532d79f16b2f14f",
+   "bytes": 13388,
+   "sha256": "69a71d851282d9fde16347a39c0c0bfae95f30ddbebdac91aeafa58e9b7f37ab",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_40c0805_utils",
+   "role": "scorer_source",
+   "commit": "40c0805655b84274f5861f81032171a1d40d7580",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/40c0805655b84274f5861f81032171a1d40d7580/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "686e4aa14040d474c6adc88adb2cc805813c8b64",
+   "bytes": 1177,
+   "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_40c0805_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "40c0805655b84274f5861f81032171a1d40d7580",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/40c0805655b84274f5861f81032171a1d40d7580/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "6359bda8f921c3c41126decaddd4b2563a608562",
+   "bytes": 13403,
+   "sha256": "0877b0defe6c7ad223fad10b7a38f7cd44eee9b5f5adee09a2f96084ad266a93",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_e424f7b_utils",
+   "role": "scorer_source",
+   "commit": "e424f7beadbc8defe96b55384df27bab22a54a76",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/e424f7beadbc8defe96b55384df27bab22a54a76/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "686e4aa14040d474c6adc88adb2cc805813c8b64",
+   "bytes": 1177,
+   "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_e424f7b_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "e424f7beadbc8defe96b55384df27bab22a54a76",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/e424f7beadbc8defe96b55384df27bab22a54a76/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "dff403a760175db69094ca3316919dca82c8c681",
+   "bytes": 13371,
+   "sha256": "be9bdb345552c1bb8b76f48c8e0769a053449675b3ee51123efca3f651dc05c6",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_0ca7c40_utils",
+   "role": "scorer_source",
+   "commit": "0ca7c4090814a43b2d53976ebe3fc9e2cef24382",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/0ca7c4090814a43b2d53976ebe3fc9e2cef24382/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "686e4aa14040d474c6adc88adb2cc805813c8b64",
+   "bytes": 1177,
+   "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_0ca7c40_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "0ca7c4090814a43b2d53976ebe3fc9e2cef24382",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/0ca7c4090814a43b2d53976ebe3fc9e2cef24382/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "96dacb4f6b2ee0070f5eae3de83bd22007d7b5cf",
+   "bytes": 14196,
+   "sha256": "1128e51458ff9e97118c491a860a5e3dea295ff8c39cf89b5e271c3d99ccb555",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_4de3327_utils",
+   "role": "scorer_source",
+   "commit": "4de3327329bcf9a5d00d800b92796b78519798ec",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/4de3327329bcf9a5d00d800b92796b78519798ec/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "686e4aa14040d474c6adc88adb2cc805813c8b64",
+   "bytes": 1177,
+   "sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_4de3327_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "4de3327329bcf9a5d00d800b92796b78519798ec",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/4de3327329bcf9a5d00d800b92796b78519798ec/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "99c21e5e214e6769cdc60b39824d543efc0e7528",
+   "bytes": 14782,
+   "sha256": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_f774d19_utils",
+   "role": "scorer_source",
+   "commit": "f774d190fef5525f1e2a6ebebdf54f31903432c0",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/f774d190fef5525f1e2a6ebebdf54f31903432c0/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "6be335ecd20d4ee260243aebeea2447822b6d14a",
+   "bytes": 1294,
+   "sha256": "8d7fa703061d4536ee9f07c1a3d103690a6a20c01d8ab2c284fcb43ce45724b9",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_f774d19_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "f774d190fef5525f1e2a6ebebdf54f31903432c0",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/f774d190fef5525f1e2a6ebebdf54f31903432c0/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "99c21e5e214e6769cdc60b39824d543efc0e7528",
+   "bytes": 14782,
+   "sha256": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_19c7757_utils",
+   "role": "scorer_source",
+   "commit": "19c7757f6e2e00b6a3383e6b2d99fd0569971a97",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/19c7757f6e2e00b6a3383e6b2d99fd0569971a97/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "573fa5231b8d32cbc95e0618d151f7a549b0cfb0",
+   "bytes": 2099,
+   "sha256": "b04aee527f1e38d8a2dad456d2bcf2b2af622d64cd01221a3f31a480bb54c0e8",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_19c7757_util",
+   "role": "scorer_source",
+   "commit": "19c7757f6e2e00b6a3383e6b2d99fd0569971a97",
+   "path": "livebench/process_results/util.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/19c7757f6e2e00b6a3383e6b2d99fd0569971a97/livebench/process_results/util.py",
+   "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd",
+   "bytes": 1107,
+   "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_19c7757_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "19c7757f6e2e00b6a3383e6b2d99fd0569971a97",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/19c7757f6e2e00b6a3383e6b2d99fd0569971a97/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "d07d6fa9ca2518f211e45c393577aa45288f2bea",
+   "bytes": 17458,
+   "sha256": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_c5c293c_utils",
+   "role": "scorer_source",
+   "commit": "c5c293c10c515f78d681c655f9b6ddcfc7938c5f",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/c5c293c10c515f78d681c655f9b6ddcfc7938c5f/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f",
+   "bytes": 2397,
+   "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_c5c293c_util",
+   "role": "scorer_source",
+   "commit": "c5c293c10c515f78d681c655f9b6ddcfc7938c5f",
+   "path": "livebench/process_results/util.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/c5c293c10c515f78d681c655f9b6ddcfc7938c5f/livebench/process_results/util.py",
+   "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd",
+   "bytes": 1107,
+   "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_c5c293c_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "c5c293c10c515f78d681c655f9b6ddcfc7938c5f",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/c5c293c10c515f78d681c655f9b6ddcfc7938c5f/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "d07d6fa9ca2518f211e45c393577aa45288f2bea",
+   "bytes": 17458,
+   "sha256": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_32c9744_utils",
+   "role": "scorer_source",
+   "commit": "32c97443b01913d348d1c118cd6e1e5d65280f9b",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/32c97443b01913d348d1c118cd6e1e5d65280f9b/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f",
+   "bytes": 2397,
+   "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_32c9744_util",
+   "role": "scorer_source",
+   "commit": "32c97443b01913d348d1c118cd6e1e5d65280f9b",
+   "path": "livebench/process_results/util.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/32c97443b01913d348d1c118cd6e1e5d65280f9b/livebench/process_results/util.py",
+   "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd",
+   "bytes": 1107,
+   "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_32c9744_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "32c97443b01913d348d1c118cd6e1e5d65280f9b",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/32c97443b01913d348d1c118cd6e1e5d65280f9b/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "a37322c575b6ed63873b25dff0e79831a3725f13",
+   "bytes": 18028,
+   "sha256": "d4671453939f9ee679511ed8ce50e43f5d44bb1c8aab6fa8f186b666239a7a13",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_6802409_utils",
+   "role": "scorer_source",
+   "commit": "68024097843d964a15afb8a742ede92d03ed00f0",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/68024097843d964a15afb8a742ede92d03ed00f0/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f",
+   "bytes": 2397,
+   "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_6802409_util",
+   "role": "scorer_source",
+   "commit": "68024097843d964a15afb8a742ede92d03ed00f0",
+   "path": "livebench/process_results/util.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/68024097843d964a15afb8a742ede92d03ed00f0/livebench/process_results/util.py",
+   "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd",
+   "bytes": 1107,
+   "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_6802409_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "68024097843d964a15afb8a742ede92d03ed00f0",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/68024097843d964a15afb8a742ede92d03ed00f0/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "3d8b5022570d7570984c71890d79180e591dc180",
+   "bytes": 18023,
+   "sha256": "8f85fa094e44a361081c07a72f24b05e290685560d8ab59ed9e72ccc9871b92f",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_bdce0f7_utils",
+   "role": "scorer_source",
+   "commit": "bdce0f7eed694e58df5a5a89345d2b0cf9507507",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/bdce0f7eed694e58df5a5a89345d2b0cf9507507/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f",
+   "bytes": 2397,
+   "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_bdce0f7_util",
+   "role": "scorer_source",
+   "commit": "bdce0f7eed694e58df5a5a89345d2b0cf9507507",
+   "path": "livebench/process_results/util.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/bdce0f7eed694e58df5a5a89345d2b0cf9507507/livebench/process_results/util.py",
+   "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd",
+   "bytes": 1107,
+   "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_bdce0f7_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "bdce0f7eed694e58df5a5a89345d2b0cf9507507",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/bdce0f7eed694e58df5a5a89345d2b0cf9507507/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "ae6c534ce4859f1ebb5eecf8c95018db951faf77",
+   "bytes": 18013,
+   "sha256": "18c10f32fbeff8a46a72f16229bef06408098abe9fb324c6f2da64994fb2d157",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_7113c8d_utils",
+   "role": "scorer_source",
+   "commit": "7113c8db47c01c5d33999cf9daf3f221caccf0fd",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/7113c8db47c01c5d33999cf9daf3f221caccf0fd/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f",
+   "bytes": 2397,
+   "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_7113c8d_util",
+   "role": "scorer_source",
+   "commit": "7113c8db47c01c5d33999cf9daf3f221caccf0fd",
+   "path": "livebench/process_results/util.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/7113c8db47c01c5d33999cf9daf3f221caccf0fd/livebench/process_results/util.py",
+   "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd",
+   "bytes": 1107,
+   "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_7113c8d_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "7113c8db47c01c5d33999cf9daf3f221caccf0fd",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/7113c8db47c01c5d33999cf9daf3f221caccf0fd/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "cc803f3803fdbff87a7a08f3b498d4d69a55b6f8",
+   "bytes": 18035,
+   "sha256": "6d0121692fbb1f8a4de53a13be34a3c60aa79b5f33b4db7d967c31a56e73215f",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_fa6a3c6_utils",
+   "role": "scorer_source",
+   "commit": "fa6a3c6c4570292abe514233d364551ee11a2e71",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/fa6a3c6c4570292abe514233d364551ee11a2e71/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f",
+   "bytes": 2397,
+   "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_fa6a3c6_util",
+   "role": "scorer_source",
+   "commit": "fa6a3c6c4570292abe514233d364551ee11a2e71",
+   "path": "livebench/process_results/util.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/fa6a3c6c4570292abe514233d364551ee11a2e71/livebench/process_results/util.py",
+   "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd",
+   "bytes": 1107,
+   "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_fa6a3c6_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "fa6a3c6c4570292abe514233d364551ee11a2e71",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/fa6a3c6c4570292abe514233d364551ee11a2e71/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "6b8d81eee7564a708f658bacbc9c7646b92f0cc4",
+   "bytes": 18132,
+   "sha256": "ed7973d19360ccf3a4a58d3112918b4f561009cdbdd2c4df55a2c85525a3d137",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_603c7d3_utils",
+   "role": "scorer_source",
+   "commit": "603c7d3aa8a75764d93db0c73fe1230e05acb9e4",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/603c7d3aa8a75764d93db0c73fe1230e05acb9e4/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f",
+   "bytes": 2397,
+   "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_603c7d3_util",
+   "role": "scorer_source",
+   "commit": "603c7d3aa8a75764d93db0c73fe1230e05acb9e4",
+   "path": "livebench/process_results/util.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/603c7d3aa8a75764d93db0c73fe1230e05acb9e4/livebench/process_results/util.py",
+   "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd",
+   "bytes": 1107,
+   "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_603c7d3_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "603c7d3aa8a75764d93db0c73fe1230e05acb9e4",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/603c7d3aa8a75764d93db0c73fe1230e05acb9e4/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "3742bab878c0dd5ba76d4a496090b078f35535ad",
+   "bytes": 19042,
+   "sha256": "bb38171f2f150e8d38d2b84c32d9a36f93268b4ddf6cc7d0a3655edc3088aa7c",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_6515fc8_utils",
+   "role": "scorer_source",
+   "commit": "6515fc884eafc4902ac9cb563be1c220bfc14415",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/6515fc884eafc4902ac9cb563be1c220bfc14415/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f",
+   "bytes": 2397,
+   "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_6515fc8_util",
+   "role": "scorer_source",
+   "commit": "6515fc884eafc4902ac9cb563be1c220bfc14415",
+   "path": "livebench/process_results/util.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/6515fc884eafc4902ac9cb563be1c220bfc14415/livebench/process_results/util.py",
+   "git_blob_sha1": "1923e36e9f06401bf5534f0f7490e89825a88fbd",
+   "bytes": 1107,
+   "sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_6515fc8_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "6515fc884eafc4902ac9cb563be1c220bfc14415",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/6515fc884eafc4902ac9cb563be1c220bfc14415/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "14d8c26c269ab0ca7747a54b1323032d69d621e3",
+   "bytes": 19077,
+   "sha256": "968660eab3e80e9f428b5446b9d1258ac2cb5d52efb1adb1b3fc82ab0862d79f",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_f3501c7_utils",
+   "role": "scorer_source",
+   "commit": "f3501c71a24afdbaab9403f50dfa46e8faa0130f",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/f3501c71a24afdbaab9403f50dfa46e8faa0130f/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f",
+   "bytes": 2397,
+   "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_f3501c7_util",
+   "role": "scorer_source",
+   "commit": "f3501c71a24afdbaab9403f50dfa46e8faa0130f",
+   "path": "livebench/process_results/util.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/f3501c71a24afdbaab9403f50dfa46e8faa0130f/livebench/process_results/util.py",
+   "git_blob_sha1": "4a1be7c8410ecf16872df1f64a5c433a579edda6",
+   "bytes": 1108,
+   "sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_f3501c7_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "f3501c71a24afdbaab9403f50dfa46e8faa0130f",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/f3501c71a24afdbaab9403f50dfa46e8faa0130f/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "decc701e6b77a083ed2bbe259d3732062c447be5",
+   "bytes": 19320,
+   "sha256": "5d0b7a28d3b8f042d2eae7ee192e92d8c56c949c635a181441fb8f01ab22ccac",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_a41783c_utils",
+   "role": "scorer_source",
+   "commit": "a41783c06f646697a96cc2ae2275a6b5c2646cb4",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/a41783c06f646697a96cc2ae2275a6b5c2646cb4/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f",
+   "bytes": 2397,
+   "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_a41783c_util",
+   "role": "scorer_source",
+   "commit": "a41783c06f646697a96cc2ae2275a6b5c2646cb4",
+   "path": "livebench/process_results/util.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/a41783c06f646697a96cc2ae2275a6b5c2646cb4/livebench/process_results/util.py",
+   "git_blob_sha1": "4a1be7c8410ecf16872df1f64a5c433a579edda6",
+   "bytes": 1108,
+   "sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_a41783c_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "a41783c06f646697a96cc2ae2275a6b5c2646cb4",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/a41783c06f646697a96cc2ae2275a6b5c2646cb4/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "0876afdc3f1917f11cf03f62488c50d07d909eb0",
+   "bytes": 22395,
+   "sha256": "b6ffc0fe14e334915c3eddc0026bd2c9760aaab1f1a6281f3617953a1d8b0bdf",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_bb4283b_utils",
+   "role": "scorer_source",
+   "commit": "bb4283ba76afa988e6614989b52854865cfe5577",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/bb4283ba76afa988e6614989b52854865cfe5577/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "ebea95d2154e9b97f7500efaf7af48a49b06ee3f",
+   "bytes": 2397,
+   "sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_bb4283b_util",
+   "role": "scorer_source",
+   "commit": "bb4283ba76afa988e6614989b52854865cfe5577",
+   "path": "livebench/process_results/util.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/bb4283ba76afa988e6614989b52854865cfe5577/livebench/process_results/util.py",
+   "git_blob_sha1": "4a1be7c8410ecf16872df1f64a5c433a579edda6",
+   "bytes": 1108,
+   "sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_bb4283b_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "bb4283ba76afa988e6614989b52854865cfe5577",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/bb4283ba76afa988e6614989b52854865cfe5577/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "bdcf774146b32fee2cb336c1df463a1d1bc33774",
+   "bytes": 22466,
+   "sha256": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_e647d72_utils",
+   "role": "scorer_source",
+   "commit": "e647d72ba9f41e139521be8ec7c0e900d62763aa",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/e647d72ba9f41e139521be8ec7c0e900d62763aa/livebench/process_results/data_analysis/tablejoin/utils.py",
+   "git_blob_sha1": "0cd241443ab3939be2fea37f50b33c468e669cb5",
+   "bytes": 2527,
+   "sha256": "1d8e56395b6ad033391503fe5914eb242f080eed5f07695c655e28d779dd213c",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_e647d72_util",
+   "role": "scorer_source",
+   "commit": "e647d72ba9f41e139521be8ec7c0e900d62763aa",
+   "path": "livebench/process_results/util.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/e647d72ba9f41e139521be8ec7c0e900d62763aa/livebench/process_results/util.py",
+   "git_blob_sha1": "4a1be7c8410ecf16872df1f64a5c433a579edda6",
+   "bytes": 1108,
+   "sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  },
+  {
+   "id": "lb_e647d72_gen_ground_truth_judgment",
+   "role": "scorer_source",
+   "commit": "e647d72ba9f41e139521be8ec7c0e900d62763aa",
+   "path": "livebench/gen_ground_truth_judgment.py",
+   "url": "https://raw.githubusercontent.com/LiveBench/LiveBench/e647d72ba9f41e139521be8ec7c0e900d62763aa/livebench/gen_ground_truth_judgment.py",
+   "git_blob_sha1": "bdcf774146b32fee2cb336c1df463a1d1bc33774",
+   "bytes": 22466,
+   "sha256": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+   "sha256_source": "computed from git show at the commit (code)",
+   "on_mismatch": "refuse"
+  }
+ ],
+ "pinned_files": {
+  "scripts/ad_pinned/gen_ground_truth_judgment_19c7757.py": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+  "scripts/ad_pinned/gen_ground_truth_judgment_905b71f.py": "b35746a0003db176914a5e3fa33496276c66ebc666156a5a57e2284c93dfa220",
+  "scripts/ad_pinned/gen_ground_truth_judgment_e647d72.py": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+  "scripts/ad_pinned/gen_ground_truth_judgment_f3501c7.py": "5d0b7a28d3b8f042d2eae7ee192e92d8c56c949c635a181441fb8f01ab22ccac",
+  "scripts/ad_pinned/gen_ground_truth_judgment_f774d19.py": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+  "scripts/ad_pinned/gen_ground_truth_judgment_fa6a3c6.py": "ed7973d19360ccf3a4a58d3112918b4f561009cdbdd2c4df55a2c85525a3d137",
+  "scripts/ad_pinned/tablejoin_utils_19c7757.py": "b04aee527f1e38d8a2dad456d2bcf2b2af622d64cd01221a3f31a480bb54c0e8",
+  "scripts/ad_pinned/tablejoin_utils_905b71f.py": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+  "scripts/ad_pinned/tablejoin_utils_c5c293c.py": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+  "scripts/ad_pinned/tablejoin_utils_e647d72.py": "1d8e56395b6ad033391503fe5914eb242f080eed5f07695c655e28d779dd213c",
+  "scripts/ad_pinned/tablejoin_utils_f774d19.py": "8d7fa703061d4536ee9f07c1a3d103690a6a20c01d8ab2c284fcb43ce45724b9",
+  "scripts/ad_pinned/util_19c7757.py": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+  "scripts/ad_pinned/util_f3501c7.py": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a"
+ },
+ "pinned_sources": {
+  "scripts/ad_pinned/gen_ground_truth_judgment_19c7757.py": {
+   "commit": "19c7757f6e2e00b6a3383e6b2d99fd0569971a97",
+   "path": "livebench/gen_ground_truth_judgment.py"
+  },
+  "scripts/ad_pinned/gen_ground_truth_judgment_905b71f.py": {
+   "commit": "905b71f2f525b169fa5eb36263e3292f14571dd0",
+   "path": "livebench/gen_ground_truth_judgment.py"
+  },
+  "scripts/ad_pinned/gen_ground_truth_judgment_e647d72.py": {
+   "commit": "e647d72ba9f41e139521be8ec7c0e900d62763aa",
+   "path": "livebench/gen_ground_truth_judgment.py"
+  },
+  "scripts/ad_pinned/gen_ground_truth_judgment_f3501c7.py": {
+   "commit": "f3501c71a24afdbaab9403f50dfa46e8faa0130f",
+   "path": "livebench/gen_ground_truth_judgment.py"
+  },
+  "scripts/ad_pinned/gen_ground_truth_judgment_f774d19.py": {
+   "commit": "f774d190fef5525f1e2a6ebebdf54f31903432c0",
+   "path": "livebench/gen_ground_truth_judgment.py"
+  },
+  "scripts/ad_pinned/gen_ground_truth_judgment_fa6a3c6.py": {
+   "commit": "fa6a3c6c4570292abe514233d364551ee11a2e71",
+   "path": "livebench/gen_ground_truth_judgment.py"
+  },
+  "scripts/ad_pinned/tablejoin_utils_19c7757.py": {
+   "commit": "19c7757f6e2e00b6a3383e6b2d99fd0569971a97",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py"
+  },
+  "scripts/ad_pinned/tablejoin_utils_905b71f.py": {
+   "commit": "905b71f2f525b169fa5eb36263e3292f14571dd0",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py"
+  },
+  "scripts/ad_pinned/tablejoin_utils_c5c293c.py": {
+   "commit": "c5c293c10c515f78d681c655f9b6ddcfc7938c5f",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py"
+  },
+  "scripts/ad_pinned/tablejoin_utils_e647d72.py": {
+   "commit": "e647d72ba9f41e139521be8ec7c0e900d62763aa",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py"
+  },
+  "scripts/ad_pinned/tablejoin_utils_f774d19.py": {
+   "commit": "f774d190fef5525f1e2a6ebebdf54f31903432c0",
+   "path": "livebench/process_results/data_analysis/tablejoin/utils.py"
+  },
+  "scripts/ad_pinned/util_19c7757.py": {
+   "commit": "19c7757f6e2e00b6a3383e6b2d99fd0569971a97",
+   "path": "livebench/process_results/util.py"
+  },
+  "scripts/ad_pinned/util_f3501c7.py": {
+   "commit": "f3501c71a24afdbaab9403f50dfa46e8faa0130f",
+   "path": "livebench/process_results/util.py"
+  }
+ },
+ "license": {
+  "file": "scripts/ad_pinned/LICENSE",
+  "sha256": "8fb1d09632b9c03b426c87654d62c5d8fb953643e51e6866f3446401903005c3",
+  "source": "https://github.com/LiveBench/LiveBench/blob/e647d72ba9f41e139521be8ec7c0e900d62763aa/LICENSE",
+  "note": "LiveBench's LICENSE: Apache License 2.0, as copied from lm-sys/FastChat; unchanged since the repository's first commit. No NOTICE file."
+ },
+ "fencecheck": {
+  "path": "tools/fencecheck.py",
+  "sha256": null,
+  "sha256_note": "not pinned here: the protocol's digest line pins the file the reading runs, so there is one digest for it, not two. An earlier draft of this manifest quoted 55cb41de..., the file at c35abfa; tools/fencecheck.py changed on main after that (7f9068a, 452527b).",
+  "functions": [
+   "strip_fence",
+   "extract_json"
+  ]
+ },
+ "livebench": {
+  "repo": "https://github.com/LiveBench/LiveBench",
+  "window": {
+   "from": "905b71f2f525b169fa5eb36263e3292f14571dd0",
+   "to": "e647d72ba9f41e139521be8ec7c0e900d62763aa",
+   "rule": "every first-parent state of main that changed any of the three files, 905b71f^..e647d72 inclusive"
+  },
+  "window_closes_utc": "2025-04-29T22:13:09Z",
+  "window_closes_at": "84c46678ef4760a62941e327ea03d22054293899",
+  "files": [
+   "livebench/process_results/data_analysis/tablejoin/utils.py",
+   "livebench/process_results/util.py",
+   "livebench/gen_ground_truth_judgment.py"
+  ],
+  "first_parent_states": [
+   {
+    "commit": "905b71f2f525b169fa5eb36263e3292f14571dd0",
+    "author_time": "2024-06-14T14:35:39Z",
+    "committer_time": "2024-06-14T14:35:39Z",
+    "is_merge": false,
+    "subject": "inside the `tablejoin` task processing utility, handle the case if the `ground_truth` variable is not a dict (isntead a string) and use `ast.literal_eval` to convert it to a dict which is necessary for processing and comparing the ground truth to the llm output",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_905b71f_utils",
+     "gen_ground_truth_judgment_sha256": "lb_905b71f_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "util_sha256": null,
+    "gen_ground_truth_judgment_sha256": "b35746a0003db176914a5e3fa33496276c66ebc666156a5a57e2284c93dfa220",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]"
+   },
+   {
+    "commit": "1264bb0ebef808ca6b43eab5e375085103d12651",
+    "author_time": "2024-07-18T00:20:37Z",
+    "committer_time": "2024-07-18T00:20:37Z",
+    "is_merge": true,
+    "subject": "Merge pull request #16 from LiveBench/usability_updates_july",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_1264bb0_utils",
+     "gen_ground_truth_judgment_sha256": "lb_1264bb0_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "util_sha256": null,
+    "gen_ground_truth_judgment_sha256": "69a71d851282d9fde16347a39c0c0bfae95f30ddbebdac91aeafa58e9b7f37ab",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]"
+   },
+   {
+    "commit": "40c0805655b84274f5861f81032171a1d40d7580",
+    "author_time": "2024-07-24T03:40:46Z",
+    "committer_time": "2024-07-24T03:40:46Z",
+    "is_merge": false,
+    "subject": "update math_comp scoring",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_40c0805_utils",
+     "gen_ground_truth_judgment_sha256": "lb_40c0805_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "util_sha256": null,
+    "gen_ground_truth_judgment_sha256": "0877b0defe6c7ad223fad10b7a38f7cd44eee9b5f5adee09a2f96084ad266a93",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]"
+   },
+   {
+    "commit": "e424f7beadbc8defe96b55384df27bab22a54a76",
+    "author_time": "2024-07-26T07:31:25Z",
+    "committer_time": "2024-07-26T07:31:25Z",
+    "is_merge": false,
+    "subject": "add scoring for new spatial reasoning task",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_e424f7b_utils",
+     "gen_ground_truth_judgment_sha256": "lb_e424f7b_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "util_sha256": null,
+    "gen_ground_truth_judgment_sha256": "be9bdb345552c1bb8b76f48c8e0769a053449675b3ee51123efca3f651dc05c6",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]"
+   },
+   {
+    "commit": "0ca7c4090814a43b2d53976ebe3fc9e2cef24382",
+    "author_time": "2024-07-29T02:19:00Z",
+    "committer_time": "2024-07-29T02:19:00Z",
+    "is_merge": true,
+    "subject": "Merge pull request #20 from LiveBench/july_release",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_0ca7c40_utils",
+     "gen_ground_truth_judgment_sha256": "lb_0ca7c40_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "util_sha256": null,
+    "gen_ground_truth_judgment_sha256": "1128e51458ff9e97118c491a860a5e3dea295ff8c39cf89b5e271c3d99ccb555",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]"
+   },
+   {
+    "commit": "4de3327329bcf9a5d00d800b92796b78519798ec",
+    "author_time": "2024-10-22T01:37:13Z",
+    "committer_time": "2024-10-22T01:37:13Z",
+    "is_merge": false,
+    "subject": "add --livebench-release-option to all runner files",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_4de3327_utils",
+     "gen_ground_truth_judgment_sha256": "lb_4de3327_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "ee638884f08ea802f59d14583f77c7e38b0c045e8d6bf309af0cca7d7bf12f3a",
+    "util_sha256": null,
+    "gen_ground_truth_judgment_sha256": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]"
+   },
+   {
+    "commit": "f774d190fef5525f1e2a6ebebdf54f31903432c0",
+    "author_time": "2024-10-22T01:43:34Z",
+    "committer_time": "2024-10-22T01:43:34Z",
+    "is_merge": false,
+    "subject": "handle edge case in tablejoin judging",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_f774d19_utils",
+     "gen_ground_truth_judgment_sha256": "lb_f774d19_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "8d7fa703061d4536ee9f07c1a3d103690a6a20c01d8ab2c284fcb43ce45724b9",
+    "util_sha256": null,
+    "gen_ground_truth_judgment_sha256": "81226f3dfc4c06b3c4a168000dd55b1e868a992565ed365d3a6c37bd81d1e3ba",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]"
+   },
+   {
+    "commit": "19c7757f6e2e00b6a3383e6b2d99fd0569971a97",
+    "author_time": "2024-12-17T21:24:28Z",
+    "committer_time": "2024-12-17T21:24:28Z",
+    "is_merge": false,
+    "subject": "Update codebase with changes made for November update (#105)",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_19c7757_utils",
+     "util_sha256": "lb_19c7757_util",
+     "gen_ground_truth_judgment_sha256": "lb_19c7757_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "b04aee527f1e38d8a2dad456d2bcf2b2af622d64cd01221a3f31a480bb54c0e8",
+    "util_sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "gen_ground_truth_judgment_sha256": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]"
+   },
+   {
+    "commit": "c5c293c10c515f78d681c655f9b6ddcfc7938c5f",
+    "author_time": "2025-01-09T22:22:19Z",
+    "committer_time": "2025-01-09T22:22:19Z",
+    "is_merge": false,
+    "subject": "Codebase Improvements (#118)",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_c5c293c_utils",
+     "util_sha256": "lb_c5c293c_util",
+     "gen_ground_truth_judgment_sha256": "lb_c5c293c_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "util_sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "gen_ground_truth_judgment_sha256": "c414031603e32ae3868299149b90241bc5841501adf38b38414ffaecbd08b6db",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]"
+   },
+   {
+    "commit": "32c97443b01913d348d1c118cd6e1e5d65280f9b",
+    "author_time": "2025-01-13T18:04:48Z",
+    "committer_time": "2025-01-13T18:04:48Z",
+    "is_merge": false,
+    "subject": "add model_display_name option to overwrite model name",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_32c9744_utils",
+     "util_sha256": "lb_32c9744_util",
+     "gen_ground_truth_judgment_sha256": "lb_32c9744_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "util_sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "gen_ground_truth_judgment_sha256": "d4671453939f9ee679511ed8ce50e43f5d44bb1c8aab6fa8f186b666239a7a13",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]"
+   },
+   {
+    "commit": "68024097843d964a15afb8a742ede92d03ed00f0",
+    "author_time": "2025-01-13T19:46:11Z",
+    "committer_time": "2025-01-13T19:46:11Z",
+    "is_merge": false,
+    "subject": "change --model-list to --model",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_6802409_utils",
+     "util_sha256": "lb_6802409_util",
+     "gen_ground_truth_judgment_sha256": "lb_6802409_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "util_sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "gen_ground_truth_judgment_sha256": "8f85fa094e44a361081c07a72f24b05e290685560d8ab59ed9e72ccc9871b92f",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]"
+   },
+   {
+    "commit": "bdce0f7eed694e58df5a5a89345d2b0cf9507507",
+    "author_time": "2025-01-13T19:47:37Z",
+    "committer_time": "2025-01-13T19:47:38Z",
+    "is_merge": false,
+    "subject": "change --model-list to --model",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_bdce0f7_utils",
+     "util_sha256": "lb_bdce0f7_util",
+     "gen_ground_truth_judgment_sha256": "lb_bdce0f7_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "util_sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "gen_ground_truth_judgment_sha256": "18c10f32fbeff8a46a72f16229bef06408098abe9fb324c6f2da64994fb2d157",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]"
+   },
+   {
+    "commit": "7113c8db47c01c5d33999cf9daf3f221caccf0fd",
+    "author_time": "2025-01-14T16:05:11Z",
+    "committer_time": "2025-01-14T16:05:11Z",
+    "is_merge": false,
+    "subject": "fix error in olympiad process results",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_7113c8d_utils",
+     "util_sha256": "lb_7113c8d_util",
+     "gen_ground_truth_judgment_sha256": "lb_7113c8d_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "util_sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "gen_ground_truth_judgment_sha256": "6d0121692fbb1f8a4de53a13be34a3c60aa79b5f33b4db7d967c31a56e73215f",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]"
+   },
+   {
+    "commit": "fa6a3c6c4570292abe514233d364551ee11a2e71",
+    "author_time": "2025-01-22T19:34:15Z",
+    "committer_time": "2025-01-22T19:34:15Z",
+    "is_merge": false,
+    "subject": "misc improvements",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_fa6a3c6_utils",
+     "util_sha256": "lb_fa6a3c6_util",
+     "gen_ground_truth_judgment_sha256": "lb_fa6a3c6_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "util_sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "gen_ground_truth_judgment_sha256": "ed7973d19360ccf3a4a58d3112918b4f561009cdbdd2c4df55a2c85525a3d137",
+    "extraction_sha256": "f0f8b2aabff8b052ef2f8571eb203df639c769d062308d71e6e651fd618007bb",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]\nllm_answer = re.sub(f\"<think>.*?<\\/think>\", \"\", llm_answer, flags=re.DOTALL)"
+   },
+   {
+    "commit": "603c7d3aa8a75764d93db0c73fe1230e05acb9e4",
+    "author_time": "2025-01-28T22:36:59Z",
+    "committer_time": "2025-01-28T22:36:59Z",
+    "is_merge": false,
+    "subject": "misc script updates",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_603c7d3_utils",
+     "util_sha256": "lb_603c7d3_util",
+     "gen_ground_truth_judgment_sha256": "lb_603c7d3_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "util_sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "gen_ground_truth_judgment_sha256": "bb38171f2f150e8d38d2b84c32d9a36f93268b4ddf6cc7d0a3655edc3088aa7c",
+    "extraction_sha256": "f0f8b2aabff8b052ef2f8571eb203df639c769d062308d71e6e651fd618007bb",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]\nllm_answer = re.sub(f\"<think>.*?<\\/think>\", \"\", llm_answer, flags=re.DOTALL)"
+   },
+   {
+    "commit": "6515fc884eafc4902ac9cb563be1c220bfc14415",
+    "author_time": "2025-01-31T23:24:51Z",
+    "committer_time": "2025-01-31T23:24:51Z",
+    "is_merge": false,
+    "subject": "remove annoying warnings",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_6515fc8_utils",
+     "util_sha256": "lb_6515fc8_util",
+     "gen_ground_truth_judgment_sha256": "lb_6515fc8_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "util_sha256": "e8f97597589c640a89e1358093f9aa5d90f0673fedbc3998fcc267ce0854c0f1",
+    "gen_ground_truth_judgment_sha256": "968660eab3e80e9f428b5446b9d1258ac2cb5d52efb1adb1b3fc82ab0862d79f",
+    "extraction_sha256": "f0f8b2aabff8b052ef2f8571eb203df639c769d062308d71e6e651fd618007bb",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]\nllm_answer = re.sub(f\"<think>.*?<\\/think>\", \"\", llm_answer, flags=re.DOTALL)"
+   },
+   {
+    "commit": "f3501c71a24afdbaab9403f50dfa46e8faa0130f",
+    "author_time": "2025-02-13T16:25:54Z",
+    "committer_time": "2025-02-13T16:25:54Z",
+    "is_merge": false,
+    "subject": "use max_tokens for non-openai api models; properly remove <think> for IF",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_f3501c7_utils",
+     "util_sha256": "lb_f3501c7_util",
+     "gen_ground_truth_judgment_sha256": "lb_f3501c7_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "util_sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "gen_ground_truth_judgment_sha256": "5d0b7a28d3b8f042d2eae7ee192e92d8c56c949c635a181441fb8f01ab22ccac",
+    "extraction_sha256": "f0f8b2aabff8b052ef2f8571eb203df639c769d062308d71e6e651fd618007bb",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]\nllm_answer = re.sub(f\"<think>.*?<\\/think>\", \"\", llm_answer, flags=re.DOTALL)"
+   },
+   {
+    "commit": "a41783c06f646697a96cc2ae2275a6b5c2646cb4",
+    "author_time": "2025-04-07T19:34:58Z",
+    "committer_time": "2025-04-07T19:34:58Z",
+    "is_merge": false,
+    "subject": "April update (#179)",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_a41783c_utils",
+     "util_sha256": "lb_a41783c_util",
+     "gen_ground_truth_judgment_sha256": "lb_a41783c_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "util_sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "gen_ground_truth_judgment_sha256": "b6ffc0fe14e334915c3eddc0026bd2c9760aaab1f1a6281f3617953a1d8b0bdf",
+    "extraction_sha256": "f0f8b2aabff8b052ef2f8571eb203df639c769d062308d71e6e651fd618007bb",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]\nllm_answer = re.sub(f\"<think>.*?<\\/think>\", \"\", llm_answer, flags=re.DOTALL)"
+   },
+   {
+    "commit": "bb4283ba76afa988e6614989b52854865cfe5577",
+    "author_time": "2025-04-08T18:50:13Z",
+    "committer_time": "2025-04-08T18:50:13Z",
+    "is_merge": false,
+    "subject": "Model configs (#186)",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_bb4283b_utils",
+     "util_sha256": "lb_bb4283b_util",
+     "gen_ground_truth_judgment_sha256": "lb_bb4283b_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "47a6fe5b2277b5760a186e9c556023e90a291bf915715dc5b87d0dba9e8bc0eb",
+    "util_sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "gen_ground_truth_judgment_sha256": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+    "extraction_sha256": "f0f8b2aabff8b052ef2f8571eb203df639c769d062308d71e6e651fd618007bb",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]\nllm_answer = re.sub(f\"<think>.*?<\\/think>\", \"\", llm_answer, flags=re.DOTALL)"
+   },
+   {
+    "commit": "e647d72ba9f41e139521be8ec7c0e900d62763aa",
+    "author_time": "2025-04-18T14:43:35Z",
+    "committer_time": "2025-04-18T14:43:35Z",
+    "is_merge": false,
+    "subject": "gemini 2.5 flash preview support",
+    "remote_ids": {
+     "tablejoin_utils_sha256": "lb_e647d72_utils",
+     "util_sha256": "lb_e647d72_util",
+     "gen_ground_truth_judgment_sha256": "lb_e647d72_gen_ground_truth_judgment"
+    },
+    "tablejoin_utils_sha256": "1d8e56395b6ad033391503fe5914eb242f080eed5f07695c655e28d779dd213c",
+    "util_sha256": "f4f8769b5b0d1bf696151212962823009753b822e3310c2087818f7a36b1ac0a",
+    "gen_ground_truth_judgment_sha256": "a6882e2f3bbc7679601aa776b4dec8318d233935d4b3b7e4d8e3b408f2a4b746",
+    "extraction_sha256": "f0f8b2aabff8b052ef2f8571eb203df639c769d062308d71e6e651fd618007bb",
+    "extraction_source": "llm_answer = answer['choices'][0]['turns'][-1]\nllm_answer = re.sub(f\"<think>.*?<\\/think>\", \"\", llm_answer, flags=re.DOTALL)"
+   }
+  ],
+  "versions": [
+   {
+    "id": "905b71f",
+    "commit": "905b71f2f525b169fa5eb36263e3292f14571dd0",
+    "in_force_from_utc": "2024-06-14T14:35:39Z",
+    "tablejoin_utils": "scripts/ad_pinned/tablejoin_utils_905b71f.py",
+    "util": null,
+    "gen_ground_truth_judgment": "scripts/ad_pinned/gen_ground_truth_judgment_905b71f.py",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "synthetic_expectation_key": "905b71f"
+   },
+   {
+    "id": "f774d19",
+    "commit": "f774d190fef5525f1e2a6ebebdf54f31903432c0",
+    "in_force_from_utc": "2024-10-22T01:43:34Z",
+    "tablejoin_utils": "scripts/ad_pinned/tablejoin_utils_f774d19.py",
+    "util": null,
+    "gen_ground_truth_judgment": "scripts/ad_pinned/gen_ground_truth_judgment_f774d19.py",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "synthetic_expectation_key": "f774d19"
+   },
+   {
+    "id": "19c7757",
+    "commit": "19c7757f6e2e00b6a3383e6b2d99fd0569971a97",
+    "in_force_from_utc": "2024-12-17T21:24:28Z",
+    "tablejoin_utils": "scripts/ad_pinned/tablejoin_utils_19c7757.py",
+    "util": "scripts/ad_pinned/util_19c7757.py",
+    "gen_ground_truth_judgment": "scripts/ad_pinned/gen_ground_truth_judgment_19c7757.py",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "synthetic_expectation_key": "19c7757"
+   },
+   {
+    "id": "c5c293c",
+    "commit": "c5c293c10c515f78d681c655f9b6ddcfc7938c5f",
+    "in_force_from_utc": "2025-01-09T22:22:19Z",
+    "tablejoin_utils": "scripts/ad_pinned/tablejoin_utils_c5c293c.py",
+    "util": "scripts/ad_pinned/util_19c7757.py",
+    "gen_ground_truth_judgment": "scripts/ad_pinned/gen_ground_truth_judgment_19c7757.py",
+    "extraction_sha256": "a2955894df668156b77b3131358843dfc264322141888a8cc1f5ea2619b5e458",
+    "synthetic_expectation_key": "c5c293c"
+   },
+   {
+    "id": "fa6a3c6",
+    "commit": "fa6a3c6c4570292abe514233d364551ee11a2e71",
+    "in_force_from_utc": "2025-01-22T19:34:15Z",
+    "tablejoin_utils": "scripts/ad_pinned/tablejoin_utils_c5c293c.py",
+    "util": "scripts/ad_pinned/util_19c7757.py",
+    "gen_ground_truth_judgment": "scripts/ad_pinned/gen_ground_truth_judgment_fa6a3c6.py",
+    "extraction_sha256": "f0f8b2aabff8b052ef2f8571eb203df639c769d062308d71e6e651fd618007bb",
+    "synthetic_expectation_key": "c5c293c"
+   },
+   {
+    "id": "f3501c7",
+    "commit": "f3501c71a24afdbaab9403f50dfa46e8faa0130f",
+    "in_force_from_utc": "2025-02-13T16:25:54Z",
+    "tablejoin_utils": "scripts/ad_pinned/tablejoin_utils_c5c293c.py",
+    "util": "scripts/ad_pinned/util_f3501c7.py",
+    "gen_ground_truth_judgment": "scripts/ad_pinned/gen_ground_truth_judgment_f3501c7.py",
+    "extraction_sha256": "f0f8b2aabff8b052ef2f8571eb203df639c769d062308d71e6e651fd618007bb",
+    "synthetic_expectation_key": "e2a8e99"
+   },
+   {
+    "id": "e647d72",
+    "commit": "e647d72ba9f41e139521be8ec7c0e900d62763aa",
+    "in_force_from_utc": "2025-04-18T14:43:35Z",
+    "tablejoin_utils": "scripts/ad_pinned/tablejoin_utils_e647d72.py",
+    "util": "scripts/ad_pinned/util_f3501c7.py",
+    "gen_ground_truth_judgment": "scripts/ad_pinned/gen_ground_truth_judgment_e647d72.py",
+    "extraction_sha256": "f0f8b2aabff8b052ef2f8571eb203df639c769d062308d71e6e651fd618007bb",
+    "synthetic_expectation_key": "e647d72"
+   }
+  ]
+ },
+ "site": {
+  "repo": "https://github.com/LiveBench/livebench.github.io",
+  "commit": "19e766a5de4de07d672ed5bf9f0a69ceed1d39bf",
+  "tables": {
+   "2024_06_24": {
+    "pinned_id": "table_2024_06_24_pinned",
+    "live_id": "table_2024_06_24_live",
+    "categories_id": "categories_2024_06_24",
+    "first_commit": {
+     "sha": "909543ebb3a7829c2dbabfa604a56351d7798eec",
+     "author_time_utc": "2024-08-03T04:30:35Z"
+    },
+    "last_commit": {
+     "sha": "cbd48e43d59fd5892e472c639e4f6fd677180583",
+     "author_time_utc": "2024-09-07T04:35:50Z",
+     "committer_time_utc": "2024-09-07T04:35:50Z"
+    },
+    "commits_touching": 12
+   },
+   "2024_07_26": {
+    "pinned_id": "table_2024_07_26_pinned",
+    "live_id": "table_2024_07_26_live",
+    "categories_id": "categories_2024_07_26",
+    "first_commit": {
+     "sha": "909543ebb3a7829c2dbabfa604a56351d7798eec",
+     "author_time_utc": "2024-08-03T04:30:35Z"
+    },
+    "last_commit": {
+     "sha": "cbd48e43d59fd5892e472c639e4f6fd677180583",
+     "author_time_utc": "2024-09-07T04:35:50Z",
+     "committer_time_utc": "2024-09-07T04:35:50Z"
+    },
+    "commits_touching": 13
+   },
+   "2024_08_31": {
+    "pinned_id": "table_2024_08_31_pinned",
+    "live_id": "table_2024_08_31_live",
+    "categories_id": "categories_2024_08_31",
+    "first_commit": {
+     "sha": "52ffba23310f821c9110c824f3607a946f840636",
+     "author_time_utc": "2024-09-01T06:04:12Z"
+    },
+    "last_commit": {
+     "sha": "990a0cea6c8781cc0025be4a9df9f4fc8bb424a1",
+     "author_time_utc": "2024-11-21T22:10:05Z",
+     "committer_time_utc": "2024-11-21T22:10:05Z"
+    },
+    "commits_touching": 23
+   },
+   "2024_11_25": {
+    "pinned_id": "table_2024_11_25_pinned",
+    "live_id": "table_2024_11_25_live",
+    "categories_id": "categories_2024_11_25",
+    "first_commit": {
+     "sha": "ef9372d577f62f0f62b894018a93f19565f660d4",
+     "author_time_utc": "2024-11-25T22:52:07Z"
+    },
+    "last_commit": {
+     "sha": "11187de08e41c413cb671e1811fd542b6eb765d5",
+     "author_time_utc": "2025-03-31T21:17:10Z",
+     "committer_time_utc": "2025-03-31T21:17:10Z"
+    },
+    "commits_touching": 51
+   },
+   "2025_04_02": {
+    "pinned_id": "table_2025_04_02_pinned",
+    "live_id": "table_2025_04_02_live",
+    "categories_id": "categories_2025_04_02",
+    "first_commit": {
+     "sha": "7b64cb3f6cf18cb2c7df10cd69cfb61f75dad624",
+     "author_time_utc": "2025-04-03T16:56:55Z"
+    },
+    "last_commit": {
+     "sha": "ad51514198e70bc67b7e1b62f658e7a50744b914",
+     "author_time_utc": "2025-04-18T20:08:41Z",
+     "committer_time_utc": "2025-04-18T20:08:41Z"
+    },
+    "commits_touching": 7
+   }
+  },
+  "table_edit_after_fix": {
+   "commit": "ad51514198e70bc67b7e1b62f658e7a50744b914",
+   "parent": "a1d5b0b1a89ac1375bcfbca2447e36e0851884fc",
+   "before_id": "table_2025_04_02_before_edit",
+   "after_id": "table_2025_04_02_pinned"
+  }
+ },
+ "aggregation": {
+  "source": "livebench/show_livebench_result.py @ 905b71f lines 22 to 31",
+  "sha256": "3da429585880af62ba23b18d63aa63492c6870221fc264e69937bc22513d0c8b",
+  "rule": "score x 100, mean per (lower-cased model, task), round(3)"
+ },
+ "environment": {
+  "python": "3.11",
+  "numpy": "2.4.6",
+  "pyarrow": "25.0.1",
+  "pyarrow_wheel": "pyarrow-25.0.1-cp311-cp311-manylinux_2_28_x86_64.whl",
+  "pyarrow_wheel_sha256": "25f8720bf6387d5dc2ebd2622112de630760419e4b66134405dd24110d15f37e",
+  "note": "recorded at run time; a different version is recorded, not refused"
+ },
+ "frame": {
+  "task": "tablejoin",
+  "questions": 50,
+  "excluded_model_id_substring": "/",
+  "scoping_counts": {
+   "in_frame_cells": 201,
+   "models": 75,
+   "per_table": {
+    "2024_06_24": 67,
+    "2024_07_26": 67,
+    "2024_08_31": 44,
+    "2024_11_25": 14,
+    "2025_04_02": 9
+   },
+   "exact_match_only": {
+    "2024_06_24": 32,
+    "2024_07_26": 32,
+    "2024_08_31": 31,
+    "2024_11_25": 8,
+    "2025_04_02": 6
+   },
+   "table_rows": {
+    "2024_06_24": 73,
+    "2024_07_26": 73,
+    "2024_08_31": 59,
+    "2024_11_25": 65,
+    "2025_04_02": 63
+   },
+   "source": "docs/research/AD_SURVEY_2026-10-21.md section 2.5 (names only)"
+  }
+ },
+ "feasibility_disclosed": {
+  "model_id": "gpt-4o-2024-05-13",
+  "answers": 50,
+  "leading_fence_info_strings": {
+   "python": 50
+  },
+  "page_sha256": "2dc81677aa0f76acb1f20a1780866ad8bc7ca657a74131a224358c0498968015",
+  "page_bytes": 28125,
+  "rule": "choices[0].turns[0].strip(); a leading ``` counts; the info string is the rest of the first line, stripped and LOWER-CASED (the scoping script's rule)",
+  "banked": "experiments/ad_feasibility_counts_2026-10-21.json"
+ }
+}

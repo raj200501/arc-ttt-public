@@ -1,0 +1,156 @@
+{
+ "19c7757": {
+  "bare_dict": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "fence_python": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "fence_json": {
+   "O": 0.0,
+   "F": 1.0
+  },
+  "fence_bare": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "prose_then_fence_json": {
+   "O": 0.0,
+   "F": 0.0
+  }
+ },
+ "686be1e": {
+  "bare_dict": {
+   "O": "error: AttributeError",
+   "F": "error: AttributeError"
+  },
+  "fence_python": {
+   "O": "error: AttributeError",
+   "F": "error: AttributeError"
+  },
+  "fence_json": {
+   "O": 0.0,
+   "F": "error: AttributeError"
+  },
+  "fence_bare": {
+   "O": 0.0,
+   "F": "error: AttributeError"
+  },
+  "prose_then_fence_json": {
+   "O": 0.0,
+   "F": 0.0
+  }
+ },
+ "905b71f": {
+  "bare_dict": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "fence_python": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "fence_json": {
+   "O": 0.0,
+   "F": 1.0
+  },
+  "fence_bare": {
+   "O": 0.0,
+   "F": 1.0
+  },
+  "prose_then_fence_json": {
+   "O": 0.0,
+   "F": 0.0
+  }
+ },
+ "c5c293c": {
+  "bare_dict": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "fence_python": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "fence_json": {
+   "O": 0.0,
+   "F": 1.0
+  },
+  "fence_bare": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "prose_then_fence_json": {
+   "O": 0.0,
+   "F": 0.0
+  }
+ },
+ "e2a8e99": {
+  "bare_dict": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "fence_python": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "fence_json": {
+   "O": 0.0,
+   "F": 1.0
+  },
+  "fence_bare": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "prose_then_fence_json": {
+   "O": 0.0,
+   "F": 0.0
+  }
+ },
+ "e647d72": {
+  "bare_dict": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "fence_python": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "fence_json": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "fence_bare": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "prose_then_fence_json": {
+   "O": 1.0,
+   "F": 1.0
+  }
+ },
+ "f774d19": {
+  "bare_dict": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "fence_python": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "fence_json": {
+   "O": 0.0,
+   "F": 1.0
+  },
+  "fence_bare": {
+   "O": 1.0,
+   "F": 1.0
+  },
+  "prose_then_fence_json": {
+   "O": 0.0,
+   "F": 0.0
+  }
+ }
+}

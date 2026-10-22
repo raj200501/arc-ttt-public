@@ -1,0 +1,485 @@
+{
+ "what": "Addendum AA: Addendum X's frozen readings, through X's own code, on the four families whose determinism gates did not fail. Set aside: the gate's terminality. Changed: X1's combine rule cannot emit X's unscoped HOLDS sentence.",
+ "protocol": "docs/research/ADDENDUM_AA_PROTOCOL.md",
+ "reads": "docs/research/ADDENDUM_X_PROTOCOL.md (readings committed 2026-09-16T06:05Z, authored 05:52Z, in 0e5a11c; X's cells first committed in b4facac, 2026-09-16T18:27Z)",
+ "banked_reading": true,
+ "artifact": "experiments/cord_decoder_isolation_read_2026-10-22.json",
+ "artifact_date": "2026-10-22 (the UTC date the reading started)",
+ "read_started_utc": "2026-10-22T05:58:20Z",
+ "git_head": "95ab99b740174f9970eb01cb4dbb69d3e05c11d9",
+ "git_status_porcelain_of_pinned_paths": "",
+ "anchor": {
+  "stamp": "2026-10-22T0114Z",
+  "protocol_sha256_at_read": "277cd0a0c7406e200d21ec6d94671f8bf152e35217da946f89033900b0e2e513",
+  "ok": true,
+  "proof": "docs/research/ADDENDUM_AA_PROTOCOL.md.2026-10-22T0114Z.ots",
+  "snapshot": "docs/research/snapshots_ADDENDUM_AA_PROTOCOL_2026-10-22T0114Z.md",
+  "proof_sha256": "d5dab61cdaeb77eeacf26e938196b280084e93db51a2fb84187e013953dd91ca",
+  "attestations": [
+   "bitcoin",
+   "pending"
+  ],
+  "bitcoin_block_heights": [
+   972551,
+   972552,
+   972566
+  ],
+  "anchored_sha256": "97212004168ab03915e9b9f12ff85e3924f983bacdaf4a6dfd3887ce7309b404",
+  "snapshot_sha256": "97212004168ab03915e9b9f12ff85e3924f983bacdaf4a6dfd3887ce7309b404",
+  "protocol_begins_with_the_snapshot": true,
+  "snapshot_is_what_the_proof_commits_to": true,
+  "pinned": {
+   "quoted_in_anchored_protocol": {
+    "scripts/decoder_isolation_read.py": "ca21f8fc28fc4cb8edccb28a2f5a555ef35d77bf7cd105f0eae7c5881b158532",
+    "scripts/cord_decoder_isolation.py": "7315fa0bfd04bef4c5167fc4cbe5f22a21effaa82b0501049515e3ceefcbe98a",
+    "scripts/aa_pinned/fencecheck_x.py": "a8de3a21dd91ed36a314afc922cf1ddc8f732f51c3b6d59e726188bbea3c0c35",
+    "scripts/cord_fence_tax.py": "c0f3ce7c359d69b42efbf50c1379050173437a89053fde52a6043ad64e7887d3",
+    "scripts/cord_constrained_families.py": "6f596cfb7ddeb3abf28cee5b677a58d15e76c257ee7aa18a1c9775b834ad2e1f",
+    "src/arcttt/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/arcttt/scoring.py": "f3ba871ffa595542e1ddf4152e676fb3836909c736ba043511c11b47933bef22",
+    "src/arcttt/text_task.py": "1811b2eff7603289c58e8eb700a83f70bdf8b25c693e86ceec35d2d9f7c887b4",
+    "src/arcttt/tasks.py": "43ee9e3ad8f6fcfdbbb3454f1e4b2c14ef32bb2de10191bd6fadce13d5e21452",
+    "scripts/aa_pinned/aa_input_manifest.json": "c2fa3277a6a3bc7a1bfe8e9105fe840b5a50fe04e2bf444f0c2418692391d94e"
+   },
+   "now": {
+    "scripts/decoder_isolation_read.py": "ca21f8fc28fc4cb8edccb28a2f5a555ef35d77bf7cd105f0eae7c5881b158532",
+    "scripts/cord_decoder_isolation.py": "7315fa0bfd04bef4c5167fc4cbe5f22a21effaa82b0501049515e3ceefcbe98a",
+    "scripts/aa_pinned/fencecheck_x.py": "a8de3a21dd91ed36a314afc922cf1ddc8f732f51c3b6d59e726188bbea3c0c35",
+    "scripts/cord_fence_tax.py": "c0f3ce7c359d69b42efbf50c1379050173437a89053fde52a6043ad64e7887d3",
+    "scripts/cord_constrained_families.py": "6f596cfb7ddeb3abf28cee5b677a58d15e76c257ee7aa18a1c9775b834ad2e1f",
+    "src/arcttt/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/arcttt/scoring.py": "f3ba871ffa595542e1ddf4152e676fb3836909c736ba043511c11b47933bef22",
+    "src/arcttt/text_task.py": "1811b2eff7603289c58e8eb700a83f70bdf8b25c693e86ceec35d2d9f7c887b4",
+    "src/arcttt/tasks.py": "43ee9e3ad8f6fcfdbbb3454f1e4b2c14ef32bb2de10191bd6fadce13d5e21452",
+    "scripts/aa_pinned/aa_input_manifest.json": "c2fa3277a6a3bc7a1bfe8e9105fe840b5a50fe04e2bf444f0c2418692391d94e"
+   },
+   "not_quoted": [],
+   "quoted_but_not_pinned_by_the_reader": [],
+   "mismatched": [],
+   "matches": true
+  },
+  "bitcoin_attested": true
+ },
+ "x_run_commit": "b4facacea71c144654b49eec7e393e79c1e0162f",
+ "inputs_read_sha256": {
+  "experiments/generation_configs_2026-09-16.json": "9874667b9ba236e69306a922fb582b54b4e6c6b2d634d7acf184e6ce6d7e54af",
+  "experiments/cord_decoder_isolation_2026-09-16.json": "f775f98cc0cb2572bfa7991279f2bbaf3fd40f72e4756731fe9ddb2af22d5fbc",
+  "experiments/cord_constrained_families_2026-09-08.json": "fc72070875c654f63b38d5e11a4060f1c8fbaa8865ab5e5b6cfc08e188578269",
+  "experiments/ladder_e6_cord_split/gold.jsonl": "7073e77dcd315936ab94da603f75fff11953e2751adef49b08d2278c490fdc70",
+  "experiments/ladder_e6_cord_split/train.jsonl": "431208ddfe21c80717c0e9dafc03cdd4b713db5352dca7e26a762ab490c862f1",
+  "experiments/cord_decoder_isolation_cells/qwen2.5-0.5b_plain.json": "62176e3d44c117a30ea30087e2ce911d42eb5a17d35eda3ee26e37a643d27e2c",
+  "experiments/cord_constrained_families_cells/qwen2.5-0.5b_schema_constrained.json": "bd6c043221933fe8d30861d64fa80660e4a0eb4f0d4c83a3ee4e6975c3a537a5",
+  "experiments/cord_fence_tax_cells/0.5b_schema.json": "f28a207e440ded903d9a94e0437c29da0d51c75e6874936042ac865d263d830d",
+  "experiments/cord_decoder_isolation_cells/qwen2.5-0.5b_generate_neutral.json": "5255954829ad64b502b61395ed5e0b7c606a563afd01e17fbaa024de8c8aa43d",
+  "experiments/cord_decoder_isolation_cells/smollm2-1.7b_plain.json": "36191ec62110ee63b6bc67002873cf04f8b00b6a48b4a25235db88400398b34c",
+  "experiments/cord_constrained_families_cells/smollm2-1.7b_schema_constrained.json": "7d6cd5afb96a797ebd5abee53cb387f83aa11e83750bb4cba6b114fbb1432536",
+  "experiments/cord_fence_tax_families_cells/smollm2-1.7b_schema.json": "810484e56220b46d138a2120ca0880e1c3f6c1758835c79c6a7b17579cfd76a4",
+  "experiments/cord_decoder_isolation_cells/granite-2b_plain.json": "ed4acd47efa36586dbe694c55da4507bca46b749261f2876b37d4c2f87e15ca2",
+  "experiments/cord_decoder_isolation_cells/granite-2b_constrained.json": "3d55007bb8b0c7f8f80fa119ab1d5a4b33424ebab0362fc8969b5b7d0e23eebd",
+  "experiments/cord_fence_tax_families_cells/granite-2b_schema.json": "90370d584aa3eec531e36e387bf7ba7baf777060f4cacb964476d75849919da2",
+  "experiments/cord_decoder_isolation_cells/granite-2b_generate_neutral.json": "790f6522ce744e339162984eebaeb0db0f1996064372c0aa4b1b44edbba47d74",
+  "experiments/cord_decoder_isolation_cells/falcon3-1b_plain.json": "7961192cf7a7b536d1d9d7052c5c8b3cb0e4fd01dbc98d83eb1d282c9b920453",
+  "experiments/cord_constrained_families_cells/falcon3-1b_schema_constrained.json": "e70712844b7ca468dd8eb3b04ff59b248ac974af7e568d8b92449e2750d8e0c0",
+  "experiments/cord_fence_tax_families_cells/falcon3-1b_schema.json": "1b74d24612ca67be33c758ceaabb8dd8b26f8e98aa08beccb300f2a3462cca55"
+ },
+ "plain_loop_stop_ids": {
+  "qwen2.5-0.5b": {
+   "pinned": 151645,
+   "tokenizer_now": 151645,
+   "agrees": true
+  },
+  "granite-2b": {
+   "pinned": 0,
+   "tokenizer_now": 0,
+   "agrees": true
+  }
+ },
+ "environment": {
+  "python": "3.11.17",
+  "torch": "2.13.0+cpu",
+  "transformers": "5.16.1",
+  "platform": "Linux-6.18.44-fc-v140-x86_64-with-glibc2.39",
+  "torch_threads": 4,
+  "render_date_pinned_for_clock_dependent_templates": "September 16, 2026"
+ },
+ "families_read": [
+  "qwen2.5-0.5b",
+  "smollm2-1.7b",
+  "granite-2b",
+  "falcon3-1b"
+ ],
+ "families_not_read": {
+  "phi3-mini": "NOT READ: X's determinism gate failed on this family in both of its runs. Addendum Y explained the first run's constrained-arm flake on cord-004 (reduction order); the generate-comparator mismatches on cord-001 and cord-002, present in both runs, remain unexplained. Counted as a family where CONSTRAINT REMOVES did not fire; its HURTS veto is unverified."
+ },
+ "determinism_gate_from_x": {
+  "qwen2.5-0.5b": {
+   "status": "PASSED",
+   "n": 5,
+   "mismatches": 0,
+   "x_artifact_banks": {
+    "n": 5,
+    "mismatches": 0,
+    "passed": true
+   }
+  },
+  "smollm2-1.7b": {
+   "status": "PASSED",
+   "n": 5,
+   "mismatches": 0,
+   "x_artifact_banks": {
+    "n": 5,
+    "mismatches": 0,
+    "passed": true
+   }
+  },
+  "granite-2b": {
+   "status": "NOT APPLICABLE",
+   "n": 0,
+   "mismatches": 0,
+   "x_artifact_banks": {
+    "n": 0,
+    "mismatches": 0,
+    "passed": true
+   },
+   "not_applicable_because": {
+    "arm_C_reused_from_V": false,
+    "chat_template_clock_calls": [
+     "strftime_now"
+    ]
+   }
+  },
+  "falcon3-1b": {
+   "status": "PASSED",
+   "n": 5,
+   "mismatches": 0,
+   "x_artifact_banks": {
+    "n": 5,
+    "mismatches": 0,
+    "passed": true
+   }
+  }
+ },
+ "published_first": [],
+ "prompt_identity_per_comparison": {
+  "qwen2.5-0.5b": {
+   "C vs P": "not verifiable (the reused arm C cell banks no prompt digest)",
+   "P vs G": "verified",
+   "G vs G0 (X3)": "not verifiable (the G0 comparator cell banks text only)"
+  },
+  "smollm2-1.7b": {
+   "C vs P": "not verifiable (the reused arm C cell banks no prompt digest)",
+   "P vs G0": "not verifiable (the G0 comparator cell banks text only)"
+  },
+  "granite-2b": {
+   "C vs P": "verified",
+   "P vs G": "verified"
+  },
+  "falcon3-1b": {
+   "C vs P": "not verifiable (the reused arm C cell banks no prompt digest)",
+   "P vs G0": "not verifiable (the G0 comparator cell banks text only)"
+  }
+ },
+ "void_families": {},
+ "rows": [
+  {
+   "family": "qwen2.5-0.5b",
+   "model": "Qwen/Qwen2.5-0.5B-Instruct",
+   "dtype": "float32",
+   "n": 50,
+   "arm_C_source": "experiments/cord_constrained_families_cells/qwen2.5-0.5b_schema_constrained.json",
+   "x1_invalid_plain": 7,
+   "x1_invalid_constrained": 7,
+   "x1_regressions_plain_valid_constrained_invalid": 0,
+   "x1_identical_documents": 50,
+   "x1_differing_documents": [],
+   "x1_reading": "CONSTRAINT INERT",
+   "constrained_steps_banked": 0,
+   "documents_with_zero_steps_but_differing_arms": [],
+   "documents_with_steps_but_identical_arms": [],
+   "fenced_plain": 50,
+   "fenced_constrained": 50,
+   "accounting_consistent": true,
+   "x2_comparison": "P vs G (token prefix)",
+   "x2_basis": "token ids",
+   "x2_compared_against": "G",
+   "x2_invalid_plain": 7,
+   "x2_invalid_other_arm": 7,
+   "x2_invalid_difference_other_minus_plain": 0,
+   "x2_divergent_documents": 0,
+   "x2_first_divergence_index": {},
+   "x2_divergent_documents_as_first_coded": 0,
+   "x2_documents_changed_by_the_eos_erratum": [],
+   "x2_eos_erratum_stripped_ids": {},
+   "x2_reading": "PATH REPRODUCES (EOS erratum 2026-09-23: 0 documents diverge as corrected, 0 as first coded)",
+   "score_mean_delta_constrained_minus_plain": 0.0,
+   "score_wins_losses_ties": [
+    0,
+    0,
+    50
+   ],
+   "score_sign_test_p": 1.0
+  },
+  {
+   "family": "smollm2-1.7b",
+   "model": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
+   "dtype": "float32",
+   "n": 50,
+   "arm_C_source": "experiments/cord_constrained_families_cells/smollm2-1.7b_schema_constrained.json",
+   "x1_invalid_plain": 8,
+   "x1_invalid_constrained": 8,
+   "x1_regressions_plain_valid_constrained_invalid": 0,
+   "x1_identical_documents": 50,
+   "x1_differing_documents": [],
+   "x1_reading": "CONSTRAINT INERT",
+   "constrained_steps_banked": 0,
+   "documents_with_zero_steps_but_differing_arms": [],
+   "documents_with_steps_but_identical_arms": [],
+   "fenced_plain": 0,
+   "fenced_constrained": 0,
+   "accounting_consistent": true,
+   "x2_comparison": "P vs G0 (text prefix; G == G0, no modifiers)",
+   "x2_basis": "decoded text",
+   "x2_compared_against": "G0",
+   "x2_invalid_plain": 8,
+   "x2_invalid_other_arm": 8,
+   "x2_invalid_difference_other_minus_plain": 0,
+   "x2_divergent_documents": 0,
+   "x2_first_divergence_index": {},
+   "x2_divergent_documents_as_first_coded": 0,
+   "x2_documents_changed_by_the_eos_erratum": [],
+   "x2_eos_erratum_stripped_ids": {},
+   "x2_reading": "PATH REPRODUCES (WEAKER TEST: decoded text, not token ids)",
+   "score_mean_delta_constrained_minus_plain": 0.0,
+   "score_wins_losses_ties": [
+    0,
+    0,
+    50
+   ],
+   "score_sign_test_p": 1.0
+  },
+  {
+   "family": "granite-2b",
+   "model": "ibm-granite/granite-3.1-2b-instruct",
+   "dtype": "float32",
+   "n": 50,
+   "arm_C_source": "experiments/cord_decoder_isolation_cells/granite-2b_constrained.json",
+   "x1_invalid_plain": 5,
+   "x1_invalid_constrained": 5,
+   "x1_regressions_plain_valid_constrained_invalid": 0,
+   "x1_identical_documents": 50,
+   "x1_differing_documents": [],
+   "x1_reading": "CONSTRAINT INERT",
+   "constrained_steps_banked": 0,
+   "documents_with_zero_steps_but_differing_arms": [],
+   "documents_with_steps_but_identical_arms": [],
+   "fenced_plain": 0,
+   "fenced_constrained": 0,
+   "accounting_consistent": true,
+   "x2_comparison": "P vs G (token prefix)",
+   "x2_basis": "token ids",
+   "x2_compared_against": "G",
+   "x2_invalid_plain": 5,
+   "x2_invalid_other_arm": 5,
+   "x2_invalid_difference_other_minus_plain": 0,
+   "x2_divergent_documents": 0,
+   "x2_first_divergence_index": {},
+   "x2_divergent_documents_as_first_coded": 0,
+   "x2_documents_changed_by_the_eos_erratum": [],
+   "x2_eos_erratum_stripped_ids": {},
+   "x2_reading": "PATH REPRODUCES (EOS erratum 2026-09-23: 0 documents diverge as corrected, 0 as first coded)",
+   "score_mean_delta_constrained_minus_plain": 0.0,
+   "score_wins_losses_ties": [
+    0,
+    0,
+    50
+   ],
+   "score_sign_test_p": 1.0
+  },
+  {
+   "family": "falcon3-1b",
+   "model": "tiiuae/Falcon3-1B-Instruct",
+   "dtype": "float32",
+   "n": 50,
+   "arm_C_source": "experiments/cord_constrained_families_cells/falcon3-1b_schema_constrained.json",
+   "x1_invalid_plain": 14,
+   "x1_invalid_constrained": 8,
+   "x1_regressions_plain_valid_constrained_invalid": 0,
+   "x1_identical_documents": 43,
+   "x1_differing_documents": [
+    "cord-003",
+    "cord-009",
+    "cord-016",
+    "cord-020",
+    "cord-022",
+    "cord-032",
+    "cord-038"
+   ],
+   "x1_reading": "CONSTRAINT HELPS",
+   "constrained_steps_banked": 11,
+   "documents_with_zero_steps_but_differing_arms": [],
+   "documents_with_steps_but_identical_arms": [],
+   "fenced_plain": 46,
+   "fenced_constrained": 50,
+   "accounting_consistent": true,
+   "x2_comparison": "P vs G0 (text prefix; G == G0, no modifiers)",
+   "x2_basis": "decoded text",
+   "x2_compared_against": "G0",
+   "x2_invalid_plain": 14,
+   "x2_invalid_other_arm": 14,
+   "x2_invalid_difference_other_minus_plain": 0,
+   "x2_divergent_documents": 0,
+   "x2_first_divergence_index": {},
+   "x2_divergent_documents_as_first_coded": 0,
+   "x2_documents_changed_by_the_eos_erratum": [],
+   "x2_eos_erratum_stripped_ids": {},
+   "x2_reading": "PATH REPRODUCES (WEAKER TEST: decoded text, not token ids)",
+   "score_mean_delta_constrained_minus_plain": 0.0224,
+   "score_wins_losses_ties": [
+    6,
+    0,
+    44
+   ],
+   "score_sign_test_p": 0.0156
+  }
+ ],
+ "x1_per_family": {
+  "qwen2.5-0.5b": "CONSTRAINT INERT",
+  "smollm2-1.7b": "CONSTRAINT INERT",
+  "granite-2b": "CONSTRAINT INERT",
+  "falcon3-1b": "CONSTRAINT HELPS"
+ },
+ "x1_finding": "X1 MIXED: CONSTRAINT REMOVES in 0 of 5 families (3 inert -- the constraint never fired there, which is not a success; 0 untestable at size -- nothing to remove, counted neither way). All counts publish, no headline. Per-family: {\"qwen2.5-0.5b\": \"CONSTRAINT INERT\", \"smollm2-1.7b\": \"CONSTRAINT INERT\", \"granite-2b\": \"CONSTRAINT INERT\", \"falcon3-1b\": \"CONSTRAINT HELPS\", \"phi3-mini\": \"NOT READ: X's determinism gate failed on this family in both of its runs. Addendum Y explained the first run's constrained-arm flake on cord-004 (reduction order); the generate-comparator mismatches on cord-001 and cord-002, present in both runs, remain unexplained. Counted as a family where CONSTRAINT REMOVES did not fire; its HURTS veto is unverified.\"}",
+ "x2_per_family": {
+  "qwen2.5-0.5b": "PATH REPRODUCES (EOS erratum 2026-09-23: 0 documents diverge as corrected, 0 as first coded)",
+  "smollm2-1.7b": "PATH REPRODUCES (WEAKER TEST: decoded text, not token ids)",
+  "granite-2b": "PATH REPRODUCES (EOS erratum 2026-09-23: 0 documents diverge as corrected, 0 as first coded)",
+  "falcon3-1b": "PATH REPRODUCES (WEAKER TEST: decoded text, not token ids)"
+ },
+ "x2_eos_erratum": {
+  "qwen2.5-0.5b": {
+   "as_corrected": 0,
+   "as_first_coded": 0,
+   "documents_changed": [],
+   "stripped_id_per_document": {},
+   "plain_loop_stop_id": 151645
+  },
+  "granite-2b": {
+   "as_corrected": 0,
+   "as_first_coded": 0,
+   "documents_changed": [],
+   "stripped_id_per_document": {},
+   "plain_loop_stop_id": 0
+  }
+ },
+ "x3": {
+  "family": "qwen2.5-0.5b",
+  "documents_differing_G_vs_G0": 47,
+  "v_published_regressions": 5,
+  "v_regressions_recomputed_here": 5,
+  "v_regression_count_reproduces": true,
+  "v_regressions_reexamined": [
+   {
+    "id": "cord-002",
+    "valid_without_the_defaults": false
+   },
+   {
+    "id": "cord-034",
+    "valid_without_the_defaults": false
+   },
+   {
+    "id": "cord-036",
+    "valid_without_the_defaults": false
+   },
+   {
+    "id": "cord-041",
+    "valid_without_the_defaults": false
+   },
+   {
+    "id": "cord-042",
+    "valid_without_the_defaults": false
+   }
+  ],
+  "regressions_explained_by_the_defaults": 5,
+  "residual_documents": [],
+  "residual_attributed_by_arithmetic": {},
+  "reading": "V'S ATTRIBUTION HOLDS: all 5 regressions are explained by the generation defaults rather than by the constraint.",
+  "note_if_v_does_not_reproduce": null
+ },
+ "decoder_accounting_inconsistent_in": [],
+ "x_predictions_checked": {
+  "verbatim": {
+   "X1": "V banked 0 constrained steps on every document of four families and on 43 of Falcon3's 50, with 0 fallbacks everywhere. If that accounting is correct, then arms C and P must be byte-identical on every document with 0 constrained steps [...] so X1 reads INERT on Qwen2.5-0.5B, SmolLM2, Granite and Phi-3, and on Falcon3 the arms differ on exactly the seven documents where the validator fired.",
+   "X2": "PATH DIVERGES on Phi-3 (V saw 32 of 50 bodies differ at bfloat16) and PATH REPRODUCES on SmolLM2. Qwen, Falcon3 and Granite are not predicted — Granite because its arms are being compared under a prompt V never used."
+  },
+  "x1_accounting_per_document": {
+   "qwen2.5-0.5b": {
+    "holds": true,
+    "documents_with_zero_steps_but_differing_arms": [],
+    "documents_with_steps_but_identical_arms": []
+   },
+   "smollm2-1.7b": {
+    "holds": true,
+    "documents_with_zero_steps_but_differing_arms": [],
+    "documents_with_steps_but_identical_arms": []
+   },
+   "granite-2b": {
+    "holds": true,
+    "documents_with_zero_steps_but_differing_arms": [],
+    "documents_with_steps_but_identical_arms": []
+   },
+   "falcon3-1b": {
+    "holds": true,
+    "documents_with_zero_steps_but_differing_arms": [],
+    "documents_with_steps_but_identical_arms": []
+   }
+  },
+  "x1_inert_where_predicted": {
+   "qwen2.5-0.5b": "CONSTRAINT INERT",
+   "smollm2-1.7b": "CONSTRAINT INERT",
+   "granite-2b": "CONSTRAINT INERT"
+  },
+  "x1_inert_holds": {
+   "qwen2.5-0.5b": true,
+   "smollm2-1.7b": true,
+   "granite-2b": true
+  },
+  "x1_falcon3_differs_on_exactly_the_documents_with_steps": {
+   "differing_documents": 7,
+   "holds": true
+  },
+  "x2_where_predicted": {
+   "smollm2-1.7b": {
+    "reading": "PATH REPRODUCES (WEAKER TEST: decoded text, not token ids)",
+    "basis": "decoded text",
+    "holds": true
+   }
+  },
+  "not_checkable": [
+   "X1 INERT on Phi-3 (not read): 3 of the 4 families X predicted INERT are checkable",
+   "X1 per-document accounting on Phi-3 (not read)",
+   "X2 PATH DIVERGES on Phi-3 (not read)"
+  ]
+ },
+ "licensed_sentences": [
+  "X1 (combined; denominator 5, phi3-mini not read and counted against): X1 MIXED: CONSTRAINT REMOVES in 0 of 5 families (3 inert -- the constraint never fired there, which is not a success; 0 untestable at size -- nothing to remove, counted neither way). All counts publish, no headline. In falcon3-1b, arm C is V's banked cell: where the arms differ, the difference is the constraint, or V's cell not reproducing across processes on that document, and this reading cannot separate the two.",
+  "qwen2.5-0.5b (X1): CONSTRAINT INERT.",
+  "qwen2.5-0.5b (X2): our loop reproduces generate token-for-token on these 50 documents, when neither is constrained and neither has generation defaults in play. Both counts, because the EOS erratum moves X2 the way that favours us: 0 of 50 documents diverge under the 2026-09-23 erratum; X's code as banked at b4facac reads PATH REPRODUCES.",
+  "smollm2-1.7b (X1): CONSTRAINT INERT.",
+  "smollm2-1.7b (X2): our loop reproduces generate's decoded text on these 50 documents (WEAKER TEST: decoded text, not token ids).",
+  "granite-2b (X1): CONSTRAINT INERT.",
+  "granite-2b (X2): our loop reproduces generate token-for-token on these 50 documents, when neither is constrained and neither has generation defaults in play. Both counts, because the EOS erratum moves X2 the way that favours us: 0 of 50 documents diverge under the 2026-09-23 erratum; X's code as banked at b4facac reads PATH REPRODUCES.",
+  "falcon3-1b (X1): CONSTRAINT HELPS. Where arms C and P differ, arm C is V's banked cell: the difference is the constraint, or V's cell not reproducing across processes on that document, and this reading cannot separate the two.",
+  "falcon3-1b (X2): our loop reproduces generate's decoded text on these 50 documents (WEAKER TEST: decoded text, not token ids).",
+  "qwen2.5-0.5b (X3): V'S ATTRIBUTION HOLDS: all 5 regressions are explained by the generation defaults rather than by the constraint."
+ ],
+ "obligations_the_same_day": [
+  {
+   "file": "tools/README.md",
+   "what": "the jsongreedy.py section carries this addendum's reading beside X's withholding"
+  }
+ ],
+ "disclosure": "Addendum X's artifact records that the operator computed the per-family X1 quantities for these families by hand during X's run, for scheduling. The record names X1 only and is silent on X2 and X3, so no reading here claims to be blind. X's readings were committed before its cells were; X's anchor came after its run, so a stranger cannot check that order. The decision to read these cells, and every choice in this addendum, were made after the hand computation. On 2026-10-21 an agent designing a different addendum (AC) read the per_document_seconds field of the Addendum S/T comparator cells to estimate decode cost. It read no prediction text, no token ids and no other field. No reading here takes decode time as an input: X1 compares arms C and P by their texts and banked constrained steps, X2 compares arm P with G by token ids or with G0 by decoded text, and X3 classifies the texts of arms C, G and G0 as valid or invalid JSON. Decode time tracks roughly how long an output was, and none of the three readings is a function of output length alone. It is the only access to those cells since X's run that the operator knows of.",
+ "how_to_recompute": "git checkout 95ab99b740174f9970eb01cb4dbb69d3e05c11d9 && PYTHONPATH=src python3 scripts/decoder_isolation_read.py --out <a new path outside experiments/>",
+ "console_of_read_families": "qwen2.5-0.5b   X1 invalid  7 ->  7 (identical 50/50, reg 0)  CONSTRAINT INERT                   | X2 PATH REPRODUCES (EOS erratum 2026-09-23: 0 documents diverge as corrected, 0 as first coded) vs G (invalid 7) | accounting ok\n               X3 G vs G0 differ on 47/50; V'S ATTRIBUTION HOLDS: all 5 regressions are explained by the generation defaults rather than by the constraint.\nsmollm2-1.7b   X1 invalid  8 ->  8 (identical 50/50, reg 0)  CONSTRAINT INERT                   | X2 PATH REPRODUCES (WEAKER TEST: decoded text, not token ids) vs G0 (invalid 8) | accounting ok\ngranite-2b     X1 invalid  5 ->  5 (identical 50/50, reg 0)  CONSTRAINT INERT                   | X2 PATH REPRODUCES (EOS erratum 2026-09-23: 0 documents diverge as corrected, 0 as first coded) vs G (invalid 5) | accounting ok\nfalcon3-1b     X1 invalid 14 ->  8 (identical 43/50, reg 0)  CONSTRAINT HELPS                   | X2 PATH REPRODUCES (WEAKER TEST: decoded text, not token ids) vs G0 (invalid 14) | accounting ok\n",
+ "read_finished_utc": "2026-10-22T05:58:27Z"
+}

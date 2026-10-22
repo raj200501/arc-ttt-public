@@ -10,14 +10,21 @@ import pytest
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 RESEARCH = REPO / "docs" / "research"
-FROZEN = ["S", "T", "U", "U_EXT", "V", "W", "X", "Y", "Z", "AA"]
+FROZEN = ["S", "T", "U", "U_EXT", "V", "W", "X", "Y", "Z", "AA", "AD"]
 # anchored BEFORE the first arm (the ANCHORS.md policy); everything
 # earlier was anchored after its run and must say so. Each maps to the
 # files that must quote its stamp.
 BEFORE_RUN = {
     "Z": ("docs/research/ANCHORS.md", "scripts/novel_schema_rerun.py", "VERDICT.md"),
     "AA": ("docs/research/ANCHORS.md", "VERDICT.md"),
+    "AD": ("docs/research/ANCHORS.md", "VERDICT.md"),
 }
+# registered before their freeze: each may still be a draft, and a draft
+# claims nothing (no proof, no snapshot, no ANCHORS.md row). Empty since
+# 2026-10-22: AA and AD are both stamped, and while they sat here the
+# freeze-state test did not require their proofs. A protocol registered
+# in FROZEN before its freeze is added here by name until it is stamped.
+NOT_YET_FROZEN: set[str] = set()
 STAMP = r"\d{4}-\d{2}-\d{2}T\d{4}Z"
 # A protocol registered here before its freeze is in one of three states,
 # read from its own text: a draft (the freeze line still says
@@ -60,7 +67,7 @@ def _draft_claims_nothing(key: str) -> None:
 def test_the_freeze_states_are_only_ever_draft_for_a_protocol_not_yet_frozen():
     for key in FROZEN:
         state, _ = freeze_state(key)
-        if key != "AA":
+        if key not in NOT_YET_FROZEN:
             assert state == "stamped", key
         elif state == "draft":
             _draft_claims_nothing(key)

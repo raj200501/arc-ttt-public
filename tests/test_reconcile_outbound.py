@@ -251,3 +251,29 @@ def test_deck_v2_catches_an_invented_figure(tmp_path: pathlib.Path) -> None:
               if name.startswith("DECK_V2.md / Slide 5")
               for item in block["unreconciled"]]
     assert marker in tokens, f"caught something, but not the plant: {tokens}"
+
+
+def test_a_record_document_is_checked_like_a_dated_section():
+    """A document that declares itself a record (SUPERSEDED and the other
+    markers `scripts/sync_test_counts.py` honours) keeps the counts it had
+    when it was superseded. The gate must not make a hand-sync of the
+    record the only way to pass (CORRECTIONS 2026-10-22)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("ro_record", SCRIPT)
+    ro = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ro)
+    spec2 = importlib.util.spec_from_file_location(
+        "stc_record", REPO / "scripts" / "sync_test_counts.py")
+    stc = importlib.util.module_from_spec(spec2)
+    spec2.loader.exec_module(stc)
+    assert ro.RECORD_MARKERS == stc.RECORD_MARKERS
+    assert ro.is_record("SUPERSEDED on 2026-10-21 by DECK_V2.md; kept as the record.\n# Deck\n")
+    # only the head counts, as in sync_test_counts
+    assert not ro.is_record("# Deck\n\nLive copy.\n" + "x" * 700 + "SUPERSEDED")
+    # every outbound document that says it is superseded is read as one
+    listed = REPO / "docs" / "strategy" / "OUTBOUND_DOCS.txt"
+    if listed.exists():
+        for name in listed.read_text(encoding="utf-8").split():
+            doc = listed.parent / name
+            if doc.exists() and "SUPERSEDED" in doc.read_text(encoding="utf-8")[:200]:
+                assert ro.is_record(doc.read_text(encoding="utf-8")), name

@@ -678,7 +678,11 @@ def test_the_tool_does_not_flag_its_own_tree():
 def test_a_deeply_nested_file_is_reported_unanalysed_not_a_crash(tmp_path):
     # A real installed file (sympy) crashed the whole scan with RecursionError
     # and exit 1, which CI reads as "found". It must be skipped and named.
-    deep = "x = " + "+".join(["completion"] * 20000) + "\n"
+    # The fixture holds a parse call: a file with none cannot hold a site
+    # and is cleared without being walked (and Python 3.9's parser, unlike
+    # 3.11's, accepts this expression, so only the walk would fail).
+    deep = ("import json\nx = json.loads(" + "+".join(["completion"] * 20000)
+            + ")\n")
     (tmp_path / "deep.py").write_text(deep)
     (tmp_path / "ok.py").write_text("y = 1\n")
     unanalysed = []

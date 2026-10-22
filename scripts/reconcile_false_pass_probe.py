@@ -80,7 +80,10 @@ def _haystack(gate: types.ModuleType) -> str:
     for path in sorted((REPO / "experiments").glob("*.json")):
         if (path.name == "outbound_reconciliation.json"
                 or path.name.startswith("reconcile_false_pass")
-                or path.name.endswith("_2026-09-23.json")):
+                or path.name.endswith("_2026-09-23.json")
+                # mirror the gate: bulk per-item dumps are not evidence for
+                # uncited figures (older gate sources have no such set)
+                or path.name in getattr(gate, "BULK_PER_ITEM", ())):
             continue
         parts.append(path.read_text(encoding="utf-8"))
     return gate._dash_normalise("\n".join(parts))

@@ -4,7 +4,8 @@
 `fencecheck.py scan` takes one path, and pre-commit passes one argument
 per staged file. This runs the same scan over each of them and reports
 them together, with the same exit status: 1 when a site is found, 2 when
-a path does not exist, 0 when every file is clean.
+a path does not exist or, with nothing found, a file could not be
+analysed, 0 when every file is clean.
 
 It loads fencecheck.py from this directory and changes nothing in it.
 That keeps the scanner byte-identical, which matters because
@@ -34,19 +35,34 @@ def main(argv: list[str] | None = None) -> int:
         print("usage: fencecheck_hook.py PATH [PATH ...]", file=sys.stderr)
         return 2
     fc = _fencecheck()
-    findings, files = [], 0
+    findings, files, skipped = [], 0, []
     for name in given:
         root = pathlib.Path(name)
         if not root.exists():
             print(f"fencecheck: no such path: {root}", file=sys.stderr)
             return 2
-        found, scanned = fc.scan_path(root)
+        unanalysed, unparsed = [], []
+        found, scanned = fc.scan_path(root, [], unanalysed, unparsed)
         for item in found:
             # scan_path names a single-file root by its bare name, and two
             # staged files called utils.py must not print one location.
             item["file"] = str(root if root.is_file() else root / item["file"])
+        where = (lambda f: str(root if root.is_file() else root / f))
+        skipped += [where(f) for f in unanalysed]
+        skipped += [f"{where(u['file'])} ({u['error']})" for u in unparsed]
         findings.extend(found)
         files += scanned
+    if skipped:
+        # A file this Python cannot parse is not analysed, so it is never
+        # reported as clean (review 2026-10-22), and with nothing found
+        # the verdict is refused with 2, as `scan` refuses it.
+        print(f"fencecheck: {len(skipped)} file(s) were not analysed, not "
+              "cleared: " + ", ".join(skipped), file=sys.stderr)
+    if not findings and skipped:
+        print(f"fencecheck: no verdict. Nothing exposed in the "
+              f"{files - len(skipped)} file(s) analysed, but {len(skipped)} "
+              "file(s) were not analysed and are not cleared.")
+        return 2
     if not findings:
         print(f"fencecheck: {files} file(s) scanned, nothing exposed.")
         return 0

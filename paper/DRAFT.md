@@ -53,7 +53,7 @@ We contribute:
   (serialization, per-task LoRA TTT, constrained DFS decoding, augmentation
   voting), written from the team's public descriptions and never from their
   code (section 2), released under MIT.
-- **A test harness** of 776 offline tests that runs without a GPU, network
+- **A test harness** of 1041 offline tests that runs without a GPU, network
   access, or model downloads, including an oracle test that verifies the
   tree search token-exactly against a cache-free reference implementation —
   a test that caught a KV-cache aliasing bug which would otherwise have
@@ -210,7 +210,7 @@ eight core modules (`augment`, `decode`, `lora`, `model`, `serialize`,
 `solve`, `tasks`, `vote`; `wc -l` at commit `e49bcb2`) — and is designed
 around one principle: every
 property the pipeline depends on is either enforced by construction or
-pinned by an offline test. The test suite (776 tests) runs on CPU with tiny in-test
+pinned by an offline test. The test suite (1041 tests) runs on CPU with tiny in-test
 models — a few-layer Qwen2-architecture model and a hand-built 13-token
 tokenizer constructed inside the test — so correctness never depends on
 network access, model downloads, or GPU availability. Scale comes from
@@ -801,11 +801,80 @@ across a change of floating-point reduction order (`CORRECTIONS.md`,
 2026-09-17). The sentence *this repository's cells reproduce* may be
 said only of the three pairs Y names, on ten documents, never
 unqualified. Addendum X stays withheld. Y explains its gate's flake; it
-does not reverse it. A successor protocol that would read X's banked
-cells for the four families whose gates did not fail (Addendum AA,
-`docs/research/ADDENDUM_AA_PROTOCOL.md`) was drafted on 2026-09-23. It
-is not frozen, no cell has been read, and nothing in this paper depends
-on it.
+does not reverse it.
+
+A successor protocol that would read X's banked cells for the four
+families whose gates did not fail (Addendum AA,
+`docs/research/ADDENDUM_AA_PROTOCOL.md`) was drafted on 2026-09-23 and
+frozen on 2026-10-22, and its reading was banked once the same day
+(`VERDICT.md`, Addendum AA;
+`experiments/cord_decoder_isolation_read_2026-10-22.json`). It was not
+read blind. During X's run the operator had computed X1 for these
+families by hand, for scheduling, and published none of it. The record
+names X1 only and is silent on X2 and X3, so all three readings count
+as possibly seen. The decision to read these cells, and every choice in
+AA, were made after that hand computation. One later access is also
+disclosed: on 2026-10-21 an agent designing a different addendum read
+only the `per_document_seconds` field of the Addenda S and T comparator
+cells, to estimate decode cost, and no AA reading takes decode time as
+an input.
+A first attempt at the reading, at 05:57:19Z and 61 seconds before the
+banked one, computed the readings in memory and was then withheld by
+the reader itself; it wrote and printed nothing
+(`docs/research/ADDENDUM_AA_PROTOCOL.md`, "The disclosure this addendum
+owes" and erratum 6).
+
+X1 asks whether the constraint removes invalid JSON. X's CONSTRAINT
+REMOVES bar (invalid outputs at least halved, and no document that is
+valid without the constraint made invalid by it) was met in 0 of 5
+families, with Phi-3 unread and counted against, and there is no
+headline. X1 reads CONSTRAINT INERT on Qwen2.5-0.5B, SmolLM2-1.7B and
+Granite-3.1-2B: the arms with and without the constraint are identical
+on 50 of 50 documents, so the constraint never fired there, which is
+not a success. On Falcon3-1B it reads CONSTRAINT HELPS: invalid outputs
+went from 14 to 8, one short of halving. Arm C there is V's banked
+cell, so the difference is the constraint or V's cell not reproducing
+across processes on those documents, and this reading cannot separate
+the two. X2 asks whether our own loop, with the constraint off,
+reproduces `model.generate`. With neither arm constrained and no
+generation defaults in play (on Qwen, its shipped defaults neutralised
+in the `generate` arm), on these 50 documents, the plain loop
+reproduced `generate` token for token on Qwen2.5-0.5B and
+Granite-3.1-2B. The 2026-09-23 EOS erratum to X's token-prefix test
+moves X2 the way that favours us, so both counts are given: 0 of 50
+documents diverge under the erratum, and X's code as banked at
+`b4facac` also reads PATH REPRODUCES, with 0 of 50 diverging. On
+SmolLM2-1.7B and Falcon3-1B, whose `generate` comparator cells bank
+text only, the plain loop reproduced only `generate`'s decoded text on
+these 50 documents (WEAKER TEST: decoded text, not token ids). None of
+this covers `generate` with Qwen's shipped generation defaults in play:
+greedy `generate` with Qwen's config untouched differs from the
+neutralised arm on 47 of 50 documents. Those defaults are what X3 is
+about. Addendum V had counted five regressions on Qwen2.5-0.5B:
+documents whose output was valid JSON under greedy `generate` with
+Qwen's config untouched, and invalid under the constraint. V attributed
+them to the repetition penalty in Qwen's config rather than to the
+constraint, and X3 tests that attribution. V's count of 5 reproduces
+from V's own banked cells, and X3 reads V'S ATTRIBUTION HOLDS: all 5
+regressions are explained by the generation defaults rather than by the
+constraint.
+
+Limits: fifty CORD receipts per family, one corpus, schema-only
+prompts, CPU, four small checkpoints, one box. All four families were
+read in float32, and X2 has no bfloat16 family: Phi-3, the one bfloat16
+family and the one X predicted would diverge, is unread. The reused
+arms (V's constrained cells and the `model.generate` comparator cells
+from Addenda S and T) were gated on five documents per family, a
+sample, on Qwen2.5-0.5B, SmolLM2-1.7B and Falcon3-1B; Granite's gate
+did not apply. Prompt identity could be verified on only 3 of the 9
+compared pairs. On the other six it rests only on that gate, and they
+include the pair behind Falcon3's HELPS, both decoded-text X2 pairs,
+and the Qwen pair behind X3 and the 47 above. Everything X's own
+protocol says it cannot show also applies, including one `transformers`
+version, that a valid object is not a correct one, and that X3,
+measured on the one family that ships a modifier, says nothing about
+other checkpoints' defaults. Nothing else in this paper depends on
+Addendum AA.
 
 What it means for this paper. The harness tests in section 3 pin code
 paths, not bytes, and Y shows one code path producing different text

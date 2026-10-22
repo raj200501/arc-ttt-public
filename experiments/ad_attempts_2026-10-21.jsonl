@@ -1,0 +1,11 @@
+{"data_dir": "data/ad", "out": "experiments/ad_fetch_2026-10-21.json", "pid": 489, "stage": "fetch", "started_utc": "2026-10-22T19:12:58Z"}
+{"attempt_started_utc": "2026-10-22T19:12:58Z", "outcome": "not received in full; nothing banked", "outcome_utc": "2026-10-22T19:14:19Z", "pid": 489, "stage": "fetch", "unreceived": {"feasibility_page": "HTTPError: HTTP Error 504: Gateway Time-out"}}
+{"data_dir": "data/ad", "out": "experiments/ad_fetch_2026-10-21.json", "pid": 633, "stage": "fetch", "started_utc": "2026-10-22T19:14:25Z"}
+{"attempt_started_utc": "2026-10-22T19:14:25Z", "outcome": "not received in full; nothing banked", "outcome_utc": "2026-10-22T19:15:11Z", "pid": 633, "stage": "fetch", "unreceived": {"feasibility_page": "HTTPError: HTTP Error 500: Internal Server Error"}}
+{"data_dir": "data/ad", "out": "experiments/ad_fetch_2026-10-21.json", "pid": 714, "stage": "fetch", "started_utc": "2026-10-22T19:15:11Z"}
+{"attempt_started_utc": "2026-10-22T19:15:11Z", "outcome": "not received in full; nothing banked", "outcome_utc": "2026-10-22T19:15:47Z", "pid": 714, "stage": "fetch", "unreceived": {"feasibility_page": "HTTPError: HTTP Error 500: Internal Server Error"}}
+{"data_dir": "data/ad", "out": "experiments/ad_fetch_2026-10-21.json", "pid": 808, "stage": "fetch", "started_utc": "2026-10-22T19:15:47Z"}
+{"attempt_started_utc": "2026-10-22T19:15:47Z", "outcome": "not received in full; nothing banked", "outcome_utc": "2026-10-22T19:16:22Z", "pid": 808, "stage": "fetch", "unreceived": {"feasibility_page": "HTTPError: HTTP Error 500: Internal Server Error"}}
+{"data_dir": "data/ad", "out": "experiments/ad_fetch_2026-10-21.json", "pid": 1429, "stage": "fetch", "started_utc": "2026-10-22T19:20:07Z"}
+{"fetch": "experiments/ad_fetch_2026-10-21.json", "out": "experiments/ad_score_2026-10-21.json", "pid": 1644, "stage": "score", "started_utc": "2026-10-22T19:21:19Z"}
+{"fetch": "experiments/ad_fetch_2026-10-21.json", "out": "experiments/ad_reading_2026-10-21.json", "pid": 1716, "score": "experiments/ad_score_2026-10-21.json", "stage": "read", "started_utc": "2026-10-22T19:21:31Z"}

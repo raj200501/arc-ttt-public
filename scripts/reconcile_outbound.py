@@ -230,6 +230,23 @@ CITATION_REACH = 240
 # moved since. They are checked against all the evidence, as before.
 DATED_PART = re.compile(r"^Update [—–-] \d{4}-\d{2}-\d{2}\b")
 
+# A whole document can be a record too. One that declares itself a record
+# of a past state in its head (the markers `scripts/sync_test_counts.py`
+# honours; a test keeps the two lists equal) is checked against all the
+# evidence, like a dated section. Holding a superseded deck's cited count
+# to the artifact's current value made the only way to pass this gate a
+# hand-sync of the record: four commits rewrote a superseded outbound
+# document's correction count after it was marked so (CORRECTIONS
+# 2026-10-22).
+RECORD_MARKERS = ("SUPERSEDED", "ARCHIVED", "NOT FOR DISTRIBUTION",
+                  "DO NOT ANSWER FROM THIS FILE")
+
+
+def is_record(text: str) -> bool:
+    """True if the document declares itself a record of a past state."""
+    head = text[:600].upper()
+    return any(marker in head for marker in RECORD_MARKERS)
+
 
 def _cited_claims(body: str, exempt: dict[str, str] | None = None
                   ) -> list[tuple[str, str, str | None]]:
@@ -438,6 +455,9 @@ def _dash_normalise(text: str) -> str:
                 .replace("\u2014", "-"))
 
 
+BULK_PER_ITEM = {"ad_score_2026-10-21.json", "ad_fetch_2026-10-21.json"}
+
+
 def _haystack() -> str:
     parts = []
     for name in EVIDENCE_PAGES:
@@ -458,6 +478,16 @@ def _haystack() -> str:
         # Nor the false-pass probe's output: it holds fabricated figures
         # on purpose, and with it in the evidence they would reconcile.
         if path.name.startswith("reconcile_false_pass"):
+            continue
+        # Nor bulk per-item dumps: Addendum AD's score file holds 4,350
+        # answers x 7 scorer versions of per-answer values, so almost any
+        # decimal an outbound sentence invents occurs in it somewhere. A
+        # figure whose clause cites one of these files is still checked
+        # against it (`_cited_text` reads the cited file directly); only
+        # uncited figures stop matching against the dump. Added 2026-10-22
+        # when the false-pass probe and the laundering test both failed on
+        # this file.
+        if path.name in BULK_PER_ITEM:
             continue
         parts.append(path.read_text(encoding="utf-8"))
     return _dash_normalise("\n".join(parts))
@@ -578,12 +608,13 @@ def main() -> int:
         if not doc.exists():
             continue
         text = _dash_normalise(doc.read_text(encoding="utf-8"))
+        record = is_record(text)
         for part in re.split(r"\n## ", "\n" + text):
             heading = part.split("\n", 1)[0].strip()[:60] or "(preamble)"
             unsure = []
             reconciled, missing = _check(
                 part, OUTBOUND_STRATEGY_EXEMPT, haystack, numbers, cache,
-                use_citations=not DATED_PART.match(heading),
+                use_citations=not (record or DATED_PART.match(heading)),
                 uncheckable=unsure)
             if not reconciled and not missing and not unsure:
                 continue

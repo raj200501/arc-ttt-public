@@ -6,7 +6,8 @@
 # dependency is actions/setup-python, which provides the interpreter.
 #
 # The job fails on findings through the tool's own exit status: 1 when a
-# site is found, 2 when a path does not exist, 0 when the scan is clean.
+# site is found, 2 when a path does not exist or, with nothing found, a
+# file could not be analysed, 0 when the scan is clean.
 name: fencecheck
 description: >-
   Fail the job when evaluation code parses model output as JSON with no
@@ -25,9 +26,12 @@ inputs:
     required: false
     default: ""
   python-version:
-    description: Python version passed to actions/setup-python.
+    description: >-
+      Python version passed to actions/setup-python. scan reads only the
+      syntax this Python can parse and names any file it cannot, so use
+      the newest Python your code targets.
     required: false
-    default: "3.11"
+    default: "3.13"
 runs:
   using: composite
   steps:
